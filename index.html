@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Despensa">
+<meta name="theme-color" content="#F7F7F4">
+<title>Despensa — Shopping</title>
+<style>
+:root{
+  --paper:#F7F7F4;
+  --ink:#15150F;
+  --muted:#8B8B80;
+  --rule:#E3E3DA;
+  --card:#FFFFFF;
+  --store:#D6431F;
+  --est:#9A6B00;
+  --danger:#B3261E;
+  --pad:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.4;padding-bottom:240px;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+header{position:sticky;top:0;z-index:30;background:var(--paper);
+  border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top)}
+.hrow{display:flex;align-items:center;gap:8px;padding:10px var(--pad) 8px}
+.brand{flex:1;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbtn{background:none;border:1px solid var(--rule);border-radius:8px;color:var(--ink);
+  font-size:13px;font-weight:600;padding:7px 12px;cursor:pointer;font-family:inherit;flex:0 0 auto}
+.hbtn.active{background:var(--store);border-color:var(--store);color:#fff}
+.tabs{display:flex;padding:0 var(--pad)}
+.tab{flex:1;background:none;border:none;border-bottom:3px solid transparent;
+  padding:10px 4px 11px;cursor:pointer;font-size:13px;font-weight:650;color:var(--muted);font-family:inherit}
+.tab .cnt{display:block;font-size:10px;font-weight:600;letter-spacing:.07em;margin-top:3px;opacity:.75}
+.tab[aria-selected="true"]{color:var(--store);border-bottom-color:var(--store)}
+.editbar{background:var(--store);color:#fff;font-size:12px;font-weight:650;
+  padding:8px var(--pad);letter-spacing:.01em;display:none}
+.editbar.on{display:block}
+
+main{padding:0 var(--pad)}
+.sec{margin:22px 0 0}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;
+  padding:0 2px 7px;border-bottom:1px solid var(--rule)}
+.sectitle{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
+.seccount{font-size:11px;color:var(--muted);font-weight:600}
+
+.row{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--rule)}
+.box{flex:0 0 26px;height:26px;border:1.5px solid var(--ink);border-radius:6px;
+  background:var(--card);cursor:pointer;position:relative;padding:0}
+.row.on .box{background:var(--store);border-color:var(--store)}
+.row.on .box::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:12px;
+  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+.pen{flex:0 0 26px;height:26px;border:1.5px solid var(--rule);border-radius:6px;
+  background:var(--card);display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--muted)}
+.namewrap{flex:1;min-width:0;cursor:pointer}
+.nm{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.en{font-size:12px;color:var(--muted);margin-top:1px}
+.meta{font-size:11px;color:var(--muted);margin-top:1px;letter-spacing:.02em}
+.row.on .nm{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
+.row.on .en,.row.on .meta{opacity:.45}
+
+.amt{flex:0 0 auto;text-align:right;padding:6px 8px;margin:-6px -8px -6px 0;
+  border:none;background:none;cursor:pointer;border-radius:7px;font-family:inherit;color:var(--ink)}
+.amt:active{background:var(--rule)}
+.mx{display:block;font-size:15px;font-weight:650;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.us{display:block;font-size:11px;color:var(--muted);margin-top:1px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.amt.est .mx{color:var(--est)}
+.amt.est .us{color:var(--est);opacity:.7}
+.tagest{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  display:block;color:var(--est);margin-bottom:1px}
+.amt.none .mx{color:var(--muted);font-style:italic;font-size:13px;font-weight:600}
+
+.addbtn{width:100%;margin:12px 0 0;padding:12px;background:none;
+  border:1.5px dashed var(--rule);border-radius:10px;color:var(--muted);
+  font-size:13px;font-weight:650;cursor:pointer;font-family:inherit}
+
+.tape{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
+  padding:14px var(--pad) calc(14px + env(safe-area-inset-bottom));
+  box-shadow:0 -10px 30px rgba(0,0,0,.07)}
+.tape::before{content:'';position:absolute;top:-9px;left:0;right:0;height:10px;
+  background:radial-gradient(circle at 7px 10px,transparent 6.5px,var(--card) 7px) repeat-x;
+  background-size:14px 10px}
+.tline{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px}
+.tlabel{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.tval{font-size:13px;font-weight:600}
+.ttotal{display:flex;align-items:baseline;justify-content:space-between;
+  border-top:1.5px solid var(--ink);margin-top:8px;padding-top:8px}
+.ttotal .tlabel{color:var(--ink)}
+.tbig{font-size:25px;font-weight:700;letter-spacing:-.02em}
+.tusd{font-size:12px;color:var(--muted);text-align:right;margin-top:-1px}
+.logbtn{width:100%;margin-top:11px;padding:15px;border:none;border-radius:11px;
+  background:var(--store);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.logbtn:disabled{background:var(--rule);color:var(--muted)}
+
+.scrim{position:fixed;inset:0;background:rgba(15,15,10,.45);z-index:50;display:none}
+.scrim.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--card);
+  border-radius:18px 18px 0 0;padding:8px var(--pad) calc(20px + env(safe-area-inset-bottom));
+  max-height:90vh;overflow-y:auto;display:none}
+.sheet.open{display:block}
+.grab{width:38px;height:4px;background:var(--rule);border-radius:2px;margin:6px auto 14px}
+.sheet h2{font-size:16px;margin:0 0 4px;letter-spacing:-.01em}
+.hint{font-size:12.5px;color:var(--muted);margin:0 0 16px;line-height:1.45}
+.lbl{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);margin:0 0 5px 2px}
+.field{width:100%;padding:13px;font-size:17px;border:1.5px solid var(--rule);
+  border-radius:10px;margin-bottom:13px;font-family:inherit;background:var(--paper);color:var(--ink)}
+.two{display:flex;gap:10px}
+.two>div{flex:1}
+.mbtn{display:block;width:100%;text-align:left;padding:15px 14px;margin-bottom:9px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:11px;
+  font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit}
+.mbtn small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+.mbtn.primary{background:var(--store);border-color:var(--store);color:#fff;text-align:center}
+.mbtn.mid{text-align:center}
+.mbtn.danger{color:var(--danger)}
+.rcpt{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:14px;
+  font-size:12.5px;max-height:42vh;overflow-y:auto;margin-bottom:14px;
+  white-space:pre-wrap;word-break:break-word}
+.empty{text-align:center;color:var(--muted);font-size:13.5px;padding:32px 10px;line-height:1.55}
+.toast{position:fixed;left:50%;bottom:auto;top:calc(env(safe-area-inset-top) + 78px);
+  transform:translateX(-50%) translateY(-6px);background:var(--ink);color:var(--paper);
+  padding:10px 17px;border-radius:9px;font-size:13.5px;font-weight:600;z-index:60;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <span class="brand" id="brand">Despensa · Puerto Aventuras</span>
+    <button class="hbtn" id="editBtn">Edit</button>
+    <button class="hbtn" id="menuBtn">Menu</button>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="editbar" id="editBar">Editing the list — tap an item to change or remove it</div>
+</header>
+
+<main id="main"></main>
+
+<div class="tape" id="tape">
+  <div class="tline"><span class="tlabel">Items checked</span><span class="tval mono" id="tCount">0</span></div>
+  <div class="tline"><span class="tlabel">Prices needed</span><span class="tval mono" id="tMissing">0</span></div>
+  <div class="tline"><span class="tlabel">Rate</span><span class="tval mono" id="tFx">17.30</span></div>
+  <div class="ttotal">
+    <span class="tlabel">Total</span>
+    <div style="text-align:right">
+      <div class="tbig mono" id="tTotal">MX$0.00</div>
+      <div class="tusd mono" id="tUsd">US$0.00</div>
+    </div>
+  </div>
+  <button class="logbtn" id="logBtn" disabled>Log this trip</button>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+var KEY = "despensa_v1";
+
+/* ---------- catalogue ----------
+   lt = expected line total in MXN. est = that total is my estimate, not a receipt figure. */
+var SEED = {
+  chedraui:{label:"Chedraui", full:"Chedraui Puerto Aventuras", color:"#D6431F", groups:[
+    {id:"wk", title:"Weekly", items:[
+      {n:"Pollo Rostizado", e:"Rotisserie chicken", q:"1", lt:99.90},
+      {n:"Tortilla Del Barrio", e:"Tortillas", q:"1", lt:23.60},
+      {n:"Aguacate Hass", e:"Hass avocado", q:"5", ref:"59.00/kg", lt:50.15, est:true},
+      {n:"Limón Eureka", e:"Eureka lemon (yellow)", q:"", ref:"59.00/kg", lt:11.80, est:true},
+      {n:"Frijoles Refritos Isadora", e:"Refried beans", q:"2", lt:36.00}
+    ]},
+    {id:"bw", title:"Every 2 weeks", items:[
+      {n:"Porciones Mahi-Mahi", e:"Mahi-mahi portions", q:"2", lt:478.00},
+      {n:"Oroweat Multigrano", e:"Multigrain bread", q:"1", lt:93.00},
+      {n:"Nectarina", e:"Nectarine", q:"3", ref:"99.90/kg", lt:44.96, est:true},
+      {n:"Limón s/semilla", e:"Seedless lime (green)", q:"2", ref:"16.50/kg", lt:2.48, est:true},
+      {n:"Almendra Natural", e:"Natural almonds, 200 g", q:"1", ref:"445.00/kg", lt:89.00},
+      {n:"Ciruela Pasa S/H", e:"Prunes, pitted", q:"2", ref:"298.00/kg", lt:122.18},
+      {n:"Granola Miel de Agave", e:"Agave granola", q:"1", lt:104.00},
+      {n:"Avena Orgánica", e:"Organic oats", q:"1", lt:102.00},
+      {n:"Papa Chips Jalapeño", e:"Jalapeño chips", q:"1", lt:61.00},
+      {n:"Sabritas Sal", e:"Salted chips", q:"1", lt:61.00},
+      {n:"Crema Almendra Sun Harvest", e:"Almond butter, organic", q:"1", lt:198.00},
+      {n:"Body Wash Raw Sugar", e:"Body wash", q:"1", lt:166.00},
+      {n:"Toallas de Papel", e:"Paper towels", q:"1", lt:52.00}
+    ]},
+    {id:"mo", title:"Monthly", items:[
+      {n:"Huevo Apapa LP Blanco", e:"Free-range white eggs, 18 ct", q:"1", lt:111.00},
+      {n:"Queso V'chez", e:"V'chez plant-based cheese", q:"1", lt:170.00},
+      {n:"Queso Mi Passion", e:"Mi Passion cheese", q:"1", lt:139.00},
+      {n:"Violife Manchego", e:"Manchego-style vegan cheese", q:"1", lt:94.00},
+      {n:"Manzana Pink Lady", e:"Pink Lady apple", q:"2", ref:"59.90/kg", lt:26.36},
+      {n:"Ajo, bolsa enmallada", e:"Garlic, mesh bag", q:"1", lt:44.90},
+      {n:"Coco Tostado", e:"Toasted coconut", q:"1", ref:"500.00/kg", lt:52.50},
+      {n:"Café Orgánico", e:"Organic coffee", q:"1", lt:160.00},
+      {n:"Crema Sun Harvest", e:"Nut butter", q:"1", lt:145.00},
+      {n:"Loción Protectora", e:"Sunscreen", q:"2", lt:574.00},
+      {n:"Pretzel FS Mini", e:"Mini pretzels", q:"1", lt:47.00},
+      {n:"Jarabe Mister Maple", e:"Maple syrup", q:"1", lt:172.00},
+      {n:"Mermelada de Fresa", e:"Strawberry jam", q:"1", lt:84.00},
+      {n:"Papel Aluminio", e:"Aluminum foil", q:"1", lt:61.00},
+      {n:"Bolsas de basura grandes", e:"Trash bags, large", q:"1", lt:73.00},
+      {n:"Bolsas eco chicas", e:"Trash bags, small", q:"1", lt:29.50},
+      {n:"Cerveza Barrilito", e:"Barrilito beer, 6-pack", q:"1", lt:59.00}
+    ]},
+    {id:"m2", title:"Every 2 months", items:[
+      {n:"Detergente Tide", e:"Laundry detergent", q:"1", lt:395.00},
+      {n:"Papel Higiénico Cottonelle", e:"Toilet paper, 24R", q:"1", lt:205.00},
+      {n:"Lysol Crisp Linen", e:"Disinfectant spray", q:"1", lt:169.00},
+      {n:"Limpiador de Cocina", e:"Kitchen cleaner", q:"1", lt:129.00},
+      {n:"Jabón Líquido", e:"Hand soap", q:"1", lt:78.00},
+      {n:"Harpic", e:"Toilet cleaner", q:"1", lt:59.00},
+      {n:"Windex", e:"Glass cleaner", q:"1", lt:55.00},
+      {n:"Fabuloso Lavanda 2L", e:"Multi-surface cleaner", q:"1", lt:55.00},
+      {n:"Azúcar Zulka", e:"Cane sugar, 500 g", q:"1", lt:25.00}
+    ]},
+    {id:"m3", title:"Every 3 months", items:[
+      {n:"Limpiador de Baños", e:"Bathroom cleaner", q:"1", lt:59.00},
+      {n:"Axion Limón", e:"Dish soap, 900 ml", q:"1", lt:34.50}
+    ]},
+    {id:"an", title:"As needed", items:[
+      {n:"Baygon Total", e:"Insecticide", q:"1", lt:65.00}
+    ]}
+  ]},
+  dac:{label:"DAC", full:"DAC Quality Foods · delivery", color:"#1E7A55", groups:[
+    {id:"bw", title:"Every 2 weeks", items:[
+      {n:"Veggiorizo", e:"Vegan chorizo, 250 g", q:"1", lt:168.00},
+      {n:"Tofu firme House Foods", e:"Firm tofu, 396 g", q:"2", lt:188.00},
+      {n:"Carne al Pastor veggie", e:"Veggie al pastor, 450 g", q:"1", lt:87.00},
+      {n:"Mantequilla Vegana Plant Butter", e:"Vegan butter, 100 g", q:"2", lt:124.00},
+      {n:"Leche de Soya Güd", e:"Unsweetened soy milk, 1 L", q:"2", lt:106.00}
+    ]},
+    {id:"mo", title:"Monthly", items:[
+      {n:"Hamburguesa de Yaca", e:"Jackfruit burger, 440 g", q:"1", lt:112.00},
+      {n:"Semillas de Chía Campo Vivo", e:"Chia seeds, 250 g", q:"1", lt:79.00}
+    ]}
+  ]},
+  fm:{label:"Market", full:"Farmers market", color:"#7A2A63", groups:[
+    {id:"veg", title:"Vegetables · weekly", items:[
+      {n:"Brócoli", e:"Broccoli", q:"", lt:null},
+      {n:"Col rizada", e:"Kale", q:"", lt:null},
+      {n:"Papa", e:"Potato", q:"", lt:null},
+      {n:"Calabaza italiana", e:"Zucchini", q:"", lt:null},
+      {n:"Tomate saladette", e:"Tomato", q:"", lt:null}
+    ]},
+    {id:"fr", title:"Fruit · weekly", items:[
+      {n:"Plátano", e:"Banana", q:"", lt:null},
+      {n:"Arándanos", e:"Blueberries", q:"", lt:null}
+    ]},
+    {id:"ju", title:"Juice · weekly", items:[
+      {n:"Jugo de naranja", e:"Orange juice", q:"", lt:null},
+      {n:"Jugo de toronja", e:"Grapefruit juice", q:"", lt:null}
+    ]}
+  ]}
+};
+
+var S, active="chedraui", editing=false;
+
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+
+function seedState(){
+  var st={v:2, fx:17.30, items:{}, checked:{}, custom:{}, trips:[]};
+  Object.keys(SEED).forEach(function(sk){
+    SEED[sk].groups.forEach(function(g){
+      g.items.forEach(function(it){
+        st.items[sk+"|"+g.id+"|"+slug(it.n)] = {price:it.lt, est:!!it.est};
+      });
+    });
+  });
+  return st;
+}
+
+function load(){
+  try{ var raw=localStorage.getItem(KEY); if(raw) S=JSON.parse(raw); }catch(e){ S=null; }
+  if(!S||!S.items){ S=seedState(); save(); return; }
+  var fresh=seedState();
+  Object.keys(fresh.items).forEach(function(id){ if(!(id in S.items)) S.items[id]=fresh.items[id]; });
+  if(!S.custom) S.custom={};
+  if(!S.checked) S.checked={};
+  if(!S.trips) S.trips=[];
+  if(typeof S.fx!=="number"||!isFinite(S.fx)||S.fx<=0) S.fx=17.30;
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ toast("Could not save — storage is blocked"); }
+}
+
+function mx(n){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  return "MX$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function usd(n){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  return "US$"+(Number(n)/S.fx).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function toast(m){
+  var t=document.getElementById("toast");
+  t.textContent=m; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("show")},2100);
+}
+
+/* resolve a catalogue entry against any saved edits */
+function resolve(sk,gid,it){
+  var id=sk+"|"+gid+"|"+slug(it.n), ov=S.items[id]||{};
+  return {id:id,
+    n: ov.name!==undefined ? ov.name : it.n,
+    e: ov.english!==undefined ? ov.english : (it.e||""),
+    q: ov.qty!==undefined ? ov.qty : (it.q||""),
+    ref: it.ref||null, price:ov.price, est:!!ov.est, hidden:!!ov.hidden};
+}
+function groups(sk){
+  return SEED[sk].groups.map(function(g){
+    var rows=g.items.map(function(it){return resolve(sk,g.id,it)});
+    (S.custom[sk]||[]).forEach(function(c){
+      if(c.g!==g.id) return;
+      var ov=S.items[c.id]||{};
+      rows.push({id:c.id, n:ov.name||"Item", e:ov.english||"", q:ov.qty||"",
+        ref:null, price:ov.price, est:!!ov.est, hidden:!!ov.hidden, custom:true});
+    });
+    return {id:g.id, title:g.title, rows:rows.filter(function(r){return !r.hidden})};
+  });
+}
+function hiddenList(){
+  var out=[];
+  Object.keys(SEED).forEach(function(sk){
+    SEED[sk].groups.forEach(function(g){
+      g.items.forEach(function(it){
+        var r=resolve(sk,g.id,it);
+        if(r.hidden) out.push({id:r.id, n:r.n, store:SEED[sk].label});
+      });
+    });
+    (S.custom[sk]||[]).forEach(function(c){
+      var ov=S.items[c.id]||{};
+      if(ov.hidden) out.push({id:c.id, n:ov.name||"Item", store:SEED[sk].label});
+    });
+  });
+  return out;
+}
+
+/* ---------- render ---------- */
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = Object.keys(SEED).map(function(sk){
+    var n=Object.keys(S.checked).filter(function(id){return S.checked[id]&&id.indexOf(sk+"|")===0}).length;
+    return '<button class="tab" role="tab" data-store="'+sk+'" aria-selected="'+(sk===active)+'">'
+      +SEED[sk].label+'<span class="cnt">'+(n? n+" picked":"—")+'</span></button>';
+  }).join("");
+}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+
+function renderList(){
+  document.documentElement.style.setProperty("--store", SEED[active].color);
+  document.getElementById("brand").textContent = SEED[active].full;
+  var html="";
+  groups(active).forEach(function(g){
+    var on=g.rows.filter(function(r){return S.checked[r.id]}).length;
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+g.title+'</span>'
+      +'<span class="seccount">'+on+' / '+g.rows.length+'</span></div>';
+    g.rows.forEach(function(r){
+      var checked=!!S.checked[r.id];
+      var meta=[r.q?"Qty "+r.q:"", r.ref?"ref "+r.ref+" MXN":""].filter(Boolean).join(" · ");
+      var has = !(r.price===null||r.price===undefined||isNaN(r.price));
+      var cls="amt"+(has?(r.est?" est":""):" none");
+      var body = has
+        ? (r.est?'<span class="tagest">est</span>':'')
+          +'<span class="mx">'+mx(r.price)+'</span><span class="us">'+usd(r.price)+'</span>'
+        : '<span class="mx">Add price</span>';
+      html+='<div class="row'+(checked&&!editing?" on":"")+'" data-id="'+r.id+'">'
+        +(editing?'<span class="pen">✎</span>':'<button class="box" aria-label="Toggle"></button>')
+        +'<div class="namewrap"><div class="nm">'+esc(r.n)+'</div>'
+        +(r.e?'<div class="en">'+esc(r.e)+'</div>':'')
+        +(meta?'<div class="meta">'+esc(meta)+'</div>':'')
+        +'</div><button class="'+cls+'" data-price="'+r.id+'">'+body+'</button></div>';
+    });
+    html+='<button class="addbtn" data-add="'+g.id+'">+ Add an item to '+g.title.toLowerCase()+'</button></section>';
+  });
+  document.getElementById("main").innerHTML=html;
+}
+
+function renderTape(){
+  var ids=Object.keys(S.checked).filter(function(id){return S.checked[id]&&id.indexOf(active+"|")===0});
+  var total=0, missing=0;
+  ids.forEach(function(id){
+    var p=S.items[id]?S.items[id].price:null;
+    if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
+  });
+  document.getElementById("tCount").textContent=ids.length;
+  document.getElementById("tMissing").textContent=missing;
+  document.getElementById("tFx").textContent=S.fx.toFixed(2);
+  document.getElementById("tTotal").textContent=mx(total);
+  document.getElementById("tUsd").textContent=usd(total);
+  var b=document.getElementById("logBtn");
+  b.disabled = ids.length===0 || editing;
+  b.textContent = editing ? "Finish editing to log a trip"
+    : (ids.length===0 ? "Log this trip" : "Log this trip · "+ids.length+" items");
+  fitTape();
+}
+function fitTape(){
+  var h=document.getElementById("tape").offsetHeight;
+  document.body.style.paddingBottom=(h+30)+"px";
+}
+function render(){ renderTabs(); renderList(); renderTape(); }
+window.addEventListener("resize", fitTape);
+window.addEventListener("orientationchange", function(){ setTimeout(fitTape,250); });
+
+/* ---------- sheet ---------- */
+function openSheet(html){
+  document.getElementById("sheetBody").innerHTML=html;
+  document.getElementById("sheet").classList.add("open");
+  document.getElementById("scrim").classList.add("open");
+}
+function closeSheet(){
+  document.getElementById("sheet").classList.remove("open");
+  document.getElementById("scrim").classList.remove("open");
+}
+document.getElementById("scrim").addEventListener("click", closeSheet);
+
+/* ---------- interaction ---------- */
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b=e.target.closest(".tab"); if(!b) return;
+  active=b.dataset.store; render(); window.scrollTo({top:0});
+});
+document.getElementById("editBtn").addEventListener("click", function(){
+  editing=!editing;
+  this.classList.toggle("active", editing);
+  this.textContent = editing ? "Done" : "Edit";
+  document.getElementById("editBar").classList.toggle("on", editing);
+  render();
+});
+document.getElementById("main").addEventListener("click", function(e){
+  var pb=e.target.closest("[data-price]");
+  if(pb && !editing){ editPrice(pb.dataset.price); return; }
+  var ab=e.target.closest("[data-add]");
+  if(ab){ itemSheet(null, ab.dataset.add); return; }
+  var row=e.target.closest(".row"); if(!row) return;
+  if(editing){ itemSheet(row.dataset.id, null); return; }
+  S.checked[row.dataset.id]=!S.checked[row.dataset.id];
+  save(); render();
+});
+
+/* quick price edit — the common in-store action */
+function editPrice(id){
+  var cur=S.items[id]?S.items[id].price:null;
+  openSheet('<h2>Price in pesos</h2>'
+    +'<p class="hint">What it actually cost. Saving replaces the estimate.</p>'
+    +'<label class="lbl">Line total · MXN</label>'
+    +'<input class="field mono" id="pIn" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
+    +(cur===null||cur===undefined?"":cur)+'">'
+    +'<div class="hint mono" id="pUsd" style="margin:-6px 0 14px 2px"></div>'
+    +'<button class="mbtn primary" id="pSave">Save price</button>'
+    +'<button class="mbtn mid" id="pClear">Clear price</button>');
+  var inp=document.getElementById("pIn"), out=document.getElementById("pUsd");
+  function sync(){ var v=parseFloat(inp.value); out.textContent = isNaN(v)?"":"≈ "+usd(v)+" at "+S.fx.toFixed(2); }
+  inp.addEventListener("input", sync); sync();
+  setTimeout(function(){inp.focus();inp.select()},120);
+  document.getElementById("pSave").onclick=function(){
+    var v=parseFloat(inp.value), ov=S.items[id]||{};
+    ov.price=isNaN(v)?null:v; ov.est=false; S.items[id]=ov;
+    save(); closeSheet(); render(); toast("Price saved");
+  };
+  document.getElementById("pClear").onclick=function(){
+    var ov=S.items[id]||{}; ov.price=null; ov.est=false; S.items[id]=ov;
+    save(); closeSheet(); render();
+  };
+}
+
+/* full item sheet — add when id is null, edit when it isn't */
+function itemSheet(id, gid){
+  var isNew=!id, ov=id?(S.items[id]||{}):{}, cur=null;
+  if(id){
+    groups(active).forEach(function(g){ g.rows.forEach(function(r){ if(r.id===id) cur=r; }); });
+  }
+  var n=cur?cur.n:"", en=cur?cur.e:"", q=cur?cur.q:"", pr=cur?cur.price:null;
+  openSheet('<h2>'+(isNew?"Add an item":"Edit item")+'</h2>'
+    +'<p class="hint">'+(isNew
+      ? "For something you bought that isn’t on the list. It stays for next time."
+      : "Changes apply from now on. Trips already logged keep the values they had.")+'</p>'
+    +'<label class="lbl">Name in Spanish</label>'
+    +'<input class="field" id="fEs" type="text" placeholder="Nombre" value="'+esc(n)+'">'
+    +'<label class="lbl">Name in English</label>'
+    +'<input class="field" id="fEn" type="text" placeholder="Name" value="'+esc(en)+'">'
+    +'<div class="two"><div><label class="lbl">Quantity</label>'
+    +'<input class="field mono" id="fQ" type="text" inputmode="decimal" placeholder="1" value="'+esc(q)+'"></div>'
+    +'<div><label class="lbl">Price · MXN</label>'
+    +'<input class="field mono" id="fP" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
+    +(pr===null||pr===undefined?"":pr)+'"></div></div>'
+    +'<button class="mbtn primary" id="fSave">'+(isNew?"Add item":"Save changes")+'</button>'
+    +(isNew?"":'<button class="mbtn danger mid" id="fDel">Remove from the list</button>')
+    +'<button class="mbtn mid" id="fCancel">Cancel</button>');
+  setTimeout(function(){document.getElementById("fEs").focus()},120);
+
+  document.getElementById("fCancel").onclick=closeSheet;
+  document.getElementById("fSave").onclick=function(){
+    var es=document.getElementById("fEs").value.trim();
+    var eng=document.getElementById("fEn").value.trim();
+    var qq=document.getElementById("fQ").value.trim();
+    var pv=parseFloat(document.getElementById("fP").value);
+    if(!es && !eng){ toast("Give it a name first"); return; }
+    if(!es) es=eng;
+    var tid=id;
+    if(isNew){
+      tid=active+"|"+gid+"|custom-"+Date.now();
+      if(!S.custom[active]) S.custom[active]=[];
+      S.custom[active].push({id:tid, g:gid});
+      S.checked[tid]=true;
+    }
+    var rec=S.items[tid]||{};
+    rec.name=es; rec.english=eng; rec.qty=qq;
+    rec.price=isNaN(pv)?null:pv; rec.est=false;
+    S.items[tid]=rec;
+    save(); closeSheet(); render(); toast(isNew?"Added":"Saved");
+  };
+  if(!isNew){
+    document.getElementById("fDel").onclick=function(){
+      var rec=S.items[id]||{}; rec.hidden=true; S.items[id]=rec;
+      delete S.checked[id];
+      save(); closeSheet(); render(); toast("Removed — restore it in Settings");
+    };
+  }
+}
+
+/* ---------- log a trip ---------- */
+document.getElementById("logBtn").addEventListener("click", function(){
+  var now=new Date(), pad=function(x){return String(x).padStart(2,"0")};
+  var dt=now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate())
+    +"T"+pad(now.getHours())+":"+pad(now.getMinutes());
+  openSheet('<h2>Log this trip</h2>'
+    +'<p class="hint">Use the date, time and rate from the receipt so the trip matches the paperwork.</p>'
+    +'<label class="lbl">Date and time</label>'
+    +'<input class="field mono" id="tDT" type="datetime-local" value="'+dt+'">'
+    +'<label class="lbl">Exchange rate · MXN per USD</label>'
+    +'<input class="field mono" id="tRate" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +'<p class="hint" style="margin-top:-6px">Saved with this trip. Changing it later won’t alter trips already logged.</p>'
+    +'<button class="mbtn primary" id="tSave">Save trip</button>'
+    +'<button class="mbtn mid" id="tCancel">Cancel</button>');
+  document.getElementById("tCancel").onclick=closeSheet;
+  document.getElementById("tSave").onclick=function(){
+    var r=parseFloat(document.getElementById("tRate").value);
+    if(isNaN(r)||r<=0){ toast("Enter a valid rate"); return; }
+    S.fx=r;
+    saveTrip(document.getElementById("tDT").value||dt, r);
+  };
+});
+
+function saveTrip(dt, rate){
+  var lines=[], total=0, missing=0;
+  groups(active).forEach(function(g){
+    g.rows.forEach(function(r){
+      if(!S.checked[r.id]) return;
+      var p=r.price;
+      if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
+      lines.push({id:r.id, nameES:r.n, nameEN:r.e||"", qty:r.q||"", group:g.title,
+        priceMXN:(p===null||p===undefined||isNaN(p))?null:Number(p)});
+    });
+  });
+  var t={id:"trip-"+Date.now(), store:SEED[active].full, storeKey:active, datetime:dt,
+    items:lines, itemCount:lines.length, missingPrices:missing,
+    totalMXN:Math.round(total*100)/100, fxRate:rate,
+    totalUSD:Math.round(total/rate*100)/100};
+  S.trips.push(t);
+  Object.keys(S.checked).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.checked[id]; });
+  save(); render(); showReceipt(t);
+}
+
+function receiptText(t){
+  var W=36, s=t.store+"\n"+t.datetime.replace("T"," ")+"\n"+"-".repeat(W)+"\n";
+  t.items.forEach(function(i){
+    var nm=(i.nameES+(i.qty?" x"+i.qty:"")).slice(0,25);
+    s+=nm.padEnd(26)+(i.priceMXN===null?"—":i.priceMXN.toFixed(2)).padStart(10)+"\n";
+  });
+  s+="-".repeat(W)+"\n"+"ITEMS".padEnd(26)+String(t.itemCount).padStart(10)+"\n";
+  if(t.missingPrices) s+="NO PRICE".padEnd(26)+String(t.missingPrices).padStart(10)+"\n";
+  s+="TOTAL MXN".padEnd(26)+t.totalMXN.toFixed(2).padStart(10)+"\n"
+   +("RATE "+t.fxRate.toFixed(2)).padEnd(26)+"".padStart(10)+"\n"
+   +"TOTAL USD".padEnd(26)+t.totalUSD.toFixed(2).padStart(10)+"\n";
+  return s;
+}
+function showReceipt(t){
+  openSheet('<h2>Trip saved</h2>'
+    +'<p class="hint">Checkboxes are cleared. The trip stays in history until you erase it.</p>'
+    +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
+    +'<button class="mbtn primary" id="rExp">Copy data for Claude</button>'
+    +'<button class="mbtn mid" id="rDone">Done</button>');
+  document.getElementById("rExp").onclick=copyExport;
+  document.getElementById("rDone").onclick=closeSheet;
+}
+
+/* ---------- export ---------- */
+function exportPayload(){
+  var prices=[];
+  Object.keys(SEED).forEach(function(sk){
+    groups(sk).forEach(function(g){
+      g.rows.forEach(function(r){
+        prices.push({store:SEED[sk].label, group:g.title, nameES:r.n, nameEN:r.e,
+          qty:r.q, priceMXN:(r.price===undefined?null:r.price), isEstimate:r.est});
+      });
+    });
+  });
+  return JSON.stringify({exportedAt:new Date().toISOString(), currentRate:S.fx,
+    trips:S.trips, currentList:prices}, null, 2);
+}
+function copyExport(){
+  var txt=exportPayload();
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(
+      function(){toast("Copied — paste it into Claude")},
+      function(){fallbackCopy(txt)});
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  openSheet('<h2>Copy this</h2><p class="hint">Tap and hold in the box, Select All, then Copy.</p>'
+    +'<textarea class="field mono" style="height:44vh" readonly>'+esc(txt)+'</textarea>'
+    +'<button class="mbtn mid" id="fbDone">Done</button>');
+  document.getElementById("fbDone").onclick=closeSheet;
+}
+function downloadExport(){
+  var b=new Blob([exportPayload()],{type:"application/json"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b);
+  a.download="despensa-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+}
+
+/* ---------- menu & settings ---------- */
+document.getElementById("menuBtn").addEventListener("click", function(){
+  var n=S.trips.length;
+  openSheet('<h2>Menu</h2><p class="hint">'+SEED[active].full+'</p>'
+    +'<button class="mbtn" id="mCopy">Copy data for Claude<small>'+n+' saved trip'+(n===1?"":"s")+' plus the current list</small></button>'
+    +'<button class="mbtn" id="mDl">Download as a file<small>The same data as .json</small></button>'
+    +'<button class="mbtn" id="mHist">Trip history<small>Review what you have logged</small></button>'
+    +'<button class="mbtn" id="mSet">Settings<small>Exchange rate and removed items</small></button>'
+    +'<button class="mbtn" id="mUnc">Clear the checkboxes<small>Start fresh without saving a trip</small></button>');
+  document.getElementById("mCopy").onclick=copyExport;
+  document.getElementById("mDl").onclick=function(){downloadExport();toast("Downloaded")};
+  document.getElementById("mHist").onclick=showHistory;
+  document.getElementById("mSet").onclick=showSettings;
+  document.getElementById("mUnc").onclick=function(){
+    Object.keys(S.checked).forEach(function(id){if(id.indexOf(active+"|")===0) delete S.checked[id]});
+    save(); render(); closeSheet(); toast("Checkboxes cleared");
+  };
+});
+
+function showSettings(){
+  var hid=hiddenList();
+  openSheet('<h2>Settings</h2>'
+    +'<label class="lbl">Exchange rate · MXN per USD</label>'
+    +'<input class="field mono" id="sFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +'<p class="hint" style="margin-top:-6px">Used for the dollar figures on screen. Each trip also stores the rate it was logged at.</p>'
+    +'<button class="mbtn primary" id="sSave">Save rate</button>'
+    +'<div style="height:14px"></div>'
+    +'<label class="lbl">Removed items · '+hid.length+'</label>'
+    +(hid.length
+      ? hid.map(function(h){return '<button class="mbtn" data-restore="'+h.id+'">'+esc(h.n)
+          +'<small>'+esc(h.store)+' · tap to put it back</small></button>'}).join("")
+      : '<p class="hint">Nothing removed.</p>')
+    +'<div style="height:14px"></div>'
+    +'<button class="mbtn danger" id="sWipe">Erase everything<small>Trips, prices, added items — all of it</small></button>');
+  document.getElementById("sSave").onclick=function(){
+    var v=parseFloat(document.getElementById("sFx").value);
+    if(isNaN(v)||v<=0){ toast("Enter a valid rate"); return; }
+    S.fx=v; save(); render(); toast("Rate saved");
+  };
+  document.getElementById("sheetBody").addEventListener("click", function(e){
+    var b=e.target.closest("[data-restore]"); if(!b) return;
+    var rec=S.items[b.dataset.restore]||{}; rec.hidden=false; S.items[b.dataset.restore]=rec;
+    save(); render(); showSettings(); toast("Restored");
+  });
+  document.getElementById("sWipe").onclick=function(){
+    openSheet('<h2>Erase everything?</h2>'
+      +'<p class="hint">Every logged trip, every price you edited and every item you added will be gone. Copy the data first if you want to keep any of it.</p>'
+      +'<button class="mbtn" id="wCopy">Copy the data first</button>'
+      +'<button class="mbtn danger mid" id="wYes">Yes, erase everything</button>'
+      +'<button class="mbtn mid" id="wNo">Keep it</button>');
+    document.getElementById("wCopy").onclick=copyExport;
+    document.getElementById("wNo").onclick=closeSheet;
+    document.getElementById("wYes").onclick=function(){
+      S=seedState(); save(); render(); closeSheet(); toast("Erased");
+    };
+  };
+}
+
+function showHistory(){
+  if(!S.trips.length){
+    openSheet('<h2>Trip history</h2><div class="empty">Nothing logged yet.<br>Check items off as you shop, then tap <strong>Log this trip</strong>.</div>'
+      +'<button class="mbtn mid" id="hDone">Done</button>');
+    document.getElementById("hDone").onclick=closeSheet; return;
+  }
+  var html='<h2>Trip history</h2><p class="hint">'+S.trips.length+' trip'+(S.trips.length===1?"":"s")+' logged</p>';
+  S.trips.slice().reverse().forEach(function(t){
+    html+='<div class="rcpt mono" style="max-height:none">'+esc(receiptText(t))+'</div>';
+  });
+  html+='<button class="mbtn primary" id="hCopy">Copy data for Claude</button>'
+    +'<button class="mbtn mid" id="hDone2">Done</button>';
+  openSheet(html);
+  document.getElementById("hCopy").onclick=copyExport;
+  document.getElementById("hDone2").onclick=closeSheet;
+}
+
+/* ---------- go ---------- */
+load(); render(); setTimeout(fitTape,60);
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}
+</script>
+</body>
+</html>
