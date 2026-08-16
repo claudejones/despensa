@@ -7,9 +7,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Despensa">
 <meta name="theme-color" content="#F7F7F4">
+<meta name="color-scheme" content="only light">
 <title>Despensa — Shopping</title>
 <style>
 :root{
+  color-scheme:only light;
   --paper:#F7F7F4;
   --ink:#15150F;
   --muted:#8B8B80;
@@ -22,8 +24,9 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
+html{background:#F7F7F4}
 body{
-  background:var(--paper);color:var(--ink);
+  background:#F7F7F4;color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   font-size:16px;line-height:1.4;padding-bottom:240px;
   -webkit-font-smoothing:antialiased;
@@ -47,19 +50,27 @@ header{position:sticky;top:0;z-index:30;background:var(--paper);
   padding:8px var(--pad);letter-spacing:.01em;display:none}
 .editbar.on{display:block}
 
-main{padding:0 var(--pad)}
-.sec{margin:22px 0 0}
+main{padding:0 var(--pad);background:var(--paper)}
+.sec{margin:22px 0 0;background:var(--paper)}
 .sechead{display:flex;align-items:baseline;justify-content:space-between;
   padding:0 2px 7px;border-bottom:1px solid var(--rule)}
 .sectitle{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
 .seccount{font-size:11px;color:var(--muted);font-weight:600}
 
-.row{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--rule)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--rule);
+  background:var(--paper);position:relative}
 .box{flex:0 0 26px;height:26px;border:1.5px solid var(--ink);border-radius:6px;
   background:var(--card);cursor:pointer;position:relative;padding:0}
 .row.on .box{background:var(--store);border-color:var(--store)}
 .row.on .box::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:12px;
   border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+/* skipped: a flat inert square, plus a left accent bar down the row */
+.mark{flex:0 0 26px;height:26px;border:1.5px solid var(--rule);border-radius:6px;
+  background:var(--rule);position:relative;padding:0;cursor:pointer}
+.mark::after{content:'';position:absolute;left:6px;top:11px;width:12px;height:2px;
+  background:var(--muted);border-radius:1px}
+.row.sk{background:#F1F1EC}
+.row.sk::before{content:'';position:absolute;left:-16px;top:0;bottom:0;width:3px;background:var(--muted)}
 .pen{flex:0 0 26px;height:26px;border:1.5px solid var(--rule);border-radius:6px;
   background:var(--card);display:flex;align-items:center;justify-content:center;
   font-size:13px;color:var(--muted)}
@@ -67,8 +78,12 @@ main{padding:0 var(--pad)}
 .nm{font-size:15px;font-weight:600;letter-spacing:-.01em}
 .en{font-size:12px;color:var(--muted);margin-top:1px}
 .meta{font-size:11px;color:var(--muted);margin-top:1px;letter-spacing:.02em}
+.metaskip{font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;
+  color:var(--muted);margin-top:3px}
 .row.on .nm{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
 .row.on .en,.row.on .meta{opacity:.45}
+.row.sk .nm,.row.sk .en,.row.sk .meta{opacity:.4}
+.row.sk .amt{opacity:.3}
 
 .amt{flex:0 0 auto;text-align:right;padding:6px 8px;margin:-6px -8px -6px 0;
   border:none;background:none;cursor:pointer;border-radius:7px;font-family:inherit;color:var(--ink)}
@@ -148,13 +163,14 @@ main{padding:0 var(--pad)}
     <button class="hbtn" id="menuBtn">Menu</button>
   </div>
   <div class="tabs" role="tablist" id="tabs"></div>
-  <div class="editbar" id="editBar">Editing the list — tap an item to change or remove it</div>
+  <div class="editbar" id="editBar">Tap any item to change it, skip it for this trip, or remove it</div>
 </header>
 
 <main id="main"></main>
 
 <div class="tape" id="tape">
   <div class="tline"><span class="tlabel">Items checked</span><span class="tval mono" id="tCount">0</span></div>
+  <div class="tline"><span class="tlabel">Skipped</span><span class="tval mono" id="tSkip">0</span></div>
   <div class="tline"><span class="tlabel">Prices needed</span><span class="tval mono" id="tMissing">0</span></div>
   <div class="tline"><span class="tlabel">Rate</span><span class="tval mono" id="tFx">17.30</span></div>
   <div class="ttotal">
@@ -276,7 +292,7 @@ var S, active="chedraui", editing=false;
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 
 function seedState(){
-  var st={v:2, fx:17.30, items:{}, checked:{}, custom:{}, trips:[]};
+  var st={v:3, fx:17.30, items:{}, checked:{}, skipped:{}, custom:{}, trips:[]};
   Object.keys(SEED).forEach(function(sk){
     SEED[sk].groups.forEach(function(g){
       g.items.forEach(function(it){
@@ -294,6 +310,7 @@ function load(){
   Object.keys(fresh.items).forEach(function(id){ if(!(id in S.items)) S.items[id]=fresh.items[id]; });
   if(!S.custom) S.custom={};
   if(!S.checked) S.checked={};
+  if(!S.skipped) S.skipped={};
   if(!S.trips) S.trips=[];
   if(typeof S.fx!=="number"||!isFinite(S.fx)||S.fx<=0) S.fx=17.30;
 }
@@ -373,7 +390,7 @@ function renderList(){
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+g.title+'</span>'
       +'<span class="seccount">'+on+' / '+g.rows.length+'</span></div>';
     g.rows.forEach(function(r){
-      var checked=!!S.checked[r.id];
+      var checked=!!S.checked[r.id], skipped=!!S.skipped[r.id];
       var meta=[r.q?"Qty "+r.q:"", r.ref?"ref "+r.ref+" MXN":""].filter(Boolean).join(" · ");
       var has = !(r.price===null||r.price===undefined||isNaN(r.price));
       var cls="amt"+(has?(r.est?" est":""):" none");
@@ -381,11 +398,16 @@ function renderList(){
         ? (r.est?'<span class="tagest">est</span>':'')
           +'<span class="mx">'+mx(r.price)+'</span><span class="us">'+usd(r.price)+'</span>'
         : '<span class="mx">Add price</span>';
-      html+='<div class="row'+(checked&&!editing?" on":"")+'" data-id="'+r.id+'">'
-        +(editing?'<span class="pen">✎</span>':'<button class="box" aria-label="Toggle"></button>')
+      var rc = (checked&&!editing?" on":"")+(skipped?" sk":"");
+      var ctrl;
+      if(editing) ctrl='<span class="pen">✎</span>';
+      else if(skipped) ctrl='<button class="mark" aria-label="Put back in this trip"></button>';
+      else ctrl='<button class="box" aria-label="Bought"></button>';
+      html+='<div class="row'+rc+'" data-id="'+r.id+'">'+ctrl
         +'<div class="namewrap"><div class="nm">'+esc(r.n)+'</div>'
         +(r.e?'<div class="en">'+esc(r.e)+'</div>':'')
         +(meta?'<div class="meta">'+esc(meta)+'</div>':'')
+        +(skipped?'<div class="metaskip">Skipped this trip</div>':'')
         +'</div><button class="'+cls+'" data-price="'+r.id+'">'+body+'</button></div>';
     });
     html+='<button class="addbtn" data-add="'+g.id+'">+ Add an item to '+g.title.toLowerCase()+'</button></section>';
@@ -400,7 +422,9 @@ function renderTape(){
     var p=S.items[id]?S.items[id].price:null;
     if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
   });
+  var skips=Object.keys(S.skipped).filter(function(id){return S.skipped[id]&&id.indexOf(active+"|")===0}).length;
   document.getElementById("tCount").textContent=ids.length;
+  document.getElementById("tSkip").textContent=skips;
   document.getElementById("tMissing").textContent=missing;
   document.getElementById("tFx").textContent=S.fx.toFixed(2);
   document.getElementById("tTotal").textContent=mx(total);
@@ -449,8 +473,10 @@ document.getElementById("main").addEventListener("click", function(e){
   var ab=e.target.closest("[data-add]");
   if(ab){ itemSheet(null, ab.dataset.add); return; }
   var row=e.target.closest(".row"); if(!row) return;
-  if(editing){ itemSheet(row.dataset.id, null); return; }
-  S.checked[row.dataset.id]=!S.checked[row.dataset.id];
+  var id=row.dataset.id;
+  if(editing){ itemSheet(id, null); return; }
+  if(S.skipped[id]){ delete S.skipped[id]; save(); render(); return; }
+  if(S.checked[id]) delete S.checked[id]; else S.checked[id]=true;
   save(); render();
 });
 
@@ -501,7 +527,10 @@ function itemSheet(id, gid){
     +'<input class="field mono" id="fP" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
     +(pr===null||pr===undefined?"":pr)+'"></div></div>'
     +'<button class="mbtn primary" id="fSave">'+(isNew?"Add item":"Save changes")+'</button>'
-    +(isNew?"":'<button class="mbtn danger mid" id="fDel">Remove from the list</button>')
+    +(isNew?"":(S.skipped[id]
+        ? '<button class="mbtn mid" id="fSkip">Put back in this trip<small>It is set to be skipped</small></button>'
+        : '<button class="mbtn mid" id="fSkip">Skip this trip<small>Stays on the list, out of this trip’s total</small></button>'))
+    +(isNew?"":'<button class="mbtn danger mid" id="fDel">Remove from the list<small>Gone from every trip until you restore it in Settings</small></button>')
     +'<button class="mbtn mid" id="fCancel">Cancel</button>');
   setTimeout(function(){document.getElementById("fEs").focus()},120);
 
@@ -527,6 +556,11 @@ function itemSheet(id, gid){
     save(); closeSheet(); render(); toast(isNew?"Added":"Saved");
   };
   if(!isNew){
+    document.getElementById("fSkip").onclick=function(){
+      if(S.skipped[id]){ delete S.skipped[id]; toast("Back in this trip"); }
+      else { S.skipped[id]=true; delete S.checked[id]; toast("Skipped this trip"); }
+      save(); closeSheet(); render();
+    };
     document.getElementById("fDel").onclick=function(){
       var rec=S.items[id]||{}; rec.hidden=true; S.items[id]=rec;
       delete S.checked[id];
@@ -559,9 +593,14 @@ document.getElementById("logBtn").addEventListener("click", function(){
 });
 
 function saveTrip(dt, rate){
-  var lines=[], total=0, missing=0;
+  var lines=[], skips=[], total=0, missing=0;
   groups(active).forEach(function(g){
     g.rows.forEach(function(r){
+      if(S.skipped[r.id]){
+        skips.push({id:r.id, nameES:r.n, nameEN:r.e||"", qty:r.q||"", group:g.title,
+          listPriceMXN:(r.price===null||r.price===undefined||isNaN(r.price))?null:Number(r.price)});
+        return;
+      }
       if(!S.checked[r.id]) return;
       var p=r.price;
       if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
@@ -571,10 +610,12 @@ function saveTrip(dt, rate){
   });
   var t={id:"trip-"+Date.now(), store:SEED[active].full, storeKey:active, datetime:dt,
     items:lines, itemCount:lines.length, missingPrices:missing,
+    skipped:skips, skippedCount:skips.length,
     totalMXN:Math.round(total*100)/100, fxRate:rate,
     totalUSD:Math.round(total/rate*100)/100};
   S.trips.push(t);
   Object.keys(S.checked).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.checked[id]; });
+  Object.keys(S.skipped).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.skipped[id]; });
   save(); render(); showReceipt(t);
 }
 
@@ -584,7 +625,14 @@ function receiptText(t){
     var nm=(i.nameES+(i.qty?" x"+i.qty:"")).slice(0,25);
     s+=nm.padEnd(26)+(i.priceMXN===null?"—":i.priceMXN.toFixed(2)).padStart(10)+"\n";
   });
-  s+="-".repeat(W)+"\n"+"ITEMS".padEnd(26)+String(t.itemCount).padStart(10)+"\n";
+  if(t.skipped && t.skipped.length){
+    s+="-".repeat(W)+"\nSKIPPED THIS TRIP\n";
+    t.skipped.forEach(function(i){
+      s+=("  "+i.nameES).slice(0,26).padEnd(26)+"\n";
+    });
+  }
+  s+="-".repeat(W)+"\n"+"ITEMS BOUGHT".padEnd(26)+String(t.itemCount).padStart(10)+"\n";
+  if(t.skippedCount) s+="SKIPPED".padEnd(26)+String(t.skippedCount).padStart(10)+"\n";
   if(t.missingPrices) s+="NO PRICE".padEnd(26)+String(t.missingPrices).padStart(10)+"\n";
   s+="TOTAL MXN".padEnd(26)+t.totalMXN.toFixed(2).padStart(10)+"\n"
    +("RATE "+t.fxRate.toFixed(2)).padEnd(26)+"".padStart(10)+"\n"
@@ -593,7 +641,7 @@ function receiptText(t){
 }
 function showReceipt(t){
   openSheet('<h2>Trip saved</h2>'
-    +'<p class="hint">Checkboxes are cleared. The trip stays in history until you erase it.</p>'
+    +'<p class="hint">Bought and skipped marks are cleared. The trip stays in history until you erase it.</p>'
     +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
     +'<button class="mbtn primary" id="rExp">Copy data for Claude</button>'
     +'<button class="mbtn mid" id="rDone">Done</button>');
@@ -645,14 +693,15 @@ document.getElementById("menuBtn").addEventListener("click", function(){
     +'<button class="mbtn" id="mDl">Download as a file<small>The same data as .json</small></button>'
     +'<button class="mbtn" id="mHist">Trip history<small>Review what you have logged</small></button>'
     +'<button class="mbtn" id="mSet">Settings<small>Exchange rate and removed items</small></button>'
-    +'<button class="mbtn" id="mUnc">Clear the checkboxes<small>Start fresh without saving a trip</small></button>');
+    +'<button class="mbtn" id="mUnc">Clear the marks<small>Reset bought and skipped without saving a trip</small></button>');
   document.getElementById("mCopy").onclick=copyExport;
   document.getElementById("mDl").onclick=function(){downloadExport();toast("Downloaded")};
   document.getElementById("mHist").onclick=showHistory;
   document.getElementById("mSet").onclick=showSettings;
   document.getElementById("mUnc").onclick=function(){
     Object.keys(S.checked).forEach(function(id){if(id.indexOf(active+"|")===0) delete S.checked[id]});
-    save(); render(); closeSheet(); toast("Checkboxes cleared");
+    Object.keys(S.skipped).forEach(function(id){if(id.indexOf(active+"|")===0) delete S.skipped[id]});
+    save(); render(); closeSheet(); toast("Marks cleared");
   };
 });
 
