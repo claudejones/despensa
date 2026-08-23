@@ -2591,7 +2591,7 @@ const LEARN_AREAS = [
     }) }
   ] }
 ];
-function LearnCards({ cards, scored, phonOn, onDone, onExit }) {
+function LearnCards({ cards, scored, phonOn, dir = "fwd", onDone, onExit }) {
   const [i, setI] = useState(0);
   const [flip, setFlip] = useState(false);
   const [score, setScore] = useState(0);
@@ -2616,11 +2616,14 @@ function LearnCards({ cards, scored, phonOn, onDone, onExit }) {
       className: "w-full rounded-2xl shadow-lg transition-all duration-500 border-2 border-amber-200",
       style: { minHeight: "230px", transformStyle: "preserve-3d", transform: flip ? "rotateY(180deg)" : "rotateY(0deg)" }
     },
-    /* @__PURE__ */ React.createElement("div", { className: "absolute inset-0 rounded-2xl p-5 flex flex-col items-center justify-center bg-white", style: { backfaceVisibility: "hidden" } }, /* @__PURE__ */ React.createElement("span", { className: "text-5xl font-bold text-stone-800 text-center" }, c.front), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400 mt-4" }, "tap to flip \u2192")),
-    /* @__PURE__ */ React.createElement("div", { className: "absolute inset-0 rounded-2xl p-5 flex flex-col items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50", style: { backfaceVisibility: "hidden", transform: "rotateY(180deg)" } }, /* @__PURE__ */ React.createElement("span", { className: "text-3xl font-bold text-stone-800 text-center" }, c.back), showPh && c.ph && /* @__PURE__ */ React.createElement("div", { className: "mt-0.5" }, /* @__PURE__ */ React.createElement(Phon, { ph: c.ph, size: "text-base" })), c.backSub && /* @__PURE__ */ React.createElement("p", { className: "text-sm text-stone-500 mt-1 text-center" }, c.backSub), c.ex && /* @__PURE__ */ React.createElement("div", { className: "mt-3 bg-white/70 border border-amber-200 rounded-lg px-4 py-2 text-center" }, /* @__PURE__ */ React.createElement("p", { className: "text-xs font-semibold text-amber-600 uppercase tracking-wider mb-0.5" }, "Example"), /* @__PURE__ */ React.createElement("p", { className: "text-base font-semibold text-stone-800" }, c.ex.w), showPh && c.ex.ph && /* @__PURE__ */ React.createElement(Phon, { ph: c.ex.ph, size: "text-xs" }), c.ex.en && /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400 mt-0.5" }, c.ex.en)), !showPh && (c.ph || c.ex && c.ex.ph) && /* @__PURE__ */ React.createElement("button", { onClick: (e) => {
+    /* @__PURE__ */ React.createElement("div", { className: "absolute inset-0 rounded-2xl p-5 flex flex-col items-center justify-center bg-white", style: { backfaceVisibility: "hidden" } }, dir === "fwd" ? /* @__PURE__ */ React.createElement("span", { className: "text-5xl font-bold text-stone-800 text-center" }, c.front) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("span", { className: "text-4xl font-bold text-stone-800 text-center" }, c.back), reveal ? /* @__PURE__ */ React.createElement(React.Fragment, null, c.ph && /* @__PURE__ */ React.createElement("div", { className: "mt-0.5" }, /* @__PURE__ */ React.createElement(Phon, { ph: c.ph, size: "text-base" })), c.backSub && /* @__PURE__ */ React.createElement("p", { className: "text-sm text-stone-500 mt-1 text-center" }, c.backSub), c.ex && /* @__PURE__ */ React.createElement("div", { className: "mt-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-center" }, /* @__PURE__ */ React.createElement("p", { className: "text-xs font-semibold text-amber-600 uppercase tracking-wider mb-0.5" }, "Example"), /* @__PURE__ */ React.createElement("p", { className: "text-sm font-semibold text-stone-800" }, c.ex.w), c.ex.ph && /* @__PURE__ */ React.createElement(Phon, { ph: c.ex.ph, size: "text-xs" }))) : (c.ph || c.backSub || c.ex) && /* @__PURE__ */ React.createElement("button", { onClick: (e) => {
       e.stopPropagation();
       setReveal(true);
-    }, className: "mt-2 text-xs text-amber-600 font-semibold" }, "\u{1F441} show pronunciation"))
+    }, className: "mt-3 text-xs text-amber-600 font-semibold" }, "\u{1F441} reveal pronunciation")), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400 mt-4" }, "tap to flip \u2192")),
+    /* @__PURE__ */ React.createElement("div", { className: "absolute inset-0 rounded-2xl p-5 flex flex-col items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50", style: { backfaceVisibility: "hidden", transform: "rotateY(180deg)" } }, dir === "rev" ? /* @__PURE__ */ React.createElement("span", { className: "text-4xl font-bold text-stone-800 text-center" }, c.front) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("span", { className: "text-3xl font-bold text-stone-800 text-center" }, c.back), showPh && c.ph && /* @__PURE__ */ React.createElement("div", { className: "mt-0.5" }, /* @__PURE__ */ React.createElement(Phon, { ph: c.ph, size: "text-base" })), c.backSub && /* @__PURE__ */ React.createElement("p", { className: "text-sm text-stone-500 mt-1 text-center" }, c.backSub), c.ex && /* @__PURE__ */ React.createElement("div", { className: "mt-3 bg-white/70 border border-amber-200 rounded-lg px-4 py-2 text-center" }, /* @__PURE__ */ React.createElement("p", { className: "text-xs font-semibold text-amber-600 uppercase tracking-wider mb-0.5" }, "Example"), /* @__PURE__ */ React.createElement("p", { className: "text-base font-semibold text-stone-800" }, c.ex.w), showPh && c.ex.ph && /* @__PURE__ */ React.createElement(Phon, { ph: c.ex.ph, size: "text-xs" }), c.ex.en && /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400 mt-0.5" }, c.ex.en)), !showPh && (c.ph || c.ex && c.ex.ph) && /* @__PURE__ */ React.createElement("button", { onClick: (e) => {
+      e.stopPropagation();
+      setReveal(true);
+    }, className: "mt-2 text-xs text-amber-600 font-semibold" }, "\u{1F441} show pronunciation")))
   )), scored ? flip ? /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => advance(false), className: "flex-1 py-2.5 rounded-xl bg-red-50 border-2 border-red-200 text-red-700 font-bold text-sm active:scale-95 transition-all" }, "\u2717 Missed"), /* @__PURE__ */ React.createElement("button", { onClick: () => advance(true), className: "flex-1 py-2.5 rounded-xl bg-green-50 border-2 border-green-300 text-green-700 font-bold text-sm active:scale-95 transition-all" }, "\u2713 Got it")) : /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400 text-center" }, "Say it out loud, then flip to check") : /* @__PURE__ */ React.createElement("div", { className: "flex gap-3" }, /* @__PURE__ */ React.createElement(
     "button",
     {
@@ -2645,6 +2648,7 @@ function LearnCards({ cards, scored, phonOn, onDone, onExit }) {
 function LearnMode({ phonOn, setPhonOn, initArea }) {
   const [areaId, setAreaId] = useState(initArea || null);
   const [aview, setAview] = useState("sets");
+  const [dir, setDir] = useState("fwd");
   const [run, setRun] = useState(null);
   const [result, setResult] = useState(null);
   const [randOpen, setRandOpen] = useState(null);
@@ -2655,18 +2659,37 @@ function LearnMode({ phonOn, setPhonOn, initArea }) {
     setRandOpen(null);
     setResult(null);
   };
-  const PhonToggle = () => /* @__PURE__ */ React.createElement("label", { className: "flex items-center gap-1.5 text-xs text-stone-500 cursor-pointer" }, /* @__PURE__ */ React.createElement("input", { type: "checkbox", checked: phonOn, onChange: (e) => setPhonOn(e.target.checked), className: "accent-amber-600" }), "Abc pronunciation");
+  const DirToggle = () => /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick: () => setDir((d) => d === "fwd" ? "rev" : "fwd"),
+      title: "Flip card direction",
+      className: `px-2 py-1 text-xs rounded-full font-semibold active:scale-95 transition-all ${dir === "rev" ? "bg-amber-600 text-white" : "bg-stone-100 text-stone-600 hover:bg-stone-200"}`
+    },
+    dir === "fwd" ? "\u{1F1FA}\u{1F1F8}\u2192\u{1F1F2}\u{1F1FD}" : "\u{1F1F2}\u{1F1FD}\u2192\u{1F1FA}\u{1F1F8}"
+  );
+  const PhonToggle = () => /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick: () => setPhonOn(!phonOn),
+      title: "Show/hide pronunciation",
+      className: `px-2 py-1 text-xs rounded-full font-semibold active:scale-95 transition-all ${phonOn ? "bg-amber-600 text-white" : "bg-stone-100 text-stone-400 hover:bg-stone-200"}`
+    },
+    "Abc"
+  );
   if (result) return /* @__PURE__ */ React.createElement("div", { className: "p-5 space-y-4 text-center" }, /* @__PURE__ */ React.createElement("span", { className: "text-6xl" }, result.score === result.total ? "\u{1F3C6}" : result.score / result.total >= 0.7 ? "\u{1F4AA}" : "\u{1F4DA}"), /* @__PURE__ */ React.createElement("h2", { className: "text-3xl font-bold text-stone-800" }, result.score, "/", result.total), /* @__PURE__ */ React.createElement("p", { className: "text-stone-500 text-sm" }, result.label), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400" }, "Head-to-head: pass the phone, run the same round, compare scores."), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => setResult(null), className: "flex-1 py-3 rounded-xl border-2 border-stone-200 text-stone-600 font-semibold active:scale-95" }, "\u2190 Sets"), /* @__PURE__ */ React.createElement("button", { onClick: () => {
     const n = result.cards.length;
     setRun({ cards: shuffle(result.pool).slice(0, n), scored: true, label: result.label });
     setResult(null);
   }, className: "flex-1 py-3 rounded-xl bg-amber-600 text-white font-bold active:scale-95 shadow" }, "\u{1F3B2} New round")));
-  if (run) return /* @__PURE__ */ React.createElement("div", { className: "p-5 space-y-3" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => setRun(null), className: "w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 active:scale-90 text-sm shrink-0" }, "\u2190"), /* @__PURE__ */ React.createElement("p", { className: "text-sm font-bold text-stone-700 flex-1 min-w-0 truncate" }, run.label), /* @__PURE__ */ React.createElement(PhonToggle, null)), /* @__PURE__ */ React.createElement(
+  if (run) return /* @__PURE__ */ React.createElement("div", { className: "p-5 space-y-3" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => setRun(null), className: "w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 active:scale-90 text-sm shrink-0" }, "\u2190"), /* @__PURE__ */ React.createElement("p", { className: "text-sm font-bold text-stone-700 flex-1 min-w-0 truncate" }, run.label), /* @__PURE__ */ React.createElement(DirToggle, null), /* @__PURE__ */ React.createElement(PhonToggle, null)), /* @__PURE__ */ React.createElement(
     LearnCards,
     {
+      key: dir,
       cards: run.cards,
       scored: run.scored,
       phonOn,
+      dir,
       onDone: (score, total) => {
         if (run.scored) {
           setResult({ score, total, label: run.label, cards: run.cards, pool: run.pool || run.cards });
@@ -2680,7 +2703,7 @@ function LearnMode({ phonOn, setPhonOn, initArea }) {
   return /* @__PURE__ */ React.createElement("div", { className: "p-5 space-y-3" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => {
     setAreaId(null);
     setAview("sets");
-  }, className: "w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 active:scale-90 text-sm" }, "\u2190"), /* @__PURE__ */ React.createElement("h2", { className: "font-bold text-stone-800 flex-1" }, area.icon, " ", area.label), /* @__PURE__ */ React.createElement(PhonToggle, null)), LEARN_GUIDES[area.id] && /* @__PURE__ */ React.createElement("div", { className: "flex gap-1 bg-stone-100 rounded-full p-1 w-fit mx-auto" }, [["sets", "\u{1F0CF} Flashcard sets"], ["guide", "\u{1F4D6} Guide"]].map((pair) => /* @__PURE__ */ React.createElement(
+  }, className: "w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 active:scale-90 text-sm" }, "\u2190"), /* @__PURE__ */ React.createElement("h2", { className: "font-bold text-stone-800 flex-1" }, area.icon, " ", area.label), /* @__PURE__ */ React.createElement(DirToggle, null), /* @__PURE__ */ React.createElement(PhonToggle, null)), LEARN_GUIDES[area.id] && /* @__PURE__ */ React.createElement("div", { className: "flex gap-1 bg-stone-100 rounded-full p-1 w-fit mx-auto" }, [["sets", "\u{1F0CF} Flashcard sets"], ["guide", "\u{1F4D6} Guide"]].map((pair) => /* @__PURE__ */ React.createElement(
     "button",
     {
       key: pair[0],
