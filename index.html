@@ -172,7 +172,7 @@ main{padding:0 var(--pad);background:var(--paper)}
   <div class="tline"><span class="tlabel">Items checked</span><span class="tval mono" id="tCount">0</span></div>
   <div class="tline"><span class="tlabel">Skipped</span><span class="tval mono" id="tSkip">0</span></div>
   <div class="tline"><span class="tlabel">Prices needed</span><span class="tval mono" id="tMissing">0</span></div>
-  <div class="tline"><span class="tlabel">Rate</span><span class="tval mono" id="tFx">17.30</span></div>
+  <div class="tline"><span class="tlabel">Rate</span><span class="tval mono" id="tFx">16.89</span></div>
   <div class="ttotal">
     <span class="tlabel">Total</span>
     <div style="text-align:right">
@@ -193,52 +193,63 @@ var KEY = "despensa_v1";
 
 /* ---------- catalogue ----------
    lt = expected line total in MXN. est = that total is my estimate, not a receipt figure. */
+var CATALOGUE = 7;   /* bump to push refreshed prices to phones */
 var SEED = {
   chedraui:{label:"Chedraui", full:"Chedraui Puerto Aventuras", color:"#D6431F", groups:[
     {id:"wk", title:"Weekly", items:[
       {n:"Pollo Rostizado", e:"Rotisserie chicken", q:"1", lt:99.90},
+      {n:"Oroweat Multigrano", e:"Multigrain bread", q:"1", lt:93.00},
+      {n:"DontWorry Quiche", e:"Plant-based quiche, 74 g", q:"1", lt:90.00},
+      {n:"Lechuga Hidropónica", e:"Hydroponic lettuce", q:"1", lt:38.90},
       {n:"Tortilla Del Barrio", e:"Tortillas", q:"1", lt:23.60},
-      {n:"Aguacate Hass", e:"Hass avocado", q:"5", ref:"59.00/kg", lt:50.15, est:true},
-      {n:"Limón Eureka", e:"Eureka lemon (yellow)", q:"", ref:"59.00/kg", lt:11.80, est:true},
-      {n:"Frijoles Refritos Isadora", e:"Refried beans", q:"2", lt:36.00}
+      {n:"Frijoles Refritos Isadora", e:"Refried beans", q:"1", lt:17.00},
+      {n:"Plátano Chiapas/Tabasco", e:"Banana", q:"1", ref:"20.90/kg", lt:17.60, est:true},
+      {n:"Limón Eureka", e:"Eureka lemon (yellow)", q:"1", ref:"59.00/kg", lt:10.03},
+      {n:"Tomate Saladette", e:"Roma tomato", q:"1", ref:"16.90/kg", lt:5.83}
     ]},
     {id:"bw", title:"Every 2 weeks", items:[
-      {n:"Porciones Mahi-Mahi", e:"Mahi-mahi portions", q:"2", lt:478.00},
-      {n:"Oroweat Multigrano", e:"Multigrain bread", q:"1", lt:93.00},
-      {n:"Nectarina", e:"Nectarine", q:"3", ref:"99.90/kg", lt:44.96, est:true},
-      {n:"Limón s/semilla", e:"Seedless lime (green)", q:"2", ref:"16.50/kg", lt:2.48, est:true},
-      {n:"Almendra Natural", e:"Natural almonds, 200 g", q:"1", ref:"445.00/kg", lt:89.00},
-      {n:"Ciruela Pasa S/H", e:"Prunes, pitted", q:"2", ref:"298.00/kg", lt:122.18},
-      {n:"Granola Miel de Agave", e:"Agave granola", q:"1", lt:104.00},
-      {n:"Avena Orgánica", e:"Organic oats", q:"1", lt:102.00},
+      {n:"Vino", e:"Wine \u2014 two bottles a month", q:"1", lt:351.00},
+      {n:"Salmón Atlántico", e:"Atlantic salmon", q:"1", lt:329.00},
+      {n:"Porciones Mahi-Mahi", e:"Mahi-mahi portions", q:"1", lt:239.00},
+      {n:"Crema Almendra Sun Harvest", e:"Almond butter, organic 454 g", q:"1", lt:198.00},
+      {n:"Avena Orgánica", e:"Organic oats, 300 g", q:"2", lt:195.00},
+      {n:"Cacahuates Mafer", e:"Peanuts, tostados + limón", q:"2", lt:105.00},
+      {n:"Granola Miel de Agave", e:"Agave granola, 310 g", q:"1", lt:104.00},
+      {n:"Pasta Rummo Farfalle", e:"Rummo farfalle pasta", q:"1", lt:84.00},
       {n:"Papa Chips Jalapeño", e:"Jalapeño chips", q:"1", lt:61.00},
-      {n:"Sabritas Sal", e:"Salted chips", q:"1", lt:61.00},
-      {n:"Crema Almendra Sun Harvest", e:"Almond butter, organic", q:"1", lt:198.00},
-      {n:"Body Wash Raw Sugar", e:"Body wash", q:"1", lt:166.00},
-      {n:"Toallas de Papel", e:"Paper towels", q:"1", lt:52.00}
+      {n:"Papa Chips Sal", e:"Salted chips, 150 g", q:"1", lt:61.00},
+      {n:"Ciruela Pasa S/H", e:"Prunes, pitted", q:"1", ref:"298.00/kg", lt:61.09},
+      {n:"Durazno Rojo", e:"Red peach", q:"1", ref:"99.00/kg", lt:60.88},
+      {n:"Toallas de Papel", e:"Paper towels", q:"1", lt:52.00},
+      {n:"Almendra Natural", e:"Natural almonds, 200 g", q:"1", ref:"445.00/kg", lt:89.00},
+      {n:"Limón s/semilla", e:"Seedless lime (green)", q:"2", ref:"16.50/kg", lt:2.48, est:true}
     ]},
     {id:"mo", title:"Monthly", items:[
-      {n:"Huevo Apapa LP Blanco", e:"Free-range white eggs, 18 ct", q:"1", lt:111.00},
-      {n:"Queso V'chez", e:"V'chez plant-based cheese", q:"1", lt:170.00},
-      {n:"Queso Mi Passion", e:"Mi Passion cheese", q:"1", lt:139.00},
-      {n:"Violife Manchego", e:"Manchego-style vegan cheese", q:"1", lt:94.00},
-      {n:"Manzana Pink Lady", e:"Pink Lady apple", q:"2", ref:"59.90/kg", lt:26.36},
-      {n:"Ajo, bolsa enmallada", e:"Garlic, mesh bag", q:"1", lt:44.90},
-      {n:"Coco Tostado", e:"Toasted coconut", q:"1", ref:"500.00/kg", lt:52.50},
-      {n:"Café Orgánico", e:"Organic coffee", q:"1", lt:160.00},
-      {n:"Crema Sun Harvest", e:"Nut butter", q:"1", lt:145.00},
       {n:"Loción Protectora", e:"Sunscreen", q:"2", lt:574.00},
-      {n:"Pretzel FS Mini", e:"Mini pretzels", q:"1", lt:47.00},
       {n:"Jarabe Mister Maple", e:"Maple syrup", q:"1", lt:172.00},
-      {n:"Mermelada de Fresa", e:"Strawberry jam", q:"1", lt:84.00},
-      {n:"Papel Aluminio", e:"Aluminum foil", q:"1", lt:61.00},
+      {n:"Crema Sun Harvest", e:"Nut butter", q:"1", lt:145.00},
+      {n:"Queso V\u2019chez", e:"V\u2019chez plant-based cheese, 400 g", q:"1", lt:170.00},
+      {n:"Café Orgánico", e:"Organic coffee", q:"1", lt:160.00},
+      {n:"Queso Mi Passion", e:"Mi Passion cheese", q:"1", lt:139.00},
+      {n:"Violife Manchego", e:"Manchego-style vegan cheese, 216 g", q:"1", lt:94.00},
+      {n:"Coco Tostado", e:"Toasted coconut", q:"1", ref:"500.00/kg", lt:52.50},
+      {n:"Mermelada de Frambuesa", e:"Raspberry jam", q:"1", lt:84.00},
       {n:"Bolsas de basura grandes", e:"Trash bags, large", q:"1", lt:73.00},
+      {n:"Quinoa BSD Foods", e:"Quinoa", q:"1", lt:71.00},
+      {n:"Cerveza Barrilito", e:"Barrilito beer, 6-pack", q:"1", lt:64.00},
+      {n:"Papel Aluminio Rey", e:"Aluminum foil", q:"1", lt:59.50},
+      {n:"Huevo Criollo Blanco", e:"White eggs, 18 ct", q:"1", lt:46.00},
       {n:"Bolsas eco chicas", e:"Trash bags, small", q:"1", lt:29.50},
-      {n:"Cerveza Barrilito", e:"Barrilito beer, 6-pack", q:"1", lt:59.00}
+      {n:"Salsa Herdez Chipotle", e:"Chipotle salsa, 240 g", q:"1", lt:27.50},
+      {n:"Manzana Pink Lady", e:"Pink Lady apple", q:"1", ref:"59.90/kg", lt:23.96},
+      {n:"Maíz Palomero", e:"Popcorn kernels", q:"1", lt:19.00},
+      {n:"Vinagre Chedraui", e:"Vinegar", q:"1", lt:13.00},
+      {n:"Ajo Granel", e:"Loose garlic", q:"1", ref:"84.90/kg", lt:8.06}
     ]},
     {id:"m2", title:"Every 2 months", items:[
       {n:"Detergente Tide", e:"Laundry detergent", q:"1", lt:395.00},
       {n:"Papel Higiénico Cottonelle", e:"Toilet paper, 24R", q:"1", lt:205.00},
+      {n:"Dátil Medjool", e:"Medjool dates", q:"1", lt:175.00},
       {n:"Lysol Crisp Linen", e:"Disinfectant spray", q:"1", lt:169.00},
       {n:"Limpiador de Cocina", e:"Kitchen cleaner", q:"1", lt:129.00},
       {n:"Jabón Líquido", e:"Hand soap", q:"1", lt:78.00},
@@ -247,40 +258,41 @@ var SEED = {
       {n:"Fabuloso Lavanda 2L", e:"Multi-surface cleaner", q:"1", lt:55.00},
       {n:"Azúcar Zulka", e:"Cane sugar, 500 g", q:"1", lt:25.00}
     ]},
-    {id:"m3", title:"Every 3 months", items:[
+    {id:"m3", title:"Every 3 to 4 months", items:[
+      {n:"Sal Rosa Alta", e:"Pink salt, 400 g", q:"1", lt:179.00},
+      {n:"Aceite de Coco Aires del Campo", e:"Coconut oil", q:"1", lt:140.00},
       {n:"Limpiador de Baños", e:"Bathroom cleaner", q:"1", lt:59.00},
+      {n:"Sazonador Moe\u2019s", e:"Seasoning blend", q:"1", lt:44.00},
       {n:"Axion Limón", e:"Dish soap, 900 ml", q:"1", lt:34.50}
     ]},
     {id:"an", title:"As needed", items:[
       {n:"Baygon Total", e:"Insecticide", q:"1", lt:65.00}
     ]}
   ]},
-  dac:{label:"DAC", full:"DAC Quality Foods · delivery", color:"#1E7A55", groups:[
-    {id:"bw", title:"Every 2 weeks", items:[
-      {n:"Veggiorizo", e:"Vegan chorizo, 250 g", q:"1", lt:168.00},
-      {n:"Tofu firme House Foods", e:"Firm tofu, 396 g", q:"2", lt:188.00},
-      {n:"Carne al Pastor veggie", e:"Veggie al pastor, 450 g", q:"1", lt:87.00},
-      {n:"Mantequilla Vegana Plant Butter", e:"Vegan butter, 100 g", q:"2", lt:124.00},
-      {n:"Leche de Soya Güd", e:"Unsweetened soy milk, 1 L", q:"2", lt:106.00}
-    ]},
-    {id:"mo", title:"Monthly", items:[
-      {n:"Hamburguesa de Yaca", e:"Jackfruit burger, 440 g", q:"1", lt:112.00},
-      {n:"Semillas de Chía Campo Vivo", e:"Chia seeds, 250 g", q:"1", lt:79.00}
+  dac:{label:"DAC", full:"DAC Quality Foods \u00b7 delivery", color:"#1E7A55", groups:[
+    {id:"mo", title:"Monthly \u00b7 prices include IVA", items:[
+      {n:"Hamburguesa de Yaca", e:"Jackfruit burger, 440 g", q:"1", lt:129.92},
+      {n:"Leche de Soya Güd", e:"Unsweetened soy milk, 1 L", q:"2", lt:122.96},
+      {n:"Tofu firme House Foods", e:"Firm tofu, 396 g", q:"1", lt:109.04},
+      {n:"Carne al Pastor veggie", e:"Veggie al pastor, 450 g", q:"1", lt:100.92},
+      {n:"Semillas de Chía Campo Vivo", e:"Chia seeds, 250 g", q:"1", lt:91.64},
+      {n:"Mantequilla Vegana Plant Butter", e:"Vegan butter, 100 g", q:"1", lt:71.92}
     ]}
   ]},
-  fm:{label:"Market", full:"Farmers market", color:"#7A2A63", groups:[
-    {id:"veg", title:"Vegetables · weekly", items:[
+  fm:{label:"Market", full:"Farmers market \u00b7 600 MXN a week", color:"#7A2A63", groups:[
+    {id:"veg", title:"Vegetables \u00b7 weekly", items:[
       {n:"Brócoli", e:"Broccoli", q:"", lt:null},
       {n:"Col rizada", e:"Kale", q:"", lt:null},
       {n:"Papa", e:"Potato", q:"", lt:null},
       {n:"Calabaza italiana", e:"Zucchini", q:"", lt:null},
       {n:"Tomate saladette", e:"Tomato", q:"", lt:null}
     ]},
-    {id:"fr", title:"Fruit · weekly", items:[
+    {id:"fr", title:"Fruit \u00b7 weekly", items:[
+      {n:"Aguacate Hass", e:"Hass avocado", q:"", lt:null},
       {n:"Plátano", e:"Banana", q:"", lt:null},
       {n:"Arándanos", e:"Blueberries", q:"", lt:null}
     ]},
-    {id:"ju", title:"Juice · weekly", items:[
+    {id:"ju", title:"Juice \u00b7 weekly", items:[
       {n:"Jugo de naranja", e:"Orange juice", q:"", lt:null},
       {n:"Jugo de toronja", e:"Grapefruit juice", q:"", lt:null}
     ]}
@@ -292,7 +304,7 @@ var S, active="chedraui", editing=false;
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 
 function seedState(){
-  var st={v:3, fx:17.30, items:{}, checked:{}, skipped:{}, custom:{}, trips:[]};
+  var st={v:4, fx:16.89, cat:CATALOGUE, items:{}, checked:{}, skipped:{}, custom:{}, trips:[]};
   Object.keys(SEED).forEach(function(sk){
     SEED[sk].groups.forEach(function(g){
       g.items.forEach(function(it){
@@ -308,11 +320,21 @@ function load(){
   if(!S||!S.items){ S=seedState(); save(); return; }
   var fresh=seedState();
   Object.keys(fresh.items).forEach(function(id){ if(!(id in S.items)) S.items[id]=fresh.items[id]; });
+  /* new catalogue: refresh the reference prices, keep every logged trip */
+  if(S.cat!==CATALOGUE){
+    Object.keys(fresh.items).forEach(function(id){
+      var keep=S.items[id]||{};
+      keep.price=fresh.items[id].price; keep.est=fresh.items[id].est;
+      S.items[id]=keep;
+    });
+    S.cat=CATALOGUE;
+    S.fx=16.89;
+  }
   if(!S.custom) S.custom={};
   if(!S.checked) S.checked={};
   if(!S.skipped) S.skipped={};
   if(!S.trips) S.trips=[];
-  if(typeof S.fx!=="number"||!isFinite(S.fx)||S.fx<=0) S.fx=17.30;
+  if(typeof S.fx!=="number"||!isFinite(S.fx)||S.fx<=0) S.fx=16.89;
 }
 function save(){
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }
