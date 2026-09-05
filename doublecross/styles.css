@@ -1,0 +1,1461 @@
+
+:root{
+  --bg:#0b1116;--panel:#111920;--panel2:#151f28;--cream:#f5ead7;--muted:#aab4bd;
+  --gold:#d7a456;--gold2:#f0c978;--line:rgba(255,255,255,.10);--red:#c75648;
+  --green:#64a46d;--amber:#d99a43;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--cream);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100%}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button,select,textarea{font:inherit}
+button{-webkit-tap-highlight-color:transparent}
+.clickTarget{min-height:44px;cursor:pointer}
+.app{max-width:1180px;margin:auto;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(11,17,22,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-left));display:flex;align-items:center;gap:12px}
+.brand{border:0;background:none;color:var(--cream);text-align:left;padding:0}
+.brand b{font-family:Georgia,serif;letter-spacing:.13em;font-size:20px}.brand small{display:block;color:var(--gold2);letter-spacing:.12em;font-size:10px}
+.help{margin-left:auto;border:0;background:none;color:var(--muted);display:flex;align-items:center;gap:7px}
+.help i{font-style:normal;border:1px solid rgba(215,164,86,.45);width:28px;height:28px;display:grid;place-items:center;border-radius:50%;color:var(--gold2)}
+main{padding:18px 16px 118px}
+.kicker{color:var(--gold2);text-transform:uppercase;letter-spacing:.18em;font-size:11px}
+.hero{height:360px;border:1px solid var(--line);border-radius:20px;overflow:hidden;position:relative;background:#10161b url("assets/hero/solo-mysteries-hero.jpg") center/cover no-repeat;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,10,13,.72),rgba(7,10,13,.30) 57%,rgba(7,10,13,.03))}
+.heroText{position:absolute;z-index:2;left:26px;right:26px;bottom:28px;max-width:850px}
+.hero h1{font-family:Georgia,serif;font-size:clamp(31px,4.4vw,52px);line-height:1.04;margin:8px 0;max-width:900px}.hero h1 span{color:var(--gold2)}
+.hero p{margin:0;color:#dde2e6;font-size:15px;line-height:1.45}
+.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:24px 2px 12px}.sectionHead h2{margin:0;font-family:Georgia,serif;font-size:27px}.sectionHead small{color:var(--muted)}
+.shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.caseCard{position:relative;overflow:hidden;min-height:220px;border-radius:17px;border:1px solid var(--line);background:#10171d;padding:15px;color:var(--cream);text-align:left}
+.caseCard:before{content:"";position:absolute;inset:0;background-image:var(--thumb);background-size:cover;background-position:center;opacity:.90;filter:saturate(1.05) brightness(1.04)}
+.caseCard:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,13,17,.08),rgba(9,13,17,.18) 38%,rgba(9,13,17,.89) 72%,rgba(9,13,17,.97))}
+.caseCard>*{position:relative;z-index:2}.caseTop{position:absolute!important;top:12px;left:12px;right:12px;display:flex;justify-content:space-between}.caseNumber{font-family:Georgia,serif;font-size:28px;text-shadow:0 2px 8px #000}
+.caseCard .no{color:var(--gold2);font-size:9px;letter-spacing:.14em;margin-top:78px}.caseCard h3{font-family:Georgia,serif;font-size:20px;margin:6px 0 5px}.caseCard p{font-size:11px;line-height:1.35;color:#d0d6da;margin:0}
+.status{background:#222015;color:var(--gold2);border:1px solid rgba(215,164,86,.45);border-radius:999px;font-size:9px;padding:5px 7px;font-weight:700}.status.new{background:#152019;color:#b9d0bc}.status.soon{background:#111820;color:#8e99a2}
+.caseHome{border:1px solid var(--line);background:linear-gradient(160deg,#151b20,#0e1419);border-radius:19px;padding:18px}.caseHome h1{font-family:Georgia,serif;font-size:34px;margin:5px 0 10px}.caseHome p{color:#d5dade;line-height:1.55}
+.task{border-left:3px solid var(--gold);padding:10px 12px;background:#0d1418}
+.meter{border:1px solid var(--line);border-radius:14px;padding:12px 13px;background:#11171b}.meterHead{display:flex;justify-content:space-between;gap:12px;margin-bottom:9px}.meterHead b{font-size:11px;letter-spacing:.1em;text-transform:uppercase}.meterHead span{font-size:11px;color:var(--muted)}
+.segments{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}.seg{height:9px;border-radius:99px;background:#2b353d}.meter.green .seg.on{background:#65a970}.meter.gold .seg.on{background:#d3aa47}.meter.amber .seg.on{background:#d77d35}.meter.red .seg.on{background:#bd4d43}
+.stickyMeter{position:sticky;top:70px;z-index:35;background:linear-gradient(var(--bg) 72%,rgba(11,17,22,.92));padding:0 0 10px;margin:0 0 8px}.stickyMeter .meter{box-shadow:0 8px 20px rgba(0,0,0,.22)}
+.stickyMeter .meter.compact{padding:9px 12px}.stickyMeter .meter.compact .meterHead{margin-bottom:6px}.stickyMeter .meter.compact .seg{height:7px}
+.diffGrid,.tacticGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.choice{border:1px solid var(--line);background:#101820;color:var(--cream);border-radius:13px;padding:12px;text-align:left}.choice.active{border-color:rgba(215,164,86,.7);background:#211b13}.choice b{display:block}.choice small{display:block;margin-top:4px;color:var(--muted)}
+.tacticSelect{padding:0;overflow:hidden}.tacticArt{height:145px;position:relative}.tacticArt img{width:100%;height:100%;object-fit:cover}.tacticArt span{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(11,17,22,.62))}.tacticSelect .body{padding:12px}.tacticSelect .body small{color:var(--cream)}.tacticSelect .body p{font-size:10px;color:var(--muted);line-height:1.4;margin:6px 0 0}
+.activeTactics{display:flex;gap:8px;overflow:auto;margin:8px 0 14px}.tacticChip{display:flex;align-items:center;gap:8px;flex:0 0 auto;border:1px solid var(--line);background:#111920;color:var(--cream);border-radius:11px;padding:6px 9px;text-align:left}.tacticChip img{width:38px;height:38px;border-radius:8px;object-fit:cover}.tacticChip b{font-size:10px}.tacticChip small{display:block;color:var(--muted);font-size:8px;margin-top:2px}.tacticChip.used{opacity:.42}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:12px}.tab{border:1px solid var(--line);border-radius:999px;background:#111920;color:var(--muted);padding:10px 14px}.tab.active{color:var(--gold2);border-color:rgba(215,164,86,.45);background:#211b13}
+.cardGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.portraitCard{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:#111820;color:var(--cream);text-align:left;padding:0}
+.portraitFrame{aspect-ratio:2/3;background:#080d11;display:grid;place-items:center;overflow:hidden}.portraitFrame img{width:100%;height:100%;object-fit:contain;display:block}
+.portraitCard .meta{padding:10px 11px}.portraitCard .meta b{font-size:13px}.portraitCard .meta small{display:block;color:var(--muted);margin-top:2px}
+.portraitCard.elim .portraitFrame img{filter:grayscale(1) brightness(.38)}.portraitCard.elim:after{content:"ELIMINATED";position:absolute;left:12px;right:12px;top:42%;text-align:center;border:2px solid #d8948a;color:#f2b2a7;background:rgba(92,25,22,.65);padding:6px;font-weight:800;transform:rotate(-6deg)}
+.portraitCard{position:relative}
+.actions{display:flex;flex-direction:column;gap:9px}.action{width:100%;border:1px solid var(--line);background:#121b23;border-radius:14px;color:var(--cream);padding:13px;display:flex;gap:12px;align-items:center;text-align:left}.action .copy{flex:1}.action b{display:block;font-size:14px}.action small{display:block;color:var(--muted);margin-top:3px}.action.disabled,.action.done{opacity:.42;cursor:default}.cost{flex:0 0 auto;border:1px solid rgba(215,164,86,.4);background:#2a2115;color:var(--gold2);border-radius:10px;padding:8px 10px;font-size:10px}
+.clue,.miniFact{border:1px solid var(--line);background:#111920;border-radius:14px;padding:14px;margin-bottom:9px}.clue h3{font-family:Georgia,serif;margin:8px 0 6px}.clue p,.miniFact p{color:#d6dde1;line-height:1.5;margin:5px 0 0}.miniFact b{display:block;margin-top:7px}.tag{display:inline-block;background:#f1cb81;color:#17120b;border-radius:6px;padding:4px 7px;font-size:9px;font-weight:800;letter-spacing:.09em}
+.notes{width:100%;min-height:130px;background:#0e151a;color:var(--cream);border:1px solid var(--line);border-radius:13px;padding:12px}
+.drawerHero{height:min(52vh,520px);background:#080d11;border-radius:14px;overflow:hidden;display:grid;place-items:center;margin-bottom:14px}.drawerHero img{width:100%;height:100%;object-fit:contain}.drawerTitle h2{font-family:Georgia,serif;font-size:28px;margin:5px 0}.drawerRole{color:var(--muted);margin:0}
+.drawerSection{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.drawerSection h3{font-family:Georgia,serif;margin:0 0 6px}.drawerSection p{color:#d3d9dd;line-height:1.5}.statusRow{display:flex;justify-content:space-between;gap:12px;align-items:center}.inlineBtn{width:auto;margin:0;min-width:140px}
+.fileGroup{margin-bottom:18px}.fileGroup>h3{color:var(--gold2);font-size:11px;letter-spacing:.12em}
+.timeline{border-left:1px solid rgba(215,164,86,.35);margin-left:90px}.timeRow{display:grid;grid-template-columns:80px 1fr;gap:18px;margin-left:-90px;padding:0 0 18px}.time{color:var(--gold2);font-weight:800;text-align:right}.timeFact{background:#111920;border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;color:#d8dde1}.timeFact:before{content:"";position:absolute;left:-23px;top:16px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--bg)}
+.accuseCard{border:1px solid var(--line);border-radius:18px;background:#111920;padding:18px}.accuseIntro{font-size:14px;color:#d5dade;line-height:1.45;margin-bottom:16px}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field span{font-size:11px;letter-spacing:.09em;color:var(--gold2);font-weight:800}.field em{font-style:normal;color:var(--muted);font-size:9px}.field select{width:100%;appearance:none;-webkit-appearance:none;background:#0e151a;color:var(--cream);border:1px solid #2b3741;border-radius:12px;padding:12px 42px 12px 12px;font-size:14px;background-image:linear-gradient(45deg,transparent 50%,#d8c7a5 50%),linear-gradient(135deg,#d8c7a5 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.resultCard{margin-top:14px;padding:14px;border-radius:13px;border:1px solid var(--line)}.resultCard.solved{background:#132018}.resultCard.unsolved{background:#241616}
+.primary,.secondary,.danger{width:100%;border-radius:13px;padding:13px 15px;font-weight:800;margin-top:10px}.primary{border:0;background:linear-gradient(#dfb361,#ba873d);color:#17110a}.secondary{border:1px solid var(--line);background:#151e26;color:var(--cream)}.danger{border:1px solid rgba(199,86,72,.5);background:#251615;color:#efaca3}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(8,12,15,.97);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}.bottom .inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.nav{border:0;background:transparent;color:#98a4ad;border-radius:10px;padding:9px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav span{font-size:10px}.nav.active{color:var(--gold2);background:#1c1911}
+.modal{display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.74);align-items:end;justify-content:center}.modal.open{display:flex}.sheet{width:100%;max-width:760px;max-height:88vh;overflow:auto;background:#111920;border:1px solid var(--line);border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}.close{float:right;border:1px solid var(--line);background:#0e151a;color:var(--cream);border-radius:999px;padding:7px 12px}
+.emptyState{border:1px dashed var(--line);border-radius:12px;padding:18px;color:var(--muted);text-align:center}
+@media(max-width:900px){.shelf{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.shelf{grid-template-columns:repeat(2,1fr)}.hero{height:330px}.help em{display:none}.stickyMeter{top:65px}.drawerHero{height:48vh}}
+@media(max-width:620px){.formGrid{grid-template-columns:1fr}.field.full{grid-column:auto}.tacticGrid{grid-template-columns:1fr}.statusRow{align-items:stretch;flex-direction:column}.inlineBtn{width:100%}}
+@media(max-width:430px){main{padding-left:12px;padding-right:12px}.heroText{left:18px;right:18px}.shelf{gap:9px}.caseCard{min-height:180px;padding:12px}.cardGrid{gap:9px}.portraitCard .meta b{font-size:12px}.portraitCard .meta small{font-size:10px}.bottom .inner{gap:2px}.nav span{font-size:9px}.timeRow{grid-template-columns:72px 1fr;gap:14px}.timeline{margin-left:80px}.timeRow{margin-left:-80px}.timeFact:before{left:-19px}}
+
+/* V13 streamlined card grid */
+.portraitCard{background:#0b1014;border-radius:14px}
+.portraitFrame{aspect-ratio:2/3}
+.portraitCard .meta{display:none}
+.cardState{position:absolute;left:10px;right:10px;bottom:12px;text-align:center;padding:6px;border:1px solid #d8948a;background:rgba(92,25,22,.72);color:#f2b2a7;border-radius:8px;font-size:10px;font-weight:800;letter-spacing:.08em}
+
+/* V13 drawer */
+.sheet{padding:0;max-width:720px}
+.drawerTop{position:sticky;top:0;z-index:6;background:rgba(17,25,32,.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.drawerTop h2{font-family:Georgia,serif;font-size:25px;margin:3px 0 0}.drawerTop p{margin:3px 0 0;color:var(--muted)}
+.drawerTop .close{float:none;flex:0 0 auto}
+.compactHero{height:310px;border-radius:0;margin:0;background:#080d11}
+.drawerBody{padding:0 16px 24px}
+.drawerSection.first{border-top:0;margin-top:0;padding-top:16px}
+.drawerSectionHead{display:flex;justify-content:space-between;align-items:end;gap:10px}.drawerSectionHead small{color:var(--muted)}
+.drawerStatus{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin-top:14px}
+.drawerStatus>div{display:flex;flex-direction:column;gap:2px}.drawerStatus b{font-family:Georgia,serif;font-size:20px}.drawerStatus small{color:var(--muted)}
+.drawerLabel{font-size:9px;letter-spacing:.12em;color:var(--gold2);font-weight:800}
+
+/* V13 Case File */
+.fileSummary{display:flex;gap:8px;overflow:auto;margin:0 0 16px}
+.fileSummary span{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:#111920;border-radius:999px;padding:7px 10px;color:var(--muted);font-size:9px;white-space:nowrap}
+.fileSummary b{color:var(--gold2);font-size:12px}
+.fileGroup{border:1px solid var(--line);border-radius:15px;padding:12px;background:#0f171d;margin-bottom:12px}
+.fileGroupHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.fileGroupHead h3{margin:0;color:var(--gold2);font-size:11px;letter-spacing:.12em}.fileGroupHead small{color:var(--muted)}
+.compactClue{background:#111920;margin-bottom:8px}.compactClue:last-child{margin-bottom:0}
+
+/* V13 Timeline */
+.timelineIntro{border-left:3px solid var(--gold);background:#0d1418;padding:10px 12px;color:#cfd6da;margin-bottom:18px;font-size:12px}
+.timeSource{display:inline-block;color:var(--gold2);font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.timeFact p{margin:0;color:#d8dde1}
+
+/* V13 Final Theory */
+.theorySection{padding:2px 0 18px}
+.theorySection + .theorySection{border-top:1px solid var(--line);padding-top:18px;margin-top:2px}
+.theoryHead{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:4px}
+.theoryHead h3{font-family:Georgia,serif;font-size:23px;margin:4px 0 0}
+.theoryHead small{color:var(--muted);font-size:10px}
+.theoryStep{font-size:9px;letter-spacing:.13em;color:var(--gold2);font-weight:800}
+.bonusTheory{background:linear-gradient(90deg,rgba(215,164,86,.035),transparent);border-radius:12px;padding-left:12px!important;padding-right:12px}
+
+/* V14 polished modal system */
+.modal{align-items:center;padding:18px}
+.sheet{padding:0;max-width:720px;max-height:min(86vh,820px);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.modalHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line);background:#111920}
+.modalHeader h2{font-family:Georgia,serif;font-size:28px;margin:4px 0 3px}.modalHeader p{margin:0;color:var(--muted)}
+.modalHeader .close{float:none;flex:0 0 auto;margin:0}
+.modalBody{padding:18px 20px;overflow:auto}
+.helpBody{display:flex;flex-direction:column;gap:10px}
+.helpStep{display:grid;grid-template-columns:36px 1fr;gap:12px;border:1px solid var(--line);border-radius:13px;background:#0f171d;padding:12px}
+.helpStep>span{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#17110a;background:var(--gold2);font-weight:900}
+.helpStep h3{margin:0 0 4px;font-family:Georgia,serif;font-size:17px}.helpStep p{margin:0;color:#ccd3d8;line-height:1.45;font-size:12px}
+.compactModalHeader{align-items:center}.compactModalHeader>div{display:flex;align-items:center;gap:12px}.compactModalHeader h2{font-size:21px;margin:0}
+.alertIcon{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#35201b;color:#f2aa98;border:1px solid rgba(199,86,72,.55);font-weight:900}
+.alertBody{padding-top:12px}.alertBody p{margin:0;color:var(--muted)}
+
+/* V14 fixed card header / art */
+.drawerPinned{flex:0 0 auto;background:#111920;border-bottom:1px solid var(--line)}
+.drawerTop{position:relative;top:auto;z-index:1;padding:13px 16px;border-bottom:1px solid var(--line)}
+.compactHero{height:220px;border-radius:0;margin:0;background:#080d11}
+.compactHero img{object-fit:contain}
+.drawerScroll{overflow:auto;padding:0 16px 24px;flex:1 1 auto}
+.drawerSection.first{padding-top:15px}
+
+/* Exact 2 rows of 3 for each six-card category */
+.cardGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.portraitCard{min-width:0}
+
+/* Timeline marker alignment */
+.timeline{border-left:1px solid rgba(215,164,86,.40);margin-left:96px;padding-left:0}
+.timeRow{display:grid;grid-template-columns:82px 1fr;gap:22px;margin-left:-96px;padding:0 0 20px;align-items:start}
+.time{color:var(--gold2);font-weight:800;text-align:right;padding-top:8px;line-height:1.2}
+.timeFact{position:relative}
+.timeFact:before{content:"";position:absolute;left:-28px;top:15px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 2px rgba(215,164,86,.25)}
+
+@media(max-width:760px){
+  .modal{padding:0;align-items:flex-end}
+  .sheet{width:100%;max-width:none;max-height:94vh;border-radius:18px 18px 0 0}
+  .compactHero{height:190px}
+  .cardGrid{gap:7px!important}
+  .portraitCard{border-radius:10px}
+}
+@media(max-width:430px){
+  .cardGrid{gap:5px!important}
+  .portraitCard{border-radius:8px}
+  .modalHeader{padding:13px 14px}.modalBody{padding:14px}
+  .compactHero{height:165px}
+  .drawerTop h2{font-size:20px}.drawerTop p{font-size:10px}
+  .timeline{margin-left:76px}
+  .timeRow{grid-template-columns:64px 1fr;gap:17px;margin-left:-76px}
+  .time{font-size:10px}
+  .timeFact:before{left:-22px}
+}
+
+/* V15 sticky workspace controls */
+.workspaceSticky{
+  position:sticky;
+  top:67px;
+  z-index:42;
+  background:rgba(11,17,22,.97);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:8px 0 9px;
+  margin:0 0 14px;
+}
+.workspaceSticky .meter{
+  padding:8px 11px;
+  margin:0;
+  box-shadow:none;
+}
+.workspaceSticky .meterHead{margin-bottom:5px}
+.workspaceSticky .segments .seg{height:6px}
+.workspaceSticky .activeTactics{margin:8px 0 0}
+.workspaceSticky .boardTabs{margin:8px 0 0}
+.workspaceSticky .tab{padding:8px 12px}
+
+/* V15 drawer identity: full card portrait, no wide crop */
+.compactIdentity{
+  display:grid;
+  grid-template-columns:88px minmax(0,1fr) auto;
+  gap:14px;
+  align-items:center;
+  padding:12px 14px;
+  background:#111920;
+  border-bottom:1px solid var(--line);
+}
+.drawerThumb{
+  width:88px;
+  height:132px;
+  background:#080d11;
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+.drawerThumb img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.drawerIdentityText{min-width:0}
+.drawerIdentityText h2{
+  font-family:Georgia,serif;
+  font-size:24px;
+  line-height:1.05;
+  margin:4px 0 4px;
+}
+.drawerIdentityText p{margin:0;color:var(--muted)}
+.compactIdentity .close{align-self:start;float:none}
+.countPill{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:5px 9px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--muted);
+  background:#0d1419;
+  font-size:9px;
+  white-space:nowrap;
+}
+.drawerSectionHead{align-items:center}
+
+/* V15 timeline: dedicated time / marker / fact columns */
+.timeline{
+  margin:0;
+  border-left:0;
+}
+.timeRow{
+  display:grid;
+  grid-template-columns:92px 22px minmax(0,1fr);
+  gap:10px;
+  margin:0;
+  padding:0 0 18px;
+  align-items:stretch;
+}
+.time{
+  text-align:right;
+  padding-top:14px;
+  font-weight:800;
+  color:var(--gold2);
+  line-height:1.15;
+}
+.timelineMarker{
+  position:relative;
+  display:flex;
+  justify-content:center;
+}
+.timelineMarker:before{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:-18px;
+  width:1px;
+  background:rgba(215,164,86,.42);
+}
+.timelineMarker span{
+  position:relative;
+  z-index:2;
+  margin-top:16px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--gold);
+  border:2px solid var(--bg);
+  box-shadow:0 0 0 2px rgba(215,164,86,.25);
+}
+.timeRow:last-child .timelineMarker:before{bottom:50%}
+.timeFact{position:relative}
+.timeFact:before{display:none!important}
+
+/* keep three-across cards but reduce vertical pressure slightly */
+.portraitFrame{aspect-ratio:2/3}
+
+@media(max-width:760px){
+  .workspaceSticky{top:62px;padding-top:6px}
+  .workspaceSticky .activeTactics{gap:5px}
+  .workspaceSticky .tacticChip{padding:5px 7px}
+  .workspaceSticky .tacticChip img{width:30px;height:30px}
+  .workspaceSticky .tacticChip b{font-size:9px}
+  .workspaceSticky .tacticChip small{font-size:7px}
+  .compactIdentity{
+    grid-template-columns:72px minmax(0,1fr) auto;
+    gap:10px;
+    padding:10px 11px;
+  }
+  .drawerThumb{width:72px;height:108px}
+  .drawerIdentityText h2{font-size:19px}
+  .drawerIdentityText p{font-size:10px}
+  .timeRow{grid-template-columns:70px 18px minmax(0,1fr);gap:7px}
+  .time{font-size:10px;padding-top:12px}
+  .timelineMarker span{margin-top:14px;width:9px;height:9px}
+}
+@media(max-width:430px){
+  .workspaceSticky .meterHead b,.workspaceSticky .meterHead span{font-size:9px}
+  .workspaceSticky .tab{padding:7px 10px;font-size:10px}
+  .compactIdentity{
+    grid-template-columns:62px minmax(0,1fr) auto;
+    gap:8px;
+  }
+  .drawerThumb{width:62px;height:93px}
+  .drawerIdentityText h2{font-size:17px}
+  .compactIdentity .close{padding:6px 9px;font-size:10px;min-height:38px}
+  .timeRow{grid-template-columns:58px 16px minmax(0,1fr);gap:6px}
+  .time{font-size:9px}
+  .timeFact{padding:10px}
+}
+
+/* V16 pill alignment and spacing */
+.status,.countPill,.tag,.cost,.tab,.fileSummary span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  vertical-align:middle;
+  line-height:1.15;
+}
+.status{min-height:30px;padding:6px 10px}
+.countPill{min-height:30px;padding:6px 10px;margin-left:10px}
+.tag{min-height:25px;padding:5px 8px}
+.cost{min-height:34px;padding:7px 11px}
+.drawerSectionHead{gap:16px;margin-bottom:10px}
+.drawerSection{padding-top:18px;margin-top:18px}
+.drawerSection.first{padding-top:18px}
+.drawerSection h3{margin-bottom:8px}
+.drawerSection p{margin-top:6px}
+.drawerStatus{padding:17px 0;margin-top:18px;gap:20px}
+.drawerStatus small{margin-top:4px;line-height:1.35}
+.actions{gap:11px}.action{padding:14px}.miniFact{padding:15px}
+.emptyState{padding:20px;line-height:1.4}
+
+/* V16 standard modal content */
+.infoPanel,.warningPanel,.factReveal,.factReminder{
+  border:1px solid var(--line);border-radius:14px;padding:15px 16px;background:#0f171d;
+}
+.infoPanel p,.warningPanel p,.reconstruction p{margin:0;color:#d5dade;line-height:1.55}
+.warningPanel{border-color:rgba(199,86,72,.38);background:#1c1413}
+.warningPanel b{display:block;color:#f2b2a7;margin-bottom:6px}
+.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.modalActions .secondary,.modalActions .danger{margin-top:0}
+.dangerHeader{border-bottom-color:rgba(199,86,72,.30)}
+.factReveal{color:#eef1f3;font-size:15px;line-height:1.55}
+.factReminder{margin-top:12px;border-left:3px solid var(--gold);border-radius:8px;color:var(--muted);font-size:12px}
+.reconstruction{display:flex;flex-direction:column;gap:12px}
+.compactIdentity{padding-top:14px;padding-bottom:14px}
+.drawerIdentityText .kicker{margin-bottom:3px}
+@media(max-width:520px){
+  .modalActions{grid-template-columns:1fr}
+  .status{min-height:28px;padding:5px 8px;font-size:8px}
+  .countPill{min-height:28px;padding:5px 8px;font-size:8px}
+}
+
+/* V17 Case Board density pass — cards only */
+.boardGrid{
+  gap:16px;
+}
+.boardCard{
+  aspect-ratio: 1 / .68;
+  min-height:0;
+  overflow:hidden;
+}
+.boardCard img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+}
+
+/* Preserve readable card art on smaller screens without poster-scale height */
+@media (max-width: 900px){
+  .boardGrid{gap:12px}
+  .boardCard{aspect-ratio:1 / .74}
+}
+@media (max-width: 640px){
+  .boardGrid{gap:10px}
+  .boardCard{aspect-ratio:1 / .82}
+}
+
+/* V18 Case Board — complete-card first-row viewport */
+.boardGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  width:min(100%, 1080px);
+  margin-left:auto;
+  margin-right:auto;
+  gap:14px;
+  align-items:start;
+}
+.boardCard{
+  aspect-ratio:auto;
+  min-height:0;
+  overflow:hidden;
+  background:transparent;
+}
+.boardCard img{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:auto;
+  object-fit:contain;
+  object-position:center;
+}
+
+/* Desktop: prioritize seeing the complete first row from the board's top position. */
+@media (min-width:901px){
+  .boardGrid{width:min(100%, 990px);gap:14px}
+}
+
+/* Tablet: retain three-across while allowing more width for legibility. */
+@media (max-width:900px) and (min-width:641px){
+  .boardGrid{width:100%;gap:12px}
+  .boardCard{aspect-ratio:auto}
+}
+
+/* Mobile: preserve readable complete cards rather than crushing three tiny cards across. */
+@media (max-width:640px){
+  .boardGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;
+    gap:10px;
+  }
+  .boardCard{aspect-ratio:auto}
+  .boardCard img{height:auto;object-fit:contain}
+}
+@media (max-width:430px){
+  .boardGrid{grid-template-columns:1fr;width:min(100%,360px)}
+}
+
+/* V19 Case 1 V2: evidence-driven questioning */
+.questionBadge{
+  position:absolute;left:8px;top:8px;z-index:5;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 8px;border-radius:999px;
+  background:#d9a85f;color:#17110a;border:1px solid #f1cf8d;
+  font-size:8px;font-weight:900;letter-spacing:.07em;
+  box-shadow:0 5px 16px rgba(0,0,0,.35);
+}
+.unlockPanel{
+  margin-top:14px;padding:14px;border:1px solid rgba(217,168,95,.42);
+  border-radius:14px;background:#211b13;display:grid;grid-template-columns:38px 1fr;gap:11px;
+}
+.unlockIcon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--gold2);color:#17110a;font-weight:900;font-size:18px}
+.unlockPanel span{display:block;color:var(--gold2);font-size:9px;letter-spacing:.12em;font-weight:900;margin-bottom:5px}
+.unlockPanel b{display:block;color:var(--ink);font-size:14px;line-height:1.3}
+.unlockPanel p{margin:5px 0 0!important;color:var(--muted)!important;font-size:11px;line-height:1.4}
+.theoryConfirm{border:1px solid var(--line);background:#0f171d;border-radius:14px;padding:12px 15px}
+.theoryConfirm p{margin:6px 0;color:#dce1e4}
+.theoryFeedback h3{font-size:24px;margin:10px 0 7px}.theoryFeedback small{display:block;color:var(--muted);margin-top:10px}
+.caseSolved{margin-top:16px;border:1px solid rgba(102,134,107,.48);border-radius:18px;overflow:hidden;background:#101a15}
+.solvedBanner{padding:20px;background:linear-gradient(150deg,#17281d,#101713);border-bottom:1px solid rgba(102,134,107,.35)}
+.solvedBanner>span{display:inline-flex;padding:5px 8px;border-radius:999px;background:#bcd2c0;color:#122017;font-size:9px;font-weight:900;letter-spacing:.1em}
+.solvedBanner h2{font-family:Georgia,serif;font-size:27px;line-height:1.08;margin:10px 0 8px}
+.solvedBanner p{margin:0;color:#dce5df;line-height:1.5}
+.reconstructionInline{padding:20px}
+.reconstructionInline h3{font-family:Georgia,serif;font-size:23px;margin:5px 0 13px}
+.reconstructionInline>p{color:#d7ddda;line-height:1.62;margin:0 0 14px}
+.reconEvidence{border-left:3px solid var(--gold);background:#121b19;padding:13px 14px;margin:18px 0}
+.reconEvidence b{color:var(--gold2)}.reconEvidence p{margin:6px 0 0;color:#d7ddda;line-height:1.55}
+.closingLine{font-style:italic;color:var(--gold2)!important}
+@media(max-width:520px){
+  .solvedBanner,.reconstructionInline{padding:16px}
+  .solvedBanner h2{font-size:23px}
+}
+
+/* V20 — Final Theory feedback */
+.attemptPill{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);background:#111920;color:var(--muted);
+  border-radius:999px;padding:7px 11px;font-size:10px;white-space:nowrap;
+}
+.theoryFailHeader{border-bottom-color:rgba(199,86,72,.32)}
+.failureMessage{
+  border:1px solid rgba(199,86,72,.28);
+  background:#1a1313;color:#e5dddd;border-radius:14px;padding:15px;
+  line-height:1.55;
+}
+
+/* V20 — Unified tactic drawers */
+.tacticModalHeader h2{max-width:540px}
+.tacticModalBody{padding-top:14px}
+.drawerOptionList{display:flex;flex-direction:column;gap:9px}
+.drawerOption{
+  width:100%;min-height:70px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid var(--line);background:#121b23;color:var(--cream);
+  border-radius:14px;padding:13px 14px;text-align:left;
+}
+.drawerOptionText{min-width:0}
+.drawerOptionText b{display:block;font-size:14px;line-height:1.3}
+.drawerOptionText small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.drawerChevron{font-size:26px;color:var(--gold2);line-height:1}
+
+/* V20 — Card identity overlay */
+.mobileCardLabel{display:none}
+
+/* Improve standalone iPhone safe-area positioning */
+@media(max-width:760px){
+  body{padding-top:0}
+  .topbar{
+    padding-top:calc(12px + env(safe-area-inset-top));
+  }
+  .sheet{
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .modalHeader{
+    padding-top:16px;
+  }
+}
+@media(max-width:640px){
+  /*
+   * On mobile, the parchment text baked into the source art is too small.
+   * Crop the visual card before its original nameplate and replace it with
+   * a readable application label.
+   */
+  .portraitCard{
+    position:relative;
+    overflow:hidden;
+    background:#111920;
+    display:flex;
+    flex-direction:column;
+  }
+  .portraitFrame{
+    aspect-ratio:3/4;
+    overflow:hidden;
+    background:#080d11;
+  }
+  .portraitFrame img{
+    width:100%;
+    height:126%;
+    object-fit:cover;
+    object-position:center top;
+  }
+  .mobileCardLabel{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-height:54px;
+    padding:8px 9px 9px;
+    background:linear-gradient(180deg,#151e26,#10171d);
+    border-top:1px solid rgba(255,255,255,.08);
+    text-align:left;
+  }
+  .mobileCardLabel b{
+    color:var(--cream);
+    font-family:Georgia,serif;
+    font-size:12px;line-height:1.16;
+  }
+  .mobileCardLabel small{
+    margin-top:2px;color:var(--muted);
+    font-size:8px;line-height:1.2;
+  }
+  .questionBadge{
+    left:6px;top:6px;font-size:7px;padding:5px 6px;
+  }
+  .cardState{bottom:58px}
+}
+@media(max-width:430px){
+  .theoryPageHead{align-items:flex-start}
+  .attemptPill{font-size:9px;padding:6px 9px}
+  .drawerOption{min-height:66px;padding:12px}
+}
+
+/* V22 mobile polish: fully clear baked parchment + structured warning header */
+@media(max-width:640px){
+  .portraitFrame img{height:126%!important;}
+  .compactModalHeader{align-items:flex-start!important;gap:12px!important;}
+  .compactModalHeader>div{display:grid!important;grid-template-columns:32px minmax(0,1fr);align-items:start!important;gap:12px!important;min-width:0;flex:1 1 auto;}
+  .compactModalHeader h2{font-size:20px!important;line-height:1.22!important;margin:1px 0 0!important;overflow-wrap:anywhere;}
+  .alertIcon{width:32px!important;height:32px!important;border-radius:9px!important;flex:none;}
+  .compactModalHeader .close{margin-left:4px!important;}
+}
+
+/* =========================================================
+   RAVENSWORTH CAMPAIGN V1
+   ========================================================= */
+.campaignHero .heroText{max-width:850px}
+.campaignPanel{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:22px 24px;border:1px solid var(--line);border-radius:18px;background:#101820;margin:20px 0}
+.campaignPanel h2{font-family:Georgia,serif;font-size:27px;margin:5px 0}.campaignPanel p{margin:0;color:var(--muted);max-width:700px}
+.campaignProgress{text-align:right;min-width:130px}.campaignProgress b{font-family:Georgia,serif;font-size:38px;color:var(--gold2)}.campaignProgress b span{font-size:18px;color:var(--muted)}.campaignProgress small{display:block;color:var(--muted)}
+.discoveryStrip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px}.discoveryMini{border:1px solid var(--line);border-radius:12px;background:#111a21;color:var(--cream);padding:9px 11px;display:flex;align-items:center;gap:8px;white-space:nowrap}.discoveryMini span{color:var(--gold2);font-size:9px}.discoveryMini b{font-size:11px}
+.caseBudget{display:block;color:var(--gold2);margin-top:8px;font-size:9px;letter-spacing:.06em}.disabledCase{filter:saturate(.35);opacity:.58}.status.locked{background:#171d22;color:#7c858c}.status.solved{background:#17291e;color:#9fd0aa;border-color:#355c41}.campaignTruthBtn{margin-top:22px}
+.setupTeaser{max-width:900px}.caseBrief{max-width:1100px;margin:0 auto}.briefStory{font-size:17px;line-height:1.7;color:#d5dbdf;max-width:1000px}.briefRulesGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}.briefRulesGrid article{background:#101820;border:1px solid var(--line);border-radius:16px;padding:17px}.briefRulesGrid span{display:block;color:var(--gold2);font-size:9px;letter-spacing:.12em;font-weight:900}.briefRulesGrid b{display:block;font-family:Georgia,serif;font-size:31px;margin:7px 0}.briefRulesGrid p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}
+.howInvestigate{border-left:4px solid var(--gold);background:#0f171d;padding:18px 20px;margin:20px 0 26px}.howInvestigate h2{font-family:Georgia,serif;font-size:26px;margin:5px 0 8px}.howInvestigate p{margin:0;color:#d0d6da;line-height:1.55}.loop{margin-top:13px;color:var(--cream);font-weight:800;word-spacing:3px}.loop i{color:var(--gold2);font-style:normal}
+.briefTactics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.briefTactic{display:flex;gap:10px;border:1px solid var(--line);border-radius:14px;padding:10px;background:#111a21}.briefTactic img{width:54px;height:54px;object-fit:cover;border-radius:9px}.briefTactic b,.briefTactic small{display:block}.briefTactic small{font-size:8px;color:var(--muted);margin:2px 0}.briefTactic p{font-size:10px;color:#c5cbd0;margin:4px 0 0}
+.warningTitle{display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:12px;min-width:0}.warningIcon{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:#3a241b;border:1px solid #98523e;color:#ff9d7e;font-size:18px}.warningModalHeader h2{margin:0;line-height:1.17}
+.unlockSymbol{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:#2d2515;color:var(--gold2);font-size:20px;font-weight:900}
+.attemptDots{border:1px solid var(--line);border-radius:14px;padding:8px 11px;background:#10171d;text-align:center}.attemptDots>span{font-size:7px;color:var(--gold2);letter-spacing:.1em;font-weight:900}.attemptDots>div{display:flex;gap:5px;justify-content:center;margin:5px 0}.attemptDots i{width:11px;height:11px;border-radius:50%;border:1px solid #65717a;background:#263039}.attemptDots i.on{background:var(--gold2);border-color:var(--gold2)}.attemptDots small{color:var(--muted);font-size:8px}
+.theoryPreview,.theoryConfirmVisual{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.theoryPick{border:1px solid var(--line);background:#0d151b;border-radius:14px;overflow:hidden;min-width:0;position:relative}.theoryPick>span{display:block;color:var(--gold2);font-size:8px;letter-spacing:.1em;font-weight:900;padding:8px 9px 0}.theoryPick img{width:100%;height:130px;object-fit:cover;object-position:center 22%}.theoryPick b{display:block;padding:8px 10px 2px;font-family:Georgia,serif;font-size:14px;line-height:1.15}.theoryPick small{display:block;padding:0 10px 9px;color:var(--muted);font-size:8px}.theoryPick.empty{min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center}.theoryPick.empty b{color:var(--muted);font-family:inherit}
+.attemptFeedback{text-align:center;padding:14px}.attemptFeedback b{display:block;font-family:Georgia,serif;font-size:34px;color:var(--gold2)}.attemptFeedback span{color:var(--muted)}
+.unsolvedPanel{text-align:center;padding:30px}.unsolvedPanel h3{font-family:Georgia,serif;font-size:26px}.unsolvedPanel p{color:var(--muted)}
+.solveStats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}.solveStats>div{background:#101820;padding:15px;text-align:center}.solveStats b{display:block;color:var(--gold2);font-size:19px}.solveStats small{color:var(--muted);font-size:9px}
+.campaignDiscovery{margin:20px 0;padding:18px;border:1px solid rgba(214,169,82,.38);border-radius:15px;background:#1a1710}.campaignDiscovery span{color:var(--gold2);font-size:8px;letter-spacing:.12em;font-weight:900}.campaignDiscovery h3{margin:6px 0;font-family:Georgia,serif}.campaignDiscovery p{margin:0!important}
+.campaignReveal{font-size:16px;line-height:1.65}.campaignReveal b{color:var(--gold2)}
+
+@media(max-width:760px){
+ .campaignPanel{align-items:flex-start}.campaignProgress{min-width:95px}.briefRulesGrid{grid-template-columns:1fr}.briefTactics{grid-template-columns:1fr}.theoryPageHead{align-items:flex-start}.solveStats{grid-template-columns:repeat(2,1fr)}
+ .theoryPreview,.theoryConfirmVisual{gap:6px}.theoryPick img{height:105px}.theoryPick b{font-size:11px;padding:6px 7px 2px}.theoryPick small{font-size:7px;padding:0 7px 7px}
+}
+@media(max-width:640px){
+ .portraitFrame{aspect-ratio:3/4;overflow:hidden}
+ .portraitFrame img{width:100%;height:138%;object-fit:cover;object-position:center top}
+ .mobileCardLabel{min-height:58px}
+ .campaignPanel{padding:16px}.campaignPanel h2{font-size:23px}.campaignPanel p{font-size:11px}
+ .briefStory{font-size:15px}.howInvestigate{padding:15px}.howInvestigate h2{font-size:22px}.loop{font-size:10px;line-height:1.8}
+ .theoryPreview{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ===== V2 refinement + regression repair ===== */
+.sectionDescription{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.warningModalHeader .warningTitle h2{font-family:Georgia,serif;font-size:24px;line-height:1.15;margin:2px 0 0;max-width:620px}
+.warningModalHeader{align-items:flex-start}
+.infoPanel{padding:14px 16px;border:1px solid var(--line);background:#0e161c;border-radius:14px}
+.infoPanel p{margin:0;line-height:1.5}
+.notesComposer{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+.notesComposer .notes{min-height:110px}
+.noteList{display:grid;gap:9px;margin-top:12px}
+.noteItem{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;border:1px solid var(--line);background:#101820;border-radius:14px;padding:12px 14px}
+.noteItem p{margin:0;white-space:pre-wrap;line-height:1.45}
+.noteDelete{background:transparent;border:1px solid #4c3838;color:#e5a4a4;border-radius:10px;padding:7px 10px}
+.theoryAttemptsInline{display:flex;justify-content:space-between;align-items:center;gap:14px;border:1px solid var(--line);border-radius:14px;background:#0e161c;padding:12px 14px;margin-bottom:14px}
+.theoryAttemptsInline span{display:block;color:var(--gold2);font-size:8px;letter-spacing:.12em;font-weight:900}
+.theoryAttemptsInline b{display:block;margin-top:3px;font-size:15px}
+.attemptDotsInline{display:flex;gap:7px}
+.attemptDotsInline i{width:15px;height:15px;border-radius:50%;border:1px solid #66727a;background:#28323a}
+.attemptDotsInline i.on{background:var(--gold2);border-color:var(--gold2)}
+.timelineMarker.pulse span{animation:dcPulse 1.8s ease-in-out infinite}
+@keyframes dcPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,169,82,.55)}50%{box-shadow:0 0 0 7px rgba(214,169,82,0)}}
+.portraitCard .mobileCardLabel{display:block!important}
+.cardDrawerHeader{position:sticky;top:0;z-index:5;background:#111b23}
+.cardDrawerHeader .drawerIdentity img{width:78px;height:104px;object-fit:cover;object-position:center top;border-radius:10px}
+.cardDrawerBody{padding-top:18px}
+.drawerSection+.drawerSection,.drawerStatus+.drawerSection,.drawerSection+.drawerStatus{margin-top:18px}
+.drawerSectionHead{margin-bottom:10px}
+.countPill{align-self:center}
+@media(min-width:761px){
+  .portraitCard .portraitFrame{aspect-ratio:3/4;overflow:hidden}
+  .portraitCard .portraitFrame img{width:100%;height:138%;object-fit:cover;object-position:center top}
+  .portraitCard .mobileCardLabel{min-height:66px;padding:12px 14px;background:#131e26}
+  .portraitCard .mobileCardLabel b{font-family:Georgia,serif;font-size:17px;line-height:1.05}
+  .portraitCard .mobileCardLabel small{font-size:10px;color:var(--muted)}
+}
+@media(max-width:640px){
+  .warningModalHeader .warningTitle{grid-template-columns:34px minmax(0,1fr)}
+  .warningModalHeader .warningIcon{width:30px;height:30px;font-size:15px}
+  .warningModalHeader .warningTitle h2{font-size:20px;line-height:1.15}
+  .warningModalHeader .close{min-width:76px}
+  .notesComposer{grid-template-columns:1fr}
+  .theoryAttemptsInline{position:sticky;top:78px;z-index:6}
+  .compactTheoryConfirm h2{font-size:26px}
+  .theoryConfirmVisual .theoryPick img{height:92px}
+  .portraitCard .portraitFrame img{height:140%}
+}
+
+/* =========================================================
+   V3 VERIFIED UI REPAIR
+   ========================================================= */
+
+/* One elimination treatment only: the diagonal stamp from .portraitCard.elim:after. */
+.cardState{display:none!important}
+
+/* Universal card label: name and role are always separate lines. */
+.portraitCard .mobileCardLabel{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center;
+  align-items:flex-start;
+  gap:3px;
+  background:linear-gradient(180deg,#151e26,#10171d);
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:10px 12px;
+  min-height:66px;
+  overflow:hidden;
+}
+.portraitCard .mobileCardLabel b,
+.portraitCard .mobileCardLabel small{
+  display:block!important;
+  width:100%;
+  float:none!important;
+  clear:both!important;
+}
+.portraitCard .mobileCardLabel b{
+  font-family:Georgia,serif;
+  font-size:17px;
+  line-height:1.08;
+  color:var(--cream);
+}
+.portraitCard .mobileCardLabel small{
+  margin:0!important;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.2;
+}
+
+/* Crop only the baked parchment at the bottom; keep the top of portraits visible. */
+.portraitCard .portraitFrame{
+  position:relative;
+  aspect-ratio:3/4!important;
+  overflow:hidden!important;
+  background:#080d11;
+}
+.portraitCard .portraitFrame img{
+  position:absolute!important;
+  left:0!important;
+  top:6px!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:none!important;
+  object-fit:initial!important;
+  object-position:initial!important;
+  transform:none!important;
+}
+
+/* Compact identity drawer restored. */
+.cardDrawerIdentity{
+  position:sticky;
+  top:0;
+  z-index:8;
+}
+.cardDrawerBody{padding-top:0!important}
+.cardDrawerBody .drawerSection p{margin:7px 0 0}
+.cardDrawerBody .drawerStatus{margin-top:18px}
+.cardDrawerBody .inlineBtn{margin-top:0}
+.cardDrawerBody .drawerSectionHead{margin-bottom:10px}
+
+/* Keep tactic/system overlays readable on small screens. */
+.warningModalHeader .warningTitle h2{
+  font-size:22px!important;
+  line-height:1.15!important;
+}
+.warningModalHeader .warningIcon{
+  flex:0 0 34px!important;
+}
+.warningModalHeader .close{
+  flex:0 0 auto!important;
+}
+
+/* Timeline dot animation */
+.timelineMarker.pulse span{
+  animation:dcTimelinePulse 1.65s ease-in-out infinite!important;
+}
+@keyframes dcTimelinePulse{
+  0%,100%{box-shadow:0 0 0 2px rgba(215,164,86,.25),0 0 0 0 rgba(215,164,86,.45)}
+  50%{box-shadow:0 0 0 2px rgba(215,164,86,.25),0 0 0 8px rgba(215,164,86,0)}
+}
+
+@media(max-width:760px){
+  .portraitCard .mobileCardLabel{min-height:58px;padding:8px 9px}
+  .portraitCard .mobileCardLabel b{font-size:12px;line-height:1.12}
+  .portraitCard .mobileCardLabel small{font-size:8px}
+  .cardDrawerIdentity{
+    grid-template-columns:64px minmax(0,1fr) auto!important;
+    gap:9px!important;
+    padding:11px 12px!important;
+  }
+  .cardDrawerIdentity .drawerThumb{width:64px!important;height:96px!important}
+  .cardDrawerIdentity .drawerIdentityText h2{
+    font-size:19px!important;
+    line-height:1.08!important;
+    margin:3px 0!important;
+  }
+  .cardDrawerIdentity .drawerIdentityText p{font-size:10px!important}
+  .cardDrawerIdentity .close{
+    padding:7px 10px!important;
+    font-size:11px!important;
+    min-height:40px!important;
+  }
+  .warningModalHeader{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:10px!important;
+  }
+  .warningModalHeader .warningTitle{
+    grid-template-columns:30px minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  .warningModalHeader .warningIcon{
+    width:30px!important;height:30px!important;font-size:14px!important;
+  }
+  .warningModalHeader .warningTitle h2{
+    font-size:18px!important;
+    line-height:1.18!important;
+  }
+  .warningModalHeader .close{
+    min-width:66px!important;
+    padding:7px 9px!important;
+    font-size:10px!important;
+  }
+  .timeRow{grid-template-columns:68px 18px minmax(0,1fr)!important}
+  .time{font-size:10px!important;white-space:nowrap}
+}
+
+@media(max-width:430px){
+  .portraitCard .portraitFrame img{top:8px!important}
+  .portraitCard .mobileCardLabel{min-height:56px;padding:8px}
+  .portraitCard .mobileCardLabel b{font-size:11px}
+  .portraitCard .mobileCardLabel small{font-size:7.5px}
+  .cardDrawerIdentity{
+    grid-template-columns:58px minmax(0,1fr) auto!important;
+    gap:8px!important;
+  }
+  .cardDrawerIdentity .drawerThumb{width:58px!important;height:87px!important}
+  .cardDrawerIdentity .drawerIdentityText h2{font-size:17px!important}
+  .cardDrawerIdentity .kicker{font-size:8px!important}
+  .timeRow{grid-template-columns:62px 16px minmax(0,1fr)!important;gap:6px!important}
+  .time{font-size:9px!important}
+}
+
+/* =========================================================
+   V4 card crop + Final Theory card polish
+   ========================================================= */
+
+/* Board cards: shorten the visible art window enough to remove the baked
+   parchment name plate from ALL suspect/weapon/location artwork. */
+.portraitCard .portraitFrame{
+  aspect-ratio:auto!important;
+  height:clamp(210px, 28vw, 330px)!important;
+  overflow:hidden!important;
+}
+.portraitCard .portraitFrame img{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:none!important;
+  transform:none!important;
+}
+
+/* Make the generated label panel the only readable name/title treatment. */
+.portraitCard .mobileCardLabel{
+  position:relative!important;
+  z-index:2!important;
+  background:#131e26!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+}
+
+/* Final Theory preview cards: keep label content fully BELOW the image.
+   No category/name text is allowed to intrude into the artwork. */
+.theoryPreview,
+.theoryConfirmVisual{
+  align-items:stretch!important;
+}
+.theoryPick{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  overflow:hidden!important;
+  border-radius:16px!important;
+  background:#111b23!important;
+}
+.theoryPick > span,
+.theoryPick .theoryPickLabel{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  z-index:3!important;
+}
+.theoryPick img{
+  display:block!important;
+  width:100%!important;
+  height:180px!important;
+  object-fit:cover!important;
+  object-position:center top!important;
+  border-radius:0!important;
+}
+.theoryPick .theoryPickLabel{
+  display:block!important;
+  background:#131e26!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  padding:12px 14px 14px!important;
+  min-height:72px!important;
+}
+.theoryPick .theoryPickLabel .kicker,
+.theoryPick .theoryPickLabel span,
+.theoryPick .theoryPickLabel b,
+.theoryPick .theoryPickLabel small{
+  display:block!important;
+  position:static!important;
+  margin:0!important;
+}
+.theoryPick .theoryPickLabel .kicker,
+.theoryPick .theoryPickLabel span{
+  color:var(--gold2)!important;
+  font-size:9px!important;
+  letter-spacing:.12em!important;
+  font-weight:900!important;
+  margin-bottom:6px!important;
+}
+.theoryPick .theoryPickLabel b{
+  font-family:Georgia,serif!important;
+  font-size:18px!important;
+  line-height:1.08!important;
+  color:var(--cream)!important;
+}
+.theoryPick .theoryPickLabel small{
+  margin-top:4px!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+}
+
+/* Some earlier rules style the category badge as an overlay.
+   Force the first direct span into its own header strip instead. */
+.theoryPick > span:first-child{
+  background:#131e26!important;
+  color:var(--gold2)!important;
+  padding:8px 12px 6px!important;
+  font-size:9px!important;
+  letter-spacing:.12em!important;
+  font-weight:900!important;
+  border-bottom:1px solid rgba(255,255,255,.05)!important;
+}
+
+/* If the existing DOM is [category][img][b][small] rather than a wrapper,
+   keep those text nodes in the panel area. */
+.theoryPick > b,
+.theoryPick > small{
+  display:block!important;
+  position:static!important;
+  background:#131e26!important;
+  margin:0!important;
+  padding-left:14px!important;
+  padding-right:14px!important;
+}
+.theoryPick > b{
+  padding-top:10px!important;
+  font-family:Georgia,serif!important;
+  font-size:18px!important;
+  line-height:1.08!important;
+  color:var(--cream)!important;
+}
+.theoryPick > small{
+  padding-top:3px!important;
+  padding-bottom:14px!important;
+  color:var(--muted)!important;
+  font-size:10px!important;
+}
+
+@media(max-width:760px){
+  .portraitCard .portraitFrame{
+    height:clamp(145px, 39vw, 195px)!important;
+  }
+  .theoryPick img{height:118px!important}
+  .theoryPick .theoryPickLabel{min-height:60px!important;padding:10px 10px 11px!important}
+  .theoryPick .theoryPickLabel b,
+  .theoryPick > b{font-size:13px!important}
+  .theoryPick .theoryPickLabel small,
+  .theoryPick > small{font-size:8px!important}
+  .theoryPick > span:first-child{font-size:8px!important;padding:7px 9px 5px!important}
+}
+
+@media(max-width:430px){
+  .portraitCard .portraitFrame{
+    height:clamp(135px, 38vw, 172px)!important;
+  }
+  .theoryPick img{height:104px!important}
+  .theoryPick .theoryPickLabel b,
+  .theoryPick > b{font-size:12px!important}
+}
+\n
+
+/* =========================================================
+   V6 AUTHORITATIVE VISUAL REPAIR
+   This block intentionally overrides earlier card/drawer rules.
+   ========================================================= */
+
+/* ---------- Case Brief objective ---------- */
+.caseBrief .task,
+.caseHome .task,
+.task.objectiveTask,
+.objectiveTask{
+  border-left:0!important;
+  border-inline-start:0!important;
+  padding-left:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+
+/* Keep the instructional block as the only yellow-rule treatment. */
+.howInvestigate{
+  border-left:4px solid var(--gold2)!important;
+  padding-left:18px!important;
+}
+
+/* ---------- Case Board cards ---------- */
+.portraitCard{
+  overflow:hidden!important;
+}
+.portraitCard .portraitFrame{
+  position:relative!important;
+  overflow:hidden!important;
+  height:clamp(210px,28vw,330px)!important;
+  aspect-ratio:auto!important;
+  background:#0a0f13!important;
+}
+.portraitCard .portraitFrame img{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:none!important;
+  object-fit:initial!important;
+  object-position:initial!important;
+  transform:none!important;
+}
+
+/* App-rendered label is the only readable identity text on cards. */
+.portraitCard .mobileCardLabel{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:3px!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  min-height:66px!important;
+  padding:10px 12px!important;
+  background:#131e26!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+}
+.portraitCard .mobileCardLabel b,
+.portraitCard .mobileCardLabel small{
+  display:block!important;
+  width:100%!important;
+  float:none!important;
+  clear:both!important;
+  position:static!important;
+}
+.portraitCard .mobileCardLabel b{
+  margin:0!important;
+  font-family:Georgia,serif!important;
+  font-size:17px!important;
+  line-height:1.08!important;
+  color:var(--cream)!important;
+}
+.portraitCard .mobileCardLabel small{
+  margin:0!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+  color:var(--muted)!important;
+}
+.cardState{display:none!important}
+
+/* ---------- Drawer identity thumbnail ---------- */
+.cardDrawerIdentity{
+  position:sticky!important;
+  top:0!important;
+  z-index:10!important;
+  display:grid!important;
+  grid-template-columns:78px minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:14px!important;
+  padding:14px 16px!important;
+  background:#111b23!important;
+  border-bottom:1px solid var(--line)!important;
+}
+.cardDrawerIdentity .drawerThumb{
+  position:relative!important;
+  width:78px!important;
+  height:104px!important;
+  overflow:hidden!important;
+  border-radius:10px!important;
+  background:#0a0f13!important;
+}
+.cardDrawerIdentity .drawerThumb img{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:none!important;
+  object-fit:initial!important;
+  object-position:initial!important;
+  transform:none!important;
+}
+.cardDrawerIdentity .drawerIdentityText h2{
+  margin:2px 0 4px!important;
+}
+.cardDrawerIdentity .drawerIdentityText p{
+  margin:0!important;
+}
+
+/* ---------- Final Theory cards ---------- */
+.theoryPreview,
+.theoryConfirmVisual{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  align-items:stretch!important;
+}
+.theoryPick{
+  display:grid!important;
+  grid-template-rows:auto 180px auto!important;
+  overflow:hidden!important;
+  border:1px solid var(--line)!important;
+  border-radius:16px!important;
+  background:#111b23!important;
+}
+.theoryPick > span:first-child{
+  display:block!important;
+  position:static!important;
+  transform:none!important;
+  margin:0!important;
+  padding:8px 12px 6px!important;
+  background:#131e26!important;
+  border-bottom:1px solid rgba(255,255,255,.05)!important;
+  color:var(--gold2)!important;
+  font-size:9px!important;
+  line-height:1!important;
+  letter-spacing:.12em!important;
+  font-weight:900!important;
+}
+.theoryPick img{
+  display:block!important;
+  width:100%!important;
+  height:180px!important;
+  object-fit:cover!important;
+  object-position:center top!important;
+  border-radius:0!important;
+}
+.theoryPick > b,
+.theoryPick > small{
+  display:block!important;
+  position:static!important;
+  transform:none!important;
+  inset:auto!important;
+  background:#131e26!important;
+  margin:0!important;
+  padding-left:14px!important;
+  padding-right:14px!important;
+}
+.theoryPick > b{
+  padding-top:11px!important;
+  font-family:Georgia,serif!important;
+  font-size:18px!important;
+  line-height:1.08!important;
+  color:var(--cream)!important;
+}
+.theoryPick > small{
+  padding-top:4px!important;
+  padding-bottom:14px!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+  color:var(--muted)!important;
+}
+.theoryPick > b + small{
+  margin-top:0!important;
+}
+
+/* If a wrapper label exists in some theory state, constrain it below artwork. */
+.theoryPick .theoryPickLabel{
+  position:static!important;
+  transform:none!important;
+  inset:auto!important;
+  display:block!important;
+  background:#131e26!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  padding:11px 14px 14px!important;
+}
+
+/* ---------- Mobile ---------- */
+@media(max-width:760px){
+  .portraitCard .portraitFrame{
+    height:clamp(145px,39vw,195px)!important;
+  }
+  .portraitCard .mobileCardLabel{
+    min-height:58px!important;
+    padding:8px 9px!important;
+  }
+  .portraitCard .mobileCardLabel b{
+    font-size:12px!important;
+  }
+  .portraitCard .mobileCardLabel small{
+    font-size:8px!important;
+  }
+
+  .cardDrawerIdentity{
+    grid-template-columns:60px minmax(0,1fr) auto!important;
+    gap:10px!important;
+    padding:12px!important;
+  }
+  .cardDrawerIdentity .drawerThumb{
+    width:60px!important;
+    height:88px!important;
+  }
+  .cardDrawerIdentity .drawerIdentityText h2{
+    font-size:18px!important;
+    line-height:1.08!important;
+  }
+  .cardDrawerIdentity .drawerIdentityText p{
+    font-size:10px!important;
+  }
+  .cardDrawerIdentity .close{
+    min-width:66px!important;
+    padding:7px 10px!important;
+    font-size:10px!important;
+  }
+
+  .theoryPreview,
+  .theoryConfirmVisual{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  .theoryPick{
+    grid-template-rows:auto 110px auto!important;
+    border-radius:12px!important;
+  }
+  .theoryPick img{
+    height:110px!important;
+  }
+  .theoryPick > span:first-child{
+    padding:6px 8px 5px!important;
+    font-size:7.5px!important;
+  }
+  .theoryPick > b{
+    padding:8px 9px 0!important;
+    font-size:12px!important;
+  }
+  .theoryPick > small{
+    padding:3px 9px 10px!important;
+    font-size:7.5px!important;
+  }
+}
+
+@media(max-width:430px){
+  .portraitCard .portraitFrame{
+    height:clamp(135px,38vw,172px)!important;
+  }
+  .cardDrawerIdentity{
+    grid-template-columns:56px minmax(0,1fr) auto!important;
+  }
+  .cardDrawerIdentity .drawerThumb{
+    width:56px!important;
+    height:82px!important;
+  }
+  .theoryPick{
+    grid-template-rows:auto 96px auto!important;
+  }
+  .theoryPick img{
+    height:96px!important;
+  }
+  .theoryPick > b{
+    font-size:11px!important;
+  }
+}
+
+/* =========================================================
+   V7 UNIFIED VISUAL CARD SYSTEM
+   Case Board, drawer identity, and Final Theory use one art-crop language.
+   ========================================================= */
+
+.artCrop{
+  position:relative!important;
+  overflow:hidden!important;
+  background:#0a0f13!important;
+}
+.artCrop img{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:none!important;
+  object-fit:initial!important;
+  object-position:initial!important;
+  transform:none!important;
+}
+
+/* Drawer thumbnail: crop bottom parchment, preserve face/top. */
+.cardDrawerIdentity .drawerThumb{
+  width:78px!important;
+  height:92px!important;
+  border-radius:10px!important;
+}
+.cardDrawerIdentity .drawerThumb img{
+  width:100%!important;
+  height:auto!important;
+  top:0!important;
+}
+
+/* Final Theory: same portrait-card concept as Case Board. */
+.theoryPreview,
+.theoryConfirmVisual{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  align-items:start!important;
+}
+.theoryCardUnified{
+  display:grid!important;
+  grid-template-rows:auto auto auto!important;
+  overflow:hidden!important;
+  border:1px solid var(--line)!important;
+  border-radius:16px!important;
+  background:#111b23!important;
+}
+.theoryCategory{
+  padding:8px 12px 7px!important;
+  background:#111b23!important;
+  color:var(--gold2)!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.12em!important;
+  line-height:1!important;
+}
+.theoryArt{
+  width:100%!important;
+  aspect-ratio:3/4!important;
+}
+.theoryArt img{
+  width:100%!important;
+  height:auto!important;
+  top:0!important;
+}
+.theoryCardLabel{
+  min-height:72px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:4px!important;
+  padding:11px 14px 13px!important;
+  background:#131e26!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+}
+.theoryCardLabel b{
+  display:block!important;
+  margin:0!important;
+  font-family:Georgia,serif!important;
+  font-size:18px!important;
+  line-height:1.08!important;
+  color:var(--cream)!important;
+}
+.theoryCardLabel small{
+  display:block!important;
+  margin:0!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+  color:var(--muted)!important;
+}
+
+/* Disable older theory preview descendants so they cannot bleed into artwork. */
+.theoryPick{display:none!important}
+
+/* Mobile */
+@media(max-width:760px){
+  .cardDrawerIdentity .drawerThumb{
+    width:58px!important;
+    height:70px!important;
+  }
+  .theoryPreview,
+  .theoryConfirmVisual{
+    gap:8px!important;
+  }
+  .theoryCardUnified{
+    border-radius:12px!important;
+  }
+  .theoryCategory{
+    padding:6px 8px 5px!important;
+    font-size:7px!important;
+  }
+  .theoryCardLabel{
+    min-height:56px!important;
+    padding:8px 9px 9px!important;
+  }
+  .theoryCardLabel b{
+    font-size:12px!important;
+  }
+  .theoryCardLabel small{
+    font-size:8px!important;
+  }
+}
+@media(max-width:430px){
+  .cardDrawerIdentity .drawerThumb{
+    width:54px!important;
+    height:64px!important;
+  }
+  .theoryCardLabel b{font-size:11px!important}
+  .theoryCardLabel small{font-size:7.5px!important}
+}
+
+/* V9 — Final Theory ONLY.
+   Preserve V7 card dimensions. Remove the baked parchment/name plate by
+   enlarging/repositioning the source art inside the existing clipped viewport. */
+.theoryArt{
+  overflow:hidden!important;
+}
+.theoryArt img{
+  position:absolute!important;
+  left:50%!important;
+  top:0!important;
+  width:112%!important;
+  height:112%!important;
+  max-width:none!important;
+  object-fit:cover!important;
+  object-position:center top!important;
+  transform:translateX(-50%)!important;
+}
+@media(max-width:760px){
+  .theoryArt img{
+    width:114%!important;
+    height:114%!important;
+  }
+}
+
+/* =========================================================
+   V11 — text-only in-case tactics, patched at renderer level
+   ========================================================= */
+
+.briefTactics{
+  gap:12px!important;
+}
+.briefTactic{
+  display:block!important;
+  min-height:0!important;
+  padding:12px 16px!important;
+}
+.briefTactic > div{
+  width:100%!important;
+}
+.briefTactic b,
+.briefTactic small,
+.briefTactic p{
+  display:block!important;
+}
+.briefTactic b{margin:0 0 2px!important}
+.briefTactic small{margin:0 0 5px!important}
+.briefTactic p{margin:0!important}
+
+.activeTactics{
+  gap:10px!important;
+}
+.tacticChip{
+  min-height:0!important;
+  padding:9px 13px!important;
+  gap:0!important;
+}
+.tacticChip > span{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.tacticChip b,
+.tacticChip small{
+  display:block!important;
+  margin:0!important;
+}
+.tacticChip small{margin-top:2px!important}
+
+@media(max-width:760px){
+  .briefTactics{gap:8px!important}
+  .briefTactic{padding:10px 12px!important}
+  .activeTactics{gap:7px!important}
+  .tacticChip{padding:8px 10px!important}
+}
