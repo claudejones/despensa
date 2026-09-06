@@ -98,6 +98,11 @@ main{padding:0 var(--pad);background:var(--paper)}
   display:block;color:var(--est);margin-bottom:1px}
 .amt.none .mx{color:var(--muted);font-style:italic;font-size:13px;font-weight:600}
 
+.skipsec{margin-top:26px}
+.skiphead{display:flex;width:100%;align-items:baseline;justify-content:space-between;
+  padding:0 2px 7px;border:none;border-bottom:1px solid var(--rule);background:none;
+  font-family:inherit;cursor:pointer;color:var(--muted)}
+.skiphead .sectitle{color:var(--muted)}
 .addbtn{width:100%;margin:12px 0 0;padding:12px;background:none;
   border:1.5px dashed var(--rule);border-radius:10px;color:var(--muted);
   font-size:13px;font-weight:650;cursor:pointer;font-family:inherit}
@@ -116,8 +121,8 @@ main{padding:0 var(--pad);background:var(--paper)}
 .ttotal .tlabel{color:var(--ink)}
 .tbig{font-size:25px;font-weight:700;letter-spacing:-.02em}
 .tusd{font-size:12px;color:var(--muted);text-align:right;margin-top:-1px}
-.logbtn{width:100%;margin-top:11px;padding:15px;border:none;border-radius:11px;
-  background:var(--store);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.logbtn{display:block;margin:11px auto 0;padding:11px 24px;border:none;border-radius:9px;
+  background:var(--store);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
 .logbtn:disabled{background:var(--rule);color:var(--muted)}
 
 .scrim{position:fixed;inset:0;background:rgba(15,15,10,.45);z-index:50;display:none}
@@ -193,108 +198,115 @@ var KEY = "despensa_v1";
 
 /* ---------- catalogue ----------
    lt = expected line total in MXN. est = that total is my estimate, not a receipt figure. */
-var CATALOGUE = 7;   /* bump to push refreshed prices to phones */
+var CATALOGUE = 10;   /* bump to push refreshed prices to phones */
+/* u = unit price MXN. q = how many. line total = u x q, computed. */
 var SEED = {
   chedraui:{label:"Chedraui", full:"Chedraui Puerto Aventuras", color:"#D6431F", groups:[
     {id:"wk", title:"Weekly", items:[
-      {n:"Pollo Rostizado", e:"Rotisserie chicken", q:"1", lt:99.90},
-      {n:"Oroweat Multigrano", e:"Multigrain bread", q:"1", lt:93.00},
-      {n:"DontWorry Quiche", e:"Plant-based quiche, 74 g", q:"1", lt:90.00},
-      {n:"Lechuga Hidropónica", e:"Hydroponic lettuce", q:"1", lt:38.90},
-      {n:"Tortilla Del Barrio", e:"Tortillas", q:"1", lt:23.60},
-      {n:"Frijoles Refritos Isadora", e:"Refried beans", q:"1", lt:17.00},
-      {n:"Plátano Chiapas/Tabasco", e:"Banana", q:"1", ref:"20.90/kg", lt:17.60, est:true},
-      {n:"Limón Eureka", e:"Eureka lemon (yellow)", q:"1", ref:"59.00/kg", lt:10.03},
-      {n:"Tomate Saladette", e:"Roma tomato", q:"1", ref:"16.90/kg", lt:5.83}
+      {n:"Pollo Rostizado", e:"Rotisserie chicken", q:1, u:99.90},
+      {n:"Oroweat Multigrano", e:"Multigrain bread", q:1, u:93.00},
+      {n:"Lechuga Italiana Viva", e:"Living lettuce", q:1, u:39.10},
+      {n:"Tortilla Blanca 45 pz", e:"White corn tortillas, 45-pack", q:1, u:38.00},
+      {n:"Huevo Blanco 12 pz", e:"White eggs, 12 ct", q:1, u:32.00},
+      {n:"Garbanzo en Salmuera", e:"Chickpeas in brine", q:1, u:26.00},
+      {n:"Frijoles Refritos Isadora", e:"Refried beans", q:2, u:17.00},
+      {n:"Plátano Chiapas/Tabasco", e:"Banana", q:1, u:18.05, ref:"24.90/kg"},
+      {n:"Tomate Saladette", e:"Roma tomato", q:1, u:7.22, ref:"21.90/kg"},
+      {n:"Limón Eureka", e:"Eureka lemon (yellow)", q:1, u:4.76, ref:"59.50/kg"}
     ]},
     {id:"bw", title:"Every 2 weeks", items:[
-      {n:"Vino", e:"Wine \u2014 two bottles a month", q:"1", lt:351.00},
-      {n:"Salmón Atlántico", e:"Atlantic salmon", q:"1", lt:329.00},
-      {n:"Porciones Mahi-Mahi", e:"Mahi-mahi portions", q:"1", lt:239.00},
-      {n:"Crema Almendra Sun Harvest", e:"Almond butter, organic 454 g", q:"1", lt:198.00},
-      {n:"Avena Orgánica", e:"Organic oats, 300 g", q:"2", lt:195.00},
-      {n:"Cacahuates Mafer", e:"Peanuts, tostados + limón", q:"2", lt:105.00},
-      {n:"Granola Miel de Agave", e:"Agave granola, 310 g", q:"1", lt:104.00},
-      {n:"Pasta Rummo Farfalle", e:"Rummo farfalle pasta", q:"1", lt:84.00},
-      {n:"Papa Chips Jalapeño", e:"Jalapeño chips", q:"1", lt:61.00},
-      {n:"Papa Chips Sal", e:"Salted chips, 150 g", q:"1", lt:61.00},
-      {n:"Ciruela Pasa S/H", e:"Prunes, pitted", q:"1", ref:"298.00/kg", lt:61.09},
-      {n:"Durazno Rojo", e:"Red peach", q:"1", ref:"99.00/kg", lt:60.88},
-      {n:"Toallas de Papel", e:"Paper towels", q:"1", lt:52.00},
-      {n:"Almendra Natural", e:"Natural almonds, 200 g", q:"1", ref:"445.00/kg", lt:89.00},
-      {n:"Limón s/semilla", e:"Seedless lime (green)", q:"2", ref:"16.50/kg", lt:2.48, est:true}
+      {n:"Salmón Atlántico", e:"Atlantic salmon", q:1, u:329.00},
+      {n:"Crema Almendra Sun Harvest", e:"Almond butter, organic 454 g", q:1, u:198.00},
+      {n:"Avena Orgánica", e:"Organic oats, 300 g", q:2, u:97.50},
+      {n:"Granola Miel de Agave", e:"Agave granola, 310 g", q:1, u:104.00},
+      {n:"Almendra Natural", e:"Natural almonds, 200 g", q:1, u:89.00, ref:"445.00/kg"},
+      {n:"Mix de Nueces", e:"Nut / snack mix, 280 g", q:1, u:86.01},
+      {n:"Pasta Rummo Farfalle", e:"Rummo farfalle pasta", q:1, u:84.00},
+      {n:"Galleta Lotus Biscoff", e:"Lotus Biscoff cookies", q:1, u:83.00},
+      {n:"Ciruela Pasa S/H", e:"Prunes, pitted", q:2, u:61.09, ref:"298.00/kg"},
+      {n:"Papa Chips Jalapeño", e:"Jalapeño crisps", q:1, u:61.00},
+      {n:"Papa Chips Sal", e:"Salted crisps, 160 g", q:1, u:61.00},
+      {n:"Papa Sabritas Crema", e:"Sour-cream crisps, 160 g", q:1, u:61.00},
+      {n:"Chile Chipotle La Chata", e:"Chipotle chillies, 215 g", q:1, u:60.00},
+      {n:"Durazno Rojo", e:"Red peach", q:1, u:60.88, ref:"99.00/kg"},
+      {n:"Cacahuates Mafer", e:"Peanuts \u2014 3-for-2 promo runs often", q:2, u:52.50},
+      {n:"Toallas de Papel", e:"Paper towels", q:1, u:51.00},
+      {n:"Champiñón Granel", e:"Mushrooms, loose", q:1, u:24.61, ref:"114.50/kg"},
+      {n:"Limón s/semilla", e:"Seedless lime (green)", q:2, u:1.24, ref:"16.50/kg"}
     ]},
     {id:"mo", title:"Monthly", items:[
-      {n:"Loción Protectora", e:"Sunscreen", q:"2", lt:574.00},
-      {n:"Jarabe Mister Maple", e:"Maple syrup", q:"1", lt:172.00},
-      {n:"Crema Sun Harvest", e:"Nut butter", q:"1", lt:145.00},
-      {n:"Queso V\u2019chez", e:"V\u2019chez plant-based cheese, 400 g", q:"1", lt:170.00},
-      {n:"Café Orgánico", e:"Organic coffee", q:"1", lt:160.00},
-      {n:"Queso Mi Passion", e:"Mi Passion cheese", q:"1", lt:139.00},
-      {n:"Violife Manchego", e:"Manchego-style vegan cheese, 216 g", q:"1", lt:94.00},
-      {n:"Coco Tostado", e:"Toasted coconut", q:"1", ref:"500.00/kg", lt:52.50},
-      {n:"Mermelada de Frambuesa", e:"Raspberry jam", q:"1", lt:84.00},
-      {n:"Bolsas de basura grandes", e:"Trash bags, large", q:"1", lt:73.00},
-      {n:"Quinoa BSD Foods", e:"Quinoa", q:"1", lt:71.00},
-      {n:"Cerveza Barrilito", e:"Barrilito beer, 6-pack", q:"1", lt:64.00},
-      {n:"Papel Aluminio Rey", e:"Aluminum foil", q:"1", lt:59.50},
-      {n:"Huevo Criollo Blanco", e:"White eggs, 18 ct", q:"1", lt:46.00},
-      {n:"Bolsas eco chicas", e:"Trash bags, small", q:"1", lt:29.50},
-      {n:"Salsa Herdez Chipotle", e:"Chipotle salsa, 240 g", q:"1", lt:27.50},
-      {n:"Manzana Pink Lady", e:"Pink Lady apple", q:"1", ref:"59.90/kg", lt:23.96},
-      {n:"Maíz Palomero", e:"Popcorn kernels", q:"1", lt:19.00},
-      {n:"Vinagre Chedraui", e:"Vinegar", q:"1", lt:13.00},
-      {n:"Ajo Granel", e:"Loose garlic", q:"1", ref:"84.90/kg", lt:8.06}
+      {n:"Loción Protectora", e:"Sunscreen", q:1, u:287.00},
+      {n:"Jarabe Mister Maple", e:"Maple syrup", q:1, u:172.00},
+      {n:"Crema Sun Harvest", e:"Nut butter", q:1, u:145.00},
+      {n:"Queso Mi Passion", e:"Mi Passion cheese", q:1, u:139.00},
+      {n:"Enjuague Listerine", e:"Listerine mouthwash", q:1, u:98.00},
+      {n:"Mermelada de Frambuesa", e:"Raspberry jam", q:1, u:84.00},
+      {n:"Aceituna Serpis Kalamata", e:"Kalamata olives", q:1, u:78.00},
+      {n:"Quinoa Okko", e:"Okko quinoa mix", q:1, u:74.00},
+      {n:"Bolsas de basura grandes", e:"Trash bags, large", q:1, u:73.00},
+      {n:"Cerveza Barrilito", e:"Barrilito beer, 6-pack", q:1, u:64.00},
+      {n:"Papel Aluminio Rey", e:"Aluminium foil", q:1, u:59.50},
+      {n:"Kleenex Gel 450 ml", e:"Hand gel / wipes", q:1, u:54.00},
+      {n:"Coco Tostado", e:"Toasted coconut", q:1, u:52.50, ref:"500.00/kg"},
+      {n:"Vinagre Chedraui", e:"Vinegar, large", q:1, u:35.00},
+      {n:"Bolsas eco chicas", e:"Trash bags, small", q:1, u:29.50},
+      {n:"Salsa Herdez Roja", e:"Red salsa", q:1, u:27.00},
+      {n:"Salsa Herdez Cacahuate", e:"Peanut salsa", q:1, u:27.00},
+      {n:"Manzana Pink Lady", e:"Pink Lady apple", q:1, u:22.16, ref:"59.90/kg"},
+      {n:"Maíz Palomero", e:"Popcorn kernels", q:1, u:19.00},
+      {n:"Ajo Granel", e:"Loose garlic", q:1, u:8.06, ref:"84.90/kg"}
     ]},
     {id:"m2", title:"Every 2 months", items:[
-      {n:"Detergente Tide", e:"Laundry detergent", q:"1", lt:395.00},
-      {n:"Papel Higiénico Cottonelle", e:"Toilet paper, 24R", q:"1", lt:205.00},
-      {n:"Dátil Medjool", e:"Medjool dates", q:"1", lt:175.00},
-      {n:"Lysol Crisp Linen", e:"Disinfectant spray", q:"1", lt:169.00},
-      {n:"Limpiador de Cocina", e:"Kitchen cleaner", q:"1", lt:129.00},
-      {n:"Jabón Líquido", e:"Hand soap", q:"1", lt:78.00},
-      {n:"Harpic", e:"Toilet cleaner", q:"1", lt:59.00},
-      {n:"Windex", e:"Glass cleaner", q:"1", lt:55.00},
-      {n:"Fabuloso Lavanda 2L", e:"Multi-surface cleaner", q:"1", lt:55.00},
-      {n:"Azúcar Zulka", e:"Cane sugar, 500 g", q:"1", lt:25.00}
+      {n:"Detergente Tide", e:"Laundry detergent", q:1, u:395.00},
+      {n:"Papel Higiénico Cottonelle", e:"Toilet paper, 24R", q:1, u:205.00},
+      {n:"Dátil Medjool", e:"Medjool dates", q:1, u:175.00},
+      {n:"Lysol Crisp Linen", e:"Disinfectant spray", q:1, u:169.00},
+      {n:"Limpiador de Cocina", e:"Kitchen cleaner", q:1, u:129.00},
+      {n:"Jabón Líquido", e:"Hand soap", q:1, u:78.00},
+      {n:"Fibra Esponja Scotch-Brite", e:"Scouring sponge", q:1, u:73.00},
+      {n:"Harpic", e:"Toilet cleaner", q:1, u:59.00},
+      {n:"Windex", e:"Glass cleaner", q:1, u:55.00},
+      {n:"Fabuloso Lavanda 2L", e:"Multi-surface cleaner", q:1, u:55.00},
+      {n:"Papel Encerado 10 m", e:"Waxed paper", q:1, u:54.00},
+      {n:"Azúcar Zulka", e:"Cane sugar, 500 g", q:1, u:23.50}
     ]},
     {id:"m3", title:"Every 3 to 4 months", items:[
-      {n:"Sal Rosa Alta", e:"Pink salt, 400 g", q:"1", lt:179.00},
-      {n:"Aceite de Coco Aires del Campo", e:"Coconut oil", q:"1", lt:140.00},
-      {n:"Limpiador de Baños", e:"Bathroom cleaner", q:"1", lt:59.00},
-      {n:"Sazonador Moe\u2019s", e:"Seasoning blend", q:"1", lt:44.00},
-      {n:"Axion Limón", e:"Dish soap, 900 ml", q:"1", lt:34.50}
+      {n:"Sal Rosa Alta", e:"Pink salt, 400 g", q:1, u:179.00},
+      {n:"Aceite de Coco Aires del Campo", e:"Coconut oil", q:1, u:140.00},
+      {n:"Limpiador de Baños", e:"Bathroom cleaner", q:1, u:59.00},
+      {n:"Sazonador Moe\u2019s", e:"Seasoning blend", q:1, u:44.00},
+      {n:"Axion Limón", e:"Dish soap, 900 ml", q:1, u:34.50}
     ]},
     {id:"an", title:"As needed", items:[
-      {n:"Baygon Total", e:"Insecticide", q:"1", lt:65.00}
+      {n:"Baygon Total", e:"Insecticide", q:1, u:65.00}
     ]}
   ]},
   dac:{label:"DAC", full:"DAC Quality Foods \u00b7 delivery", color:"#1E7A55", groups:[
     {id:"mo", title:"Monthly \u00b7 prices include IVA", items:[
-      {n:"Hamburguesa de Yaca", e:"Jackfruit burger, 440 g", q:"1", lt:129.92},
-      {n:"Leche de Soya Güd", e:"Unsweetened soy milk, 1 L", q:"2", lt:122.96},
-      {n:"Tofu firme House Foods", e:"Firm tofu, 396 g", q:"1", lt:109.04},
-      {n:"Carne al Pastor veggie", e:"Veggie al pastor, 450 g", q:"1", lt:100.92},
-      {n:"Semillas de Chía Campo Vivo", e:"Chia seeds, 250 g", q:"1", lt:91.64},
-      {n:"Mantequilla Vegana Plant Butter", e:"Vegan butter, 100 g", q:"1", lt:71.92}
+      {n:"Hamburguesa de Yaca", e:"Jackfruit burger, 440 g", q:1, u:129.92},
+      {n:"Tofu firme House Foods", e:"Firm tofu, 396 g", q:1, u:109.04},
+      {n:"Carne al Pastor veggie", e:"Veggie al pastor, 450 g", q:1, u:100.92},
+      {n:"Semillas de Chía Campo Vivo", e:"Chia seeds, 250 g", q:1, u:91.64},
+      {n:"Mantequilla Vegana Plant Butter", e:"Vegan butter, 100 g", q:1, u:71.92},
+      {n:"Leche de Soya Güd", e:"Unsweetened soy milk, 1 L", q:2, u:61.48}
     ]}
   ]},
   fm:{label:"Market", full:"Farmers market \u00b7 600 MXN a week", color:"#7A2A63", groups:[
     {id:"veg", title:"Vegetables \u00b7 weekly", items:[
-      {n:"Brócoli", e:"Broccoli", q:"", lt:null},
-      {n:"Col rizada", e:"Kale", q:"", lt:null},
-      {n:"Papa", e:"Potato", q:"", lt:null},
-      {n:"Calabaza italiana", e:"Zucchini", q:"", lt:null},
-      {n:"Tomate saladette", e:"Tomato", q:"", lt:null}
+      {n:"Brócoli", e:"Broccoli", q:1, u:null},
+      {n:"Col rizada", e:"Kale", q:1, u:null},
+      {n:"Papa", e:"Potato", q:1, u:null},
+      {n:"Calabaza italiana", e:"Zucchini", q:1, u:null},
+      {n:"Tomate saladette", e:"Tomato", q:1, u:null}
     ]},
     {id:"fr", title:"Fruit \u00b7 weekly", items:[
-      {n:"Aguacate Hass", e:"Hass avocado", q:"", lt:null},
-      {n:"Plátano", e:"Banana", q:"", lt:null},
-      {n:"Arándanos", e:"Blueberries", q:"", lt:null}
+      {n:"Aguacate Hass", e:"Hass avocado", q:1, u:null},
+      {n:"Plátano", e:"Banana", q:1, u:null},
+      {n:"Arándanos", e:"Blueberries", q:1, u:null}
     ]},
     {id:"ju", title:"Juice \u00b7 weekly", items:[
-      {n:"Jugo de naranja", e:"Orange juice", q:"", lt:null},
-      {n:"Jugo de toronja", e:"Grapefruit juice", q:"", lt:null}
+      {n:"Jugo de naranja", e:"Orange juice", q:1, u:null},
+      {n:"Jugo de toronja", e:"Grapefruit juice", q:1, u:null}
     ]}
   ]}
 };
@@ -308,7 +320,7 @@ function seedState(){
   Object.keys(SEED).forEach(function(sk){
     SEED[sk].groups.forEach(function(g){
       g.items.forEach(function(it){
-        st.items[sk+"|"+g.id+"|"+slug(it.n)] = {price:it.lt, est:!!it.est};
+        st.items[sk+"|"+g.id+"|"+slug(it.n)] = {unit:it.u, qty:it.q, est:!!it.est};
       });
     });
   });
@@ -324,7 +336,7 @@ function load(){
   if(S.cat!==CATALOGUE){
     Object.keys(fresh.items).forEach(function(id){
       var keep=S.items[id]||{};
-      keep.price=fresh.items[id].price; keep.est=fresh.items[id].est;
+      keep.unit=fresh.items[id].unit; keep.qty=fresh.items[id].qty; keep.est=fresh.items[id].est;
       S.items[id]=keep;
     });
     S.cat=CATALOGUE;
@@ -341,6 +353,13 @@ function save(){
   catch(e){ toast("Could not save — storage is blocked"); }
 }
 
+function calc(u,q){
+  if(u===null||u===undefined||isNaN(u)) return null;
+  return u*(q===undefined||q===null||isNaN(q)?1:q);
+}
+function priceOf(id){
+  var ov=S.items[id]; return ov?calc(ov.unit, ov.qty):null;
+}
 function mx(n){
   if(n===null||n===undefined||isNaN(n)) return "—";
   return "MX$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -361,8 +380,11 @@ function resolve(sk,gid,it){
   return {id:id,
     n: ov.name!==undefined ? ov.name : it.n,
     e: ov.english!==undefined ? ov.english : (it.e||""),
-    q: ov.qty!==undefined ? ov.qty : (it.q||""),
-    ref: it.ref||null, price:ov.price, est:!!ov.est, hidden:!!ov.hidden};
+    q: ov.qty!==undefined ? ov.qty : (it.q||1),
+    unit: ov.unit!==undefined ? ov.unit : it.u,
+    ref: it.ref||null,
+    price: calc(ov.unit!==undefined?ov.unit:it.u, ov.qty!==undefined?ov.qty:(it.q||1)),
+    est:!!ov.est, hidden:!!ov.hidden};
 }
 function groups(sk){
   return SEED[sk].groups.map(function(g){
@@ -370,8 +392,9 @@ function groups(sk){
     (S.custom[sk]||[]).forEach(function(c){
       if(c.g!==g.id) return;
       var ov=S.items[c.id]||{};
-      rows.push({id:c.id, n:ov.name||"Item", e:ov.english||"", q:ov.qty||"",
-        ref:null, price:ov.price, est:!!ov.est, hidden:!!ov.hidden, custom:true});
+      var cq=(ov.qty===undefined?1:ov.qty);
+      rows.push({id:c.id, n:ov.name||"Item", e:ov.english||"", q:cq, unit:ov.unit, ref:null,
+        price:calc(ov.unit,cq), est:!!ov.est, hidden:!!ov.hidden, custom:true});
     });
     return {id:g.id, title:g.title, rows:rows.filter(function(r){return !r.hidden})};
   });
@@ -403,37 +426,46 @@ function renderTabs(){
 }
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
 
+var skOpen=false;
+function rowHTML(r,checked,skipped){
+  var hasU=!(r.unit===null||r.unit===undefined||isNaN(r.unit));
+  var meta=[(r.q>1&&hasU)?("Qty "+r.q+" \u00d7 "+mx(r.unit)):(r.q>1?"Qty "+r.q:""),
+            r.ref?"ref "+r.ref+" MXN":""].filter(Boolean).join(" \u00b7 ");
+  var has=!(r.price===null||r.price===undefined||isNaN(r.price));
+  var cls="amt"+(has?(r.est?" est":""):" none");
+  var body=has ? (r.est?'<span class="tagest">est</span>':'')
+      +'<span class="mx">'+mx(r.price)+'</span><span class="us">'+usd(r.price)+'</span>'
+    : '<span class="mx">Add price</span>';
+  var ctrl;
+  if(editing) ctrl='<span class="pen">\u270e</span>';
+  else if(skipped) ctrl='<button class="mark" aria-label="Put back in this trip"></button>';
+  else ctrl='<button class="box" aria-label="Bought"></button>';
+  return '<div class="row'+((checked&&!editing?" on":"")+(skipped?" sk":""))+'" data-id="'+r.id+'">'+ctrl
+    +'<div class="namewrap"><div class="nm">'+esc(r.n)+'</div>'
+    +(r.e?'<div class="en">'+esc(r.e)+'</div>':'')
+    +(meta?'<div class="meta">'+esc(meta)+'</div>':'')
+    +'</div><button class="'+cls+'" data-price="'+r.id+'">'+body+'</button></div>';
+}
 function renderList(){
   document.documentElement.style.setProperty("--store", SEED[active].color);
   document.getElementById("brand").textContent = SEED[active].full;
-  var html="";
+  var html="", parked=[];
   groups(active).forEach(function(g){
-    var on=g.rows.filter(function(r){return S.checked[r.id]}).length;
+    var live=g.rows.filter(function(r){ return editing || !S.skipped[r.id]; });
+    if(!editing) g.rows.forEach(function(r){ if(S.skipped[r.id]) parked.push(r); });
+    var on=live.filter(function(r){return S.checked[r.id]}).length;
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+g.title+'</span>'
-      +'<span class="seccount">'+on+' / '+g.rows.length+'</span></div>';
-    g.rows.forEach(function(r){
-      var checked=!!S.checked[r.id], skipped=!!S.skipped[r.id];
-      var meta=[r.q?"Qty "+r.q:"", r.ref?"ref "+r.ref+" MXN":""].filter(Boolean).join(" · ");
-      var has = !(r.price===null||r.price===undefined||isNaN(r.price));
-      var cls="amt"+(has?(r.est?" est":""):" none");
-      var body = has
-        ? (r.est?'<span class="tagest">est</span>':'')
-          +'<span class="mx">'+mx(r.price)+'</span><span class="us">'+usd(r.price)+'</span>'
-        : '<span class="mx">Add price</span>';
-      var rc = (checked&&!editing?" on":"")+(skipped?" sk":"");
-      var ctrl;
-      if(editing) ctrl='<span class="pen">✎</span>';
-      else if(skipped) ctrl='<button class="mark" aria-label="Put back in this trip"></button>';
-      else ctrl='<button class="box" aria-label="Bought"></button>';
-      html+='<div class="row'+rc+'" data-id="'+r.id+'">'+ctrl
-        +'<div class="namewrap"><div class="nm">'+esc(r.n)+'</div>'
-        +(r.e?'<div class="en">'+esc(r.e)+'</div>':'')
-        +(meta?'<div class="meta">'+esc(meta)+'</div>':'')
-        +(skipped?'<div class="metaskip">Skipped this trip</div>':'')
-        +'</div><button class="'+cls+'" data-price="'+r.id+'">'+body+'</button></div>';
-    });
+      +'<span class="seccount">'+on+' / '+live.length+'</span></div>';
+    live.forEach(function(r){ html+=rowHTML(r,!!S.checked[r.id],!!S.skipped[r.id]); });
     html+='<button class="addbtn" data-add="'+g.id+'">+ Add an item to '+g.title.toLowerCase()+'</button></section>';
   });
+  if(parked.length){
+    html+='<section class="sec skipsec"><button class="skiphead" id="skipHead">'
+      +'<span class="sectitle">Skipped this trip</span>'
+      +'<span class="seccount">'+parked.length+(skOpen?' \u25b4':' \u25be')+'</span></button>';
+    if(skOpen) parked.forEach(function(r){ html+=rowHTML(r,false,true); });
+    html+='</section>';
+  }
   document.getElementById("main").innerHTML=html;
 }
 
@@ -441,8 +473,8 @@ function renderTape(){
   var ids=Object.keys(S.checked).filter(function(id){return S.checked[id]&&id.indexOf(active+"|")===0});
   var total=0, missing=0;
   ids.forEach(function(id){
-    var p=S.items[id]?S.items[id].price:null;
-    if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
+    var p=priceOf(id);
+    if(p===null) missing++; else total+=p;
   });
   var skips=Object.keys(S.skipped).filter(function(id){return S.skipped[id]&&id.indexOf(active+"|")===0}).length;
   document.getElementById("tCount").textContent=ids.length;
@@ -490,6 +522,7 @@ document.getElementById("editBtn").addEventListener("click", function(){
   render();
 });
 document.getElementById("main").addEventListener("click", function(e){
+  if(e.target.closest("#skipHead")){ skOpen=!skOpen; renderList(); return; }
   var pb=e.target.closest("[data-price]");
   if(pb && !editing){ editPrice(pb.dataset.price); return; }
   var ab=e.target.closest("[data-add]");
@@ -504,26 +537,29 @@ document.getElementById("main").addEventListener("click", function(e){
 
 /* quick price edit — the common in-store action */
 function editPrice(id){
-  var cur=S.items[id]?S.items[id].price:null;
+  var ovp=S.items[id]||{}, cur=ovp.unit, pq=(ovp.qty===undefined?1:ovp.qty);
   openSheet('<h2>Price in pesos</h2>'
-    +'<p class="hint">What it actually cost. Saving replaces the estimate.</p>'
-    +'<label class="lbl">Line total · MXN</label>'
+    +'<p class="hint">Price for one. The line total is this times the quantity.</p>'
+    +'<label class="lbl">Price each · MXN</label>'
     +'<input class="field mono" id="pIn" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
     +(cur===null||cur===undefined?"":cur)+'">'
     +'<div class="hint mono" id="pUsd" style="margin:-6px 0 14px 2px"></div>'
     +'<button class="mbtn primary" id="pSave">Save price</button>'
     +'<button class="mbtn mid" id="pClear">Clear price</button>');
   var inp=document.getElementById("pIn"), out=document.getElementById("pUsd");
-  function sync(){ var v=parseFloat(inp.value); out.textContent = isNaN(v)?"":"≈ "+usd(v)+" at "+S.fx.toFixed(2); }
+  function sync(){ var v=parseFloat(inp.value);
+    out.textContent = isNaN(v) ? ""
+      : (pq>1 ? pq+" × "+mx(v)+" = "+mx(v*pq)+"  ·  "+usd(v*pq)
+              : "≈ "+usd(v)+" at "+S.fx.toFixed(2)); }
   inp.addEventListener("input", sync); sync();
   setTimeout(function(){inp.focus();inp.select()},120);
   document.getElementById("pSave").onclick=function(){
     var v=parseFloat(inp.value), ov=S.items[id]||{};
-    ov.price=isNaN(v)?null:v; ov.est=false; S.items[id]=ov;
+    ov.unit=isNaN(v)?null:v; ov.est=false; S.items[id]=ov;
     save(); closeSheet(); render(); toast("Price saved");
   };
   document.getElementById("pClear").onclick=function(){
-    var ov=S.items[id]||{}; ov.price=null; ov.est=false; S.items[id]=ov;
+    var ov=S.items[id]||{}; ov.unit=null; ov.est=false; S.items[id]=ov;
     save(); closeSheet(); render();
   };
 }
@@ -534,7 +570,7 @@ function itemSheet(id, gid){
   if(id){
     groups(active).forEach(function(g){ g.rows.forEach(function(r){ if(r.id===id) cur=r; }); });
   }
-  var n=cur?cur.n:"", en=cur?cur.e:"", q=cur?cur.q:"", pr=cur?cur.price:null;
+  var n=cur?cur.n:"", en=cur?cur.e:"", q=cur?cur.q:1, pr=cur?cur.unit:null;
   openSheet('<h2>'+(isNew?"Add an item":"Edit item")+'</h2>'
     +'<p class="hint">'+(isNew
       ? "For something you bought that isn’t on the list. It stays for next time."
@@ -544,8 +580,8 @@ function itemSheet(id, gid){
     +'<label class="lbl">Name in English</label>'
     +'<input class="field" id="fEn" type="text" placeholder="Name" value="'+esc(en)+'">'
     +'<div class="two"><div><label class="lbl">Quantity</label>'
-    +'<input class="field mono" id="fQ" type="text" inputmode="decimal" placeholder="1" value="'+esc(q)+'"></div>'
-    +'<div><label class="lbl">Price · MXN</label>'
+    +'<input class="field mono" id="fQ" type="number" inputmode="decimal" step="1" min="0" placeholder="1" value="'+esc(q)+'"></div>'
+    +'<div><label class="lbl">Price each · MXN</label>'
     +'<input class="field mono" id="fP" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
     +(pr===null||pr===undefined?"":pr)+'"></div></div>'
     +'<button class="mbtn primary" id="fSave">'+(isNew?"Add item":"Save changes")+'</button>'
@@ -560,7 +596,8 @@ function itemSheet(id, gid){
   document.getElementById("fSave").onclick=function(){
     var es=document.getElementById("fEs").value.trim();
     var eng=document.getElementById("fEn").value.trim();
-    var qq=document.getElementById("fQ").value.trim();
+    var qq=parseFloat(document.getElementById("fQ").value);
+    if(isNaN(qq)||qq<0) qq=1;
     var pv=parseFloat(document.getElementById("fP").value);
     if(!es && !eng){ toast("Give it a name first"); return; }
     if(!es) es=eng;
@@ -573,7 +610,7 @@ function itemSheet(id, gid){
     }
     var rec=S.items[tid]||{};
     rec.name=es; rec.english=eng; rec.qty=qq;
-    rec.price=isNaN(pv)?null:pv; rec.est=false;
+    rec.unit=isNaN(pv)?null:pv; rec.est=false;
     S.items[tid]=rec;
     save(); closeSheet(); render(); toast(isNew?"Added":"Saved");
   };
@@ -626,7 +663,7 @@ function saveTrip(dt, rate){
       if(!S.checked[r.id]) return;
       var p=r.price;
       if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
-      lines.push({id:r.id, nameES:r.n, nameEN:r.e||"", qty:r.q||"", group:g.title,
+      lines.push({id:r.id, nameES:r.n, nameEN:r.e||"", qty:r.q, unitMXN:r.unit, group:g.title,
         priceMXN:(p===null||p===undefined||isNaN(p))?null:Number(p)});
     });
   });
@@ -635,12 +672,22 @@ function saveTrip(dt, rate){
     skipped:skips, skippedCount:skips.length,
     totalMXN:Math.round(total*100)/100, fxRate:rate,
     totalUSD:Math.round(total/rate*100)/100};
+  t.restoreChecked=lines.map(function(i){return i.id});
+  t.restoreSkipped=skips.map(function(i){return i.id});
   S.trips.push(t);
   Object.keys(S.checked).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.checked[id]; });
   Object.keys(S.skipped).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.skipped[id]; });
   save(); render(); showReceipt(t);
 }
 
+function undoLastTrip(){
+  if(!S.trips.length){ toast("No trip to undo"); return; }
+  var t=S.trips.pop();
+  active=t.storeKey||active;
+  (t.restoreChecked||[]).forEach(function(id){ S.checked[id]=true; });
+  (t.restoreSkipped||[]).forEach(function(id){ S.skipped[id]=true; });
+  save(); closeSheet(); render(); toast("Trip undone \u2014 marks restored");
+}
 function receiptText(t){
   var W=36, s=t.store+"\n"+t.datetime.replace("T"," ")+"\n"+"-".repeat(W)+"\n";
   t.items.forEach(function(i){
@@ -666,8 +713,10 @@ function showReceipt(t){
     +'<p class="hint">Bought and skipped marks are cleared. The trip stays in history until you erase it.</p>'
     +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
     +'<button class="mbtn primary" id="rExp">Copy data for Claude</button>'
+    +'<button class="mbtn mid" id="rUndo">Undo this trip<small>Puts every mark back and deletes the trip</small></button>'
     +'<button class="mbtn mid" id="rDone">Done</button>');
   document.getElementById("rExp").onclick=copyExport;
+  document.getElementById("rUndo").onclick=undoLastTrip;
   document.getElementById("rDone").onclick=closeSheet;
 }
 
@@ -678,7 +727,8 @@ function exportPayload(){
     groups(sk).forEach(function(g){
       g.rows.forEach(function(r){
         prices.push({store:SEED[sk].label, group:g.title, nameES:r.n, nameEN:r.e,
-          qty:r.q, priceMXN:(r.price===undefined?null:r.price), isEstimate:r.est});
+          qty:r.q, unitMXN:(r.unit===undefined?null:r.unit),
+          lineTotalMXN:(r.price===undefined?null:r.price), isEstimate:r.est});
       });
     });
   });
@@ -714,11 +764,13 @@ document.getElementById("menuBtn").addEventListener("click", function(){
     +'<button class="mbtn" id="mCopy">Copy data for Claude<small>'+n+' saved trip'+(n===1?"":"s")+' plus the current list</small></button>'
     +'<button class="mbtn" id="mDl">Download as a file<small>The same data as .json</small></button>'
     +'<button class="mbtn" id="mHist">Trip history<small>Review what you have logged</small></button>'
+    +(n?'<button class="mbtn" id="mUndo">Undo the last trip<small>Restores its marks and deletes it</small></button>':'')
     +'<button class="mbtn" id="mSet">Settings<small>Exchange rate and removed items</small></button>'
     +'<button class="mbtn" id="mUnc">Clear the marks<small>Reset bought and skipped without saving a trip</small></button>');
   document.getElementById("mCopy").onclick=copyExport;
   document.getElementById("mDl").onclick=function(){downloadExport();toast("Downloaded")};
   document.getElementById("mHist").onclick=showHistory;
+  if(n) document.getElementById("mUndo").onclick=undoLastTrip;
   document.getElementById("mSet").onclick=showSettings;
   document.getElementById("mUnc").onclick=function(){
     Object.keys(S.checked).forEach(function(id){if(id.indexOf(active+"|")===0) delete S.checked[id]});
