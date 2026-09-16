@@ -3674,6 +3674,7 @@ function LearnCards({ cards: allCards, scored, phonOn, dir: dirProp = "fwd", fli
   }, [dirProp]);
   const missedCount = allCards.filter((x) => trackLoad()[trackKeyOf(x)]).length;
   const cards = missedOnly ? allCards.filter((x) => trackLoad()[trackKeyOf(x)]) : allCards;
+  if (!cards.length) return /* @__PURE__ */ React.createElement("div", { className: "p-5 text-center space-y-3" }, /* @__PURE__ */ React.createElement("span", { className: "text-5xl" }, "\u{1F389}"), /* @__PURE__ */ React.createElement("p", { className: "font-bold text-stone-800" }, "Nothing to review"), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-stone-400" }, "Miss something anywhere in the app and it lands here."), onExit && /* @__PURE__ */ React.createElement("button", { onClick: onExit, className: "w-full py-2.5 rounded-xl bg-amber-600 text-white font-bold text-sm active:scale-95" }, exitLabel));
   const c = cards[i];
   if (!c) return null;
   const advance = (got) => {
@@ -4628,8 +4629,64 @@ function GrammarArea({ id, onBack }) {
     "\u{1F0CF} Drill the backwards bits \u2014 10 cards"
   ), id === "allverbs" && /* @__PURE__ */ React.createElement(VerbBrowser, { onDrill: (v) => setRun({ label: `\u{1F4DA} ${v.inf} \u2014 say it from memory`, cards: verbDrillCards(v) }) })), gview === "game" && id === "worder" && /* @__PURE__ */ React.createElement(WordOrderGame, null), gview === "drill" && (id === "gustar" ? /* @__PURE__ */ React.createElement(FillBlankDrill, { items: GUSTAR_DRILL, endNote: "Every sentence here was new \u2014 mix in doler next time anything hurts at the doctor's." }) : id === "future" ? /* @__PURE__ */ React.createElement(FillBlankDrill, { key: "fd", items: FUTURE_DRILL, endNote: "Fresh sentences, all five helpers \u2014 voy, vas, va, vamos, van." }) : id === "past" ? /* @__PURE__ */ React.createElement(FillBlankDrill, { key: "pd", items: PAST_DRILL, endNote: "Fresh sentences across -ar, -er and -ir \u2014 yo and t\xFA." }) : id === "verbs" ? /* @__PURE__ */ React.createElement(FillBlankDrill, { key: "vd", items: VERBS_DRILL, endNote: "Ser, estar and tener mixed \u2014 the form always matches WHO." }) : id === "twoverbs" ? /* @__PURE__ */ React.createElement(FillBlankDrill, { key: "tvd", items: TWOVERBS_DRILL, endNote: "First verb carries the who \u2014 the second never changed once. That's the whole rule." }) : id === "gender" ? /* @__PURE__ */ React.createElement(FillBlankDrill, { key: "gd", items: GENDER_DRILL, endNote: "Fresh words \u2014 rules and traps mixed. El/La Buckets in Quizzes is the timed version." }) : /* @__PURE__ */ React.createElement(FillBlankDrill, { key: "cd", items: CONNECTOR_DRILL, endNote: "Fresh sentences \u2014 every glue word, chosen from meaning." })));
 }
+function vmxNormalize() {
+  const s = vmxLoad();
+  if (s._norm === 2) return s;
+  const q = s.queue, moves = {}, drop = [];
+  const drillIndex = {};
+  [GUSTAR_DRILL, FUTURE_DRILL, PAST_DRILL, VERBS_DRILL, TWOVERBS_DRILL, GENDER_DRILL, CONNECTOR_DRILL].forEach((arr) => arr.forEach((d) => {
+    drillIndex[d.full] = d;
+  }));
+  const deckIndex = {};
+  try {
+    [...basicsDrillCards(), ...worderDrillCards()].forEach((c) => {
+      deckIndex[String(c.speakText || c.front)] = c;
+    });
+  } catch (e) {
+  }
+  Object.entries(q).forEach(([k, v]) => {
+    if (v && typeof v === "object" && v.f) return;
+    if (/^(w|c|t|dr|wo):/.test(k)) return;
+    if (VOCAB.some((x) => x.spanish === k)) {
+      moves[wKey(k)] = 1;
+      drop.push(k);
+      return;
+    }
+    const d = drillIndex[k];
+    if (d) {
+      moves["dr:" + d.full] = { f: d.full, b: d.en, sub: d.note, say: d.full, sent: 1, sf: 1 };
+      drop.push(k);
+      return;
+    }
+    const dc = deckIndex[k];
+    if (dc) {
+      moves[k] = { f: dc.front, b: dc.back, sub: dc.backSub, say: dc.speakText, sent: dc.sent ? 1 : 0, sf: dc.speakFront ? 1 : 0 };
+      drop.push(k);
+      return;
+    }
+    if (COGNATE_FAMILIES.some((f) => f.words.some((x) => x.es === k))) {
+      moves[cKey(k)] = 1;
+      drop.push(k);
+      return;
+    }
+    if (FALSE_FRIENDS.some((x) => x.es === k)) {
+      moves[tKey(k)] = 1;
+      drop.push(k);
+      return;
+    }
+    drop.push(k);
+  });
+  drop.forEach((k) => delete q[k]);
+  Object.entries(moves).forEach(([k, v]) => {
+    if (!q[k]) q[k] = v;
+    if (!s.boxes[k]) s.boxes[k] = 1;
+  });
+  s._norm = 2;
+  vmxSave();
+  return s;
+}
 function queueCards() {
-  const q = vmxLoad().queue, out = [];
+  const q = vmxNormalize().queue, out = [];
   Object.entries(q).forEach(([k, v]) => {
     if (v && typeof v === "object" && v.f) {
       out.push({ front: v.f, back: v.b, backSub: v.sub, speakText: v.say, frontPh: v.ph, sent: !!v.sent, speakFront: !!v.sf, gradeKey: k });
@@ -4659,7 +4716,8 @@ function queueCards() {
   return shuffle(out);
 }
 function GameHub({ onTrain }) {
-  const st = useVmx();
+  useVmx();
+  const st = vmxNormalize();
   const today = st.days[todayKey()] || 0;
   const pct = Math.min(1, today / XP_GOAL);
   const yest = todayKey(new Date(Date.now() - 864e5));
