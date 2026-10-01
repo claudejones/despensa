@@ -491,6 +491,10 @@ let state = {
 // seed-year — the app should open on whatever month you're actually
 // managing right now.
 let ui = { tab: "monthly", ym: todayYM(), dbNS: null, writable: false, loaded: false, monthlyView: "ledger", settingsYear: null };
+// Tracks which tab was on screen for the previous render() call, so we can
+// tell an actual tab switch (scroll back to top) apart from a re-render of
+// the same tab (e.g. a chart update) which should leave scroll position alone.
+let lastRenderedTab = null;
 
 function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2,9); }
 
@@ -933,6 +937,15 @@ function render(){
   renderSubhead();
   const main = document.getElementById("main");
   main.innerHTML = "";
+  // Switching top-level tabs (Monthly / Annual Outlook / Budget Setup /
+  // Settings) should always land at the top of the new tab's content, never
+  // mid-scroll from wherever the previous tab was left. This only fires when
+  // ui.tab actually changed since the last render — a re-render of the same
+  // tab (e.g. after an edit) must not yank scroll position around.
+  if(ui.tab!==lastRenderedTab){
+    window.scrollTo({top:0, behavior:"instant"});
+    lastRenderedTab = ui.tab;
+  }
   if(!ui.loaded){ renderSkeleton(main); return; }
   if(ui.tab==="monthly") renderMonthly(main);
   else if(ui.tab==="outlook") renderOutlook(main);
@@ -1783,6 +1796,7 @@ function openTransferDialog(ym){
   const body = document.getElementById("dlgBody");
   const withRemaining = state.categories.map(c=>({ c, remaining: remainingForMonth(c.id, ym) }));
   const sources = withRemaining.filter(x=> x.remaining > 0);
+  const noSurplus = sources.length === 0;
   let fromId = sources.length ? sources[0].c.id : null;
   let toId = (state.categories.find(c=>c.id!==fromId) || {}).id || null;
 
@@ -1812,7 +1826,7 @@ function openTransferDialog(ym){
       <summary><span class="eyebrow" style="margin:0">From — has surplus</span><span class="pickval" id="fromSummary">${pickerSummary("from",sources)}</span></summary>
       <div class="stack" id="fromList" style="gap:0">${sources.length?rowsHTML(sources,"from"):'<div class="empty">No category has a surplus to move right now.</div>'}</div>
     </details>
-    <details class="advanced xferpick" id="toPicker">
+    <details class="advanced xferpick" id="toPicker" ${noSurplus ? 'style="opacity:.5; pointer-events:none" aria-disabled="true"' : ''}>
       <summary><span class="eyebrow" style="margin:0">To</span><span class="pickval" id="toSummary">${pickerSummary("to",withRemaining)}</span></summary>
       <div class="stack" id="toList" style="gap:0">${rowsHTML(withRemaining,"to")}</div>
     </details>
@@ -1823,7 +1837,7 @@ function openTransferDialog(ym){
     <label>Note (optional)<input type="text" id="tNote" placeholder="e.g. covered grocery overrun"></label>
     <div class="dialog-actions">
       <button class="btn ghost" id="tCancel">Cancel</button>
-      <button class="btn primary" id="tSave">Move</button>
+      <button class="btn primary" id="tSave" ${noSurplus ? 'disabled style="opacity:.5"' : ''}>Move</button>
     </div>
   `;
   function refreshSelection(){
