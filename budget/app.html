@@ -98,7 +98,7 @@
   /* Sticky header + subhead move together as one unit, so a per-tab
      subhead always sits flush under the app header regardless of the
      app header's own height. */
-  #stickyTop{ position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg) }
+  #stickyTop{ position:sticky; top:0; z-index:5; background:var(--bg); padding-top:env(safe-area-inset-top,0px) }
 
   header.top{
     background:var(--bg); padding-block:18px 10px;
