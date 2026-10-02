@@ -93,29 +93,81 @@
   button, input, select{font-family:inherit; font-size:inherit; color:inherit}
   a{color:var(--primary)}
 
-  #app{max-width:640px; margin:0 auto; padding-inline:16px; padding-bottom:96px; min-height:100%; display:flex; flex-direction:column}
+  /* min-height uses the DYNAMIC viewport unit (dvh), not just 100% — a
+     short page (e.g. an unconfigured month's single CTA card) has nothing
+     to scroll, so the mobile browser's address bar never collapses, and a
+     100%-tall #app stops short of the true visible bottom, leaving
+     nav.tabs (fixed, bottom:0) pinned above the browser chrome instead of
+     flush with the real screen edge — while a taller page (enough content
+     to scroll) collapses that chrome and looks fine by comparison. Sizing
+     against 100dvh instead means #app always fills the actual visible
+     viewport regardless of content length, so the nav lands in the same
+     place on every screen. 100% stays first as the fallback for browsers
+     without dvh support. */
+  #app{max-width:640px; margin:0 auto; padding-inline:16px; padding-bottom:96px; min-height:100%; min-height:100dvh; display:flex; flex-direction:column}
 
   /* Sticky header + subhead move together as one unit, so a per-tab
      subhead always sits flush under the app header regardless of the
      app header's own height. */
   #stickyTop{ position:sticky; top:0; z-index:5; background:var(--bg); padding-top:env(safe-area-inset-top,0px) }
 
+  /* App identity — left side of the single header row, no row of its
+     own. Compact so it doesn't fight the date widget on the right for
+     space on narrow phones. */
+  .brand-row{
+    display:flex; align-items:center; gap:8px; flex:none;
+  }
+  .brand-row img{ width:24px; height:24px; border-radius:6px; flex:none; display:block }
+  .brand-row span{
+    font-family:'Fraunces',serif; font-size:15px; font-weight:600;
+    letter-spacing:.03em; text-transform:uppercase; color:var(--ink-soft);
+    white-space:nowrap;
+  }
   header.top{
-    background:var(--bg); padding-block:18px 10px;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--bg); padding-block:10px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
     border-bottom:1px solid var(--line);
   }
-  header.top .brand{display:flex; flex-direction:column; gap:2px}
-  header.top .brand small{color:var(--ink-soft); font-size:12px; letter-spacing:.04em; text-transform:uppercase}
-  /* Calendar entry point to the year grid — replaces the base-rate figure
-     that used to live here; the rate itself now sits next to the rate
-     chart on Annual Outlook, where it's actually relevant. */
-  header.top .iconbtn{
-    width:44px; height:44px; border-radius:50%; border:1px solid var(--line);
-    background:var(--surface-2); color:var(--ink); cursor:pointer; flex:none;
-    display:flex; align-items:center; justify-content:center; padding:0;
+  /* The floated label (below) needs room below the icon before the
+     border — but only on tabs that actually show the widget. Toggled by
+     renderHeaderStepper() so Budget Setup/Settings stay at the tighter
+     10px and don't grow just because this rule exists. */
+  header.top.has-stepper{ padding-bottom:26px; }
+  /* The one place the current period is ever shown — Monthly steps by
+     month, Annual Outlook steps by year; Budget Setup is a template and
+     Settings has its own independent year control, so both render
+     nothing here. A single compact widget, right side of the same row as
+     the brand (not a row of its own — that left too much dead space):
+     chevrons flank the calendar icon, which is the real tap target —
+     opening month+year picker (Year Grid) on Monthly, year-only picker
+     on Outlook — with a small caps label inline naming the period. The
+     chevrons just step by one unit, no dialog. */
+  .hdr-stepper{display:flex; align-items:center; gap:2px; min-width:0}
+  .hdr-stepper .navbtn-ghost{
+    background:none; border:none; color:var(--ink-soft); cursor:pointer;
+    width:28px; height:28px; font-size:17px; display:flex; align-items:center;
+    justify-content:center; padding:0; flex:none;
   }
-  header.top .iconbtn:active{ opacity:.85 }
+  .hdr-stepper .navbtn-ghost:active{ opacity:.6 }
+  .hdr-stepper .navbtn-ghost:disabled{ opacity:.3; cursor:default }
+  .hdr-stepper .cal-btn{
+    background:none; border:none; color:var(--ink); cursor:pointer;
+    width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+    padding:0; flex:none;
+  }
+  .hdr-stepper .cal-btn:active{ opacity:.6 }
+  /* cal-stack sizes to the icon alone (not the label) — the label is
+     pulled out of flow and floated underneath it instead of sharing the
+     stack's width, so it can't inflate this box and push the arrows away
+     from the icon. That also means the stepper's total width is always
+     just icon+arrows, constant regardless of label text, which is what
+     stops the whole cluster from shifting Monthly <-> Outlook. */
+  .hdr-stepper .cal-stack{ position:relative }
+  .hdr-stepper .hdr-label2{
+    position:absolute; top:100%; left:50%; transform:translateX(-50%); margin-top:2px;
+    font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--ink-soft); white-space:nowrap;
+  }
 
   /* Per-tab subhead — status + the one action that matters most while
      scrolling that tab. Empty/hidden on tabs with nothing to pin. */
@@ -135,16 +187,29 @@
     background:var(--surface-2); color:var(--ink); font-size:15px; cursor:pointer; flex:none;
     display:flex; align-items:center; justify-content:center; padding:0;
   }
+  .navbtn:disabled{ opacity:.35; cursor:default }
   .subhead .iconbtn{
     width:34px; height:34px; border-radius:50%; border:1px solid transparent;
     background:var(--accent); color:var(--accent-ink); font-size:19px; cursor:pointer; flex:none;
     display:flex; align-items:center; justify-content:center; padding:0; line-height:1;
   }
   .subhead .iconbtn:active{ opacity:.85 }
-  /* Ledger/Dashboard view toggle — its own row at the top of Monthly's
-     body, not the sticky subhead (too tight on a real phone width once the
-     Available/Spent/Surplus stats are already there). Labeled, not just
-     icon-only, since it now has room to say what it does. */
+  .subhead .iconbtn{ position:relative }
+  .iconbtn-badge{
+    position:absolute; top:-4px; right:-4px; min-width:16px; height:16px; padding:0 3px;
+    border-radius:999px; background:var(--primary); color:#fff; font-size:10px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; line-height:1; pointer-events:none;
+  }
+  /* Transfer funds + Ledger/Dashboard toggle — pinned as the bottom slice
+     of the sticky header stack (brand row, subhead, this), so it's always
+     reachable without scrolling back up, on every tab it applies to. Empty
+     and hidden on every tab but Monthly (renderSubhead fills/clears it). */
+  .monthly-toggle-sticky{ display:none; padding-bottom:10px; border-bottom:1px solid var(--line) }
+  .monthly-toggle-sticky.show{ display:block }
+  /* Ledger/Dashboard view toggle — its own row, not the subhead itself (too
+     tight on a real phone width once the Available/Spent/Surplus stats are
+     already there). Labeled, not just icon-only, since it now has room to
+     say what it does. */
   .viewtoggle-row{ display:flex; align-items:center; justify-content:space-between; gap:10px }
   .viewtoggle{
     display:flex; border:1px solid var(--line); border-radius:9px; overflow:hidden; flex:none;
@@ -335,6 +400,9 @@
   /* A PAST unconfigured month is quiet history, not a pending task — plain
      dimmed tile, no dashed "needs attention" border. */
   .monthtile.unset-past:not(.active){ opacity:.45; color:var(--ink-soft) }
+  /* Year-only picker reuses these tiles for years instead of months; a
+     year outside the nav bounds is just unreachable, not "unset". */
+  .monthtile:disabled{ opacity:.3; cursor:default; pointer-events:none }
   .monthtile-unset{ position:absolute; bottom:8px; left:50%; transform:translateX(-50%); font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); white-space:nowrap }
 
   /* Bottom sheet — anchored to the bottom edge instead of centered, the
@@ -410,14 +478,14 @@
 <div id="app">
   <div id="stickyTop">
     <header class="top">
-      <div class="brand">
-        <h1 style="font-size:20px">Ledger Casa</h1>
+      <div class="brand-row">
+        <img src="favicon.png" alt="">
+        <span>Ledger Casa</span>
       </div>
-      <button type="button" class="iconbtn" id="calBtn" aria-label="Open year view">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      </button>
+      <div class="hdr-stepper" id="hdrStepper"></div>
     </header>
     <div class="subhead" id="subhead"></div>
+    <div class="monthly-toggle-sticky" id="monthlyToggleSticky"></div>
   </div>
 
   <main id="main"></main>
@@ -606,6 +674,18 @@ function earliestYM(){
   const years = Object.keys(state.settings.perYear||{}).map(Number);
   const y = years.length ? Math.min(...years) : yearOfYM(ui.ym);
   return ymOf(y, 0);
+}
+// How far year navigation (the header widget's year arrows and the Year
+// Grid) is allowed to travel. Not a fixed calendar year like 2000 — that
+// would be arbitrary for an app meant to be used for decades. Instead:
+// one year of headroom behind whichever is earlier, the earliest year
+// you've actually configured or the real current year (so a brand-new
+// install can still step one year back from today before hitting the
+// wall), and 30 years of headroom ahead of today for long-range planning.
+function yearNavBounds(){
+  const minYear = Math.min(yearOfYM(earliestYM()), yearOfYM(todayYM())) - 1;
+  const maxYear = yearOfYM(todayYM()) + 30;
+  return { minYear, maxYear };
 }
 
 /* ---------------------------------------------------------------
@@ -890,6 +970,15 @@ function fundAdjustmentForMonth(ym){
   return extra;
 }
 
+// Count of fund events + transfers touching this month — drives the
+// numbered badge on Monthly's subhead "adjustments" icon. Same filters as
+// openFundAdjustmentsSheet, kept in sync with it.
+function fundAdjustmentsCountForMonth(ym){
+  const fe = state.fundevents.filter(f=> f.mode==="oneshot" ? f.targetYM===ym : (ym>=f.targetYM && ym<(yearOfYM(f.targetYM)+1)*12));
+  const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
+  return fe.length + tr.length;
+}
+
 // Actual Spend for a category — independent of Target. Sums the actual-
 // spend entries logged in Monthly for that category and month, whether
 // that's one lump total or several itemized entries.
@@ -1124,6 +1213,7 @@ function render(){
   // marks months that already have real data (imported, or seeded before
   // this tracking existed) so they don't later show as "not set up".
   if(ui.loaded) ensureMonthSeeded(ui.ym);
+  renderHeaderStepper();
   renderSubhead();
   const main = document.getElementById("main");
   main.innerHTML = "";
@@ -1143,13 +1233,65 @@ function render(){
   else if(ui.tab==="settings") renderSettings(main);
 }
 
+// The one place the current period is displayed, full stop — every other
+// date label in the body (Monthly's old subhead label, the Year-to-Date
+// card's own year) was removed in favor of this, so there's never a
+// duplicate to fall out of sync. Granularity follows the tab: Monthly is
+// month-scoped, Annual Outlook is year-scoped. Budget Setup is a template
+// (not tied to any one month) and Settings has its own independent year
+// control, so both render nothing here. A single compact widget: the
+// calendar icon is the real tap target (opens the Year Grid — month+year
+// on Monthly, year-only on Outlook); the chevrons just step one unit
+// without opening anything.
+const CAL_ICON_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+function renderHeaderStepper(){
+  const box = document.getElementById("hdrStepper");
+  const headerEl = box.closest("header.top");
+  box.innerHTML = "";
+  const hasWidget = ui.loaded && (ui.tab==="monthly" || ui.tab==="outlook");
+  headerEl.classList.toggle("has-stepper", hasWidget);
+  if(!hasWidget) return;
+  const ym = ui.ym;
+  if(ui.tab==="monthly"){
+    box.innerHTML = `
+      <button type="button" class="navbtn-ghost" id="hdrPrev" aria-label="Previous month">‹</button>
+      <div class="cal-stack">
+        <button type="button" class="cal-btn" id="hdrCal" aria-label="Open month picker">${CAL_ICON_SVG}</button>
+        <span class="hdr-label2">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</span>
+      </div>
+      <button type="button" class="navbtn-ghost" id="hdrNext" aria-label="Next month">›</button>
+    `;
+    box.querySelector("#hdrPrev").onclick = ()=>{ ui.ym = ym - 1; render(); };
+    box.querySelector("#hdrNext").onclick = ()=>{ ui.ym = ym + 1; render(); };
+    box.querySelector("#hdrCal").onclick = ()=> openYearGridSheet(yearOfYM(ui.ym));
+  } else if(ui.tab==="outlook"){
+    const year = yearOfYM(ym);
+    const { minYear, maxYear } = yearNavBounds();
+    box.innerHTML = `
+      <button type="button" class="navbtn-ghost" id="hdrPrev" aria-label="Previous year" ${year<=minYear?"disabled":""}>‹</button>
+      <div class="cal-stack">
+        <button type="button" class="cal-btn" id="hdrCal" aria-label="Open year picker">${CAL_ICON_SVG}</button>
+        <span class="hdr-label2">${year}</span>
+      </div>
+      <button type="button" class="navbtn-ghost" id="hdrNext" aria-label="Next year" ${year>=maxYear?"disabled":""}>›</button>
+    `;
+    box.querySelector("#hdrPrev").onclick = ()=>{ if(year>minYear){ ui.ym = ymOf(year-1, monthOfYM(ym)); render(); } };
+    box.querySelector("#hdrNext").onclick = ()=>{ if(year<maxYear){ ui.ym = ymOf(year+1, monthOfYM(ym)); render(); } };
+    box.querySelector("#hdrCal").onclick = ()=> openYearOnlySheet(yearOfYM(ui.ym));
+  }
+}
+
 // The sticky subhead: status + the one action that matters most while
 // scrolling this tab. Annual Outlook has no per-month concept and Settings
 // has nothing worth pinning, so both stay hidden here.
 function renderSubhead(){
   const sub = document.getElementById("subhead");
+  const toggleBox = document.getElementById("monthlyToggleSticky");
   sub.innerHTML = "";
   sub.classList.remove("show");
+  sub.style.borderBottom = "";
+  toggleBox.innerHTML = "";
+  toggleBox.classList.remove("show");
   if(!ui.loaded) return;
   const ym = ui.ym;
 
@@ -1174,26 +1316,25 @@ function renderSubhead(){
     const avail = showAvail ? totalAvailableForMonth(ym) : null;
     const spent = seeded ? totalSpentForMonth(ym) : null;
     const surplus = seeded ? (avail - spent) : null;
+    const adjCount = fundAdjustmentsCountForMonth(ym);
     sub.innerHTML = `
-      <button class="navbtn" id="shPrevM" aria-label="Previous month">‹</button>
-      <div class="sh-info">
-        <div class="sh-label">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</div>
-        <div class="sh-info" style="flex-direction:row; gap:14px; align-items:baseline; margin-top:2px">
-          <div${showAvail?"":` style="text-align:center"`}><div class="sh-tiny">Available</div><div class="num sh-amt">${showAvail?fmtUSD(avail):"—"}</div></div>
-          <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
-          <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
-        </div>
+      <div class="sh-info" style="flex-direction:row; gap:14px; align-items:baseline">
+        <div${showAvail?"":` style="text-align:center"`}><div class="sh-tiny">Available</div><div class="num sh-amt">${showAvail?fmtUSD(avail):"—"}</div></div>
+        <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
+        <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
       </div>
       <div class="sh-actions">
-        <button class="navbtn" id="shNextM" aria-label="Next month">›</button>
+        <button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}</button>
       </div>
     `;
     sub.classList.add("show");
-    sub.querySelector("#shPrevM").onclick = ()=>{ ui.ym = ym - 1; render(); };
-    sub.querySelector("#shNextM").onclick = ()=>{ ui.ym = ym + 1; render(); };
+    sub.style.borderBottom = "none";
+    sub.querySelector("#shFundAdj").onclick = ()=> openFundAdjustmentsSheet(ym);
+    toggleBox.appendChild(viewToggleRow(ym));
+    toggleBox.classList.add("show");
   } else if(ui.tab==="categories"){
-    const target = yearSettings(yearOfYM(ym)).yearBudgetUSD/12;
-    const allocated = state.categories.filter(c=>categoryAppliesToYM(c,ym)).reduce((s,c)=> s+categoryBaseForMonth(c.id,ym), 0);
+    const target = yearSettings(yearOfYM(todayYM())).yearBudgetUSD/12;
+    const allocated = state.categories.filter(c=>categoryAppliesToYM(c,ym)).reduce((s,c)=> s+(c.baseAmountUSD||0), 0);
     const unallocated = target - allocated;
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:16px; align-items:baseline">
@@ -1240,10 +1381,6 @@ document.querySelectorAll("nav.tabs button").forEach(b=>{
   });
 });
 
-// The calendar icon in the app header is the sole entry point to the year
-// grid — static markup outside #main, so it's wired once here rather than
-// on every render().
-document.getElementById("calBtn").onclick = ()=> openYearGridSheet(yearOfYM(ui.ym));
 
 /* ---------------------------------------------------------------
    RENDER: MONTHLY — DASHBOARD SUB-VIEW
@@ -1256,7 +1393,6 @@ document.getElementById("calBtn").onclick = ()=> openYearGridSheet(yearOfYM(ui.y
 function renderMonthlyDash(main, ym){
   const mIdx = monthOfYM(ym);
   const wrap = el("div", "stack");
-  wrap.appendChild(viewToggleRow(ym));
 
   if(!isMonthSeeded(ym)){
     if(ym < todayYM()) wrap.appendChild(monthNotSetUpCard(ym));
@@ -1309,14 +1445,7 @@ function renderOutlook(main){
 
   const ytdCard = el("div","card stack");
   ytdCard.innerHTML = `
-    <div class="row" style="align-items:center">
-      <div class="eyebrow">Year to date</div>
-      <div class="row" style="gap:6px; width:auto">
-        <button class="navbtn" id="outPrevY" aria-label="Previous year">‹</button>
-        <span class="num" style="font-weight:600">${year}</span>
-        <button class="navbtn" id="outNextY" aria-label="Next year">›</button>
-      </div>
-    </div>
+    <div class="eyebrow">Year to date</div>
   `;
   const bar = el("div");
   const pct = Math.min(100, (ytdSpent/Math.max(yearBudget,1))*100);
@@ -1359,9 +1488,6 @@ function renderOutlook(main){
 
   main.appendChild(wrap);
 
-  ytdCard.querySelector("#outPrevY").onclick = ()=>{ ui.ym = ymOf(year-1, monthOfYM(ym)); render(); };
-  ytdCard.querySelector("#outNextY").onclick = ()=>{ ui.ym = ymOf(year+1, monthOfYM(ym)); render(); };
-
   drawMonthlyChart();
   drawRateChart();
 }
@@ -1378,18 +1504,28 @@ function drawMonthlyChart(){
   const yms = MONTHS.map((_,i)=> ymOf(year, i));
   const budgets = yms.map(ym=> totalBudgetForMonth(ym));
   const actuals = yms.map(ym=> hasActualsForMonth(ym) ? totalSpentForMonth(ym) : null);
-  const budgetColors = yms.map(ym=> hasActualsForMonth(ym) ? cssVar("--surface-2") : hexToRgba(cssVar("--ink-soft"), 0.18));
+  // One consistent color for every "Budget / plan" bar — the dark "Actual"
+  // bar in front of it already signals which months have logged data, so
+  // a second, unlabeled color on the plan bar itself only broke the
+  // legend (whose single swatch could never represent two colors at once).
   try{
     if(charts.monthly) charts.monthly.destroy();
     charts.monthly = new Chart(ctx, {
       type:"bar",
       data:{ labels:MONTHS, datasets:[
-        { label:"Budget / plan", data:budgets, backgroundColor: budgetColors, borderRadius:4 },
+        { label:"Budget / plan", data:budgets, backgroundColor: hexToRgba(cssVar("--ink-soft"), 0.18), borderRadius:4 },
         { label:"Actual", data:actuals, backgroundColor: cssVar("--primary"), borderRadius:4 },
       ]},
       options:{
         responsive:true,
-        plugins:{ legend:{ labels:{ color:cssVar("--ink-soft"), font:{family:"Work Sans"} } } },
+        plugins:{
+          legend:{ labels:{ color:cssVar("--ink-soft"), font:{family:"Work Sans"} } },
+          // Chart.js's default tooltip formatter shows up to 3 decimal
+          // places on a raw JS number, which is why a summed actual like
+          // 5372.335999... read as "$5,372.336" — every dollar figure in
+          // this app is 2 decimals, tooltips included.
+          tooltip:{ callbacks:{ label:(c)=> `${c.dataset.label}: ${fmtUSD(c.parsed.y)}` } },
+        },
         scales:{
           x:{ ticks:{color:cssVar("--ink-soft")}, grid:{display:false} },
           y:{ ticks:{color:cssVar("--ink-soft")}, grid:{color:cssVar("--line")} }
@@ -1411,7 +1547,10 @@ function drawCategoryChart(m){
   charts.cat = new Chart(ctx, {
     type:"doughnut",
     data:{ labels:cats.map(c=>c.name), datasets:[{ data:cats.map(c=>spentForMonth(c.id,m)), backgroundColor:cats.map(c=>c.color) }] },
-    options:{ plugins:{ legend:{ position:"bottom", labels:{ color:cssVar("--ink-soft"), boxWidth:10, font:{size:11} } } } }
+    options:{ plugins:{
+      legend:{ position:"bottom", labels:{ color:cssVar("--ink-soft"), boxWidth:10, font:{size:11} } },
+      tooltip:{ callbacks:{ label:(c)=> `${c.label}: ${fmtUSD(c.parsed)}` } },
+    } }
   });
 }
 function drawSplitChart(ym){
@@ -1428,7 +1567,10 @@ function drawSplitChart(ym){
   charts.split = new Chart(ctx, {
     type:"bar",
     data:{ labels:["Cash","Card","Transfer"], datasets:[{ data:[cash,card,transfer], backgroundColor:[cssVar("--cash"), cssVar("--primary"), cssVar("--transfer")], borderRadius:6 }] },
-    options:{ indexAxis:"y", plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:cssVar("--ink-soft")},grid:{color:cssVar("--line")}}, y:{ticks:{color:cssVar("--ink-soft")},grid:{display:false}} } }
+    options:{ indexAxis:"y", plugins:{
+      legend:{display:false},
+      tooltip:{ callbacks:{ label:(c)=> fmtUSD(c.parsed.x) } },
+    }, scales:{ x:{ticks:{color:cssVar("--ink-soft")},grid:{color:cssVar("--line")}}, y:{ticks:{color:cssVar("--ink-soft")},grid:{display:false}} } }
   });
 }
 function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#888"; }
@@ -1516,7 +1658,7 @@ function drawRateChart(){
         interaction:{ mode:"index", intersect:false },
         plugins:{
           legend:{ labels:{ color:mutedColor, font:{family:"Work Sans"}, boxWidth:12 } },
-          tooltip:{ mode:"index", intersect:false },
+          tooltip:{ mode:"index", intersect:false, callbacks:{ label:(c)=> `${c.dataset.label}: ${c.parsed.y.toFixed(2)}` } },
         },
         scales:{
           x:{ ticks:{ color:mutedColor }, grid:{display:false} },
@@ -1802,7 +1944,6 @@ function renderMonthly(main){
   }
 
   const wrap = el("div","stack");
-  wrap.appendChild(viewToggleRow(ym));
 
   if(!isMonthSeeded(ym)){
     if(ym < todayYM()) wrap.appendChild(monthNotSetUpCard(ym));
@@ -1817,14 +1958,22 @@ function renderMonthly(main){
       <div class="eyebrow">Allocated by category</div>
       <button class="infobtn" type="button" id="mAddCat" aria-label="Add a category to this month" style="font-size:18px; line-height:1">+</button>
     </div>
-    <p class="muted" style="margin:-4px 0 0">Tap a category to review spend this month, or + to log something quickly.</p>
+    <p class="muted" style="margin:-4px 0 0">Tap a category to review expenses this month, or + to log something quickly.</p>
   `;
   catsCard.querySelector("#mAddCat").onclick = ()=> openMonthAddCategorySheet(ym);
   // Driven by state.monthCategoryData[ym], not the live template list — a
   // set-up month only ever shows what it was actually forked with (plus
   // whatever's been added/removed directly in that month since), never
   // whatever Budget Setup happens to look like right now.
-  monthCategoryList(ym).forEach(({id, name, color})=>{
+  const monthCats = monthCategoryList(ym);
+  // A seeded month can legitimately have zero categories (chose "Start
+  // with nothing", or removed its last one since) — distinct from never
+  // having been set up at all. Without this, the card just goes blank,
+  // which reads as broken rather than as "empty, build it up from here."
+  if(monthCats.length===0){
+    catsCard.appendChild(el("div","empty","No categories yet — tap + to add one."));
+  }
+  monthCats.forEach(({id, name, color})=>{
     const base = categoryBaseForMonth(id, ym);
     // "Has a target" used to mean "has line items" back when a category's
     // budget only ever came from summing them. Now a flat category (no
@@ -1852,9 +2001,8 @@ function renderMonthly(main){
     row.innerHTML = `
       <div class="head">
         <span class="name">${name}</span>
-        <button class="infobtn" type="button" data-info aria-label="Details for ${escapeHtml(name)}">${infoIconSVG()}</button>
-        <button class="infobtn" type="button" data-add aria-label="Log spend for ${escapeHtml(name)}" style="font-size:18px; line-height:1">+</button>
-        <span class="chev">›</span>
+        <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
+        <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
       </div>
       <div class="catbar"><div style="width:${pct}%; background:${over?'var(--bad)':color}"></div></div>
       <div class="row">
@@ -1864,8 +2012,11 @@ function renderMonthly(main){
       ${showRoll ? `<div class="muted" style="font-size:11px; margin-top:-4px">${roll>0?'+':''}${fmtUSD(roll)} carried in from last month</div>` : ""}
     `;
     row.style.cursor = "pointer";
-    row.onclick = ()=> openMonthlyActualsSheet(id, ym);
-    row.querySelector("[data-info]").onclick = (ev)=>{
+    // Row tap and the pencil icon both open the one category-management
+    // screen — same pattern as Budget Setup. The "$" icon is a shortcut
+    // that skips straight to logging an expense.
+    row.onclick = ()=> openMonthlyCategoryDetailSheet(id, ym);
+    row.querySelector("[data-edit]").onclick = (ev)=>{
       ev.stopPropagation();
       openMonthlyCategoryDetailSheet(id, ym);
     };
@@ -1877,93 +2028,66 @@ function renderMonthly(main){
   });
   wrap.appendChild(catsCard);
 
-  const oneOffCard = el("div","card stack");
-  oneOffCard.innerHTML = `<div class="eyebrow">This month's fund adjustments</div>`;
-  // A one-shot fund event applies to exactly its target month; a
-  // redistribute one spreads across every month from its target month
-  // through the end of that same calendar year — same window
-  // fundAdjustmentForMonth uses.
-  const fe = state.fundevents.filter(f=> f.mode==="oneshot" ? f.targetYM===ym : (ym>=f.targetYM && ym<(yearOfYM(f.targetYM)+1)*12));
-  const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
-  if(fe.length===0 && tr.length===0){
-    oneOffCard.appendChild(el("div","muted","No fund adjustments or transfers this month."));
-  } else {
-    fe.forEach(f=>{
-      const row = el("div","row");
-      row.innerHTML = `<span class="muted">${f.mode==="oneshot"?"One-time funds":"Redistributed funds"} · ${f.date}</span><span class="num">${fmtUSD(f.amountUSD)}</span>`;
-      oneOffCard.appendChild(row);
-    });
-    tr.forEach(t=>{
-      const from = state.categories.find(c=>c.id===t.fromCategoryId);
-      const to = state.categories.find(c=>c.id===t.toCategoryId);
-      const row = el("div","row");
-      row.innerHTML = `
-        <span class="muted">Moved · ${from?from.name:"?"} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
-        <span class="amt" style="display:flex; align-items:center; gap:8px">
-          <span class="num">${fmtUSD(t.amountUSD)}</span>
-          <button data-del type="button" style="background:none; border:none; color:var(--ink-soft); font-size:11px; cursor:pointer; text-decoration:underline; padding:0">delete</button>
-        </span>
-      `;
-      row.querySelector("[data-del]").onclick = ()=>{
-        confirmAction(`Delete this ${fmtUSD(t.amountUSD)} move (${from?from.name:"?"} → ${to?to.name:"?"})?`, async ()=>{
-          state.transfers = state.transfers.filter(x=>x.id!==t.id);
-          await dbDelete("transfers", t.id);
-          showToast("Transfer deleted");
-          render();
-        });
-      };
-      oneOffCard.appendChild(row);
-    });
-  }
-  wrap.appendChild(oneOffCard);
+  // Fund events and transfers for this month now live behind the sliders
+  // icon in the subhead (openFundAdjustmentsSheet) instead of an
+  // always-visible card at the bottom of the ledger.
 
   main.appendChild(wrap);
 }
 
-// The category's Actual Spend for the month — every logged entry, editable
-// or deletable, plus a running Target / Actual / Remaining summary. This is
-// the Monthly-side counterpart to Budget Setup's item list: independent of
-// it, on purpose, so the two numbers can genuinely diverge.
-function openMonthlyActualsSheet(categoryId, ym){
+// Itemized fund events (one-time/redistributed funding) and transfers for
+// this month, with the ability to delete a transfer — moved off the main
+// ledger scroll and behind the subhead's "adjustments" icon.
+function openFundAdjustmentsSheet(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const info = categoryDisplayInfo(categoryId, ym);
-  const rate = yearSettings(yearOfYM(ym)).baseRate;
-  const target = categoryBaseForMonth(categoryId, ym);
-  const hasTarget = target > 0;
-  const entries = state.actuals.filter(a=>a.categoryId===categoryId && ymOfDate(a.date)===ym);
-  const spent = entries.reduce((s,a)=> s + toUSD(a.amount||0, a.currency, a.rate||rate), 0);
-  const remaining = target - spent;
+  // Same filters as fundAdjustmentsCountForMonth — a one-shot fund event
+  // applies to exactly its target month; a redistribute one spreads across
+  // every month from its target month through the end of that same
+  // calendar year, same window fundAdjustmentForMonth uses.
+  const fe = state.fundevents.filter(f=> f.mode==="oneshot" ? f.targetYM===ym : (ym>=f.targetYM && ym<(yearOfYM(f.targetYM)+1)*12));
+  const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
 
-  const rows = entries.length ? entries.map(a=>{
-    const amt = toUSD(a.amount||0, a.currency, a.rate||rate);
-    return `
-      <button type="button" class="setuprow" data-entry="${a.id}">
-        <span class="name-wrap">
-          <span class="name">${escapeHtml(a.name || "Spend")}</span>
-          <span class="meta-note ${paymentMetaClass(a.paymentMethod)}">${paymentLabel(a.paymentMethod)}</span>
-        </span>
-        <span class="amt num">${fmtUSD(amt)}</span>
-        <span class="chev">›</span>
-      </button>
-    `;
-  }).join("") : `<div class="empty">Nothing logged yet — add a total or itemize as you go.</div>`;
+  const rows = (fe.length===0 && tr.length===0) ? `<div class="empty">No fund adjustments or transfers this month.</div>` : `
+    <div class="stack" id="faRows" style="gap:0">
+      ${fe.map(f=>`<div class="row"><span class="muted">${f.mode==="oneshot"?"One-time funds":"Redistributed funds"} · ${f.date}</span><span class="num">${fmtUSD(f.amountUSD)}</span></div>`).join("")}
+      ${tr.map(t=>{
+        const from = state.categories.find(c=>c.id===t.fromCategoryId);
+        const to = state.categories.find(c=>c.id===t.toCategoryId);
+        return `
+          <div class="row">
+            <span class="muted">Moved · ${from?from.name:"?"} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
+            <span class="amt" style="display:flex; align-items:center; gap:8px">
+              <span class="num">${fmtUSD(t.amountUSD)}</span>
+              <button data-del="${t.id}" type="button" style="background:none; border:none; color:var(--ink-soft); font-size:11px; cursor:pointer; text-decoration:underline; padding:0">delete</button>
+            </span>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
 
   body.innerHTML = `
-    <h3>${escapeHtml(info.name)}</h3>
-    <p class="muted">${MONTHS[monthOfYM(ym)]} · Target <strong class="num">${fmtUSD(target)}</strong> · Actual <strong class="num">${fmtUSD(spent)}</strong> · <span class="num" style="color:${!hasTarget?'inherit':(remaining>=0?'var(--good)':'var(--bad)')}">${!hasTarget?'no target set':(remaining>=0?fmtUSD(remaining)+' left':fmtUSD(remaining))}</span></p>
-    <div class="stack" id="aEntries" style="gap:0">${rows}</div>
-    <button class="btn accent block" id="aAddEntry">${iconPlus()}<span>Add spend</span></button>
-    <div class="dialog-actions"><button class="btn ghost" id="aClose">Close</button></div>
+    <h3>Fund adjustments</h3>
+    <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</p>
+    ${rows}
+    <div class="dialog-actions"><button class="btn ghost" id="faClose">Close</button></div>
   `;
-  body.querySelectorAll("[data-entry]").forEach(btn=>{
+  body.querySelectorAll("[data-del]").forEach(btn=>{
     btn.onclick = ()=>{
-      const a = entries.find(x=>x.id===btn.dataset.entry);
-      openActualEntryDialog(categoryId, ym, a);
+      const t = tr.find(x=>x.id===btn.dataset.del);
+      const from = state.categories.find(c=>c.id===t.fromCategoryId);
+      const to = state.categories.find(c=>c.id===t.toCategoryId);
+      confirmAction(`Delete this ${fmtUSD(t.amountUSD)} move (${from?from.name:"?"} → ${to?to.name:"?"})?`, async ()=>{
+        state.transfers = state.transfers.filter(x=>x.id!==t.id);
+        await dbDelete("transfers", t.id);
+        showToast("Transfer deleted");
+        render();
+        openFundAdjustmentsSheet(ym);
+      });
     };
   });
-  body.querySelector("#aAddEntry").onclick = ()=> openActualEntryDialog(categoryId, ym, null);
-  body.querySelector("#aClose").onclick = ()=> dlg.close();
+  body.querySelector("#faClose").onclick = ()=> dlg.close();
   openSheet();
 }
 
@@ -1986,7 +2110,7 @@ function openActualEntryDialog(categoryId, ym, existing){
   })();
 
   body.innerHTML = `
-    <h3>${existing?"Edit":"Log"} spend</h3>
+    <h3>${existing?"Edit":"Add"} Expense</h3>
     <label>Name (optional)<input type="text" id="aName" value="${existing?escapeHtml(existing.name||""):""}" placeholder="Leave blank for a lump total"></label>
     ${currencyFieldsHTML()}
     <label>Payment method
@@ -2034,7 +2158,7 @@ function openActualEntryDialog(categoryId, ym, existing){
     await dbSet("actuals", rec.id, rec);
     showToast(`${existing?"Updated":"Logged"} ${fmtUSD(toUSD(amount, rec.currency, rec.rate))}`);
     render();
-    openMonthlyActualsSheet(categoryId, ym);
+    openMonthlyCategoryDetailSheet(categoryId, ym);
   });
   if(existing){
     body.querySelector("#aDelete").onclick = ()=> confirmAction(`Delete this ${fmtUSD(toUSD(existing.amount||0, existing.currency, existing.rate||baseRate))} entry?`, async ()=>{
@@ -2042,7 +2166,7 @@ function openActualEntryDialog(categoryId, ym, existing){
       await dbDelete("actuals", existing.id);
       showToast("Entry deleted");
       render();
-      openMonthlyActualsSheet(categoryId, ym);
+      openMonthlyCategoryDetailSheet(categoryId, ym);
     });
   }
   openSheet();
@@ -2209,7 +2333,6 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   const info = categoryDisplayInfo(categoryId, ym);
-  const entry = (state.monthCategoryData[ym]||{})[categoryId];
   const base = categoryBaseForMonth(categoryId, ym);
   const hasTarget = base > 0;
   const roll = rolloverForMonth(categoryId, ym);
@@ -2230,21 +2353,29 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     transferBlock = `<div class="danger-zone"><div class="eyebrow" style="margin-bottom:8px">Transfers this month</div>${rows}</div>`;
   }
 
-  const items = (entry && entry.items) || [];
-  const itemRows = items.length ? items.map(it=>`
-    <button type="button" class="setuprow" data-mitem="${it.id}">
-      <span class="name-wrap">
-        <span class="name">${escapeHtml(it.name)}</span>
-        <span class="meta-note ${paymentMetaClass(it.paymentMethod)}">${paymentLabel(it.paymentMethod)}</span>
-      </span>
-      <span class="amt num">${fmtUSD(it.amount||0)}</span>
-      <span class="chev">›</span>
-    </button>
-  `).join("") : `<div class="empty">No items for this month yet.</div>`;
+  // The real logged spend for this category/month — replaces the old
+  // static "This month's items" snapshot, which was never actually read by
+  // any budget math (Available/Spent/Remaining always came from the base
+  // allocation + these same actuals) and just drifted out of sync with it.
+  const rate = yearSettings(yearOfYM(ym)).baseRate;
+  const entries = state.actuals.filter(a=>a.categoryId===categoryId && ymOfDate(a.date)===ym);
+  const entryRows = entries.length ? entries.map(a=>{
+    const amt = toUSD(a.amount||0, a.currency, a.rate||rate);
+    return `
+      <div class="setuprow" role="button" tabindex="0" data-entry="${a.id}">
+        <span class="name-wrap">
+          <span class="name">${escapeHtml(a.name || "Expense")}</span>
+          <span class="meta-note ${paymentMetaClass(a.paymentMethod)}">${paymentLabel(a.paymentMethod)}</span>
+        </span>
+        <span class="amt num">${fmtUSD(amt)}</span>
+        <button class="infobtn" type="button" data-edit="${a.id}" aria-label="Edit ${escapeHtml(a.name||"expense")}">${iconEdit()}</button>
+        <button class="infobtn" type="button" data-del="${a.id}" aria-label="Delete ${escapeHtml(a.name||"expense")}">${iconTrash()}</button>
+      </div>
+    `;
+  }).join("") : `<div class="empty">Nothing logged yet — add a total or itemize as you go.</div>`;
 
   body.innerHTML = `
     <h3>${escapeHtml(info.name)}</h3>
-    <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)} — this month's own copy, independent of Budget Setup</p>
     <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px">
       <span class="muted" style="flex:none">Base allocation</span>
       <input type="number" inputmode="decimal" step="0.01" id="mcBaseAmount" value="${(base||0).toFixed(2)}" style="flex:1">
@@ -2261,26 +2392,18 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     </div>
     ${transferBlock}
     <div class="list-divider">
-      <div class="eyebrow">This month's items</div>
-      <div class="stack" id="mcItems" style="gap:0">${itemRows}</div>
-      <button class="btn accent block" id="mcAddItem" style="margin-top:10px">${iconPlus()}<span>Add item</span></button>
+      <div class="eyebrow">Logged expenses</div>
+      <div class="stack" id="mcEntries" style="gap:0">${entryRows}</div>
+      <button class="btn accent block" id="mcAddEntry" style="margin-top:10px">${iconPlus()}<span>Add Expense</span></button>
     </div>
     <div class="danger-zone">
       <button class="btn small danger" id="mcRemoveCat">${iconTrash()}<span>Remove from this month</span></button>
     </div>
-    <div class="dialog-actions" style="justify-content:space-between">
-      ${entry && entry.source==="template" ? `<button class="btn ghost" id="miEditSetup">Edit template in Budget Setup →</button>` : `<span></span>`}
+    <div class="dialog-actions">
       <button class="btn ghost" id="miClose">Close</button>
     </div>
   `;
   body.querySelector("#miClose").onclick = ()=> dlg.close();
-  if(entry && entry.source==="template"){
-    body.querySelector("#miEditSetup").onclick = ()=>{
-      dlg.close();
-      ui.tab = "categories";
-      render();
-    };
-  }
   onceClick(body.querySelector("#mcBaseSave"), async ()=>{
     const amount = parseFloat(body.querySelector("#mcBaseAmount").value||"0") || 0;
     state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
@@ -2293,13 +2416,40 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     render();
     openMonthlyCategoryDetailSheet(categoryId, ym);
   });
-  body.querySelectorAll("[data-mitem]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const it = items.find(x=>x.id===btn.dataset.mitem);
-      openMonthItemDialog(categoryId, ym, it);
+  body.querySelectorAll("[data-entry]").forEach(row=>{
+    row.onclick = ()=>{
+      const a = entries.find(x=>x.id===row.dataset.entry);
+      openActualEntryDialog(categoryId, ym, a);
+    };
+    row.onkeydown = (ev)=>{
+      if(ev.key==="Enter" || ev.key===" "){
+        ev.preventDefault();
+        const a = entries.find(x=>x.id===row.dataset.entry);
+        openActualEntryDialog(categoryId, ym, a);
+      }
     };
   });
-  body.querySelector("#mcAddItem").onclick = ()=> openMonthItemDialog(categoryId, ym, null);
+  body.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.onclick = (ev)=>{
+      ev.stopPropagation();
+      const a = entries.find(x=>x.id===btn.dataset.edit);
+      openActualEntryDialog(categoryId, ym, a);
+    };
+  });
+  body.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = (ev)=>{
+      ev.stopPropagation();
+      const a = entries.find(x=>x.id===btn.dataset.del);
+      confirmAction(`Delete this ${fmtUSD(toUSD(a.amount||0, a.currency, a.rate||rate))} entry?`, async ()=>{
+        state.actuals = state.actuals.filter(x=>x.id!==a.id);
+        await dbDelete("actuals", a.id);
+        showToast("Entry deleted");
+        render();
+        openMonthlyCategoryDetailSheet(categoryId, ym);
+      });
+    };
+  });
+  body.querySelector("#mcAddEntry").onclick = ()=> openActualEntryDialog(categoryId, ym, null);
   body.querySelector("#mcRemoveCat").onclick = ()=> confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Any balance it's carrying gets swept into this month's general Unallocated pot instead of disappearing.`, async ()=>{
     // Two distinct components land in this month's Unallocated pot once the
     // entry is gone. The carried-in-from-before part (rollover from the
@@ -2323,62 +2473,6 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     showToast(`Removed ${info.name} from ${MONTHS[monthOfYM(ym)]}`);
     render();
   });
-  openSheet();
-}
-
-// Name/amount/payment-method editor for one of THIS MONTH's own items
-// (state.monthCategoryData[ym][categoryId].items) — simpler than Budget
-// Setup's line items on purpose: no 12-month schedule, since a month-local
-// item only ever applies to this one month.
-function openMonthItemDialog(categoryId, ym, existing){
-  const dlg = document.getElementById("dlg");
-  const body = document.getElementById("dlgBody");
-  body.innerHTML = `
-    <h3>${existing?"Edit":"New"} item</h3>
-    <label>Name<input type="text" id="miName" value="${existing?escapeHtml(existing.name):""}" placeholder="e.g. Netflix"></label>
-    <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="miAmount" value="${existing?(existing.amount||0).toFixed(2):""}" placeholder="0.00"></label>
-    <label>Payment method
-      <select id="miPay">
-        <option value="card" ${!existing||existing.paymentMethod==="card"?"selected":""}>Card</option>
-        <option value="cash" ${existing&&existing.paymentMethod==="cash"?"selected":""}>Cash (ATM)</option>
-        <option value="transfer" ${existing&&existing.paymentMethod==="transfer"?"selected":""}>Bank transfer</option>
-      </select>
-    </label>
-    ${existing ? `<div class="danger-zone"><button class="btn small danger" id="miDelete">${iconTrash()}<span>Delete item</span></button></div>` : ""}
-    <div class="dialog-actions">
-      <button class="btn ghost" id="miCancel">Cancel</button>
-      <button class="btn primary" id="miSave">Save</button>
-    </div>
-  `;
-  body.querySelector("#miCancel").onclick = ()=> dlg.close();
-  onceClick(body.querySelector("#miSave"), async ()=>{
-    const name = body.querySelector("#miName").value.trim();
-    if(!name) return;
-    const amount = parseFloat(body.querySelector("#miAmount").value||"0") || 0;
-    const paymentMethod = body.querySelector("#miPay").value;
-    const entry = state.monthCategoryData[ym] && state.monthCategoryData[ym][categoryId];
-    if(!entry) { dlg.close(); return; }
-    if(existing){
-      const idx = entry.items.findIndex(x=>x.id===existing.id);
-      if(idx>=0) entry.items[idx] = { ...entry.items[idx], name, amount, paymentMethod };
-    } else {
-      entry.items.push({ id: uid("mli"), name, amount, paymentMethod });
-    }
-    await dbSetMonthCategoryData();
-    showToast(`${existing?"Updated":"Added"} ${name}`);
-    render();
-    openMonthlyCategoryDetailSheet(categoryId, ym);
-  });
-  if(existing){
-    body.querySelector("#miDelete").onclick = ()=> confirmAction(`Delete "${existing.name}"?`, async ()=>{
-      const entry = state.monthCategoryData[ym] && state.monthCategoryData[ym][categoryId];
-      if(entry) entry.items = entry.items.filter(x=>x.id!==existing.id);
-      await dbSetMonthCategoryData();
-      showToast("Deleted");
-      render();
-      openMonthlyCategoryDetailSheet(categoryId, ym);
-    });
-  }
   openSheet();
 }
 
@@ -2484,21 +2578,69 @@ function openYearGridSheet(year){
     `;
   }).join("");
 
+  const { minYear, maxYear } = yearNavBounds();
   body.innerHTML = `
     <div class="row" style="align-items:center">
-      <button class="navbtn" id="ygPrev" aria-label="Previous year">‹</button>
+      <button class="navbtn" id="ygPrev" aria-label="Previous year" ${year<=minYear?"disabled":""}>‹</button>
       <h3 style="flex:1; text-align:center; margin:0">${year}</h3>
-      <button class="navbtn" id="ygNext" aria-label="Next year">›</button>
+      <button class="navbtn" id="ygNext" aria-label="Next year" ${year>=maxYear?"disabled":""}>›</button>
     </div>
     <div class="yeargrid">${tiles}</div>
     <div class="dialog-actions"><button class="btn ghost" id="ygClose">Close</button></div>
   `;
-  body.querySelector("#ygPrev").onclick = ()=> openYearGridSheet(year-1);
-  body.querySelector("#ygNext").onclick = ()=> openYearGridSheet(year+1);
+  body.querySelector("#ygPrev").onclick = ()=>{ if(year>minYear) openYearGridSheet(year-1); };
+  body.querySelector("#ygNext").onclick = ()=>{ if(year<maxYear) openYearGridSheet(year+1); };
   body.querySelector("#ygClose").onclick = ()=> dlg.close();
   body.querySelectorAll("[data-ym]").forEach(btn=>{
     btn.onclick = ()=>{
       ui.ym = parseInt(btn.dataset.ym,10);
+      dlg.close();
+      render();
+    };
+  });
+  openSheet();
+}
+
+// Annual Outlook's own picker — year only, no month tiles, since Outlook
+// has no per-month concept. Reuses the same bottom sheet and .yeargrid/
+// .monthtile styling as the Year Grid, just with a 12-year window
+// instead of 12 months, centered on `year` and shiftable a window at a
+// time via the same ‹/› controls.
+function openYearOnlySheet(year){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const curYear = yearOfYM(ui.ym);
+  const todayYear = yearOfYM(todayYM());
+  const { minYear, maxYear } = yearNavBounds();
+  const windowStart = year - 5;
+
+  const tiles = Array.from({length:12}, (_,i)=> windowStart + i).map(y=>{
+    const inBounds = y>=minYear && y<=maxYear;
+    const isCurrent = y===curYear;
+    const isToday = y===todayYear;
+    return `
+      <button type="button" class="monthtile ${isCurrent?"active":""} ${isToday?"today":""}" data-year="${y}" ${inBounds?"":"disabled"}>
+        <span>${y}</span>
+      </button>
+    `;
+  }).join("");
+
+  body.innerHTML = `
+    <div class="row" style="align-items:center">
+      <button class="navbtn" id="ygPrev" aria-label="Earlier years" ${windowStart<=minYear?"disabled":""}>‹</button>
+      <h3 style="flex:1; text-align:center; margin:0">${windowStart}–${windowStart+11}</h3>
+      <button class="navbtn" id="ygNext" aria-label="Later years" ${windowStart+11>=maxYear?"disabled":""}>›</button>
+    </div>
+    <div class="yeargrid">${tiles}</div>
+    <div class="dialog-actions"><button class="btn ghost" id="ygClose">Close</button></div>
+  `;
+  body.querySelector("#ygPrev").onclick = ()=>{ if(windowStart>minYear) openYearOnlySheet(year-12); };
+  body.querySelector("#ygNext").onclick = ()=>{ if(windowStart+11<maxYear) openYearOnlySheet(year+12); };
+  body.querySelector("#ygClose").onclick = ()=> dlg.close();
+  body.querySelectorAll("[data-year]:not(:disabled)").forEach(btn=>{
+    btn.onclick = ()=>{
+      const y = parseInt(btn.dataset.year,10);
+      ui.ym = ymOf(y, monthOfYM(ui.ym));
       dlg.close();
       render();
     };
@@ -2555,7 +2697,7 @@ async function moveCategory(cat, dir, siblings){
 }
 
 function categorySummaryAmount(c, ym){
-  return categoryBaseForMonth(c.id, ym);
+  return c.baseAmountUSD || 0;
 }
 
 // One clean tap target per category. No inline inputs — tapping opens the
@@ -2586,11 +2728,15 @@ function renderCategoryRow(c, ym, siblings){
       ${meta}
     </span>
     <span class="amt num" style="color:${amt<0?'var(--bad)':'inherit'}">${fmtUSD(amt)}</span>
-    <button class="infobtn" type="button" data-add aria-label="Add spend to ${escapeHtml(c.name)}" style="font-size:18px; line-height:1">+</button>
-    <span class="chev">›</span>
+    <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(c.name)}">${iconEdit()}</button>
+    <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(c.name)}">${iconDollar()}</button>
   `;
   row.onclick = ()=> openCategoryDetailSheet(c.id, ym);
   row.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); openCategoryDetailSheet(c.id, ym); } };
+  row.querySelector("[data-edit]").onclick = (ev)=>{
+    ev.stopPropagation();
+    openCategoryDetailSheet(c.id, ym);
+  };
   row.querySelector("[data-add]").onclick = (ev)=>{
     ev.stopPropagation();
     openLineItemDialog(c.id, null, ym);
@@ -2616,7 +2762,7 @@ function openCategoryDetailSheet(categoryId, ym){
   const mIdx = monthOfYM(ym);
   const rate = yearSettings(yearOfYM(ym)).baseRate;
   const items = state.lineitems.filter(li=>li.categoryId===categoryId);
-  const target = categoryBaseForMonth(c.id, ym);
+  const target = c.baseAmountUSD || 0;
   const planned = categoryPlannedForMonth(c.id, ym);
   const unallocated = target - planned;
 
@@ -2628,17 +2774,21 @@ function openCategoryDetailSheet(categoryId, ym){
     // like an ordinary recurring item everywhere else it's listed.
     const onlyNote = li.onlyYM ? `Only ${MONTHS[monthOfYM(li.onlyYM)]} ${yearOfYM(li.onlyYM)}` : "";
     const meta = [paymentLabel(li.paymentMethod), freq, onlyNote].filter(Boolean).join(" · ");
+    // A div, not a button — it hosts its own nested edit/delete icon
+    // buttons alongside the row's main tap target, and a button can't
+    // validly contain another button (same pattern as renderCategoryRow).
     return `
-      <button type="button" class="setuprow" data-item="${li.id}">
+      <div class="setuprow" role="button" tabindex="0" data-item="${li.id}">
         <span class="name-wrap">
           <span class="name">${escapeHtml(li.name)}</span>
           <span class="meta-note ${paymentMetaClass(li.paymentMethod)}">${meta}</span>
         </span>
         <span class="amt num">${fmtUSD(amt)}</span>
-        <span class="chev">›</span>
-      </button>
+        <button class="infobtn" type="button" data-edit="${li.id}" aria-label="Edit ${escapeHtml(li.name)}">${iconEdit()}</button>
+        <button class="infobtn" type="button" data-del="${li.id}" aria-label="Delete ${escapeHtml(li.name)}">${iconTrash()}</button>
+      </div>
     `;
-  }).join("") : `<div class="empty">No items yet — add what makes up ${escapeHtml(c.name)}.</div>`;
+  }).join("") : `<div class="empty">No expenses yet — add what makes up ${escapeHtml(c.name)}.</div>`;
 
   body.innerHTML = `
     <h3>${escapeHtml(c.name)}</h3>
@@ -2649,18 +2799,45 @@ function openCategoryDetailSheet(categoryId, ym){
       <button class="btn small" id="dFlatSave">Save</button>
     </label>
     <div class="stack" id="dItems" style="gap:0">${itemRows}</div>
-    <button class="btn accent block" id="dAddItem">${iconPlus()}<span>Add spend</span></button>
+    <button class="btn accent block" id="dAddItem">${iconPlus()}<span>Add Expense</span></button>
     ${c.onlyYM ? `<div class="danger-zone"><button class="btn small block" id="dPromote">Also add to master Budget Setup</button></div>` : ""}
     <div class="danger-zone" style="display:flex; gap:10px">
       <button class="btn small ghost" id="dDuplicate">${iconCopy()}<span>Duplicate category</span></button>
-      <button class="btn small danger" id="dDelCat">${iconTrash()}<span>Delete category${items.length?" & its items":""}</span></button>
+      <button class="btn small danger" id="dDelCat">${iconTrash()}<span>Delete category</span></button>
     </div>
     <div class="dialog-actions"><button class="btn ghost" id="dClose">Close</button></div>
   `;
-  body.querySelectorAll("[data-item]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const li = items.find(x=>x.id===btn.dataset.item);
+  body.querySelectorAll("[data-item]").forEach(row=>{
+    row.onclick = ()=>{
+      const li = items.find(x=>x.id===row.dataset.item);
       openLineItemDialog(categoryId, li, ym);
+    };
+    row.onkeydown = (ev)=>{
+      if(ev.key==="Enter" || ev.key===" "){
+        ev.preventDefault();
+        const li = items.find(x=>x.id===row.dataset.item);
+        openLineItemDialog(categoryId, li, ym);
+      }
+    };
+  });
+  body.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.onclick = (ev)=>{
+      ev.stopPropagation();
+      const li = items.find(x=>x.id===btn.dataset.edit);
+      openLineItemDialog(categoryId, li, ym);
+    };
+  });
+  body.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = (ev)=>{
+      ev.stopPropagation();
+      const li = items.find(x=>x.id===btn.dataset.del);
+      confirmAction(`Delete "${li.name}"?`, async ()=>{
+        state.lineitems = state.lineitems.filter(x=>x.id!==li.id);
+        await dbDelete("lineitems", li.id);
+        showToast(`Deleted ${li.name}`);
+        render();
+        openCategoryDetailSheet(categoryId, ym);
+      });
     };
   });
   onceClick(body.querySelector("#dFlatSave"), async ()=>{
@@ -2695,7 +2872,7 @@ function openCategoryDetailSheet(categoryId, ym){
     render();
     openCategoryDetailSheet(newId, ym);
   });
-  body.querySelector("#dDelCat").onclick = ()=> confirmAction(`Delete "${c.name}"${items.length?` and its ${items.length} item(s)`:""}?`, async ()=>{
+  body.querySelector("#dDelCat").onclick = ()=> confirmAction(`Delete "${c.name}"${items.length?` and its ${items.length} expense${items.length===1?"":"s"}`:""}?`, async ()=>{
     // This only removes the TEMPLATE: the Budget Setup category itself and
     // its planning items. It never touches state.actuals or any month's
     // monthCategoryData — those were already forked into their own
@@ -2720,18 +2897,17 @@ function openCategoryDetailSheet(categoryId, ym){
 // number. `baseAmountUSD` is the category's whole budget, full stop —
 // items added later are just planning templates and never touch it (see
 // categoryBaseForMonth above).
+// A new Budget Setup category is always part of the recurring template —
+// a month-only category has its own dedicated flow in Monthly ("New
+// category just for this month", openMonthNewLocalCategoryDialog), which
+// doesn't touch state.categories at all. No "only this month" option here.
 function openCategoryDialog(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const monthLabel = `${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}`;
   body.innerHTML = `
     <h3>New category</h3>
     <label>Name<input type="text" id="cName" placeholder="e.g. Pet care"></label>
     <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="cAmount" placeholder="0.00"></label>
-    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:8px">
-      <input type="checkbox" id="cOnlyMonth" style="width:auto">
-      <span>Only ${monthLabel} — not part of the recurring Budget Setup template</span>
-    </label>
     <div class="dialog-actions">
       <button class="btn ghost" id="cCancel">Cancel</button>
       <button class="btn primary" id="cSave">Save</button>
@@ -2742,11 +2918,9 @@ function openCategoryDialog(ym){
     const name = body.querySelector("#cName").value.trim();
     if(!name) return;
     const amount = parseFloat(body.querySelector("#cAmount").value||"0") || 0;
-    const onlyMonth = body.querySelector("#cOnlyMonth").checked;
     const id = uid("cat");
     const color = PALETTE[state.categories.length % PALETTE.length];
     const rec = { id, name, order: state.categories.length, color, baseAmountUSD: amount };
-    if(onlyMonth) rec.onlyYM = ym;
     state.categories.push(rec);
     await dbSet("categories", id, rec);
     dlg.close();
@@ -2781,7 +2955,7 @@ function openLineItemDialog(categoryId, existing, ym){
   const monthLabel = `${MONTHS[mIdx]} ${yearOfYM(ym)}`;
 
   body.innerHTML = `
-    <h3>${existing?"Edit":"New"} item</h3>
+    <h3>${existing?"Edit":"New"} Expense</h3>
     <label>Name<input type="text" id="iName" value="${existing?escapeHtml(existing.name):""}" placeholder="e.g. Netflix"></label>
     ${currencyFieldsHTML()}
     <div class="muted" id="iPerPeriod" style="display:none"></div>
@@ -2801,12 +2975,8 @@ function openLineItemDialog(categoryId, existing, ym){
       </select>
     </label>
     <label class="sheet-row" id="iForwardRow" style="flex-direction:row; align-items:center; gap:8px">
-      <input type="checkbox" id="iForward" style="width:auto" ${!existing?"checked":""}>
+      <input type="checkbox" id="iForward" style="width:auto" ${!isOnlyThisMonth&&!existing?"checked":""} ${isOnlyThisMonth?"disabled":""}>
       <span>Apply to ${monthLabel} and every month after${!existing?" (recommended for something new)":""} — unchecked means ${monthLabel} only</span>
-    </label>
-    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:8px">
-      <input type="checkbox" id="iOnlyMonth" style="width:auto" ${isOnlyThisMonth?"checked":""}>
-      <span>Only ${monthLabel} — not part of the recurring Budget Setup template</span>
     </label>
     <details class="advanced" id="iAdv">
       <summary>All 12 months</summary>
@@ -2817,7 +2987,7 @@ function openLineItemDialog(categoryId, existing, ym){
       </div>
     </details>
     ${existing && existing.onlyYM ? `<div class="danger-zone"><button class="btn small block" id="iPromote">Also add to master Budget Setup</button></div>` : ""}
-    ${existing ? `<div class="danger-zone" style="display:flex; gap:10px"><button class="btn small ghost" id="iDuplicate">${iconCopy()}<span>Duplicate item</span></button><button class="btn small danger" id="iDelete">${iconTrash()}<span>Delete item</span></button></div>` : ""}
+    ${existing ? `<div class="danger-zone" style="display:flex; gap:10px"><button class="btn small ghost" id="iDuplicate">${iconCopy()}<span>Duplicate expense</span></button><button class="btn small danger" id="iDelete">${iconTrash()}<span>Delete expense</span></button></div>` : ""}
     <div class="dialog-actions">
       <button class="btn ghost" id="iCancel">Cancel</button>
       <button class="btn primary" id="iSave">Save</button>
@@ -2836,20 +3006,15 @@ function openLineItemDialog(categoryId, existing, ym){
   body.querySelector("#itRate").value = curRate;
   if(curCurrency==="MXN") body.querySelector("#itCurMXN").click();
 
-  // "Only this month" and "apply forward" are mutually exclusive — a
-  // month-only item can't also recur forward, so checking one disables
-  // (and unchecks) the other.
+  // Budget Setup has no "only this month" control anymore — new items
+  // created here are always part of the recurring template. If you're
+  // editing an item that already has onlyYM set (from before this change,
+  // or promoted-and-reverted some other way), that flag is simply
+  // preserved on save without any checkbox to toggle it — "Apply to every
+  // month after" is locked off since there's nothing to apply forward to,
+  // and the only way out is the "Also add to master Budget Setup" button.
   const forwardRow = body.querySelector("#iForwardRow");
-  const forwardEl = body.querySelector("#iForward");
-  const onlyMonthEl = body.querySelector("#iOnlyMonth");
-  function syncOnlyMonth(){
-    const only = onlyMonthEl.checked;
-    forwardEl.disabled = only;
-    forwardRow.style.opacity = only ? .45 : 1;
-    if(only) forwardEl.checked = false;
-  }
-  onlyMonthEl.addEventListener("change", syncOnlyMonth);
-  syncOnlyMonth();
+  if(isOnlyThisMonth) forwardRow.style.opacity = .45;
 
   // Live preview: the 12-month grid reflects what "apply forward" (or not)
   // and the current amount would actually save, updated as you type —
@@ -2895,7 +3060,7 @@ function openLineItemDialog(categoryId, existing, ym){
     const currency = linked.getCurrency();
     const rate = linked.getRate();
     const nativeAmt = linked.getNativeAmount();
-    const onlyMonth = body.querySelector("#iOnlyMonth").checked;
+    const onlyMonth = isOnlyThisMonth;
     const forward = !onlyMonth && body.querySelector("#iForward").checked;
     const frequency = body.querySelector("#iFreq").value;
 
@@ -2922,7 +3087,7 @@ function openLineItemDialog(categoryId, existing, ym){
     const currency = linked.getCurrency();
     const rate = linked.getRate();
     const frequency = body.querySelector("#iFreq").value;
-    const onlyMonth = body.querySelector("#iOnlyMonth").checked;
+    const onlyMonth = isOnlyThisMonth;
     const newSched = [...grid.querySelectorAll("input")].map(inp=> parseFloat(inp.value||"0"));
     const rec = { id: existing ? existing.id : uid("li"), categoryId, name, schedule:newSched, paymentMethod: body.querySelector("#iPay").value, currency, rate, frequency };
     if(onlyMonth) rec.onlyYM = ym;
@@ -3012,24 +3177,27 @@ function renderSettings(main){
   const yearPanel = el("div","card yearpanel");
 
   const panelHead = el("div","yp-head");
+  const { minYear: setMinYear, maxYear: setMaxYear } = yearNavBounds();
   panelHead.innerHTML = `
     <div class="eyebrow">Year settings</div>
     <div class="row" style="margin-top:6px">
       <div style="font-weight:600; font-size:22px" class="num">${settingsYear}</div>
       <div class="row" style="gap:6px; width:auto">
-        <button class="navbtn" id="setPrevY" aria-label="Previous year">‹</button>
-        <button class="navbtn" id="setNextY" aria-label="Next year">›</button>
+        <button class="navbtn" id="setPrevY" aria-label="Previous year" ${settingsYear<=setMinYear?"disabled":""}>‹</button>
+        <button class="navbtn" id="setNextY" aria-label="Next year" ${settingsYear>=setMaxYear?"disabled":""}>›</button>
       </div>
     </div>
   `;
-  panelHead.querySelector("#setPrevY").onclick = ()=>{ ui.settingsYear = settingsYear - 1; render(); };
-  panelHead.querySelector("#setNextY").onclick = ()=>{ ui.settingsYear = settingsYear + 1; render(); };
+  panelHead.querySelector("#setPrevY").onclick = ()=>{ if(settingsYear>setMinYear){ ui.settingsYear = settingsYear - 1; render(); } };
+  panelHead.querySelector("#setNextY").onclick = ()=>{ if(settingsYear<setMaxYear){ ui.settingsYear = settingsYear + 1; render(); } };
   yearPanel.appendChild(panelHead);
 
+  const configuredN = (state.settings.seededYMs||[]).filter(ym=>yearOfYM(ym)===settingsYear).length;
   const yearDataCard = el("div","yp-section stack");
   yearDataCard.innerHTML = `
     <div class="eyebrow">${settingsYear} data</div>
-    <div class="muted">Download just this year's logged spend, transfers, fund events, and settings — or wipe ${settingsYear} entirely to set it up fresh.</div>
+    <div class="muted">Download just this year's logged expenses, transfers, fund events, and settings — or wipe ${settingsYear} entirely to set it up fresh.</div>
+    <div class="muted">Configured: ${configuredN} of 12 months</div>
   `;
   const downloadYearBtn = el("button","btn ghost block");
   downloadYearBtn.innerHTML = `${iconDownload()}<span>Download ${settingsYear} data</span>`;
@@ -3109,7 +3277,7 @@ function renderSettings(main){
   wrap.appendChild(yearPanel);
 
   const exportCard = el("div","card stack");
-  exportCard.innerHTML = `<div class="eyebrow">Export data</div><div class="muted">Download everything — categories, Budget Setup items, logged spend, transfers, and settings — as a single JSON file. Hand that file to Claude in a future conversation to carry your real data into a rebuild.</div>`;
+  exportCard.innerHTML = `<div class="eyebrow">Export data</div><div class="muted">Download everything — categories, Budget Setup items, logged expenses, transfers, and settings — as a single JSON file. Hand that file to Claude in a future conversation to carry your real data into a rebuild.</div>`;
   const exportBtn = el("button","btn ghost block");
   exportBtn.innerHTML = `${iconDownload()}<span>Download JSON</span>`;
   exportBtn.onclick = exportData;
@@ -3331,8 +3499,16 @@ function viewToggleRow(ym){
       <button type="button" class="viewbtn ${ui.monthlyView==="dash"?"active":""}" id="mvDash" aria-pressed="${ui.monthlyView==="dash"}">${barChartIconSVG()}<span>Dashboard</span></button>
     </div>
   `;
-  row.querySelector("#mvLedger").onclick = ()=>{ ui.monthlyView = "ledger"; render(); };
-  row.querySelector("#mvDash").onclick = ()=>{ ui.monthlyView = "dash"; render(); };
+  row.querySelector("#mvLedger").onclick = ()=>{
+    ui.monthlyView = "ledger";
+    window.scrollTo({top:0, behavior:"instant"});
+    render();
+  };
+  row.querySelector("#mvDash").onclick = ()=>{
+    ui.monthlyView = "dash";
+    window.scrollTo({top:0, behavior:"instant"});
+    render();
+  };
   row.querySelector("#mfBtn").onclick = ()=> openTransferDialog(ym);
   return row;
 }
@@ -3358,6 +3534,22 @@ function iconDownload(){
 // button, so a glance at the icon alone signals "removes something".
 function iconTrash(){
   return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>`;
+}
+// "edit-2" from Feather Icons (MIT) — pencil, for the quick-edit icon on
+// category-detail item rows (sits beside the trash icon).
+function iconEdit(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>`;
+}
+// "dollar-sign" from Feather Icons (MIT) — reads as "add an expense",
+// clearer than a bare "+" once a row also has an edit/manage icon.
+function iconDollar(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+}
+// "sliders" from Feather Icons (MIT) — reads as "adjustments", distinct
+// from the swap icon used for "Transfer funds". Opens the fund
+// adjustments/transfers overlay from Monthly's subhead.
+function iconSliders(){
+  return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>`;
 }
 // "plus" from Feather Icons (MIT) — replaces the literal "+" text on the
 // various "Add ..." buttons.
