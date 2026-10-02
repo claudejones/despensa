@@ -918,7 +918,14 @@ async function dbSetMonthCategoryData(){
 /* ---------------------------------------------------------------
    MONEY HELPERS
 --------------------------------------------------------------- */
-function fmtUSD(n){ const s = (n<0?"-":"") + "$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); return s; }
+// Floating-point sums of independently-computed money values (a typed
+// base allocation vs. a reduce() over several converted actuals, etc.)
+// routinely land a few trillionths off zero instead of exactly on it.
+// Rounding to the cent at the point a value is computed (not just when
+// displayed) keeps both its printed text AND any >=0 sign check used for
+// color consistent with each other.
+function roundCents(n){ return Math.round(n*100)/100; }
+function fmtUSD(n){ n = roundCents(n) || 0; const s = (n<0?"-":"") + "$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); return s; }
 function fmtMXN(n){ return (n<0?"-":"") + "MX$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}); }
 function toUSD(amount, currency, rate){ return currency==="MXN" ? amount/rate : amount; }
 function toMXN(amount, currency, rate){ return currency==="MXN" ? amount : amount*rate; }
@@ -1061,7 +1068,7 @@ function availableForMonth(catId, ym){
   return categoryBaseForMonth(catId, ym) + rolloverForMonth(catId, ym) + categoryAdjustmentForMonth(catId, ym);
 }
 function remainingForMonth(catId, ym){
-  return availableForMonth(catId, ym) - spentForMonth(catId, ym);
+  return roundCents(availableForMonth(catId, ym) - spentForMonth(catId, ym));
 }
 
 // The month's total pool is that year's annual Target ÷ 12, not the sum of
@@ -1312,7 +1319,7 @@ function renderSubhead(){
     const showAvail = seeded || futureUnconfigured;
     const avail = showAvail ? totalAvailableForMonth(ym) : null;
     const spent = seeded ? totalSpentForMonth(ym) : null;
-    const surplus = seeded ? (avail - spent) : null;
+    const surplus = seeded ? roundCents(avail - spent) : null;
     const adjCount = fundAdjustmentsCountForMonth(ym);
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:14px; align-items:baseline">
@@ -1332,7 +1339,7 @@ function renderSubhead(){
   } else if(ui.tab==="categories"){
     const target = yearSettings(yearOfYM(todayYM())).yearBudgetUSD/12;
     const allocated = state.categories.filter(c=>categoryAppliesToYM(c,ym)).reduce((s,c)=> s+(c.baseAmountUSD||0), 0);
-    const unallocated = target - allocated;
+    const unallocated = roundCents(target - allocated);
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:16px; align-items:baseline">
         <div><div class="sh-tiny">Target</div><div class="num sh-amt">${fmtUSD(target)}</div></div>
@@ -1483,6 +1490,7 @@ function renderOutlook(main){
   const yearBudget = yearSettings(year).yearBudgetUSD;
   const ytdSpent = ytdActual(ym);
   const ytdBud = ytdBudget(ym);
+  const ytdDiff = roundCents(ytdBud - ytdSpent);
 
   const wrap = el("div", "stack");
 
@@ -1495,7 +1503,7 @@ function renderOutlook(main){
   bar.innerHTML = `
     <div class="row"><span class="muted num">${fmtUSD(ytdSpent)} spent</span><span class="muted num">${fmtUSD(yearBudget)} annual budget</span></div>
     <div class="catbar" style="margin-top:6px"><div style="width:${pct}%; background:var(--primary)"></div></div>
-    <div class="muted" style="margin-top:6px">${fmtUSD(ytdBud - ytdSpent)} ${ytdBud-ytdSpent>=0?"under":"over"} plan through ${MONTHS[monthOfYM(ym)]}</div>
+    <div class="muted" style="margin-top:6px">${fmtUSD(ytdDiff)} ${ytdDiff>=0?"under":"over"} plan through ${MONTHS[monthOfYM(ym)]}</div>
   `;
   ytdCard.appendChild(bar);
   wrap.appendChild(ytdCard);
@@ -2010,7 +2018,7 @@ function renderMonthly(main){
     const adj = categoryAdjustmentForMonth(id, ym);
     const avail = base + roll + adj;
     const spent = spentForMonth(id, ym);
-    const remaining = avail - spent;
+    const remaining = roundCents(avail - spent);
     const pct = avail>0 ? Math.min(100, (spent/avail)*100) : (spent>0?100:0);
     // Categories with no target set in Budget Setup (e.g. Entertainment,
     // Unaccounted for Expenses) aren't "over" just because spend exceeds an
@@ -2110,7 +2118,7 @@ function openFundAdjustmentsSheet(ym){
         showToast("Transfer deleted");
         render();
         openFundAdjustmentsSheet(ym);
-      });
+      }, ()=> openFundAdjustmentsSheet(ym));
     };
   });
   body.querySelector("#faClose").onclick = ()=> dlg.close();
@@ -2118,9 +2126,13 @@ function openFundAdjustmentsSheet(ym){
 }
 
 // One actual-spend entry — a name is optional (leave it blank for a lump
-// total), linked USD/MXN amount, payment method, and a date within the
-// month. No "apply forward" here — actual spend happened once, by nature.
-function openActualEntryDialog(categoryId, ym, existing){
+// total), linked USD/MXN amount, payment method, notes, and a date within
+// the month. No "apply forward" here — actual spend happened once, by
+// nature. onBack (optional) is where Cancel returns to — the dashboard's
+// "$" shortcut opens this directly (no onBack: Cancel just closes the
+// sheet), while the monthly category screen opens it mid-dialog and passes
+// itself as onBack so Cancel lands back there instead of exiting entirely.
+function openActualEntryDialog(categoryId, ym, existing, onBack){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   const baseRate = yearSettings(yearOfYM(ym)).baseRate;
@@ -2147,6 +2159,7 @@ function openActualEntryDialog(categoryId, ym, existing){
       </select>
     </label>
     <label>Date<input type="date" id="aDate" value="${existing?existing.date:defaultDate}"></label>
+    <label>Notes (optional)<textarea id="aNote" rows="2" placeholder="Any detail worth remembering about this expense">${existing?escapeHtml(existing.note||""):""}</textarea></label>
     ${existing ? `<div class="danger-zone"><button class="btn small danger" id="aDelete">${iconTrash()}<span>Delete entry</span></button></div>` : ""}
     <div class="dialog-actions">
       <button class="btn ghost" id="aCancel">Cancel</button>
@@ -2154,12 +2167,17 @@ function openActualEntryDialog(categoryId, ym, existing){
     </div>
   `;
   const linked = wireLinkedCurrency(body, "USD");
-  body.querySelector("#itUSD").value = usdInit.toFixed(2);
-  body.querySelector("#itMXN").value = mxnInit.toFixed(2);
+  // Only an existing entry gets its amount pre-filled — a brand-new entry
+  // leaves these blank so the "0.00" placeholder shows instead of a literal
+  // 0.00 the person has to clear before typing.
+  if(existing){
+    body.querySelector("#itUSD").value = usdInit.toFixed(2);
+    body.querySelector("#itMXN").value = mxnInit.toFixed(2);
+  }
   body.querySelector("#itRate").value = curRate;
   if(curCurrency==="MXN") body.querySelector("#itCurMXN").click();
 
-  body.querySelector("#aCancel").onclick = ()=> dlg.close();
+  body.querySelector("#aCancel").onclick = ()=>{ if(onBack){ onBack(); } else { dlg.close(); } };
   onceClick(body.querySelector("#aSave"), async ()=>{
     const amount = linked.getNativeAmount();
     if(!amount) return;
@@ -2174,6 +2192,7 @@ function openActualEntryDialog(categoryId, ym, existing){
       currency: linked.getCurrency(),
       rate: linked.getRate(),
       paymentMethod: body.querySelector("#aPay").value,
+      note: body.querySelector("#aNote").value.trim(),
     };
     if(existing){
       const idx = state.actuals.findIndex(x=>x.id===existing.id);
@@ -2193,7 +2212,7 @@ function openActualEntryDialog(categoryId, ym, existing){
       showToast("Entry deleted");
       render();
       openMonthlyCategoryDetailSheet(categoryId, ym);
-    });
+    }, ()=> openActualEntryDialog(categoryId, ym, existing, onBack));
   }
   openSheet();
 }
@@ -2365,7 +2384,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   const adj = categoryAdjustmentForMonth(categoryId, ym);
   const avail = base + roll + adj;
   const spent = spentForMonth(categoryId, ym);
-  const remaining = avail - spent;
+  const remaining = roundCents(avail - spent);
   const trs = state.transfers.filter(t=> ymOfDate(t.date)===ym && (t.toCategoryId===categoryId || t.fromCategoryId===categoryId));
 
   let transferBlock = "";
@@ -2427,6 +2446,31 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       <button class="btn primary" id="mcSave">Save</button>
     </div>
   `;
+  // Commits whatever is currently sitting in the Base allocation / Name
+  // fields, without the toast/render/reopen song-and-dance Save does — used
+  // right before any action that navigates off this screen (Add Expense,
+  // opening/deleting a logged entry, Remove from month), so an in-progress
+  // edit is never silently discarded just because Save wasn't clicked
+  // first. A blank Name is skipped rather than blocking the amount from
+  // saving — this runs invisibly, so it shouldn't stall navigation over an
+  // unrelated field; the explicit Save button below still enforces it.
+  async function persistPendingEdits(){
+    const amountField = body.querySelector("#mcBaseAmount");
+    if(!amountField) return;
+    const amount = parseFloat(amountField.value||"0") || 0;
+    state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
+    const entry = state.monthCategoryData[ym][categoryId];
+    if(!entry) return;
+    entry.baseAmountUSD = amount;
+    if(info.isLocal){
+      const nameField = body.querySelector("#mcName");
+      const name = nameField ? nameField.value.trim() : "";
+      if(name) entry.name = name;
+    }
+    await dbSetMonthCategoryData();
+  }
+  const backHere = ()=> openMonthlyCategoryDetailSheet(categoryId, ym);
+
   body.querySelector("#miClose").onclick = ()=> dlg.close();
   onceClick(body.querySelector("#mcSave"), async ()=>{
     const amount = parseFloat(body.querySelector("#mcBaseAmount").value||"0") || 0;
@@ -2447,28 +2491,32 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     openMonthlyCategoryDetailSheet(categoryId, ym);
   });
   body.querySelectorAll("[data-entry]").forEach(row=>{
-    row.onclick = ()=>{
+    row.onclick = async ()=>{
+      await persistPendingEdits();
       const a = entries.find(x=>x.id===row.dataset.entry);
-      openActualEntryDialog(categoryId, ym, a);
+      openActualEntryDialog(categoryId, ym, a, backHere);
     };
-    row.onkeydown = (ev)=>{
+    row.onkeydown = async (ev)=>{
       if(ev.key==="Enter" || ev.key===" "){
         ev.preventDefault();
+        await persistPendingEdits();
         const a = entries.find(x=>x.id===row.dataset.entry);
-        openActualEntryDialog(categoryId, ym, a);
+        openActualEntryDialog(categoryId, ym, a, backHere);
       }
     };
   });
   body.querySelectorAll("[data-edit]").forEach(btn=>{
-    btn.onclick = (ev)=>{
+    btn.onclick = async (ev)=>{
       ev.stopPropagation();
+      await persistPendingEdits();
       const a = entries.find(x=>x.id===btn.dataset.edit);
-      openActualEntryDialog(categoryId, ym, a);
+      openActualEntryDialog(categoryId, ym, a, backHere);
     };
   });
   body.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.onclick = (ev)=>{
+    btn.onclick = async (ev)=>{
       ev.stopPropagation();
+      await persistPendingEdits();
       const a = entries.find(x=>x.id===btn.dataset.del);
       confirmAction(`Delete this ${fmtUSD(toUSD(a.amount||0, a.currency, a.rate||rate))} entry?`, async ()=>{
         state.actuals = state.actuals.filter(x=>x.id!==a.id);
@@ -2476,26 +2524,32 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
         showToast("Entry deleted");
         render();
         openMonthlyCategoryDetailSheet(categoryId, ym);
-      });
+      }, backHere);
     };
   });
-  body.querySelector("#mcAddEntry").onclick = ()=> openActualEntryDialog(categoryId, ym, null);
-  body.querySelector("#mcRemoveCat").onclick = ()=> confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Its balance stays part of this month's overall total — removing it here only stops tracking it as its own category.`, async ()=>{
-    // No separate "sweep the balance into Unallocated" bookkeeping needed —
-    // totalAvailableForMonth/totalSpentForMonth are whole-pot figures (the
-    // month's flat budget minus every dollar actually spent, both
-    // independent of which categories currently exist), so a removed
-    // category's unspent balance was never subtracted from that pot in the
-    // first place. Deleting its entry here is the only state change
-    // required; nothing needs crediting back.
-    if(state.monthCategoryData[ym]){
-      delete state.monthCategoryData[ym][categoryId];
-    }
-    await dbSetMonthCategoryData();
-    dlg.close();
-    showToast(`Removed ${info.name} from ${MONTHS[monthOfYM(ym)]}`);
-    render();
-  });
+  body.querySelector("#mcAddEntry").onclick = async ()=>{
+    await persistPendingEdits();
+    openActualEntryDialog(categoryId, ym, null, backHere);
+  };
+  body.querySelector("#mcRemoveCat").onclick = async ()=>{
+    await persistPendingEdits();
+    confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Its balance stays part of this month's overall total — removing it here only stops tracking it as its own category.`, async ()=>{
+      // No separate "sweep the balance into Unallocated" bookkeeping needed —
+      // totalAvailableForMonth/totalSpentForMonth are whole-pot figures (the
+      // month's flat budget minus every dollar actually spent, both
+      // independent of which categories currently exist), so a removed
+      // category's unspent balance was never subtracted from that pot in the
+      // first place. Deleting its entry here is the only state change
+      // required; nothing needs crediting back.
+      if(state.monthCategoryData[ym]){
+        delete state.monthCategoryData[ym][categoryId];
+      }
+      await dbSetMonthCategoryData();
+      dlg.close();
+      showToast(`Removed ${info.name} from ${MONTHS[monthOfYM(ym)]}`);
+      render();
+    }, backHere);
+  };
   openSheet();
 }
 
@@ -2881,7 +2935,7 @@ function openCategoryDetailSheet(categoryId, ym){
         showToast(`Deleted ${li.name}`);
         render();
         openCategoryDetailSheet(categoryId, ym);
-      });
+      }, ()=> openCategoryDetailSheet(categoryId, ym));
     };
   });
   onceClick(body.querySelector("#dSave"), async ()=>{
@@ -2934,7 +2988,7 @@ function openCategoryDetailSheet(categoryId, ym){
     for(const li of items) await dbDelete("lineitems", li.id);
     showToast(`Deleted ${c.name}`);
     render();
-  });
+  }, ()=> openCategoryDetailSheet(categoryId, ym));
   body.querySelector("#dClose").onclick = ()=> dlg.close();
   openSheet();
 }
@@ -3180,7 +3234,7 @@ function openLineItemDialog(categoryId, existing, ym){
       showToast(`Deleted ${existing.name}`);
       render();
       openCategoryDetailSheet(categoryId, ym);
-    });
+    }, ()=> openLineItemDialog(categoryId, existing, ym));
   }
   openSheet();
 }
@@ -3684,7 +3738,15 @@ function showToast(message){
 
 // This sandbox blocks native confirm()/prompt() dialogs, so deletes get a
 // real in-page confirmation step using the same <dialog> as everything else.
-function confirmAction(message, onConfirm){
+// confirmAction always overwrites dlgBody — it has no idea what was on
+// screen before it. When it's opened from the top level (directly off a
+// page, nothing else in the sheet), the default onCancel (closing the whole
+// sheet) is correct. When it's opened from INSIDE another already-open
+// dialog screen, closing the whole sheet on Cancel drops the person on
+// whatever's behind the sheet instead of back on the screen they were
+// actually on — callers in that situation must pass an onCancel that
+// reopens their own screen.
+function confirmAction(message, onConfirm, onCancel){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   body.innerHTML = `
@@ -3695,7 +3757,9 @@ function confirmAction(message, onConfirm){
       <button class="btn danger" id="cnConfirm">Delete</button>
     </div>
   `;
-  body.querySelector("#cnCancel").onclick = ()=> dlg.close();
+  body.querySelector("#cnCancel").onclick = ()=>{
+    if(onCancel){ onCancel(); } else { dlg.close(); }
+  };
   onceClick(body.querySelector("#cnConfirm"), async ()=>{
     dlg.close();
     await onConfirm();
