@@ -233,6 +233,22 @@
   .setuprow .meta-note.mm-neutral{color:var(--ink-soft)}
   .setuprow .amt{font-size:14px; white-space:nowrap; flex:none}
   .setuprow .chev{color:var(--ink-soft); font-size:18px; flex:none}
+  /* Up/down reorder buttons — a plain, boring replacement for the old
+     pointer-drag grip (removed: two attempts at drag both shipped visual
+     bugs). Stacked tight at the row's leading edge so they read as one
+     compact unit instead of competing with the row's main tap target. */
+  .setuprow .movebtns{ display:flex; flex-direction:column; gap:2px; flex:none; margin:-4px -2px -4px -6px }
+  .setuprow .movebtn{
+    width:22px; height:18px; border:none; background:none; color:var(--ink-soft); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0; border-radius:4px;
+  }
+  .setuprow .movebtn:active{ background:var(--surface-2) }
+  .setuprow .movebtn:disabled{ opacity:.25; cursor:default }
+
+  /* Section divider for a called-out subset of a list — same horizontal-
+     rule-with-header convention as .yearpanel's .yp-section, reused here
+     for Budget Setup's "This month only" category section. */
+  .list-divider{ border-top:1px solid var(--line); padding-top:14px; margin-top:4px }
 
   nav.tabs{
     position:fixed; left:0; right:0; bottom:0; z-index:10;
@@ -332,9 +348,18 @@
   }
   dialog:focus{ outline:none }
   dialog::backdrop{background:rgba(18,32,29,.5)}
-  /* Scroll lock while a sheet is open — prevents the page behind the
-     sheet from scrolling along with it. */
-  body.sheet-open{ overflow:hidden }
+  /* Scroll lock while a sheet is open — prevents the page behind the sheet
+     from scrolling along with it. `overflow:hidden` alone (the previous
+     approach) doesn't reliably block touch-driven scrolling in mobile
+     Safari, and leaves no record of where the page was scrolled to, so the
+     background can end up a little scrolled by the time the sheet closes.
+     Taking body fully out of flow with position:fixed (top offset by the
+     saved scroll position, restored on close — see openSheet/the dialog
+     "close" handler) is the robust mobile fix: nothing behind the sheet can
+     move, and the page reappears exactly where it was, so nav.tabs — fixed
+     to the viewport regardless — is never left reflecting a page that
+     silently scrolled while hidden. */
+  body.sheet-open{ position:fixed; left:0; right:0; width:100% }
   dialog[open]{ animation: sheetUp .22s cubic-bezier(.2,.8,.2,1) both; }
   @media (prefers-reduced-motion: reduce){ dialog[open]{ animation:none; } }
   @keyframes sheetUp{ from{ transform:translateX(-50%) translateY(24px); opacity:.4 } to{ transform:translateX(-50%) translateY(0); opacity:1 } }
@@ -481,6 +506,17 @@ let state = {
   actuals: [],      // {id, categoryId, name, date, amount, currency, rate, paymentMethod}
   fundevents: [],   // {id, date, amountUSD, mode, targetYM}
   transfers: [],    // {id, date, fromCategoryId, toCategoryId, amountUSD, note}
+  // Per-month, per-category independent copy — created the moment a month
+  // is set up (see openMonthSeedChoiceDialog), forking that month away from
+  // the Budget Setup template from then on. Keyed by ym then catId:
+  // { baseAmountUSD, items:[{id,name,amount,paymentMethod}], source:"template"|"local" }.
+  // source:"template" means it originated from a real template category
+  // (catId matches a state.categories id); source:"local" means it was
+  // created directly within the month with no template counterpart at all
+  // (catId is then a freshly generated id that never appears in
+  // state.categories). See categoryBaseForMonth/rolloverForMonth/
+  // categoryCashOutForMonth below for how this drives the money math.
+  monthCategoryData: {},
 };
 
 // monthlyView switches the Monthly tab between its ledger (category list)
@@ -517,6 +553,33 @@ function migrateToMultiYear(){
     const y = state.settings.year || SEED_YEAR;
     return { ...fe, targetYM: ymOf(y, fe.targetMonth||0) };
   });
+}
+
+// One-time, idempotent per-category upgrade: categories created before
+// baseAmountUSD existed had no fixed budget field of their own and were
+// displayed using the sum of their line items instead (the old "itemized
+// mode" branch of categoryBaseForMonth, since removed — see above). This
+// gives each such category a real baseAmountUSD now, computed the exact
+// same way that old branch used to for a representative month, so nothing
+// anyone already built resets to $0. Guarded by checking the field itself
+// (not a version flag) — a category that already has a baseAmountUSD
+// (including every category made through the newer "New category" dialog)
+// is left completely untouched, which is also what makes this naturally
+// safe to call on every load.
+function migrateCategoryBaseAmounts(){
+  const ym = todayYM();
+  const mIdx = monthOfYM(ym);
+  const rate = yearSettings(yearOfYM(ym)).baseRate;
+  const changed = [];
+  state.categories.forEach(c=>{
+    if(c.baseAmountUSD) return;
+    const sum = state.lineitems
+      .filter(li=>li.categoryId===c.id && (!li.onlyYM || li.onlyYM===ym))
+      .reduce((s,li)=> s + toUSD(li.schedule[mIdx]||0, li.currency, li.rate||rate), 0);
+    c.baseAmountUSD = sum;
+    changed.push(c);
+  });
+  return changed;
 }
 
 // Falls back to the nearest configured year's figures — prefers the most
@@ -607,6 +670,7 @@ async function initDB(){
       ui.dbNS = null;
       loadLocalFallback();
       migrateToMultiYear();
+      migrateCategoryBaseAmounts().forEach(c=> dbSet("categories", c.id, c));
       ui.monthlyView = state.settings.monthlyDefaultView || "ledger";
       ui.loaded = true;
       render();
@@ -616,13 +680,14 @@ async function initDB(){
     const u = await (async ()=>{ try{ const usr = await claude.use("user"); return usr; } catch(e){ return null; } })();
     ui.writable = u ? (u.canEdit ? u.canEdit() : true) : true;
 
-    const [settingsDoc, catsRes, itemsRes, actualsRes, fundRes, transRes] = await Promise.all([
+    const [settingsDoc, catsRes, itemsRes, actualsRes, fundRes, transRes, monthCatDoc] = await Promise.all([
       db.doc("settings/main").get(),
       db.collection("categories").get(),
       db.collection("lineitems").get(),
       db.collection("actuals").get(),
       db.collection("fundevents").get(),
       db.collection("transfers").get(),
+      db.doc("monthcat/main").get(),
     ]);
 
     const catsEmpty = !catsRes || !catsRes.docs || catsRes.docs.length===0;
@@ -646,10 +711,12 @@ async function initDB(){
     state.actuals = (actualsRes.docs||[]).map(d=>({...d.data()}));
     state.fundevents = (fundRes.docs||[]).map(d=>({...d.data()}));
     state.transfers = (transRes.docs||[]).map(d=>({...d.data()}));
+    state.monthCategoryData = (monthCatDoc && monthCatDoc.exists) ? {...monthCatDoc.data()} : {};
   } catch(err){
     loadLocalFallback();
   }
   migrateToMultiYear();
+  migrateCategoryBaseAmounts().forEach(c=> dbSet("categories", c.id, c));
   dbSetSettings();
   ui.monthlyView = state.settings.monthlyDefaultView || "ledger";
   ui.loaded = true;
@@ -733,6 +800,15 @@ async function dbSetSettings(){
   }
   persistLocalFallback();
 }
+// monthCategoryData is a single document (like settings/main), not a
+// collection — one plain nested object {ym:{catId:entry}}, rewritten whole
+// on every change. Mirrors dbSetSettings exactly.
+async function dbSetMonthCategoryData(){
+  if(ui.dbNS){
+    try{ await ui.dbNS.doc("monthcat/main").set(state.monthCategoryData); return; } catch(e){}
+  }
+  persistLocalFallback();
+}
 
 /* ---------------------------------------------------------------
    MONEY HELPERS
@@ -746,17 +822,47 @@ function toMXN(amount, currency, rate){ return currency==="MXN" ? amount : amoun
    DERIVED BUDGET MATH — everything below takes ym (a linear year*12+month
    index, see ymOf/yearOfYM/monthOfYM above), not a bare 0-11 month.
 --------------------------------------------------------------- */
-// Target/Allocated for a category — built from the master Budget Setup
-// template, plus any item added specifically for this one month (onlyYM).
-// A category with no items yet has a $0 Target, same as a blank Allocated
-// cell in a spreadsheet.
+// Target/Allocated for a category — a single fixed amount the category
+// carries directly (set once via the "New category"/category-detail amount
+// field, edited any time). Line items never redefine or override it, no
+// matter how many items the category has — they're planning templates only
+// (see categoryPlannedForMonth below for what they add up to). A category
+// with no amount set yet has a $0 Target, same as a blank Allocated cell in
+// a spreadsheet.
 function categoryBaseForMonth(catId, ym){
+  if(isMonthSeeded(ym)){
+    // Set-up months are forked — the category's budget for this month comes
+    // only from its own independent copy (state.monthCategoryData), never
+    // from the live template. A category not included in this month (never
+    // added, or since removed) contributes nothing here — its balance (if
+    // any) was already swept into the general pot, see categoryCashOutForMonth.
+    const entry = state.monthCategoryData[ym] && state.monthCategoryData[ym][catId];
+    return entry ? (entry.baseAmountUSD || 0) : 0;
+  }
+  // Not yet set up: a live preview straight from the template, so an
+  // unconfigured month's forecast always reflects Budget Setup's current
+  // numbers rather than freezing at whatever they were when this ran.
+  const c = state.categories.find(x=>x.id===catId);
+  return c ? (c.baseAmountUSD || 0) : 0;
+}
+
+// Purely informational: what this category's line items currently add up
+// to for the given month — used by Budget Setup's Budget/Planned/
+// Unallocated readout. Never feeds into categoryBaseForMonth; items seed a
+// month's actual spend (state.actuals) when that month is set up, but they
+// never change the category's own budget.
+function categoryPlannedForMonth(catId, ym){
   const mIdx = monthOfYM(ym);
   const rate = yearSettings(yearOfYM(ym)).baseRate;
   return state.lineitems
     .filter(li=>li.categoryId===catId && (!li.onlyYM || li.onlyYM===ym))
     .reduce((sum,li)=> sum + toUSD(li.schedule[mIdx]||0, li.currency, li.rate||rate), 0);
 }
+
+// Whether a category belongs to this month at all — a global category (no
+// onlyYM, or onlyYM pointing at a different month) always does; a
+// month-only category only belongs to its own onlyYM month.
+function categoryAppliesToYM(c, ym){ return !c.onlyYM || c.onlyYM===ym; }
 
 // Net of transfers moved into/out of a category for a given month —
 // manual "move funds" adjustments, separate from automatic rollover.
@@ -803,6 +909,21 @@ function rolloverForMonth(catId, ym){
   let roll = 0;
   const start = earliestYM();
   for(let k=start;k<ym;k++){
+    // An unseeded month was never actually opened/set up — it has no real
+    // budget or spend yet, so it must contribute nothing to the running
+    // rollover rather than being treated as a zero-spend month with its
+    // full budget silently credited as surplus.
+    if(!isMonthSeeded(k)) continue;
+    // A category not included in a seeded month resets the chain — its
+    // carried balance up to that point was cashed out into that month's
+    // general pot instead (see categoryCashOutForMonth), so it must not
+    // keep compounding here, and if the category reappears in a later
+    // month it starts fresh at that month's own budget.
+    const included = !!(state.monthCategoryData[k] && state.monthCategoryData[k][catId]);
+    if(!included){
+      roll = 0;
+      continue;
+    }
     const base = categoryBaseForMonth(catId, k);
     const adj = categoryAdjustmentForMonth(catId, k);
     const avail = base + roll + adj;
@@ -810,6 +931,59 @@ function rolloverForMonth(catId, ym){
     roll = avail - spent;
   }
   return roll;
+}
+// The most recently seeded month strictly before `ym` — used by
+// categoryCashOutForMonth to find "the month right before this one that
+// actually had anything set up", skipping over any unseeded gaps.
+function mostRecentSeededMonthBefore(ym){
+  const start = earliestYM();
+  let last = null;
+  for(let k=start;k<ym;k++) if(isMonthSeeded(k)) last = k;
+  return last;
+}
+// The amount, if any, that gets swept from `catId` into `ym`'s general
+// Unallocated pot because `ym` is the EXACT seeded month it got dropped in.
+// Fires exactly once per drop: the month right after a category was last
+// included carries its balance into the pot; every later month it stays
+// absent returns 0 here (categoryCashOutForMonth below guards against ever
+// double-counting the same cash-out).
+function categoryCashOutForMonth(catId, ym){
+  if(!isMonthSeeded(ym)) return 0;
+  const includedThisMonth = !!(state.monthCategoryData[ym] && state.monthCategoryData[ym][catId]);
+  if(includedThisMonth) return 0; // still included, nothing to cash out
+  const prior = mostRecentSeededMonthBefore(ym);
+  if(prior === null) return 0; // never existed before this point
+  const includedPrior = !!(state.monthCategoryData[prior] && state.monthCategoryData[prior][catId]);
+  if(!includedPrior) return 0; // already dropped earlier — already cashed out then
+  return rolloverForMonth(catId, ym); // balance it was carrying right up to entering ym
+}
+// Every category id that could ever need a cash-out check — the current
+// template's categories, plus any id (template-matched or purely
+// month-local) that has ever appeared in monthCategoryData, so a category
+// deleted from the template entirely (or one that only ever existed inside
+// a single month) still gets its drop accounted for.
+function allKnownCategoryIds(){
+  const ids = new Set(state.categories.map(c=>c.id));
+  Object.values(state.monthCategoryData||{}).forEach(monthMap=>{
+    Object.keys(monthMap||{}).forEach(id=>{ if(id!==DROPPED_CREDITS_KEY) ids.add(id); });
+  });
+  return ids;
+}
+// Running credit for money that was GENERATED within a month itself (this
+// month's own budget + transfers − actual spend, before removal) by a
+// category removed from that month via "Remove from this month" — see
+// openMonthlyCategoryDetailSheet's #mcRemoveCat handler. Kept as one extra
+// key alongside the real per-category entries in
+// state.monthCategoryData[ym], the same object/persistence path every
+// other per-month fact already uses (dbSetMonthCategoryData), rather than a
+// parallel top-level collection. Deliberately NOT a category id — every
+// place that enumerates state.monthCategoryData[ym]'s keys as category ids
+// (monthCategoryList, allKnownCategoryIds, the new-local-category color
+// index) excludes this key explicitly.
+const DROPPED_CREDITS_KEY = "__droppedCredits";
+function droppedCreditsForMonth(ym){
+  const d = state.monthCategoryData[ym];
+  return (d && d[DROPPED_CREDITS_KEY]) || 0;
 }
 function availableForMonth(catId, ym){
   return categoryBaseForMonth(catId, ym) + rolloverForMonth(catId, ym) + categoryAdjustmentForMonth(catId, ym);
@@ -839,7 +1013,23 @@ function totalSpentForMonth(ym){
 function totalAvailableForMonth(ym){
   let bal = 0;
   const start = earliestYM();
-  for(let k=start;k<ym;k++) bal += totalBudgetForMonth(k) - totalSpentForMonth(k);
+  const knownIds = allKnownCategoryIds();
+  for(let k=start;k<ym;k++){
+    if(!isMonthSeeded(k)) continue;
+    bal += totalBudgetForMonth(k) - totalSpentForMonth(k);
+    // A category dropped from month k has its carried balance swept into
+    // k's general Unallocated pot instead of vanishing or sitting orphaned
+    // — add that in here, at the exact month it happened, same walk as the
+    // line above. In the normal case (nothing ever dropped) this adds
+    // exactly 0 every time, so existing totals are unchanged.
+    knownIds.forEach(catId=>{ bal += categoryCashOutForMonth(catId, k); });
+    // Plus whatever each removed category had generated WITHIN month k
+    // itself (this month's own budget + transfers − actual spend, before
+    // removal) — the carried-in portion above is handled by
+    // categoryCashOutForMonth; this is the separate in-month portion, see
+    // droppedCreditsForMonth and #mcRemoveCat.
+    bal += droppedCreditsForMonth(k);
+  }
   return totalBudgetForMonth(ym) + bal;
 }
 
@@ -971,17 +1161,27 @@ function renderSubhead(){
     // Available minus Spent is Surplus, exactly, every time, because Spent
     // is every actual dollar logged this month, budgeted or not.
     const seeded = isMonthSeeded(ym);
-    const avail = seeded ? totalAvailableForMonth(ym) : null;
+    // A current/future month that hasn't been set up yet still gets a real
+    // Available figure here — it's genuinely knowable (template budget +
+    // whatever has genuinely rolled forward from already-seeded prior
+    // months, same totalAvailableForMonth every seeded month uses). Spent
+    // and Surplus stay a flat "—" until the month is actually set up —
+    // Spent isn't knowable yet, and Available minus an unknown Spend isn't
+    // a meaningful Surplus. A PAST unconfigured month shows "—" across the
+    // board, same as before (see monthNotSetUpCard).
+    const futureUnconfigured = !seeded && ym >= todayYM();
+    const showAvail = seeded || futureUnconfigured;
+    const avail = showAvail ? totalAvailableForMonth(ym) : null;
     const spent = seeded ? totalSpentForMonth(ym) : null;
-    const surplus = seeded ? avail - spent : null;
+    const surplus = seeded ? (avail - spent) : null;
     sub.innerHTML = `
       <button class="navbtn" id="shPrevM" aria-label="Previous month">‹</button>
       <div class="sh-info">
         <div class="sh-label">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</div>
         <div class="sh-info" style="flex-direction:row; gap:14px; align-items:baseline; margin-top:2px">
-          <div><div class="sh-tiny">Available</div><div class="num sh-amt">${seeded?fmtUSD(avail):"—"}</div></div>
-          <div><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
-          <div><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
+          <div${showAvail?"":` style="text-align:center"`}><div class="sh-tiny">Available</div><div class="num sh-amt">${showAvail?fmtUSD(avail):"—"}</div></div>
+          <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
+          <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
         </div>
       </div>
       <div class="sh-actions">
@@ -993,7 +1193,7 @@ function renderSubhead(){
     sub.querySelector("#shNextM").onclick = ()=>{ ui.ym = ym + 1; render(); };
   } else if(ui.tab==="categories"){
     const target = yearSettings(yearOfYM(ym)).yearBudgetUSD/12;
-    const allocated = state.categories.reduce((s,c)=> s+categoryBaseForMonth(c.id,ym), 0);
+    const allocated = state.categories.filter(c=>categoryAppliesToYM(c,ym)).reduce((s,c)=> s+categoryBaseForMonth(c.id,ym), 0);
     const unallocated = target - allocated;
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:16px; align-items:baseline">
@@ -1006,7 +1206,7 @@ function renderSubhead(){
       </div>
     `;
     sub.classList.add("show");
-    sub.querySelector("#shAddCat").onclick = openCategoryDialog;
+    sub.querySelector("#shAddCat").onclick = ()=> openCategoryDialog(ym);
   }
 }
 
@@ -1059,7 +1259,8 @@ function renderMonthlyDash(main, ym){
   wrap.appendChild(viewToggleRow(ym));
 
   if(!isMonthSeeded(ym)){
-    wrap.appendChild(monthNotSetUpCard(ym));
+    if(ym < todayYM()) wrap.appendChild(monthNotSetUpCard(ym));
+    else appendMonthForecast(wrap, ym);
     main.appendChild(wrap);
     return;
   }
@@ -1202,7 +1403,10 @@ function drawMonthlyChart(){
 function drawCategoryChart(m){
   const ctx = document.getElementById("chartCat");
   if(!ctx || typeof Chart==="undefined") return;
-  const cats = state.categories.filter(c=> spentForMonth(c.id,m) > 0 || categoryBaseForMonth(c.id,m) > 0);
+  // monthCategoryList(m) (this month's own set, template-forked AND
+  // month-local) rather than state.categories alone — otherwise a
+  // month-local category's spend would silently vanish from this chart.
+  const cats = monthCategoryList(m).filter(c=> spentForMonth(c.id,m) > 0 || categoryBaseForMonth(c.id,m) > 0);
   if(charts.cat) charts.cat.destroy();
   charts.cat = new Chart(ctx, {
     type:"doughnut",
@@ -1379,6 +1583,29 @@ function seedItemIntoMonth(li, ym){
   dbSet("actuals", rec.id, rec);
 }
 
+// Forks every template category applying to `ym` into its own independent
+// copy in state.monthCategoryData[ym] — from this moment on, edits to this
+// month's categories/items never touch the template, and template edits
+// never retroactively touch this month. `itemFilter(li)` decides which of a
+// category's eligible line items get copied in as the month's own local
+// items (their amount frozen at that item's schedule[mIdx] right now).
+function forkTemplateIntoMonth(ym, itemFilter){
+  const mIdx = monthOfYM(ym);
+  const data = {};
+  state.categories.filter(c=>categoryAppliesToYM(c, ym)).forEach(c=>{
+    const items = state.lineitems
+      .filter(li=>li.categoryId===c.id && (!li.onlyYM || li.onlyYM===ym) && itemFilter(li))
+      .map(li=>({ id: uid("mli"), name: li.name, amount: li.schedule[mIdx]||0, paymentMethod: li.paymentMethod }));
+    // name/color are snapshotted here too, same as everything else — once
+    // forked, this month's display never depends on the template still
+    // existing (see categoryDisplayInfo, which falls back to these exact
+    // fields the moment the template is gone).
+    data[c.id] = { baseAmountUSD: c.baseAmountUSD || 0, items, source: "template", name: c.name, color: c.color };
+  });
+  state.monthCategoryData[ym] = data;
+  dbSetMonthCategoryData();
+}
+
 function openMonthSeedChoiceDialog(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
@@ -1395,12 +1622,20 @@ function openMonthSeedChoiceDialog(ym){
   `;
   body.querySelector("#msAll").onclick = ()=>{
     eligible.forEach(li=> seedItemIntoMonth(li, ym));
+    // "Apply all" forks every applicable template category in with ALL of
+    // its eligible (nonzero-this-month) items, mirroring exactly what just
+    // got seeded into actuals above.
+    forkTemplateIntoMonth(ym, li=> (li.schedule[mIdx]||0));
     markMonthSeeded(ym);
     dlg.close();
     showToast(`${MONTHS[mIdx]} set up from Budget Setup`);
     render();
   };
   body.querySelector("#msNone").onclick = ()=>{
+    // Start with nothing: no category exists in this month at all yet — the
+    // user builds it up from scratch via the Monthly "+ Add category" UI.
+    state.monthCategoryData[ym] = {};
+    dbSetMonthCategoryData();
     markMonthSeeded(ym);
     dlg.close();
     render();
@@ -1421,7 +1656,7 @@ function openMonthSeedChecklistDialog(ym, eligible){
     const amt = toUSD(li.schedule[mIdx]||0, li.currency, li.rate||rate);
     return `
       <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px">
-        <input type="checkbox" class="msItem" data-id="${li.id}" style="width:auto" checked>
+        <input type="checkbox" class="msItem" data-id="${li.id}" style="width:auto">
         <span style="flex:1">${escapeHtml(li.name)} <span class="muted">· ${c?escapeHtml(c.name):""}</span></span>
         <span class="num muted">${fmtUSD(amt)}</span>
       </label>
@@ -1429,16 +1664,54 @@ function openMonthSeedChecklistDialog(ym, eligible){
   }).join("") : `<div class="empty">No Budget Setup items have an amount for this month.</div>`;
   body.innerHTML = `
     <h3>Choose items for ${MONTHS[mIdx]} ${yearOfYM(ym)}</h3>
-    <div class="stack" style="gap:2px">${rows}</div>
+    ${eligible.length ? `
+    <label class="sheet-row" id="mcSelectAllRow" style="flex-direction:row; align-items:center; gap:10px; border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:2px">
+      <input type="checkbox" id="mcSelectAll" style="width:auto">
+      <span style="flex:1; font-weight:600">Select all</span>
+    </label>` : ""}
+    <div class="stack" id="mcList" style="gap:2px">${rows}</div>
     <div class="dialog-actions">
       <button class="btn ghost" id="mcCancel">Back</button>
-      <button class="btn primary" id="mcSave">Apply selected</button>
+      <button class="btn primary" id="mcSave" disabled>Apply selected</button>
     </div>
   `;
+  const itemBoxes = [...body.querySelectorAll(".msItem")];
+  const selectAll = body.querySelector("#mcSelectAll");
+  const saveBtn = body.querySelector("#mcSave");
+  // Reflects (and updates live as) whether all/some/none of the item
+  // checkboxes are checked — a real tri-state control, not just a one-way
+  // "check everything" button. "Apply selected" with nothing checked isn't
+  // a real choice — "Start with nothing" (one screen back) is the only
+  // button that actually produces an empty month — so it stays disabled
+  // until at least one item is checked, exactly like the Transfer-funds
+  // dialog disables "Move" with no source selected.
+  function syncSelectAll(){
+    const checkedCount = itemBoxes.filter(b=>b.checked).length;
+    if(selectAll){
+      selectAll.checked = checkedCount>0 && checkedCount===itemBoxes.length;
+      selectAll.indeterminate = checkedCount>0 && checkedCount<itemBoxes.length;
+    }
+    saveBtn.disabled = checkedCount===0;
+  }
+  if(selectAll){
+    selectAll.addEventListener("change", ()=>{
+      itemBoxes.forEach(b=> b.checked = selectAll.checked);
+      syncSelectAll();
+    });
+    itemBoxes.forEach(b=> b.addEventListener("change", syncSelectAll));
+  }
+  syncSelectAll();
   body.querySelector("#mcCancel").onclick = ()=> openMonthSeedChoiceDialog(ym);
   body.querySelector("#mcSave").onclick = ()=>{
-    const checked = new Set([...body.querySelectorAll(".msItem:checked")].map(x=>x.dataset.id));
+    const checked = new Set(itemBoxes.filter(b=>b.checked).map(b=>b.dataset.id));
+    if(checked.size===0) return;
     eligible.filter(li=>checked.has(li.id)).forEach(li=> seedItemIntoMonth(li, ym));
+    // "Choose which" forks EVERY applicable template category into the
+    // month regardless of what got checked — the checklist only controls
+    // which items get pre-seeded as actuals, not which categories exist in
+    // the month. A category with a flat budget and zero checked items still
+    // gets forked in with that budget and an empty item list.
+    forkTemplateIntoMonth(ym, li=> checked.has(li.id));
     markMonthSeeded(ym);
     dlg.close();
     showToast(`${MONTHS[mIdx]} set up with ${checked.size} item${checked.size===1?"":"s"}`);
@@ -1451,32 +1724,72 @@ function openMonthSeedChecklistDialog(ym, eligible){
 // and Dashboard sub-views instead of letting zeroed-out figures pass for
 // "configured with nothing budgeted", which is a different, misleading
 // state. Setup only ever happens from the explicit button here.
+// Quiet empty state for an unconfigured PAST month only — nobody's going to
+// retroactively fill it in, so it's a low-emphasis "no data" read, not a
+// pending task. A current/future unconfigured month instead gets a real
+// forecast — see appendMonthForecast below.
 function monthNotSetUpCard(ym){
   const mIdx = monthOfYM(ym);
   const card = el("div","card stack");
-  // A month already in the past (relative to today) isn't a pending setup
-  // task — nobody's going to retroactively fill it in — so it gets a
-  // quiet "no data" read and a low-emphasis text link instead of the
-  // prominent CTA a current/future unconfigured month still shows.
-  if(ym < todayYM()){
-    card.innerHTML = `
-      <div class="empty" style="padding:34px 10px">
-        <div style="font-weight:600; color:var(--ink-soft); margin-bottom:4px">No data recorded</div>
-        <div class="muted" style="margin-bottom:14px">${MONTHS[mIdx]} ${yearOfYM(ym)} has no budget configured.</div>
-        <button type="button" id="setupMonthBtn" style="background:none; border:none; color:var(--ink-soft); font-size:12px; cursor:pointer; text-decoration:underline; padding:0">Set up this month anyway</button>
-      </div>
-    `;
-  } else {
-    card.innerHTML = `
-      <div class="empty" style="padding:34px 10px">
-        <div style="font-weight:600; color:var(--ink); margin-bottom:4px">This month hasn't been set up yet</div>
-        <div class="muted" style="margin-bottom:16px">${MONTHS[mIdx]} ${yearOfYM(ym)} has no budget configured, so there's nothing to show here yet.</div>
-        <button class="btn primary" id="setupMonthBtn" type="button">Set up this month</button>
-      </div>
-    `;
-  }
+  card.innerHTML = `
+    <div class="empty" style="padding:34px 10px">
+      <div style="font-weight:600; color:var(--ink-soft); margin-bottom:4px">No data recorded</div>
+      <div class="muted" style="margin-bottom:14px">${MONTHS[mIdx]} ${yearOfYM(ym)} has no budget configured.</div>
+      <button type="button" id="setupMonthBtn" style="background:none; border:none; color:var(--ink-soft); font-size:12px; cursor:pointer; text-decoration:underline; padding:0">Set up this month anyway</button>
+    </div>
+  `;
   card.querySelector("#setupMonthBtn").onclick = ()=> openMonthSeedChoiceDialog(ym);
   return card;
+}
+
+// A simple call-to-action for a CURRENT or FUTURE unconfigured month. The
+// subhead above already shows a real Available figure (template budget +
+// whatever has genuinely rolled forward from already-seeded prior months);
+// there's nothing else real to show until the month is actually set up, so
+// this is just a prominent CTA — no per-category breakdown, no "projected"
+// numbers, no forecast label. Appends its card straight onto `wrap` for
+// consistency with the (single-card) monthNotSetUpCard above.
+function appendMonthForecast(wrap, ym){
+  const mIdx = monthOfYM(ym);
+  const card = el("div","card stack");
+  card.innerHTML = `
+    <div class="empty" style="padding:34px 10px">
+      <div style="font-weight:600; margin-bottom:4px">This month hasn't been set up yet</div>
+      <div class="muted" style="margin-bottom:14px">${MONTHS[mIdx]} ${yearOfYM(ym)} has no budget configured, so there's nothing to show here yet.</div>
+      <button class="btn primary block" id="setupMonthBtn" type="button">Set up this month</button>
+    </div>
+  `;
+  card.querySelector("#setupMonthBtn").onclick = ()=> openMonthSeedChoiceDialog(ym);
+  wrap.appendChild(card);
+}
+
+// Resolves a catId to display info for Monthly, whether it's a real
+// template category (state.categories) or a purely month-local one that
+// only exists inside state.monthCategoryData[ym] (source:"local", no
+// template counterpart at all).
+function categoryDisplayInfo(catId, ym){
+  const tmpl = state.categories.find(c=>c.id===catId);
+  if(tmpl) return { id: tmpl.id, name: tmpl.name, color: tmpl.color, isLocal:false };
+  const entry = (state.monthCategoryData[ym]||{})[catId];
+  return { id: catId, name: (entry && entry.name) || "Untitled", color: (entry && entry.color) || PALETTE[0], isLocal:true };
+}
+
+// Every category that's actually part of a SET-UP month — driven by
+// state.monthCategoryData[ym], never by the live template list, since a
+// seeded month only shows what it was actually forked with (plus whatever
+// has since been added/removed directly in that month). Template-matched
+// categories keep the template's own order; purely month-local ones (no
+// template counterpart) follow at the end in the order they were added.
+function monthCategoryList(ym){
+  const data = state.monthCategoryData[ym] || {};
+  const ids = Object.keys(data).filter(id=> id!==DROPPED_CREDITS_KEY);
+  const templateIds = ids.filter(id=> state.categories.some(c=>c.id===id))
+    .sort((a,b)=> state.categories.find(c=>c.id===a).order - state.categories.find(c=>c.id===b).order);
+  const localIds = ids.filter(id=> !state.categories.some(c=>c.id===id));
+  return [...templateIds, ...localIds].map(id=>{
+    const info = categoryDisplayInfo(id, ym);
+    return { id, name: info.name, color: info.color, entry: data[id] };
+  });
 }
 
 function renderMonthly(main){
@@ -1492,23 +1805,36 @@ function renderMonthly(main){
   wrap.appendChild(viewToggleRow(ym));
 
   if(!isMonthSeeded(ym)){
-    wrap.appendChild(monthNotSetUpCard(ym));
+    if(ym < todayYM()) wrap.appendChild(monthNotSetUpCard(ym));
+    else appendMonthForecast(wrap, ym);
     main.appendChild(wrap);
     return;
   }
 
   const catsCard = el("div","card stack");
   catsCard.innerHTML = `
-    <div class="eyebrow">Allocated by category</div>
+    <div class="section-title">
+      <div class="eyebrow">Allocated by category</div>
+      <button class="infobtn" type="button" id="mAddCat" aria-label="Add a category to this month" style="font-size:18px; line-height:1">+</button>
+    </div>
     <p class="muted" style="margin:-4px 0 0">Tap a category to review spend this month, or + to log something quickly.</p>
   `;
-  state.categories.forEach(c=>{
-    const hasTarget = state.lineitems.some(li=>li.categoryId===c.id);
-    const base = categoryBaseForMonth(c.id, ym);
-    const roll = rolloverForMonth(c.id, ym);
-    const adj = categoryAdjustmentForMonth(c.id, ym);
+  catsCard.querySelector("#mAddCat").onclick = ()=> openMonthAddCategorySheet(ym);
+  // Driven by state.monthCategoryData[ym], not the live template list — a
+  // set-up month only ever shows what it was actually forked with (plus
+  // whatever's been added/removed directly in that month since), never
+  // whatever Budget Setup happens to look like right now.
+  monthCategoryList(ym).forEach(({id, name, color})=>{
+    const base = categoryBaseForMonth(id, ym);
+    // "Has a target" used to mean "has line items" back when a category's
+    // budget only ever came from summing them. Now a flat category (no
+    // items, a real baseAmountUSD) is just as budgeted as an itemized one
+    // — the actual fixed amount is what decides it, not item count.
+    const hasTarget = base > 0;
+    const roll = rolloverForMonth(id, ym);
+    const adj = categoryAdjustmentForMonth(id, ym);
     const avail = base + roll + adj;
-    const spent = spentForMonth(c.id, ym);
+    const spent = spentForMonth(id, ym);
     const remaining = avail - spent;
     const pct = avail>0 ? Math.min(100, (spent/avail)*100) : (spent>0?100:0);
     // Categories with no target set in Budget Setup (e.g. Entertainment,
@@ -1525,12 +1851,12 @@ function renderMonthly(main){
     const row = el("div","catrow");
     row.innerHTML = `
       <div class="head">
-        <span class="name">${c.name}</span>
-        <button class="infobtn" type="button" data-info aria-label="Details for ${escapeHtml(c.name)}">${infoIconSVG()}</button>
-        <button class="infobtn" type="button" data-add aria-label="Log spend for ${escapeHtml(c.name)}" style="font-size:18px; line-height:1">+</button>
+        <span class="name">${name}</span>
+        <button class="infobtn" type="button" data-info aria-label="Details for ${escapeHtml(name)}">${infoIconSVG()}</button>
+        <button class="infobtn" type="button" data-add aria-label="Log spend for ${escapeHtml(name)}" style="font-size:18px; line-height:1">+</button>
         <span class="chev">›</span>
       </div>
-      <div class="catbar"><div style="width:${pct}%; background:${over?'var(--bad)':c.color}"></div></div>
+      <div class="catbar"><div style="width:${pct}%; background:${over?'var(--bad)':color}"></div></div>
       <div class="row">
         <span class="muted num">${fmtUSD(spent)} spent</span>
         <span class="muted num" style="color:${!hasTarget?'inherit':(remaining>=0?'var(--good)':'var(--bad)')}">${!hasTarget?(spent>0?fmtUSD(spent)+' tracked':'no target set'):(remaining>=0?fmtUSD(remaining)+' left':fmtUSD(remaining))}</span>
@@ -1538,14 +1864,14 @@ function renderMonthly(main){
       ${showRoll ? `<div class="muted" style="font-size:11px; margin-top:-4px">${roll>0?'+':''}${fmtUSD(roll)} carried in from last month</div>` : ""}
     `;
     row.style.cursor = "pointer";
-    row.onclick = ()=> openMonthlyActualsSheet(c.id, ym);
+    row.onclick = ()=> openMonthlyActualsSheet(id, ym);
     row.querySelector("[data-info]").onclick = (ev)=>{
       ev.stopPropagation();
-      openMonthlyCategoryDetailSheet(c.id, ym);
+      openMonthlyCategoryDetailSheet(id, ym);
     };
     row.querySelector("[data-add]").onclick = (ev)=>{
       ev.stopPropagation();
-      openActualEntryDialog(c.id, ym, null);
+      openActualEntryDialog(id, ym, null);
     };
     catsCard.appendChild(row);
   });
@@ -1601,10 +1927,10 @@ function renderMonthly(main){
 function openMonthlyActualsSheet(categoryId, ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const c = state.categories.find(x=>x.id===categoryId);
-  const hasTarget = state.lineitems.some(li=>li.categoryId===categoryId);
+  const info = categoryDisplayInfo(categoryId, ym);
   const rate = yearSettings(yearOfYM(ym)).baseRate;
-  const target = categoryBaseForMonth(c.id, ym);
+  const target = categoryBaseForMonth(categoryId, ym);
+  const hasTarget = target > 0;
   const entries = state.actuals.filter(a=>a.categoryId===categoryId && ymOfDate(a.date)===ym);
   const spent = entries.reduce((s,a)=> s + toUSD(a.amount||0, a.currency, a.rate||rate), 0);
   const remaining = target - spent;
@@ -1624,7 +1950,7 @@ function openMonthlyActualsSheet(categoryId, ym){
   }).join("") : `<div class="empty">Nothing logged yet — add a total or itemize as you go.</div>`;
 
   body.innerHTML = `
-    <h3>${escapeHtml(c.name)}</h3>
+    <h3>${escapeHtml(info.name)}</h3>
     <p class="muted">${MONTHS[monthOfYM(ym)]} · Target <strong class="num">${fmtUSD(target)}</strong> · Actual <strong class="num">${fmtUSD(spent)}</strong> · <span class="num" style="color:${!hasTarget?'inherit':(remaining>=0?'var(--good)':'var(--bad)')}">${!hasTarget?'no target set':(remaining>=0?fmtUSD(remaining)+' left':fmtUSD(remaining))}</span></p>
     <div class="stack" id="aEntries" style="gap:0">${rows}</div>
     <button class="btn accent block" id="aAddEntry">${iconPlus()}<span>Add spend</span></button>
@@ -1873,34 +2199,58 @@ function openTransferDialog(ym){
 // in, each transfer this month, spent, remaining. Editing the category's
 // allocation itself lives only in Budget Setup; this sheet links there
 // rather than duplicating an edit path.
+// This month's own view of a category — base, rollover carried in, each
+// transfer this month, spent, remaining, PLUS (new) this month's own items
+// and the ability to edit this month's base amount and remove the category
+// from the month entirely, all operating only on state.monthCategoryData[ym]
+// — never on the template (state.categories/state.lineitems). Works the
+// same whether the category is template-forked or purely month-local.
 function openMonthlyCategoryDetailSheet(categoryId, ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const c = state.categories.find(x=>x.id===categoryId);
-  const hasTarget = state.lineitems.some(li=>li.categoryId===categoryId);
-  const base = categoryBaseForMonth(c.id, ym);
-  const roll = rolloverForMonth(c.id, ym);
-  const adj = categoryAdjustmentForMonth(c.id, ym);
+  const info = categoryDisplayInfo(categoryId, ym);
+  const entry = (state.monthCategoryData[ym]||{})[categoryId];
+  const base = categoryBaseForMonth(categoryId, ym);
+  const hasTarget = base > 0;
+  const roll = rolloverForMonth(categoryId, ym);
+  const adj = categoryAdjustmentForMonth(categoryId, ym);
   const avail = base + roll + adj;
-  const spent = spentForMonth(c.id, ym);
+  const spent = spentForMonth(categoryId, ym);
   const remaining = avail - spent;
-  const trs = state.transfers.filter(t=> ymOfDate(t.date)===ym && (t.toCategoryId===c.id || t.fromCategoryId===c.id));
+  const trs = state.transfers.filter(t=> ymOfDate(t.date)===ym && (t.toCategoryId===categoryId || t.fromCategoryId===categoryId));
 
   let transferBlock = "";
   if(trs.length){
     const rows = trs.map(t=>{
-      const into = t.toCategoryId===c.id;
-      const other = state.categories.find(x=> x.id === (into ? t.fromCategoryId : t.toCategoryId));
-      return `<div class="row"><span class="muted">${into?"From":"To"} ${other?other.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span><span class="num" style="color:${into?"var(--good)":"var(--bad)"}">${into?"+":"-"}${fmtUSD(t.amountUSD)}</span></div>`;
+      const into = t.toCategoryId===categoryId;
+      const otherId = into ? t.fromCategoryId : t.toCategoryId;
+      const otherName = categoryDisplayInfo(otherId, ym).name;
+      return `<div class="row"><span class="muted">${into?"From":"To"} ${otherName||"?"}${t.note?" · "+escapeHtml(t.note):""}</span><span class="num" style="color:${into?"var(--good)":"var(--bad)"}">${into?"+":"-"}${fmtUSD(t.amountUSD)}</span></div>`;
     }).join("");
     transferBlock = `<div class="danger-zone"><div class="eyebrow" style="margin-bottom:8px">Transfers this month</div>${rows}</div>`;
   }
 
+  const items = (entry && entry.items) || [];
+  const itemRows = items.length ? items.map(it=>`
+    <button type="button" class="setuprow" data-mitem="${it.id}">
+      <span class="name-wrap">
+        <span class="name">${escapeHtml(it.name)}</span>
+        <span class="meta-note ${paymentMetaClass(it.paymentMethod)}">${paymentLabel(it.paymentMethod)}</span>
+      </span>
+      <span class="amt num">${fmtUSD(it.amount||0)}</span>
+      <span class="chev">›</span>
+    </button>
+  `).join("") : `<div class="empty">No items for this month yet.</div>`;
+
   body.innerHTML = `
-    <h3>${c.name}</h3>
-    <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</p>
+    <h3>${escapeHtml(info.name)}</h3>
+    <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)} — this month's own copy, independent of Budget Setup</p>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px">
+      <span class="muted" style="flex:none">Base allocation</span>
+      <input type="number" inputmode="decimal" step="0.01" id="mcBaseAmount" value="${(base||0).toFixed(2)}" style="flex:1">
+      <button class="btn small" id="mcBaseSave">Save</button>
+    </label>
     <div class="stack" style="gap:8px">
-      <div class="row"><span class="muted">Base allocation</span><span class="num">${fmtUSD(base)}</span></div>
       ${roll!==0 ? `<div class="row"><span class="muted">Rollover carried in</span><span class="num">${roll>0?"+":""}${fmtUSD(roll)}</span></div>` : ""}
       ${adj!==0 ? `<div class="row"><span class="muted">Net moved this month</span><span class="num">${adj>0?"+":""}${fmtUSD(adj)}</span></div>` : ""}
       <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">Available</span><span class="num" style="font-weight:600">${fmtUSD(avail)}</span></div>
@@ -1910,17 +2260,197 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
         : `<div class="row"><span style="font-weight:600">Remaining</span><span class="muted" style="font-weight:600">No target set — unbudgeted</span></div>`}
     </div>
     ${transferBlock}
+    <div class="list-divider">
+      <div class="eyebrow">This month's items</div>
+      <div class="stack" id="mcItems" style="gap:0">${itemRows}</div>
+      <button class="btn accent block" id="mcAddItem" style="margin-top:10px">${iconPlus()}<span>Add item</span></button>
+    </div>
+    <div class="danger-zone">
+      <button class="btn small danger" id="mcRemoveCat">${iconTrash()}<span>Remove from this month</span></button>
+    </div>
     <div class="dialog-actions" style="justify-content:space-between">
-      <button class="btn ghost" id="miEditSetup">Edit in Budget Setup →</button>
+      ${entry && entry.source==="template" ? `<button class="btn ghost" id="miEditSetup">Edit template in Budget Setup →</button>` : `<span></span>`}
       <button class="btn ghost" id="miClose">Close</button>
     </div>
   `;
   body.querySelector("#miClose").onclick = ()=> dlg.close();
-  body.querySelector("#miEditSetup").onclick = ()=>{
-    dlg.close();
-    ui.tab = "categories";
+  if(entry && entry.source==="template"){
+    body.querySelector("#miEditSetup").onclick = ()=>{
+      dlg.close();
+      ui.tab = "categories";
+      render();
+    };
+  }
+  onceClick(body.querySelector("#mcBaseSave"), async ()=>{
+    const amount = parseFloat(body.querySelector("#mcBaseAmount").value||"0") || 0;
+    state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
+    if(!state.monthCategoryData[ym][categoryId]) return;
+    // Edits only this month's own copy — the template's baseAmountUSD (and
+    // every other already-seeded month) is never touched.
+    state.monthCategoryData[ym][categoryId].baseAmountUSD = amount;
+    await dbSetMonthCategoryData();
+    showToast(`Updated ${info.name} for ${MONTHS[monthOfYM(ym)]}`);
     render();
-  };
+    openMonthlyCategoryDetailSheet(categoryId, ym);
+  });
+  body.querySelectorAll("[data-mitem]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const it = items.find(x=>x.id===btn.dataset.mitem);
+      openMonthItemDialog(categoryId, ym, it);
+    };
+  });
+  body.querySelector("#mcAddItem").onclick = ()=> openMonthItemDialog(categoryId, ym, null);
+  body.querySelector("#mcRemoveCat").onclick = ()=> confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Any balance it's carrying gets swept into this month's general Unallocated pot instead of disappearing.`, async ()=>{
+    // Two distinct components land in this month's Unallocated pot once the
+    // entry is gone. The carried-in-from-before part (rollover from the
+    // most recent prior seeded month) is handled automatically afterward by
+    // categoryCashOutForMonth, which compares this month against that prior
+    // month — nothing to do for it here. The part generated WITHIN this
+    // month itself (its own budget + transfers this month, minus what was
+    // actually spent, before removal) is NOT covered by that mechanism —
+    // categoryBaseForMonth would return 0 for it the instant the entry is
+    // deleted, with no credit recorded — so capture it here, before
+    // deleting, deliberately excluding rolloverForMonth (that's the
+    // carried-in part already handled above; including it here would
+    // double-count it).
+    const inMonthNet = categoryBaseForMonth(categoryId, ym) + categoryAdjustmentForMonth(categoryId, ym) - spentForMonth(categoryId, ym);
+    if(state.monthCategoryData[ym]){
+      state.monthCategoryData[ym][DROPPED_CREDITS_KEY] = droppedCreditsForMonth(ym) + inMonthNet;
+      delete state.monthCategoryData[ym][categoryId];
+    }
+    await dbSetMonthCategoryData();
+    dlg.close();
+    showToast(`Removed ${info.name} from ${MONTHS[monthOfYM(ym)]}`);
+    render();
+  });
+  openSheet();
+}
+
+// Name/amount/payment-method editor for one of THIS MONTH's own items
+// (state.monthCategoryData[ym][categoryId].items) — simpler than Budget
+// Setup's line items on purpose: no 12-month schedule, since a month-local
+// item only ever applies to this one month.
+function openMonthItemDialog(categoryId, ym, existing){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  body.innerHTML = `
+    <h3>${existing?"Edit":"New"} item</h3>
+    <label>Name<input type="text" id="miName" value="${existing?escapeHtml(existing.name):""}" placeholder="e.g. Netflix"></label>
+    <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="miAmount" value="${existing?(existing.amount||0).toFixed(2):""}" placeholder="0.00"></label>
+    <label>Payment method
+      <select id="miPay">
+        <option value="card" ${!existing||existing.paymentMethod==="card"?"selected":""}>Card</option>
+        <option value="cash" ${existing&&existing.paymentMethod==="cash"?"selected":""}>Cash (ATM)</option>
+        <option value="transfer" ${existing&&existing.paymentMethod==="transfer"?"selected":""}>Bank transfer</option>
+      </select>
+    </label>
+    ${existing ? `<div class="danger-zone"><button class="btn small danger" id="miDelete">${iconTrash()}<span>Delete item</span></button></div>` : ""}
+    <div class="dialog-actions">
+      <button class="btn ghost" id="miCancel">Cancel</button>
+      <button class="btn primary" id="miSave">Save</button>
+    </div>
+  `;
+  body.querySelector("#miCancel").onclick = ()=> dlg.close();
+  onceClick(body.querySelector("#miSave"), async ()=>{
+    const name = body.querySelector("#miName").value.trim();
+    if(!name) return;
+    const amount = parseFloat(body.querySelector("#miAmount").value||"0") || 0;
+    const paymentMethod = body.querySelector("#miPay").value;
+    const entry = state.monthCategoryData[ym] && state.monthCategoryData[ym][categoryId];
+    if(!entry) { dlg.close(); return; }
+    if(existing){
+      const idx = entry.items.findIndex(x=>x.id===existing.id);
+      if(idx>=0) entry.items[idx] = { ...entry.items[idx], name, amount, paymentMethod };
+    } else {
+      entry.items.push({ id: uid("mli"), name, amount, paymentMethod });
+    }
+    await dbSetMonthCategoryData();
+    showToast(`${existing?"Updated":"Added"} ${name}`);
+    render();
+    openMonthlyCategoryDetailSheet(categoryId, ym);
+  });
+  if(existing){
+    body.querySelector("#miDelete").onclick = ()=> confirmAction(`Delete "${existing.name}"?`, async ()=>{
+      const entry = state.monthCategoryData[ym] && state.monthCategoryData[ym][categoryId];
+      if(entry) entry.items = entry.items.filter(x=>x.id!==existing.id);
+      await dbSetMonthCategoryData();
+      showToast("Deleted");
+      render();
+      openMonthlyCategoryDetailSheet(categoryId, ym);
+    });
+  }
+  openSheet();
+}
+
+// Entry point for adding a category to an already-set-up month — either
+// forking in a template category that isn't part of this month yet, or
+// creating one that only ever exists inside this one month.
+function openMonthAddCategorySheet(ym){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const data = state.monthCategoryData[ym] || {};
+  const available = state.categories.filter(c=> categoryAppliesToYM(c, ym) && !data[c.id]);
+  const rows = available.length ? available.map(c=>`
+    <button type="button" class="setuprow" data-tmpl="${c.id}">
+      <span class="dot" style="background:${c.color}"></span>
+      <span class="name">${c.name}</span>
+      <span class="amt num">${fmtUSD(c.baseAmountUSD||0)}</span>
+      <span class="chev">›</span>
+    </button>
+  `).join("") : `<div class="empty">Every Budget Setup category is already part of this month.</div>`;
+  body.innerHTML = `
+    <h3>Add category — ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</h3>
+    <p class="muted">Bring in a category from Budget Setup with its current budget, or create one just for this month.</p>
+    <div class="stack" id="macList" style="gap:0">${rows}</div>
+    <button class="btn accent block" id="macNewLocal">${iconPlus()}<span>New category just for this month</span></button>
+    <div class="dialog-actions"><button class="btn ghost" id="macClose">Cancel</button></div>
+  `;
+  body.querySelectorAll("[data-tmpl]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const c = state.categories.find(x=>x.id===btn.dataset.tmpl);
+      state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
+      state.monthCategoryData[ym][c.id] = { baseAmountUSD: c.baseAmountUSD||0, items: [], source:"template" };
+      await dbSetMonthCategoryData();
+      dlg.close();
+      showToast(`Added ${c.name} to ${MONTHS[monthOfYM(ym)]}`);
+      render();
+    };
+  });
+  body.querySelector("#macNewLocal").onclick = ()=> openMonthNewLocalCategoryDialog(ym);
+  body.querySelector("#macClose").onclick = ()=> dlg.close();
+  openSheet();
+}
+
+// A brand-new category that lives ONLY inside this one month — written
+// straight into state.monthCategoryData[ym], never into state.categories,
+// since it has no template counterpart. Gets its own name/color (there's no
+// template row to read those from).
+function openMonthNewLocalCategoryDialog(ym){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  body.innerHTML = `
+    <h3>New category — ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)} only</h3>
+    <label>Name<input type="text" id="mlName" placeholder="e.g. One-off repair"></label>
+    <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="mlAmount" placeholder="0.00"></label>
+    <div class="dialog-actions">
+      <button class="btn ghost" id="mlCancel">Cancel</button>
+      <button class="btn primary" id="mlSave">Save</button>
+    </div>
+  `;
+  body.querySelector("#mlCancel").onclick = ()=> dlg.close();
+  onceClick(body.querySelector("#mlSave"), async ()=>{
+    const name = body.querySelector("#mlName").value.trim();
+    if(!name) return;
+    const amount = parseFloat(body.querySelector("#mlAmount").value||"0") || 0;
+    const newId = uid("mcat");
+    state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
+    const colorIdx = Object.keys(state.monthCategoryData[ym]).filter(id=> id!==DROPPED_CREDITS_KEY).length % PALETTE.length;
+    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name, color: PALETTE[colorIdx] };
+    await dbSetMonthCategoryData();
+    dlg.close();
+    showToast(`Added ${name}`);
+    render();
+  });
   openSheet();
 }
 
@@ -1983,11 +2513,45 @@ function renderCategories(main){
   const ym = ui.ym;
   const wrap = el("div","stack");
 
-  state.categories.slice().sort((a,b)=>a.order-b.order).forEach(c=>{
-    wrap.appendChild(renderCategoryRow(c, ym));
-  });
+  const allCats = state.categories.slice().sort((a,b)=>a.order-b.order);
+  // "Global" = no onlyYM, or onlyYM pointing at some OTHER month — it still
+  // shows in the normal list everywhere except its own scoped month.
+  const globalCats = allCats.filter(c=> c.onlyYM !== ym);
+  const monthCats = allCats.filter(c=> c.onlyYM === ym);
+
+  const globalList = el("div","card stack");
+  if(!globalCats.length) globalList.appendChild(el("div","empty","No categories yet — add one from the + above."));
+  globalCats.forEach(c=> globalList.appendChild(renderCategoryRow(c, ym, globalCats)));
+  wrap.appendChild(globalList);
+
+  if(monthCats.length){
+    const divider = el("div","list-divider");
+    divider.innerHTML = `<div class="eyebrow">This month only</div>`;
+    wrap.appendChild(divider);
+    const monthList = el("div","card stack");
+    monthCats.forEach(c=> monthList.appendChild(renderCategoryRow(c, ym, monthCats)));
+    wrap.appendChild(monthList);
+  }
 
   main.appendChild(wrap);
+}
+
+// Swaps `cat`'s `order` with its neighbor in `dir` (-1 = up, +1 = down)
+// within `siblings` — the same-section list (global or "this month only")
+// it belongs to, so a move never jumps a category across sections (that's
+// what "Promote to master" is for). Persists both affected rows immediately
+// and re-renders so the new order is visible right away.
+async function moveCategory(cat, dir, siblings){
+  const i = siblings.indexOf(cat);
+  const j = i + dir;
+  if(i<0 || j<0 || j>=siblings.length) return;
+  const other = siblings[j];
+  const tmp = cat.order;
+  cat.order = other.order;
+  other.order = tmp;
+  await dbSet("categories", cat.id, cat);
+  await dbSet("categories", other.id, other);
+  render();
 }
 
 function categorySummaryAmount(c, ym){
@@ -1996,13 +2560,15 @@ function categorySummaryAmount(c, ym){
 
 // One clean tap target per category. No inline inputs — tapping opens the
 // detail sheet, which is where everything (amount, payment type, advanced
-// schedule, delete) actually lives.
-function renderCategoryRow(c, ym){
+// schedule, delete) actually lives. `siblings` is the same-section list
+// (global or "this month only") this row's up/down buttons reorder within.
+function renderCategoryRow(c, ym, siblings){
   const items = state.lineitems.filter(li=>li.categoryId===c.id);
   const amt = categorySummaryAmount(c, ym);
-  // A div, not a button — it hosts its own nested "+" button (per-row add,
-  // consistent with Monthly's per-row add) alongside the row's main tap
-  // target, and a button can't validly contain another button.
+  const idx = siblings.indexOf(c);
+  // A div, not a button — it hosts its own nested up/down + "+" buttons
+  // (per-row add, consistent with Monthly's per-row add) alongside the
+  // row's main tap target, and a button can't validly contain another button.
   const row = el("div","setuprow");
   row.setAttribute("role","button");
   row.tabIndex = 0;
@@ -2010,13 +2576,17 @@ function renderCategoryRow(c, ym){
     : items.length>1 ? `<span class="meta-note mm-neutral">${items.length} items</span>`
     : `<span class="meta-note mm-neutral">Not set</span>`;
   row.innerHTML = `
+    <span class="movebtns">
+      <button class="movebtn" type="button" data-up aria-label="Move ${escapeHtml(c.name)} up" ${idx<=0?"disabled":""}>${iconChevronUp()}</button>
+      <button class="movebtn" type="button" data-down aria-label="Move ${escapeHtml(c.name)} down" ${idx>=siblings.length-1?"disabled":""}>${iconChevronDown()}</button>
+    </span>
     <span class="dot" style="background:${c.color}"></span>
     <span class="name-wrap">
       <span class="name">${c.name}</span>
       ${meta}
     </span>
     <span class="amt num" style="color:${amt<0?'var(--bad)':'inherit'}">${fmtUSD(amt)}</span>
-    <button class="infobtn" type="button" data-add aria-label="Add item to ${escapeHtml(c.name)}" style="font-size:18px; line-height:1">+</button>
+    <button class="infobtn" type="button" data-add aria-label="Add spend to ${escapeHtml(c.name)}" style="font-size:18px; line-height:1">+</button>
     <span class="chev">›</span>
   `;
   row.onclick = ()=> openCategoryDetailSheet(c.id, ym);
@@ -2024,6 +2594,14 @@ function renderCategoryRow(c, ym){
   row.querySelector("[data-add]").onclick = (ev)=>{
     ev.stopPropagation();
     openLineItemDialog(c.id, null, ym);
+  };
+  row.querySelector("[data-up]").onclick = (ev)=>{
+    ev.stopPropagation();
+    moveCategory(c, -1, siblings);
+  };
+  row.querySelector("[data-down]").onclick = (ev)=>{
+    ev.stopPropagation();
+    moveCategory(c, 1, siblings);
   };
   return row;
 }
@@ -2039,6 +2617,8 @@ function openCategoryDetailSheet(categoryId, ym){
   const rate = yearSettings(yearOfYM(ym)).baseRate;
   const items = state.lineitems.filter(li=>li.categoryId===categoryId);
   const target = categoryBaseForMonth(c.id, ym);
+  const planned = categoryPlannedForMonth(c.id, ym);
+  const unallocated = target - planned;
 
   const itemRows = items.length ? items.map(li=>{
     const amt = toUSD(li.schedule[mIdx]||0, li.currency, li.rate||rate);
@@ -2062,10 +2642,19 @@ function openCategoryDetailSheet(categoryId, ym){
 
   body.innerHTML = `
     <h3>${escapeHtml(c.name)}</h3>
-    <p class="muted">${MONTHS[mIdx]} target: <strong class="num">${fmtUSD(target)}</strong></p>
+    <p class="muted">Budget: <strong class="num">${fmtUSD(target)}</strong> · Planned <strong class="num">${fmtUSD(planned)}</strong> · Unallocated <strong class="num" style="color:${unallocated<0?'var(--bad)':'inherit'}">${fmtUSD(unallocated)}</strong></p>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px">
+      <span class="muted" style="flex:none">Amount (USD)</span>
+      <input type="number" inputmode="decimal" step="0.01" id="dFlatAmount" value="${(c.baseAmountUSD||0).toFixed(2)}" style="flex:1">
+      <button class="btn small" id="dFlatSave">Save</button>
+    </label>
     <div class="stack" id="dItems" style="gap:0">${itemRows}</div>
-    <button class="btn accent block" id="dAddItem">${iconPlus()}<span>Add item</span></button>
-    <div class="danger-zone"><button class="btn small danger" id="dDelCat">${iconTrash()}<span>Delete category${items.length?" & its items":""}</span></button></div>
+    <button class="btn accent block" id="dAddItem">${iconPlus()}<span>Add spend</span></button>
+    ${c.onlyYM ? `<div class="danger-zone"><button class="btn small block" id="dPromote">Also add to master Budget Setup</button></div>` : ""}
+    <div class="danger-zone" style="display:flex; gap:10px">
+      <button class="btn small ghost" id="dDuplicate">${iconCopy()}<span>Duplicate category</span></button>
+      <button class="btn small danger" id="dDelCat">${iconTrash()}<span>Delete category${items.length?" & its items":""}</span></button>
+    </div>
     <div class="dialog-actions"><button class="btn ghost" id="dClose">Close</button></div>
   `;
   body.querySelectorAll("[data-item]").forEach(btn=>{
@@ -2074,15 +2663,51 @@ function openCategoryDetailSheet(categoryId, ym){
       openLineItemDialog(categoryId, li, ym);
     };
   });
+  onceClick(body.querySelector("#dFlatSave"), async ()=>{
+    const amount = parseFloat(body.querySelector("#dFlatAmount").value||"0") || 0;
+    c.baseAmountUSD = amount;
+    await dbSet("categories", c.id, c);
+    showToast(`Updated ${c.name}`);
+    render();
+    openCategoryDetailSheet(categoryId, ym);
+  });
   body.querySelector("#dAddItem").onclick = ()=> openLineItemDialog(categoryId, null, ym);
+  if(c.onlyYM){
+    body.querySelector("#dPromote").onclick = async ()=>{
+      delete c.onlyYM;
+      await dbSet("categories", c.id, c);
+      showToast(`${c.name} added to Budget Setup for every month`);
+      render();
+      openCategoryDetailSheet(categoryId, ym);
+    };
+  }
+  onceClick(body.querySelector("#dDuplicate"), async ()=>{
+    const newId = uid("cat");
+    const copy = { ...c, id: newId, name: c.name + " (copy)", order: state.categories.length };
+    state.categories.push(copy);
+    await dbSet("categories", newId, copy);
+    const newItems = items.map(li=> ({ ...li, id: uid("li"), categoryId: newId }));
+    for(const li of newItems){
+      state.lineitems.push(li);
+      await dbSet("lineitems", li.id, li);
+    }
+    showToast(`Duplicated ${c.name}`);
+    render();
+    openCategoryDetailSheet(newId, ym);
+  });
   body.querySelector("#dDelCat").onclick = ()=> confirmAction(`Delete "${c.name}"${items.length?` and its ${items.length} item(s)`:""}?`, async ()=>{
-    const catActuals = state.actuals.filter(a=>a.categoryId===c.id);
+    // This only removes the TEMPLATE: the Budget Setup category itself and
+    // its planning items. It never touches state.actuals or any month's
+    // monthCategoryData — those were already forked into their own
+    // independent copies (name/color included — see forkTemplateIntoMonth),
+    // so a month that used this category keeps its real logged spend and
+    // its own display info exactly as it was, with or without the template.
+    // The only effect going forward is that future unconfigured months no
+    // longer see this category in their Budget Setup projection.
     state.categories = state.categories.filter(x=>x.id!==c.id);
     state.lineitems = state.lineitems.filter(x=>x.categoryId!==c.id);
-    state.actuals = state.actuals.filter(x=>x.categoryId!==c.id);
     await dbDelete("categories", c.id);
     for(const li of items) await dbDelete("lineitems", li.id);
-    for(const a of catActuals) await dbDelete("actuals", a.id);
     showToast(`Deleted ${c.name}`);
     render();
   });
@@ -2090,12 +2715,23 @@ function openCategoryDetailSheet(categoryId, ym){
   openSheet();
 }
 
-function openCategoryDialog(){
+// Name + a direct flat amount — creating a category no longer forces a trip
+// through the full "New item" dialog just to give it a simple monthly
+// number. `baseAmountUSD` is the category's whole budget, full stop —
+// items added later are just planning templates and never touch it (see
+// categoryBaseForMonth above).
+function openCategoryDialog(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
+  const monthLabel = `${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}`;
   body.innerHTML = `
     <h3>New category</h3>
     <label>Name<input type="text" id="cName" placeholder="e.g. Pet care"></label>
+    <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="cAmount" placeholder="0.00"></label>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:8px">
+      <input type="checkbox" id="cOnlyMonth" style="width:auto">
+      <span>Only ${monthLabel} — not part of the recurring Budget Setup template</span>
+    </label>
     <div class="dialog-actions">
       <button class="btn ghost" id="cCancel">Cancel</button>
       <button class="btn primary" id="cSave">Save</button>
@@ -2105,9 +2741,12 @@ function openCategoryDialog(){
   onceClick(body.querySelector("#cSave"), async ()=>{
     const name = body.querySelector("#cName").value.trim();
     if(!name) return;
+    const amount = parseFloat(body.querySelector("#cAmount").value||"0") || 0;
+    const onlyMonth = body.querySelector("#cOnlyMonth").checked;
     const id = uid("cat");
     const color = PALETTE[state.categories.length % PALETTE.length];
-    const rec = { id, name, order: state.categories.length, color };
+    const rec = { id, name, order: state.categories.length, color, baseAmountUSD: amount };
+    if(onlyMonth) rec.onlyYM = ym;
     state.categories.push(rec);
     await dbSet("categories", id, rec);
     dlg.close();
@@ -2576,6 +3215,7 @@ async function exportData(){
     actuals: state.actuals,
     fundevents: state.fundevents,
     transfers: state.transfers,
+    monthCategoryData: state.monthCategoryData,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
   const filename = `ledgercasa-export-${new Date().toISOString().slice(0,10)}.json`;
@@ -2607,6 +3247,7 @@ async function exportYearData(year){
     fundevents: state.fundevents.filter(fe=>yearOfYM(fe.targetYM)===year),
     perYearSettings: (state.settings.perYear||{})[year] || null,
     lineitems: state.lineitems.filter(li=>li.onlyYM!==undefined && yearOfYM(li.onlyYM)===year),
+    monthCategoryData: Object.fromEntries(Object.entries(state.monthCategoryData||{}).filter(([ym])=>yearOfYM(Number(ym))===year)),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
   const filename = `ledger-casa-${year}-backup.json`;
@@ -2652,12 +3293,16 @@ async function clearYearData(year){
 
   if(state.settings.perYear) delete state.settings.perYear[year];
   state.settings.seededYMs = (state.settings.seededYMs||[]).filter(ym=>yearOfYM(ym)!==year);
+  Object.keys(state.monthCategoryData||{}).forEach(ym=>{
+    if(yearOfYM(Number(ym))===year) delete state.monthCategoryData[ym];
+  });
 
   for(const a of dropActuals) await dbDelete("actuals", a.id);
   for(const t of dropTransfers) await dbDelete("transfers", t.id);
   for(const fe of dropFund) await dbDelete("fundevents", fe.id);
   for(const li of dropItems) await dbDelete("lineitems", li.id);
   await dbSetSettings();
+  await dbSetMonthCategoryData();
 }
 
 function el(tag, cls, text){
@@ -2728,6 +3373,14 @@ function iconCopy(){
 function iconCheck(){
   return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 }
+// "chevron-up"/"chevron-down" from Feather Icons (MIT) — the up/down
+// reorder buttons on each Budget Setup category row.
+function iconChevronUp(){
+  return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>`;
+}
+function iconChevronDown(){
+  return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+}
 
 // Short, sentence-case forms only — every pill in the app uses these, so
 // they need to be short and consistent-width, not full labels.
@@ -2750,10 +3403,13 @@ function paymentMetaClass(pm){
 // (e.g. a category detail sheet opening a delete confirmation) without
 // closing first — showModal() throws if called on an already-open
 // dialog, so every open*Sheet/Dialog function calls this instead.
+let lockedScrollY = 0;
 function openSheet(){
   const dlg = document.getElementById("dlg");
   if(!dlg.open){
+    lockedScrollY = window.scrollY || window.pageYOffset || 0;
     dlg.showModal();
+    document.body.style.top = `-${lockedScrollY}px`;
     document.body.classList.add("sheet-open");
     // showModal() autofocuses the first focusable control in the sheet —
     // usually a <select> or <input type=date> — which on mobile can pop
@@ -2846,6 +3502,12 @@ function wireSheetDrag(){
 function start(){
   document.getElementById("dlg").addEventListener("close", ()=>{
     document.body.classList.remove("sheet-open");
+    document.body.style.top = "";
+    // Restores the exact scroll position the lock saved, rather than
+    // trusting the browser to have kept the (now unlocked) body where it
+    // visually was — that's what was leaving nav.tabs looking detached
+    // from the bottom edge after a sheet closed.
+    window.scrollTo(0, lockedScrollY);
   });
   wireSheetDrag();
   render();
