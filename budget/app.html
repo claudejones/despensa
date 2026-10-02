@@ -582,8 +582,8 @@ let state = {
   // (catId matches a state.categories id); source:"local" means it was
   // created directly within the month with no template counterpart at all
   // (catId is then a freshly generated id that never appears in
-  // state.categories). See categoryBaseForMonth/rolloverForMonth/
-  // categoryCashOutForMonth below for how this drives the money math.
+  // state.categories). See categoryBaseForMonth/rolloverForMonth below for
+  // how this drives the money math.
   monthCategoryData: {},
 };
 
@@ -940,7 +940,9 @@ function categoryBaseForMonth(catId, ym){
     // only from its own independent copy (state.monthCategoryData), never
     // from the live template. A category not included in this month (never
     // added, or since removed) contributes nothing here — its balance (if
-    // any) was already swept into the general pot, see categoryCashOutForMonth.
+    // any) is just no longer tracked under its own name; the whole-pot
+    // total (totalAvailableForMonth) never subtracted it in the first
+    // place, so there's nothing to sweep back.
     const entry = state.monthCategoryData[ym] && state.monthCategoryData[ym][catId];
     return entry ? (entry.baseAmountUSD || 0) : 0;
   }
@@ -1029,10 +1031,11 @@ function rolloverForMonth(catId, ym){
     // full budget silently credited as surplus.
     if(!isMonthSeeded(k)) continue;
     // A category not included in a seeded month resets the chain — its
-    // carried balance up to that point was cashed out into that month's
-    // general pot instead (see categoryCashOutForMonth), so it must not
-    // keep compounding here, and if the category reappears in a later
-    // month it starts fresh at that month's own budget.
+    // carried balance up to that point simply stops being tracked under
+    // its own name (the whole-pot total was never reduced by it, so
+    // nothing needs crediting back elsewhere), and if the category
+    // reappears in a later month it starts fresh at that month's own
+    // budget.
     const included = !!(state.monthCategoryData[k] && state.monthCategoryData[k][catId]);
     if(!included){
       roll = 0;
@@ -1046,59 +1049,14 @@ function rolloverForMonth(catId, ym){
   }
   return roll;
 }
-// The most recently seeded month strictly before `ym` — used by
-// categoryCashOutForMonth to find "the month right before this one that
-// actually had anything set up", skipping over any unseeded gaps.
-function mostRecentSeededMonthBefore(ym){
-  const start = earliestYM();
-  let last = null;
-  for(let k=start;k<ym;k++) if(isMonthSeeded(k)) last = k;
-  return last;
-}
-// The amount, if any, that gets swept from `catId` into `ym`'s general
-// Unallocated pot because `ym` is the EXACT seeded month it got dropped in.
-// Fires exactly once per drop: the month right after a category was last
-// included carries its balance into the pot; every later month it stays
-// absent returns 0 here (categoryCashOutForMonth below guards against ever
-// double-counting the same cash-out).
-function categoryCashOutForMonth(catId, ym){
-  if(!isMonthSeeded(ym)) return 0;
-  const includedThisMonth = !!(state.monthCategoryData[ym] && state.monthCategoryData[ym][catId]);
-  if(includedThisMonth) return 0; // still included, nothing to cash out
-  const prior = mostRecentSeededMonthBefore(ym);
-  if(prior === null) return 0; // never existed before this point
-  const includedPrior = !!(state.monthCategoryData[prior] && state.monthCategoryData[prior][catId]);
-  if(!includedPrior) return 0; // already dropped earlier — already cashed out then
-  return rolloverForMonth(catId, ym); // balance it was carrying right up to entering ym
-}
-// Every category id that could ever need a cash-out check — the current
-// template's categories, plus any id (template-matched or purely
-// month-local) that has ever appeared in monthCategoryData, so a category
-// deleted from the template entirely (or one that only ever existed inside
-// a single month) still gets its drop accounted for.
-function allKnownCategoryIds(){
-  const ids = new Set(state.categories.map(c=>c.id));
-  Object.values(state.monthCategoryData||{}).forEach(monthMap=>{
-    Object.keys(monthMap||{}).forEach(id=>{ if(id!==DROPPED_CREDITS_KEY) ids.add(id); });
-  });
-  return ids;
-}
-// Running credit for money that was GENERATED within a month itself (this
-// month's own budget + transfers − actual spend, before removal) by a
-// category removed from that month via "Remove from this month" — see
-// openMonthlyCategoryDetailSheet's #mcRemoveCat handler. Kept as one extra
-// key alongside the real per-category entries in
-// state.monthCategoryData[ym], the same object/persistence path every
-// other per-month fact already uses (dbSetMonthCategoryData), rather than a
-// parallel top-level collection. Deliberately NOT a category id — every
-// place that enumerates state.monthCategoryData[ym]'s keys as category ids
-// (monthCategoryList, allKnownCategoryIds, the new-local-category color
-// index) excludes this key explicitly.
+// Legacy data may still carry this key in an old month's
+// monthCategoryData from before the cash-out/dropped-credits bookkeeping
+// below was removed (see totalAvailableForMonth) — every place that
+// enumerates state.monthCategoryData[ym]'s keys as category ids
+// (monthCategoryList, the new-local-category color index) still has to
+// skip it, permanently, so a stale saved value never gets read back as a
+// category.
 const DROPPED_CREDITS_KEY = "__droppedCredits";
-function droppedCreditsForMonth(ym){
-  const d = state.monthCategoryData[ym];
-  return (d && d[DROPPED_CREDITS_KEY]) || 0;
-}
 function availableForMonth(catId, ym){
   return categoryBaseForMonth(catId, ym) + rolloverForMonth(catId, ym) + categoryAdjustmentForMonth(catId, ym);
 }
@@ -1116,33 +1074,47 @@ function remainingForMonth(catId, ym){
 function totalBudgetForMonth(ym){
   return (yearSettings(yearOfYM(ym)).yearBudgetUSD/12) + fundAdjustmentForMonth(ym);
 }
+// Every actual dollar logged this month, full stop — NOT a sum over
+// state.categories (the live Budget Setup template list). Summing over
+// state.categories undercounts (misses spend logged against a purely
+// month-local category, which never lives in state.categories) and can
+// disagree with what's actually configured for THIS month (a category
+// removed from this month, or never added to it, but still present in the
+// live template, still had its spend counted here regardless). Reading
+// straight off state.actuals is what the header's own "Spent is every
+// actual dollar logged this month, budgeted or not" promise requires —
+// this way it can never drift from reality or from the category list.
 function totalSpentForMonth(ym){
-  return state.categories.reduce((s,c)=> s + spentForMonth(c.id, ym), 0);
+  return state.actuals
+    .filter(a=> ymOfDate(a.date)===ym)
+    .reduce((s,a)=> s + toUSD(a.amount||0, a.currency, a.rate||yearSettings(yearOfYM(ym)).baseRate), 0);
 }
 // A single running balance for the whole pot, not a sum of each category's
 // own rollover — the Unallocated slice belongs to no category, so summing
 // per-category rollovers silently drops it. Walking from earliestYM means
 // this carries across a year boundary exactly the same way category
 // rollover does, per your call on that.
+//
+// totalBudgetForMonth(k) - totalSpentForMonth(k) is already the complete,
+// category-independent answer for "how much of month k's whole pot went
+// unspent" — totalBudgetForMonth is a flat annual/12 + adjustments figure
+// that was never reduced by removing a category, and totalSpentForMonth
+// (above) counts every dollar actually spent regardless of whether its
+// category is still configured for that month. An earlier version of this
+// function ALSO added back a removed category's leftover balance via
+// categoryCashOutForMonth/droppedCreditsForMonth, on the theory that
+// removing a category "orphaned" its balance — but that balance was never
+// subtracted from the pot to begin with, so adding it back double-counted
+// it. Verified: a $100 category present for two $500/month budgets, with
+// nothing ever spent, removed after month 2 — true available going into
+// month 3 is $1,500 (three untouched months); the old formula returned
+// $1,700, counting the category's $100 twice.
 function totalAvailableForMonth(ym){
   let bal = 0;
   const start = earliestYM();
-  const knownIds = allKnownCategoryIds();
   for(let k=start;k<ym;k++){
     if(!isMonthSeeded(k)) continue;
     bal += totalBudgetForMonth(k) - totalSpentForMonth(k);
-    // A category dropped from month k has its carried balance swept into
-    // k's general Unallocated pot instead of vanishing or sitting orphaned
-    // — add that in here, at the exact month it happened, same walk as the
-    // line above. In the normal case (nothing ever dropped) this adds
-    // exactly 0 every time, so existing totals are unchanged.
-    knownIds.forEach(catId=>{ bal += categoryCashOutForMonth(catId, k); });
-    // Plus whatever each removed category had generated WITHIN month k
-    // itself (this month's own budget + transfers − actual spend, before
-    // removal) — the carried-in portion above is handled by
-    // categoryCashOutForMonth; this is the separate in-month portion, see
-    // droppedCreditsForMonth and #mcRemoveCat.
-    bal += droppedCreditsForMonth(k);
   }
   return totalBudgetForMonth(ym) + bal;
 }
@@ -2508,22 +2480,15 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     };
   });
   body.querySelector("#mcAddEntry").onclick = ()=> openActualEntryDialog(categoryId, ym, null);
-  body.querySelector("#mcRemoveCat").onclick = ()=> confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Any balance it's carrying gets swept into this month's general Unallocated pot instead of disappearing.`, async ()=>{
-    // Two distinct components land in this month's Unallocated pot once the
-    // entry is gone. The carried-in-from-before part (rollover from the
-    // most recent prior seeded month) is handled automatically afterward by
-    // categoryCashOutForMonth, which compares this month against that prior
-    // month — nothing to do for it here. The part generated WITHIN this
-    // month itself (its own budget + transfers this month, minus what was
-    // actually spent, before removal) is NOT covered by that mechanism —
-    // categoryBaseForMonth would return 0 for it the instant the entry is
-    // deleted, with no credit recorded — so capture it here, before
-    // deleting, deliberately excluding rolloverForMonth (that's the
-    // carried-in part already handled above; including it here would
-    // double-count it).
-    const inMonthNet = categoryBaseForMonth(categoryId, ym) + categoryAdjustmentForMonth(categoryId, ym) - spentForMonth(categoryId, ym);
+  body.querySelector("#mcRemoveCat").onclick = ()=> confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Its balance stays part of this month's overall total — removing it here only stops tracking it as its own category.`, async ()=>{
+    // No separate "sweep the balance into Unallocated" bookkeeping needed —
+    // totalAvailableForMonth/totalSpentForMonth are whole-pot figures (the
+    // month's flat budget minus every dollar actually spent, both
+    // independent of which categories currently exist), so a removed
+    // category's unspent balance was never subtracted from that pot in the
+    // first place. Deleting its entry here is the only state change
+    // required; nothing needs crediting back.
     if(state.monthCategoryData[ym]){
-      state.monthCategoryData[ym][DROPPED_CREDITS_KEY] = droppedCreditsForMonth(ym) + inMonthNet;
       delete state.monthCategoryData[ym][categoryId];
     }
     await dbSetMonthCategoryData();
