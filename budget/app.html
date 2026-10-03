@@ -27,6 +27,7 @@
     --good-bg:#E4F2E9;
     --bad:#B23B3B;
     --bad-bg:#FBE7E7;
+    --status-met:#4A6B8A;
     --cash:#B8862E;
     --cash-bg:#F7ECD6;
     --transfer:#4E7A8F;
@@ -50,6 +51,7 @@
       --good-bg:#1C3A2A;
       --bad:#E08585;
       --bad-bg:#3B2222;
+      --status-met:#7CAFCE;
       --cash:#E0B15C;
       --cash-bg:#3A2E17;
       --transfer:#7FB3CC;
@@ -73,6 +75,7 @@
     --good-bg:#1C3A2A;
     --bad:#E08585;
     --bad-bg:#3B2222;
+    --status-met:#7CAFCE;
     --cash:#E0B15C;
     --cash-bg:#3A2E17;
     --transfer:#7FB3CC;
@@ -450,6 +453,7 @@
   details.xferpick summary{ font-size:14px; color:var(--ink); flex-wrap:wrap; row-gap:4px }
   details.xferpick summary .eyebrow{ font-size:11px; color:var(--ink-soft); font-weight:700 }
   details.xferpick summary .pickval{ flex-basis:100%; margin-left:22px; font-weight:600; font-size:14px; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:calc(100% - 22px); display:flex; align-items:center }
+  details.xferpick[open] summary .pickval{ display:none }
   input.err, select.err, textarea.err{ border-color:var(--bad) !important }
   .form-err-msg{ color:var(--bad); font-size:13px; font-weight:600; margin:2px 0 8px }
 
@@ -537,28 +541,13 @@
 --------------------------------------------------------------- */
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const SEED_YEAR = 2027; // the year the original seed data was written for
-// 20 colors, not 12 — the old 12-color set put more than one category on
-// the same color past the 12th category (simple modulo wraparound). The
-// old first entry (#1D3B36) also nearly matched the .catbar track's own
-// dark-mode background (--surface-2 = #213732), making that category's
-// progress bar almost invisible against its own track — replaced below.
-const PALETTE = ["#B8453A","#B8862E","#5B8A9A","#8A5B7A","#6E8F4E","#B2593E","#4E7A8F","#9A7B4E","#6E5B8F","#3F8F5F","#8F6B3F","#5B6B8F","#A4486B","#4E8F7A","#8F4E6E","#6B8F3F","#3F6B8F","#8F7A3F","#5B3F8F","#8F5B3F"];
-
-// Picks a color for a new category — the first PALETTE entry not already
-// in use by a sibling, rather than a raw `length % PALETTE.length`, which
-// reintroduces a collision the moment any earlier category is deleted
-// (the count shifts, a later category's modulo result changes, and it can
-// land back on a color a surviving category already has). Once every
-// PALETTE color is taken at least once, falls back to the least-used one.
-function nextAvailableColor(existingColors){
-  const used = new Set(existingColors);
-  const free = PALETTE.find(c=> !used.has(c));
-  if(free) return free;
-  const counts = {};
-  PALETTE.forEach(c=> counts[c]=0);
-  existingColors.forEach(c=> { if(counts[c]!=null) counts[c]++; });
-  return PALETTE.reduce((best,c)=> counts[c]<counts[best] ? c : best, PALETTE[0]);
-}
+// Categories no longer carry an assigned identity color — past ~8
+// categories a generated hue stops being reliably distinguishable (see
+// the dataviz skill), and the category set here is unlimited/custom, so
+// per-category color never scaled. Every category row instead uses the
+// same generic icon (iconCategoryTag) as a scan aid; identity comes from
+// the name text next to it. Any `color` field still present on existing
+// stored categories (from the old PALETTE system) is simply unused now.
 
 const SEED_VERSION = 3;
 
@@ -755,7 +744,7 @@ function buildSeed(){
     { id:"cat_usgm", name:"USGM", order:13 },
     { id:"cat_streaming", name:"Streaming Services", order:14 },
     { id:"cat_health", name:"Health (co-pays)", order:15 },
-  ].map((c,i)=>({...c, color: PALETTE[i % PALETTE.length]}));
+  ];
 
   const flat = (n)=> new Array(12).fill(n);
 
@@ -920,25 +909,38 @@ function categoryAdjustmentForMonth(catId, ym){
   return net;
 }
 
+// A fund event's mode decides which months it touches and how much of it
+// lands in each:
+//   oneshot      — exactly its targetYM, the full amount (Monthly's
+//                  "Add funds" always writes this — Monthly is one month,
+//                  there's nothing to spread).
+//   evenly       — amount/12, every month of targetYM's calendar year,
+//                  regardless of which month targetYM itself is (Settings'
+//                  "Apply evenly across all 12 months").
+//   redistribute — amount/(months remaining), spread from targetYM through
+//                  December of that same year (Settings' "Apply from
+//                  active month moving forward").
+// fundAdjustmentPortion returns how much of `fe` lands in `ym` (0 if none)
+// — the one place this logic lives, so the monthly total and the fund-
+// adjustments list can never disagree about which months an event touches.
+function fundAdjustmentPortion(fe, ym){
+  if(fe.mode==="oneshot") return fe.targetYM===ym ? fe.amountUSD : 0;
+  if(fe.mode==="evenly") return yearOfYM(ym)===yearOfYM(fe.targetYM) ? fe.amountUSD/12 : 0;
+  // redistribute
+  const start = fe.targetYM;
+  const yearEnd = yearOfYM(start)*12 + 12;
+  const span = yearEnd - start;
+  return (ym>=start && ym<yearEnd && span>0) ? fe.amountUSD/span : 0;
+}
 function fundAdjustmentForMonth(ym){
-  let extra = 0;
-  state.fundevents.forEach(fe=>{
-    if(fe.mode==="oneshot"){
-      if(fe.targetYM===ym) extra += fe.amountUSD;
-    } else { // redistribute across remaining months from event's target month onward, within that year
-      const start = fe.targetYM;
-      const span = (yearOfYM(start)+1)*12 - start;
-      if(ym>=start && ym<yearOfYM(start)*12+12 && span>0) extra += fe.amountUSD/span;
-    }
-  });
-  return extra;
+  return state.fundevents.reduce((sum,fe)=> sum + fundAdjustmentPortion(fe, ym), 0);
 }
 
 // Count of fund events + transfers touching this month — drives the
 // numbered badge on Monthly's subhead "adjustments" icon. Same filters as
 // openFundAdjustmentsSheet, kept in sync with it.
 function fundAdjustmentsCountForMonth(ym){
-  const fe = state.fundevents.filter(f=> f.mode==="oneshot" ? f.targetYM===ym : (ym>=f.targetYM && ym<(yearOfYM(f.targetYM)+1)*12));
+  const fe = state.fundevents.filter(f=> fundAdjustmentPortion(f, ym) !== 0);
   const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
   return fe.length + tr.length;
 }
@@ -950,6 +952,51 @@ function spentForMonth(catId, ym){
   return state.actuals
     .filter(a=>a.categoryId===catId && ymOfDate(a.date)===ym)
     .reduce((sum,a)=> sum + toUSD(a.amount||0, a.currency, a.rate||yearSettings(yearOfYM(ym)).baseRate), 0);
+}
+
+// Three fixed, reserved states, read straight off the dollar sign of
+// `remaining` — not a percentage threshold, so there's no judgment call
+// about where "approaching" starts: green (still under — money left),
+// gray/neutral (exactly met — spent precisely the target, a normal,
+// healthy outcome, not a warning), red (over — spent past the target).
+// A category with no target set (hasTarget===false) never enters this at
+// all: it's unbudgeted, not "under" or "met" or "over", so it always gets
+// its own neutral "No budget set" label, never a dollar figure dressed up
+// as a status.
+const BUDGET_STATUS = { UNDER:"under", MET:"met", OVER:"over" };
+function budgetStatus(hasTarget, remaining){
+  if(!hasTarget) return null;
+  if(remaining > 0) return BUDGET_STATUS.UNDER;
+  if(remaining < 0) return BUDGET_STATUS.OVER;
+  return BUDGET_STATUS.MET;
+}
+function budgetStatusColor(status){
+  if(status===BUDGET_STATUS.UNDER) return "var(--good)";
+  if(status===BUDGET_STATUS.OVER) return "var(--bad)";
+  return "var(--status-met)"; // met, or no target at all
+}
+// Always the signed number, consistently formatted — no "Budget met"
+// substitution for the exactly-met case. A category with no target set
+// gets one fixed neutral label instead of a dollar figure at all — there's
+// nothing to be "$0.00 left" of when nothing was ever budgeted. "Over"
+// carries its own sign via the word, not a leading "-" (same as "left"
+// carries no "+") — stacking a minus on top of the word and the red color
+// would just be redundant signage.
+function remainingDisplay(hasTarget, remaining){
+  if(!hasTarget) return { text: "No budget set", color: "inherit", status: null };
+  const status = budgetStatus(hasTarget, remaining);
+  const text = remaining>=0 ? `${fmtUSD(remaining)} left` : `${fmtUSD(Math.abs(remaining))} over`;
+  return { text, color: budgetStatusColor(status), status };
+}
+// The category progress bar's fill is a flat color straight off the same
+// three states — no gradient, no segment/gap. A gradient or a gap reads as
+// a continuous measure (how close to some threshold), which isn't what
+// this is: there's no "approaching" state, only under/met/over, so three
+// solid colors say that more plainly than a blend or a broken bar ever could.
+function budgetBarStyle(hasTarget, remaining, pct){
+  const width = Math.max(0, Math.min(100, pct));
+  if(!hasTarget) return `width:${width}%; background:var(--accent)`;
+  return `width:${width}%; background:${budgetStatusColor(budgetStatus(hasTarget, remaining))}`;
 }
 
 // rollover(ym) computed from the earliest configured month up through ym,
@@ -1194,8 +1241,8 @@ function renderHeaderStepper(){
       </div>
       <button type="button" class="navbtn-ghost" id="hdrNext" aria-label="Next month">›</button>
     `;
-    box.querySelector("#hdrPrev").onclick = ()=>{ ui.ym = ym - 1; render(); };
-    box.querySelector("#hdrNext").onclick = ()=>{ ui.ym = ym + 1; render(); };
+    box.querySelector("#hdrPrev").onclick = ()=> stepPeriod(-1);
+    box.querySelector("#hdrNext").onclick = ()=> stepPeriod(1);
     box.querySelector("#hdrCal").onclick = ()=> openYearGridSheet(yearOfYM(ui.ym));
   } else if(ui.tab==="outlook"){
     const year = yearOfYM(ym);
@@ -1208,8 +1255,8 @@ function renderHeaderStepper(){
       </div>
       <button type="button" class="navbtn-ghost" id="hdrNext" aria-label="Next year" ${year>=maxYear?"disabled":""}>›</button>
     `;
-    box.querySelector("#hdrPrev").onclick = ()=>{ if(year>minYear){ ui.ym = ymOf(year-1, monthOfYM(ym)); render(); } };
-    box.querySelector("#hdrNext").onclick = ()=>{ if(year<maxYear){ ui.ym = ymOf(year+1, monthOfYM(ym)); render(); } };
+    box.querySelector("#hdrPrev").onclick = ()=> stepPeriod(-1);
+    box.querySelector("#hdrNext").onclick = ()=> stepPeriod(1);
     box.querySelector("#hdrCal").onclick = ()=> openYearOnlySheet(yearOfYM(ui.ym));
   }
 }
@@ -1337,25 +1384,32 @@ function renderMonthlyDash(main, ym){
   // The old "ATM / cash needed" card was a forward-looking plan figure
   // (sum of Budget Setup items flagged Cash) that didn't reflect what was
   // actually spent in cash this month — dropped in favor of the real
-  // Cash vs. card split chart below, which now also carries MXN.
-  wrap.appendChild(categoryMxnBreakdownCard(ym, mIdx));
-
+  // payment-method split chart below, which now also carries MXN. It leads
+  // the dashboard (payment method first, category detail second), per
+  // request. Title is "Spending by payment method", not "Cash vs. card" —
+  // the chart has always plotted three bars (Cash/Card/Transfer), and the
+  // old title quietly dropped the third one.
   const splitCard = el("div","card stack");
-  splitCard.innerHTML = `<div class="eyebrow">Cash vs. card, ${MONTHS[mIdx]}</div><canvas id="chartSplit" height="140"></canvas>`;
+  splitCard.innerHTML = `<div class="eyebrow">Spending by payment method, ${MONTHS[mIdx]}</div><canvas id="chartSplit" height="140"></canvas>`;
   wrap.appendChild(splitCard);
+
+  wrap.appendChild(categoryMxnBreakdownCard(ym, mIdx));
 
   main.appendChild(wrap);
 
   drawSplitChart(ym);
 }
 
-// Per-category USD/MXN/effective-rate ranked breakdown for the month —
-// replaces the old pie/doughnut (drawCategoryChart), which broke down past
-// ~6-8 slices and never actually answered "are we getting more pesos for
-// our dollar." One row per category with spend, sorted largest first, each
-// row a direct-labeled bar (no legend needed), plus a dynamic totals row —
-// a ranked bar is the standard swap for a magnitude-by-category comparison
-// with more than a handful of categories (see the dataviz skill).
+// Per-category USD/MXN/effective-rate breakdown for the month — a table,
+// not a chart: past ~7-8 classes (the dataviz skill's ceiling), a ranked
+// bar or chart stops being reliably distinguishable and a table is the
+// right form regardless of color. Sorted largest-spend-first in USD, a
+// fixed order that doesn't reshuffle when the USD/MXN toggle is flipped
+// (reshuffling rows on every toggle would make the table harder to scan,
+// not easier). The toggle only changes which currency reads as primary
+// (bold) vs. secondary (muted, smaller) — both are always visible, so
+// switching never hides data, consistent with every other USD/MXN control
+// in this app being local to its own card, never a global setting.
 // monthCategoryList(ym), not state.categories, so month-local categories'
 // spend shows up here too.
 function categoryMxnBreakdownForMonth(catId, ym){
@@ -1375,26 +1429,57 @@ function categoryMxnBreakdownCard(ym, mIdx){
     .map(c=> ({ c, ...categoryMxnBreakdownForMonth(c.id, ym) }))
     .filter(r=> r.usd > 0)
     .sort((a,b)=> b.usd - a.usd);
-  const maxUsd = Math.max(1, ...rows.map(r=>r.usd));
   const totalUsd = rows.reduce((s,r)=> s+r.usd, 0);
   const totalMxn = rows.reduce((s,r)=> s+r.mxn, 0);
-  card.innerHTML = `
-    <div class="eyebrow">Where ${MONTHS[mIdx]} is going — USD vs. MXN</div>
-    <div class="stack" style="gap:10px">
-      ${rows.length ? rows.map(r=>`
-        <div>
-          <div class="row" style="align-items:center; gap:8px; margin-bottom:3px">
-            <span class="dot" style="background:${r.c.color}; width:10px; height:10px; border-radius:50%; flex:none"></span>
-            <span class="name" style="flex:1; font-size:13px">${escapeHtml(r.c.name)}</span>
-            <span class="muted num" style="font-size:12px">${r.rate.toFixed(2)}/USD</span>
+  let primary = "USD"; // local to this card only — never written to state
+
+  // Rate rides along with the secondary (muted) figure, not as its own
+  // column — it's context for the MXN conversion, not a third number worth
+  // equal visual weight next to the actual spend amounts.
+  function amtCell(usd, mxn, rate, bold){
+    const primaryText = primary==="USD" ? fmtUSD(usd) : fmtMXN(mxn);
+    const secondaryText = primary==="USD" ? fmtMXN(mxn) : fmtUSD(usd);
+    const rateNote = rate!=null ? ` · ${rate.toFixed(2)}/USD` : "";
+    return `<span class="num" style="display:block; font-weight:${bold?700:600}; font-size:${bold?'14px':'13px'}">${primaryText}</span><span class="num muted" style="display:block; font-size:11px">${secondaryText}${rateNote}</span>`;
+  }
+
+  function renderBody(){
+    const wrap = card.querySelector("#bdWrap");
+    wrap.innerHTML = rows.length ? `
+      <div class="stack" style="gap:0">
+        ${rows.map(r=>`
+          <div class="row" style="align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--line)">
+            <span class="name" style="flex:1; font-weight:600; font-size:13px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${escapeHtml(r.c.name)}</span>
+            <span style="text-align:right">${amtCell(r.usd, r.mxn, r.rate, false)}</span>
           </div>
-          <div class="catbar"><div style="width:${(r.usd/maxUsd*100).toFixed(1)}%; background:${r.c.color}"></div></div>
-          <div class="row muted num" style="font-size:12px; margin-top:2px"><span>${fmtUSD(r.usd)}</span><span>${fmtMXN(r.mxn)}</span></div>
-        </div>
-      `).join("") : `<div class="empty">Nothing logged yet this month.</div>`}
+        `).join("")}
+      </div>
+      <div class="row" style="padding-top:10px; align-items:center">
+        <span style="font-weight:700; flex:1">Total</span>
+        <span style="text-align:right">${amtCell(totalUsd, totalMxn, null, true)}</span>
+      </div>
+    ` : `<div class="empty">Nothing logged yet this month.</div>`;
+  }
+
+  card.innerHTML = `
+    <div class="row" style="align-items:center">
+      <div class="eyebrow" style="flex:1">Where ${MONTHS[mIdx]} is going</div>
+      <div class="row" style="gap:4px; flex:none">
+        <button type="button" class="btn small ${primary==="USD"?"active":""}" id="bdUSD">USD</button>
+        <button type="button" class="btn small ${primary==="MXN"?"active":""}" id="bdMXN">MXN</button>
+      </div>
     </div>
-    ${rows.length ? `<div class="row" style="border-top:1px solid var(--line); padding-top:8px; margin-top:4px"><span style="font-weight:600">Total</span><span class="num" style="font-weight:600">${fmtUSD(totalUsd)} · ${fmtMXN(totalMxn)}</span></div>` : ""}
+    <div id="bdWrap"></div>
   `;
+  function setPrimary(cur){
+    primary = cur;
+    card.querySelector("#bdUSD").classList.toggle("active", primary==="USD");
+    card.querySelector("#bdMXN").classList.toggle("active", primary==="MXN");
+    renderBody();
+  }
+  card.querySelector("#bdUSD").onclick = ()=> setPrimary("USD");
+  card.querySelector("#bdMXN").onclick = ()=> setPrimary("MXN");
+  renderBody();
   return card;
 }
 
@@ -1696,11 +1781,11 @@ function forkTemplateIntoMonth(ym, itemFilter){
     const items = state.lineitems
       .filter(li=>li.categoryId===c.id && (!li.onlyYM || li.onlyYM===ym) && itemFilter(li))
       .map(li=>({ id: uid("mli"), name: li.name, amount: li.schedule[mIdx]||0, paymentMethod: li.paymentMethod }));
-    // name/color are snapshotted here too, same as everything else — once
+    // name is snapshotted here too, same as everything else — once
     // forked, this month's display never depends on the template still
-    // existing (see categoryDisplayInfo, which falls back to these exact
-    // fields the moment the template is gone).
-    data[c.id] = { baseAmountUSD: c.baseAmountUSD || 0, items, source: "template", name: c.name, color: c.color };
+    // existing (see categoryDisplayInfo, which falls back to this exact
+    // field the moment the template is gone).
+    data[c.id] = { baseAmountUSD: c.baseAmountUSD || 0, items, source: "template", name: c.name };
   });
   state.monthCategoryData[ym] = data;
   dbSetMonthCategoryData();
@@ -1869,9 +1954,9 @@ function appendMonthForecast(wrap, ym){
 // template counterpart at all).
 function categoryDisplayInfo(catId, ym){
   const tmpl = state.categories.find(c=>c.id===catId);
-  if(tmpl) return { id: tmpl.id, name: tmpl.name, color: tmpl.color, isLocal:false };
+  if(tmpl) return { id: tmpl.id, name: tmpl.name, isLocal:false };
   const entry = (state.monthCategoryData[ym]||{})[catId];
-  return { id: catId, name: (entry && entry.name) || "Untitled", color: (entry && entry.color) || PALETTE[0], isLocal:true };
+  return { id: catId, name: (entry && entry.name) || "Untitled", isLocal:true };
 }
 
 // Every category that's actually part of a SET-UP month — driven by
@@ -1888,7 +1973,7 @@ function monthCategoryList(ym){
   const localIds = ids.filter(id=> !state.categories.some(c=>c.id===id));
   return [...templateIds, ...localIds].map(id=>{
     const info = categoryDisplayInfo(id, ym);
-    return { id, name: info.name, color: info.color, entry: data[id] };
+    return { id, name: info.name, entry: data[id] };
   });
 }
 
@@ -1931,7 +2016,7 @@ function renderMonthly(main){
   if(monthCats.length===0){
     catsCard.appendChild(el("div","empty","No categories yet — tap + to add one."));
   }
-  monthCats.forEach(({id, name, color})=>{
+  monthCats.forEach(({id, name})=>{
     const base = categoryBaseForMonth(id, ym);
     // "Has a target" used to mean "has line items" back when a category's
     // budget only ever came from summing them. Now a flat category (no
@@ -1944,11 +2029,7 @@ function renderMonthly(main){
     const spent = spentForMonth(id, ym);
     const remaining = roundCents(avail - spent);
     const pct = avail>0 ? Math.min(100, (spent/avail)*100) : (spent>0?100:0);
-    // Categories with no target set in Budget Setup (e.g. Entertainment,
-    // Unaccounted for Expenses) aren't "over" just because spend exceeds an
-    // unset $0 target — they're unbudgeted, filled in as expenses land.
-    // Neutral styling, no red, no "over" language.
-    const over = hasTarget && spent>avail;
+    const remainingInfo = remainingDisplay(hasTarget, remaining);
     // Rollover is already carried into `avail` above — a category that
     // underspends in Jan really does have more to spend in Feb, the math
     // has done that all along. What was missing was ever showing it: two
@@ -1963,10 +2044,10 @@ function renderMonthly(main){
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
       </div>
       <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">${hasTarget ? `Budget ${fmtUSD(base)}` : "Budget: not set"}</div>
-      <div class="catbar"><div style="width:${pct}%; background:${over?'var(--bad)':color}"></div></div>
+      <div class="catbar"><div style="${budgetBarStyle(hasTarget, remaining, pct)}"></div></div>
       <div class="row">
         <span class="muted num">${fmtUSD(spent)} spent</span>
-        <span class="muted num" style="color:${!hasTarget?'inherit':(remaining>=0?'var(--good)':'var(--bad)')}">${!hasTarget?(spent>0?fmtUSD(spent)+' tracked':'no target set'):(remaining>=0?fmtUSD(remaining)+' left':fmtUSD(remaining))}</span>
+        <span class="muted num" style="color:${remainingInfo.color}">${remainingInfo.text}</span>
       </div>
       ${showRoll ? `<div class="muted" style="font-size:11px; margin-top:-4px">${roll>0?'+':''}${fmtUSD(roll)} carried in from last month</div>` : ""}
     `;
@@ -2000,22 +2081,30 @@ function renderMonthly(main){
 function openFundAdjustmentsSheet(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  // Same filters as fundAdjustmentsCountForMonth — a one-shot fund event
-  // applies to exactly its target month; a redistribute one spreads across
-  // every month from its target month through the end of that same
-  // calendar year, same window fundAdjustmentForMonth uses.
-  const fe = state.fundevents.filter(f=> f.mode==="oneshot" ? f.targetYM===ym : (ym>=f.targetYM && ym<(yearOfYM(f.targetYM)+1)*12));
+  // Same predicate as fundAdjustmentsCountForMonth/fundAdjustmentForMonth —
+  // one shared place decides which fund events touch which months.
+  const fe = state.fundevents.filter(f=> fundAdjustmentPortion(f, ym) !== 0);
   const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
+  const feLabel = f=> f.mode==="oneshot" ? "One-time funds" : f.mode==="evenly" ? "Evenly across the year" : "Redistributed funds";
 
   const rows = (fe.length===0 && tr.length===0) ? `<div class="empty">No fund adjustments or transfers this month.</div>` : `
     <div class="stack" id="faRows" style="gap:0">
-      ${fe.map(f=>`<div class="row"><span class="muted">${f.mode==="oneshot"?"One-time funds":"Redistributed funds"} · ${f.date}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">${fmtUSD(f.amountUSD)}</span></div>`).join("")}
+      ${fe.map(f=>`
+        <div class="row">
+          <span class="muted">${feLabel(f)} · ${f.date}${f.note?" · "+escapeHtml(f.note):""}</span>
+          <span class="amt" style="display:flex; align-items:center; gap:8px">
+            <span class="num">${fmtUSD(f.amountUSD)}</span>
+            <button data-delfe="${f.id}" type="button" style="background:none; border:none; color:var(--ink-soft); font-size:11px; cursor:pointer; text-decoration:underline; padding:0">delete</button>
+          </span>
+        </div>
+      `).join("")}
       ${tr.map(t=>{
-        const from = state.categories.find(c=>c.id===t.fromCategoryId);
+        const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
         const to = state.categories.find(c=>c.id===t.toCategoryId);
+        const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
         return `
           <div class="row">
-            <span class="muted">Moved · ${from?from.name:"?"} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
+            <span class="muted">Moved · ${fromLabel} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
             <span class="amt" style="display:flex; align-items:center; gap:8px">
               <span class="num">${fmtUSD(t.amountUSD)}</span>
               <button data-del="${t.id}" type="button" style="background:none; border:none; color:var(--ink-soft); font-size:11px; cursor:pointer; text-decoration:underline; padding:0">delete</button>
@@ -2033,15 +2122,50 @@ function openFundAdjustmentsSheet(ym){
     ${rows}
     <div class="dialog-actions"><button class="btn ghost" id="faClose">Close</button></div>
   `;
+  // A transfer funded from "External source" was written together with a
+  // matching one-time fund event (same externalSourceLinkId) — one raises
+  // the whole-pot total, the other credits the category, and they only
+  // reconcile together. Deleting either one cascades to remove both in a
+  // single action so neither is ever left behind as orphaned state.
   body.querySelectorAll("[data-del]").forEach(btn=>{
     btn.onclick = ()=>{
       const t = tr.find(x=>x.id===btn.dataset.del);
-      const from = state.categories.find(c=>c.id===t.fromCategoryId);
+      const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
       const to = state.categories.find(c=>c.id===t.toCategoryId);
-      confirmAction(`Delete this ${fmtUSD(t.amountUSD)} move (${from?from.name:"?"} → ${to?to.name:"?"})?`, async ()=>{
+      const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
+      const linkedFe = t.externalSourceLinkId ? state.fundevents.find(f=>f.externalSourceLinkId===t.externalSourceLinkId) : null;
+      const msg = linkedFe
+        ? `Delete this ${fmtUSD(t.amountUSD)} addition (${fromLabel} → ${to?to.name:"?"})? This also removes the matching funds added to the budget.`
+        : `Delete this ${fmtUSD(t.amountUSD)} move (${fromLabel} → ${to?to.name:"?"})?`;
+      confirmAction(msg, async ()=>{
         state.transfers = state.transfers.filter(x=>x.id!==t.id);
         await dbDelete("transfers", t.id);
-        showToast("Transfer deleted");
+        if(linkedFe){
+          state.fundevents = state.fundevents.filter(x=>x.id!==linkedFe.id);
+          await dbDelete("fundevents", linkedFe.id);
+        }
+        showToast("Deleted");
+        render();
+        openFundAdjustmentsSheet(ym);
+      }, ()=> openFundAdjustmentsSheet(ym));
+    };
+  });
+  body.querySelectorAll("[data-delfe]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const f = fe.find(x=>x.id===btn.dataset.delfe);
+      const linkedTr = f.externalSourceLinkId ? state.transfers.find(t=>t.externalSourceLinkId===f.externalSourceLinkId) : null;
+      const scopeNote = f.mode==="oneshot" ? "" : " This fund event applies to more than just this month — deleting it removes it everywhere it applies.";
+      const msg = linkedTr
+        ? `Delete this ${fmtUSD(f.amountUSD)} addition? This also removes the matching category credit.`
+        : `Delete this ${fmtUSD(f.amountUSD)} fund adjustment?${scopeNote}`;
+      confirmAction(msg, async ()=>{
+        state.fundevents = state.fundevents.filter(x=>x.id!==f.id);
+        await dbDelete("fundevents", f.id);
+        if(linkedTr){
+          state.transfers = state.transfers.filter(x=>x.id!==linkedTr.id);
+          await dbDelete("transfers", linkedTr.id);
+        }
+        showToast("Deleted");
         render();
         openFundAdjustmentsSheet(ym);
       }, ()=> openFundAdjustmentsSheet(ym));
@@ -2225,21 +2349,30 @@ function wireLinkedCurrency(body, initialCurrency){
 // format "name — $X left" cleanly, which is what made this screen feel
 // bundled together. "From" only lists categories that actually have a
 // surplus to give.
+// "From" can be either a category with surplus (an ordinary zero-sum move
+// — one category's surplus becomes another's) or External source (new
+// money landing in a single category this month, same as Settings' Add
+// Funds but scoped to one category instead of the whole year). The two
+// read the same here — pick From, pick To, enter an amount — but External
+// source writes an extra linked fund event so the whole-pot total rises
+// to match (see the save handler below); it never competes with another
+// category's balance, so it's never limited by surplus.
+const EXTERNAL_SOURCE_ID = "__external__";
 function openTransferDialog(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   const withRemaining = state.categories.map(c=>({ c, remaining: remainingForMonth(c.id, ym) }));
-  const sources = withRemaining.filter(x=> x.remaining > 0);
-  const noSurplus = sources.length === 0;
-  let fromId = sources.length ? sources[0].c.id : null;
-  let toId = (state.categories.find(c=>c.id!==fromId) || {}).id || null;
+  const surplusSources = withRemaining.filter(x=> x.remaining > 0);
+  const externalOption = { c:{ id:EXTERNAL_SOURCE_ID, name:"External source" }, remaining:null, external:true };
+  const fromOptions = [externalOption, ...surplusSources];
+  let fromId = EXTERNAL_SOURCE_ID;
+  let toId = (state.categories[0] || {}).id || null;
 
   function rowsHTML(list, group){
     return list.map(x=>`
       <button type="button" class="setuprow" data-${group}="${x.c.id}" style="min-height:48px">
-        <span class="dot" style="background:${x.c.color}"></span>
         <span class="name">${escapeHtml(x.c.name)}</span>
-        <span class="amt num" style="color:${x.remaining>=0?'var(--good)':'var(--bad)'}">${fmtUSD(x.remaining)}</span>
+        ${x.external ? "" : `<span class="amt num" style="color:${x.remaining>=0?'var(--good)':'var(--bad)'}">${fmtUSD(x.remaining)}</span>`}
         <span class="chev" data-check></span>
       </button>
     `).join("");
@@ -2249,35 +2382,38 @@ function openTransferDialog(ym){
   function pickerSummary(group, list){
     const sel = group==="from" ? fromId : toId;
     const x = list.find(x=>x.c.id===sel);
-    if(!x) return group==="from" ? "Choose a source category" : "Choose a destination category";
-    return `<span class="dot" style="background:${x.c.color}; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px"></span>${escapeHtml(x.c.name)} · <span class="num" style="color:${x.remaining>=0?'var(--good)':'var(--bad)'}">${fmtUSD(x.remaining)}</span>`;
+    if(!x) return group==="from" ? "Choose a source" : "Choose a destination category";
+    const amt = x.external ? "" : ` · <span class="num" style="color:${x.remaining>=0?'var(--good)':'var(--bad)'}">${fmtUSD(x.remaining)}</span>`;
+    return `${escapeHtml(x.c.name)}${amt}`;
   }
 
   body.innerHTML = `
     <h3>Move funds</h3>
-    <p class="muted">Pull money from a category with surplus to cover one that's running over — this month only. It carries forward through rollover like any other balance change.</p>
+    <p class="muted">Pull money from a category with surplus to cover one that's running over, or bring in new money from outside the budget — either way, this month only. It carries forward through rollover like any other balance change.</p>
     <details class="advanced xferpick" id="fromPicker" open>
-      <summary><span class="eyebrow" style="margin:0">From — has surplus</span><span class="pickval" id="fromSummary">${pickerSummary("from",sources)}</span></summary>
-      <div class="stack" id="fromList" style="gap:0">${sources.length?rowsHTML(sources,"from"):'<div class="empty">No category has a surplus to move right now.</div>'}</div>
+      <summary><span class="eyebrow" style="margin:0">From</span><span class="pickval" id="fromSummary">${pickerSummary("from",fromOptions)}</span></summary>
+      <div class="stack" id="fromList" style="gap:0">${rowsHTML(fromOptions,"from")}</div>
     </details>
-    <details class="advanced xferpick" id="toPicker" ${noSurplus ? 'style="opacity:.5; pointer-events:none" aria-disabled="true"' : ''}>
+    <details class="advanced xferpick list-divider" id="toPicker">
       <summary><span class="eyebrow" style="margin:0">To</span><span class="pickval" id="toSummary">${pickerSummary("to",withRemaining)}</span></summary>
       <div class="stack" id="toList" style="gap:0">${rowsHTML(withRemaining,"to")}</div>
     </details>
-    <div class="field-row">
-      <label>Amount (USD)<input type="number" inputmode="decimal" id="tAmt" step="0.01" placeholder="0.00"></label>
-      <label>Date<input type="date" id="tDate" value="${new Date(yearOfYM(ym), monthOfYM(ym), Math.min(new Date().getDate(),28)).toISOString().slice(0,10)}"></label>
-    </div>
-    <label>Note (optional)<input type="text" id="tNote" placeholder="e.g. covered grocery overrun"></label>
-    <div class="dialog-actions">
-      <button class="btn ghost" id="tCancel">Cancel</button>
-      <button class="btn primary" id="tSave" ${noSurplus ? 'disabled style="opacity:.5"' : ''}>Move</button>
+    <div class="list-divider stack" style="gap:16px">
+      <div class="field-row">
+        <label>Amount (USD)<input type="number" inputmode="decimal" id="tAmt" step="0.01" placeholder="0.00"></label>
+        <label>Date<input type="date" id="tDate" value="${new Date(yearOfYM(ym), monthOfYM(ym), Math.min(new Date().getDate(),28)).toISOString().slice(0,10)}"></label>
+      </div>
+      <label>Note (optional)<input type="text" id="tNote" placeholder="e.g. covered grocery overrun"></label>
+      <div class="dialog-actions">
+        <button class="btn ghost" id="tCancel">Cancel</button>
+        <button class="btn primary" id="tSave">Move</button>
+      </div>
     </div>
   `;
   function refreshSelection(){
     body.querySelectorAll('[data-from]').forEach(b=>{ b.querySelector('[data-check]').innerHTML = b.dataset.from===fromId ? iconCheck() : ""; });
     body.querySelectorAll('[data-to]').forEach(b=>{ b.querySelector('[data-check]').innerHTML = b.dataset.to===toId ? iconCheck() : ""; });
-    body.querySelector("#fromSummary").innerHTML = pickerSummary("from", sources);
+    body.querySelector("#fromSummary").innerHTML = pickerSummary("from", fromOptions);
     body.querySelector("#toSummary").innerHTML = pickerSummary("to", withRemaining);
   }
   body.querySelectorAll('[data-from]').forEach(b=> b.onclick = ()=>{ fromId = b.dataset.from; refreshSelection(); body.querySelector("#fromPicker").open = false; });
@@ -2289,16 +2425,32 @@ function openTransferDialog(ym){
     const amountUSD = parseFloat(body.querySelector("#tAmt").value||"0");
     const date = body.querySelector("#tDate").value;
     const note = body.querySelector("#tNote").value;
+    const fromExternal = fromId===EXTERNAL_SOURCE_ID;
     if(!fromId || !toId){ formError(body, "Choose a From and To category."); return; }
-    if(fromId===toId){ formError(body, "From and To can't be the same category."); return; }
+    if(!fromExternal && fromId===toId){ formError(body, "From and To can't be the same category."); return; }
     if(!amountUSD){ formError(body, "Enter an amount.", body.querySelector("#tAmt")); return; }
     if(!date){ formError(body, "Pick a date.", body.querySelector("#tDate")); return; }
     const id = uid("xfer");
-    const rec = { id, date, fromCategoryId:fromId, toCategoryId:toId, amountUSD, note };
+    const rec = { id, date, fromCategoryId: fromExternal ? null : fromId, toCategoryId:toId, amountUSD, note };
+    // External source also raises the whole-pot total for this month by
+    // the same amount, via a linked one-time fund event — otherwise this
+    // category's available would grow without the month's overall total
+    // growing to match, reopening the exact surplus-vs-category-sum gap
+    // that was already resolved elsewhere. The shared id is what lets a
+    // delete later remove both halves together (see openFundAdjustmentsSheet).
+    if(fromExternal){
+      const linkId = uid("extlink");
+      rec.externalSourceLinkId = linkId;
+      const feId = uid("fund");
+      const feRec = { id: feId, date, amountUSD, targetYM: ym, mode: "oneshot", externalSourceLinkId: linkId };
+      if(note) feRec.note = note;
+      state.fundevents.push(feRec);
+      await dbSet("fundevents", feId, feRec);
+    }
     state.transfers.push(rec);
     await dbSet("transfers", id, rec);
     dlg.close();
-    const fromName = (state.categories.find(x=>x.id===fromId)||{}).name || "?";
+    const fromName = fromExternal ? "External source" : (state.categories.find(x=>x.id===fromId)||{}).name || "?";
     const toName = (state.categories.find(x=>x.id===toId)||{}).name || "?";
     showToast(`Moved ${fmtUSD(amountUSD)}: ${fromName} → ${toName}`);
     render();
@@ -2327,6 +2479,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   const avail = base + roll + adj;
   const spent = spentForMonth(categoryId, ym);
   const remaining = roundCents(avail - spent);
+  const remainingInfo = remainingDisplay(hasTarget, remaining);
   const trs = state.transfers.filter(t=> ymOfDate(t.date)===ym && (t.toCategoryId===categoryId || t.fromCategoryId===categoryId));
 
   let transferBlock = "";
@@ -2370,9 +2523,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       ${adj!==0 ? `<div class="row"><span class="muted">Net moved this month</span><span class="num">${adj>0?"+":""}${fmtUSD(adj)}</span></div>` : ""}
       <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">Available</span><span class="num" id="mcAvail" style="font-weight:600">${fmtUSD(avail)}</span></div>
       <div class="row"><span class="muted">Spent</span><span class="num">${fmtUSD(spent)}</span></div>
-      <div class="row" id="mcRemainingRow">${hasTarget
-        ? `<span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${remaining>=0?"var(--good)":"var(--bad)"}">${fmtUSD(remaining)}</span>`
-        : `<span style="font-weight:600">Remaining</span><span class="muted" style="font-weight:600">No target set — unbudgeted</span>`}</div>
+      <div class="row" id="mcRemainingRow"><span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${remainingInfo.color}">${remainingInfo.text}</span></div>
     </div>
     ${transferBlock}
     <div class="list-divider">
@@ -2423,10 +2574,9 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     const newAvail = newBase + roll + adj;
     const newRemaining = roundCents(newAvail - spent);
     const newHasTarget = newBase > 0;
+    const newRemainingInfo = remainingDisplay(newHasTarget, newRemaining);
     body.querySelector("#mcAvail").textContent = fmtUSD(newAvail);
-    body.querySelector("#mcRemainingRow").innerHTML = newHasTarget
-      ? `<span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${newRemaining>=0?"var(--good)":"var(--bad)"}">${fmtUSD(newRemaining)}</span>`
-      : `<span style="font-weight:600">Remaining</span><span class="muted" style="font-weight:600">No target set — unbudgeted</span>`;
+    body.querySelector("#mcRemainingRow").innerHTML = `<span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${newRemainingInfo.color}">${newRemainingInfo.text}</span>`;
   });
 
   body.querySelector("#miClose").onclick = ()=> dlg.close();
@@ -2521,7 +2671,6 @@ function openMonthAddCategorySheet(ym){
   const available = state.categories.filter(c=> categoryAppliesToYM(c, ym) && !data[c.id]);
   const rows = available.length ? available.map(c=>`
     <button type="button" class="setuprow" data-tmpl="${c.id}">
-      <span class="dot" style="background:${c.color}"></span>
       <span class="name">${c.name}</span>
       <span class="amt num">${fmtUSD(c.baseAmountUSD||0)}</span>
       <span class="chev">›</span>
@@ -2573,11 +2722,7 @@ function openMonthNewLocalCategoryDialog(ym){
     const amount = parseFloat(body.querySelector("#mlAmount").value||"0") || 0;
     const newId = uid("mcat");
     state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
-    const usedColors = [
-      ...state.categories.map(c=>c.color),
-      ...Object.values(state.monthCategoryData[ym]).map(e=>e.color).filter(Boolean)
-    ];
-    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name, color: nextAvailableColor(usedColors) };
+    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name };
     await dbSetMonthCategoryData();
     dlg.close();
     showToast(`Added ${name}`);
@@ -2769,7 +2914,6 @@ function renderCategoryRow(c, ym, siblings){
       <button class="movebtn" type="button" data-up aria-label="Move ${escapeHtml(c.name)} up" ${idx<=0?"disabled":""}>${iconChevronUp()}</button>
       <button class="movebtn" type="button" data-down aria-label="Move ${escapeHtml(c.name)} down" ${idx>=siblings.length-1?"disabled":""}>${iconChevronDown()}</button>
     </span>
-    <span class="dot" style="background:${c.color}"></span>
     <span class="name-wrap">
       <span class="name">${c.name}</span>
       ${meta}
@@ -2988,8 +3132,7 @@ function openCategoryDialog(ym){
     if(!name){ formError(body, "Enter a name.", body.querySelector("#cName")); return; }
     const amount = parseFloat(body.querySelector("#cAmount").value||"0") || 0;
     const id = uid("cat");
-    const color = nextAvailableColor(state.categories.map(c=>c.color));
-    const rec = { id, name, order: nextCategoryOrder(), color, baseAmountUSD: amount };
+    const rec = { id, name, order: nextCategoryOrder(), baseAmountUSD: amount };
     state.categories.push(rec);
     await dbSet("categories", id, rec);
     dlg.close();
@@ -3355,7 +3498,7 @@ function renderSettings(main){
   yearPanel.appendChild(rateCard);
 
   const fundCard = el("div","yp-section stack");
-  fundCard.innerHTML = `<div class="eyebrow">Add funds</div><div class="muted">Add money mid-year and choose whether it spreads across the remaining months or applies once, to a single month.</div>`;
+  fundCard.innerHTML = `<div class="eyebrow">Add funds</div><div class="muted">Raises this year's overall budget — split it evenly across all 12 months, or ramp it in from the month you're currently viewing. To add money to one specific category instead, use Transfer funds from that month's view.</div>`;
   const addFundBtn = el("button","btn accent block");
   addFundBtn.innerHTML = `${iconPlus()}<span>Add funds</span>`;
   addFundBtn.onclick = ()=> openFundDialog(ymOf(settingsYear, monthOfYM(ui.ym)));
@@ -3370,7 +3513,8 @@ function renderSettings(main){
       row.style.borderTop = "1px solid var(--line)";
       row.style.paddingTop = "8px";
       const label = `${MONTHS[monthOfYM(f.targetYM)]} ${yearOfYM(f.targetYM)}`;
-      row.innerHTML = `<span class="muted">${f.date} · ${f.mode==="oneshot"?("one-time, "+label):("spread from "+label)}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">+${fmtUSD(f.amountUSD)}</span>`;
+      const modeDesc = f.mode==="oneshot" ? `one-time, ${label}` : f.mode==="evenly" ? "evenly across all 12 months" : `spread from ${label}`;
+      row.innerHTML = `<span class="muted">${f.date} · ${modeDesc}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">+${fmtUSD(f.amountUSD)}</span>`;
       list.appendChild(row);
     });
     fundCard.appendChild(list);
@@ -3390,13 +3534,17 @@ function renderSettings(main){
   main.appendChild(wrap);
 }
 
-// Shared by Settings (pick any month/year, usually a future one — month
-// and year stay editable) and Monthly's fund-adjustments sheet (always the
-// month you're already looking at — `opts.lockMonth` swaps the Month/Year
-// selects for a plain label, since picking a month you're already in is
-// just noise). `opts.onSaved`/`opts.onCancel`, when given, replace the
-// default "just close" behavior — lets the Monthly entry point return you
-// to the adjustments sheet you came from (via Save OR Cancel) instead of
+// Shared by Settings (year-level only — adding funds there always means
+// "this affects the whole year's budget," never a single category) and
+// Monthly's fund-adjustments sheet (always the month you're already
+// looking at — `opts.lockMonth` swaps the Year field for a plain label,
+// since picking a year you're already in is just noise, and forces
+// mode:"oneshot" since Monthly's Add Funds is always this-month-only now;
+// Monthly's category-targeted case goes through the Transfer dialog's
+// "External source" option instead, not this screen at all).
+// `opts.onSaved`/`opts.onCancel`, when given, replace the default "just
+// close" behavior — lets the Monthly entry point return you to the
+// adjustments sheet you came from (via Save OR Cancel) instead of
 // dropping you with no dialog open at all.
 function openFundDialog(targetYm, opts){
   const { onSaved, onCancel, lockMonth } = opts || {};
@@ -3404,33 +3552,32 @@ function openFundDialog(targetYm, opts){
   const body = document.getElementById("dlgBody");
   const seedYm = targetYm!=null ? targetYm : ui.ym;
   const defaultYear = yearOfYM(seedYm);
-  const monthField = lockMonth
+  // "Apply from active month moving forward" needs an anchor month —
+  // whatever month is currently selected in the app, if that's within the
+  // year being edited, otherwise January (there's no "active month" in a
+  // year you're not even looking at).
+  const anchorMIdx = yearOfYM(ui.ym)===defaultYear ? monthOfYM(ui.ym) : 0;
+  const yearField = lockMonth
     ? `<p class="muted">Applying to <strong>${MONTHS[monthOfYM(seedYm)]} ${defaultYear}</strong></p>`
-    : `
-    <div class="field-row">
-      <label>Apply starting
-        <select id="fdMonth">${MONTHS.map((mn,i)=>`<option value="${i}">${mn}</option>`).join("")}</select>
-      </label>
-      <label>Year<input type="number" inputmode="numeric" id="fdYear" step="1" value="${defaultYear}"></label>
-    </div>`;
-  // Locked to one month, the "spread across the rest of the year" choice
-  // is a different action wearing this screen's clothes, not a real
-  // question about the month you're already in — one-time, this month
-  // only, is the only thing "Add funds" from Monthly ever means now.
-  // Spreading new money forward stays a Settings-only move.
+    : `<label>Year<input type="number" inputmode="numeric" id="fdYear" step="1" value="${defaultYear}"></label>`;
+  // Locked to one month, there's no real choice to make — one-time, this
+  // month only, is the only thing "Add funds" from Monthly ever means.
+  // Settings is year-level, so its only two real questions are whether the
+  // year's new money lands evenly across all 12 months, or ramps in from
+  // wherever you currently are and holds for the rest of the year.
   const modeField = lockMonth
     ? ""
     : `<label>How should it apply?
       <select id="fdMode">
-        <option value="redistribute">Spread across remaining months of that year (raises monthly budget)</option>
-        <option value="oneshot">One-time — that month only</option>
+        <option value="evenly">Apply evenly across all 12 months</option>
+        <option value="redistribute">Apply from ${MONTHS[anchorMIdx]} moving forward</option>
       </select>
     </label>`;
   body.innerHTML = `
     <h3>Add funds</h3>
     <label>Amount (USD)<input type="number" inputmode="decimal" id="fdAmt" step="0.01" placeholder="5000"></label>
     <label>Date received<input type="date" id="fdDate" value="${new Date().toISOString().slice(0,10)}"></label>
-    ${monthField}
+    ${yearField}
     ${modeField}
     <label>Note (optional)<input type="text" id="fdNote" placeholder="e.g. tax refund"></label>
     <div class="dialog-actions">
@@ -3438,14 +3585,13 @@ function openFundDialog(targetYm, opts){
       <button class="btn primary" id="fdSave">Save</button>
     </div>
   `;
-  if(!lockMonth) body.querySelector("#fdMonth").value = monthOfYM(seedYm);
   body.querySelector("#fdCancel").onclick = ()=>{ dlg.close(); if(onCancel) onCancel(); };
   onceClick(body.querySelector("#fdSave"), async ()=>{
     const amt = parseFloat(body.querySelector("#fdAmt").value||"0");
     if(!amt){ formError(body, "Enter an amount.", body.querySelector("#fdAmt")); return; }
     const id = uid("fund");
     const year = lockMonth ? defaultYear : (parseInt(body.querySelector("#fdYear").value,10) || defaultYear);
-    const mIdx = lockMonth ? monthOfYM(seedYm) : parseInt(body.querySelector("#fdMonth").value,10);
+    const mIdx = lockMonth ? monthOfYM(seedYm) : anchorMIdx;
     const note = body.querySelector("#fdNote").value.trim();
     const rec = {
       id, date: body.querySelector("#fdDate").value,
@@ -3738,6 +3884,12 @@ function iconChevronUp(){
 function iconChevronDown(){
   return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
 }
+// Category rows carry no icon — bold name text is the only marker, on
+// every screen (Budget Setup list, add-to-month picker, Transfer dialog
+// picker, dashboard table). Categories are unlimited/custom, so there was
+// never a way to assign a meaningful per-category icon or color; a shared
+// generic glyph was tried and dropped as pure clutter with no information
+// of its own.
 
 // Short, sentence-case forms only — every pill in the app uses these, so
 // they need to be short and consistent-width, not full labels.
@@ -3863,6 +4015,52 @@ function wireSheetDrag(){
   handle.addEventListener("pointercancel", endDrag);
 }
 
+// Steps Monthly/Annual Outlook one unit forward or back (dir = -1 or 1) —
+// the single implementation both the header's ‹/› buttons and swipe
+// gestures call, so the two stay in sync (year bounds, etc.) by
+// construction instead of by two copies agreeing.
+function stepPeriod(dir){
+  if(ui.tab==="monthly"){
+    ui.ym = ui.ym + dir;
+    render();
+  } else if(ui.tab==="outlook"){
+    const year = yearOfYM(ui.ym);
+    const { minYear, maxYear } = yearNavBounds();
+    const newYear = year + dir;
+    if(newYear>=minYear && newYear<=maxYear){
+      ui.ym = ymOf(newYear, monthOfYM(ui.ym));
+      render();
+    }
+  }
+}
+
+// Swipe left/right over the main content area steps the period on
+// Monthly and Annual Outlook, same as tapping the header's ‹/› buttons —
+// a horizontal gesture reads more naturally than reaching for the small
+// header controls on a phone. Guards against: a dialog/sheet being open
+// (swipe shouldn't fire underneath it), a mostly-vertical drag (that's
+// just scrolling), and a swipe too short to be deliberate.
+function wireSwipeNav(){
+  const main = document.getElementById("main");
+  let startX = 0, startY = 0, tracking = false;
+  main.addEventListener("touchstart", (e)=>{
+    if(document.getElementById("dlg").open) { tracking = false; return; }
+    if(!(ui.tab==="monthly" || ui.tab==="outlook")) { tracking = false; return; }
+    const t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+    tracking = true;
+  }, { passive: true });
+  main.addEventListener("touchend", (e)=>{
+    if(!tracking) return;
+    tracking = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+    if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    stepPeriod(dx < 0 ? 1 : -1);
+  }, { passive: true });
+}
+
 /* ---------------------------------------------------------------
    BOOT
 --------------------------------------------------------------- */
@@ -3877,6 +4075,7 @@ function start(){
     window.scrollTo(0, lockedScrollY);
   });
   wireSheetDrag();
+  wireSwipeNav();
   render();
   initDB();
 }
