@@ -594,7 +594,7 @@ let state = {
 // ym defaults to the real current calendar month, not a fixed Jan-of-the-
 // seed-year — the app should open on whatever month you're actually
 // managing right now.
-let ui = { tab: "monthly", ym: todayYM(), dbNS: null, writable: false, loaded: false, monthlyView: "ledger", settingsYear: null };
+let ui = { tab: "monthly", ym: todayYM(), loaded: false, monthlyView: "ledger", settingsYear: null };
 // Tracks which tab was on screen for the previous render() call, so we can
 // tell an actual tab switch (scroll back to top) apart from a re-render of
 // the same tab (e.g. a chart update) which should leave scroll position alone.
@@ -766,103 +766,21 @@ function buildSeed(){
 /* ---------------------------------------------------------------
    DB LAYER
 --------------------------------------------------------------- */
+// This is a standalone iPhone-homescreen prototype: everything lives in
+// this device's own localStorage, full stop. There used to be an optional
+// cloud "db" capability path here with a local-storage fallback for when it
+// wasn't available — that added a whole seed/migrate-on-the-cloud code path
+// or an iOS homescreen install could silently drift between two different
+// copies of your data, no warning either way, which is exactly what
+// happened. One storage mechanism, always on, same as any native app.
 async function initDB(){
-  try{
-    const db = await claude.use("db");
-    if(!db){
-      ui.dbNS = null;
-      loadLocalFallback();
-      migrateToMultiYear();
-      migrateCategoryBaseAmounts().forEach(c=> dbSet("categories", c.id, c));
-      migrateCategoryOrders().forEach(c=> dbSet("categories", c.id, c));
-      ui.monthlyView = state.settings.monthlyDefaultView || "ledger";
-      ui.loaded = true;
-      render();
-      return;
-    }
-    ui.dbNS = db;
-    const u = await (async ()=>{ try{ const usr = await claude.use("user"); return usr; } catch(e){ return null; } })();
-    ui.writable = u ? (u.canEdit ? u.canEdit() : true) : true;
-
-    const [settingsDoc, catsRes, itemsRes, actualsRes, fundRes, transRes, monthCatDoc] = await Promise.all([
-      db.doc("settings/main").get(),
-      db.collection("categories").get(),
-      db.collection("lineitems").get(),
-      db.collection("actuals").get(),
-      db.collection("fundevents").get(),
-      db.collection("transfers").get(),
-      db.doc("monthcat/main").get(),
-    ]);
-
-    const catsEmpty = !catsRes || !catsRes.docs || catsRes.docs.length===0;
-    if(!settingsDoc || !settingsDoc.exists || catsEmpty){
-      await seedDB(db);
-      return initDB();
-    }
-
-    const settingsData = settingsDoc.data();
-    if((settingsData.seedVersion||1) < SEED_VERSION){
-      await migrateDB(db, settingsData);
-      return initDB();
-    }
-
-    // Every document a read returns is frozen — clone each into a plain
-    // object here so the rest of the app can freely add/change fields on
-    // them (e.g. seededMonths on settings) without throwing.
-    state.settings = {...settingsData};
-    state.categories = catsRes.docs.map(d=>({...d.data()})).sort((a,b)=>a.order-b.order);
-    state.lineitems = itemsRes.docs.map(d=>({...d.data()}));
-    state.actuals = (actualsRes.docs||[]).map(d=>({...d.data()}));
-    state.fundevents = (fundRes.docs||[]).map(d=>({...d.data()}));
-    state.transfers = (transRes.docs||[]).map(d=>({...d.data()}));
-    state.monthCategoryData = (monthCatDoc && monthCatDoc.exists) ? {...monthCatDoc.data()} : {};
-  } catch(err){
-    loadLocalFallback();
-  }
+  loadLocalFallback();
   migrateToMultiYear();
   migrateCategoryBaseAmounts().forEach(c=> dbSet("categories", c.id, c));
   migrateCategoryOrders().forEach(c=> dbSet("categories", c.id, c));
-  dbSetSettings();
   ui.monthlyView = state.settings.monthlyDefaultView || "ledger";
   ui.loaded = true;
   render();
-}
-
-async function seedDB(db){
-  const seed = buildSeed();
-  try{
-    await db.doc("settings/main").set(state.settings);
-    for(const c of seed.categories) await db.collection("categories").doc(c.id).set(c);
-    for(const li of seed.lineitems) await db.collection("lineitems").doc(li.id).set(li);
-  } catch(e){ /* fall through, will retry read */ }
-}
-
-// Brings an existing (already-seeded) database up to the current SEED_VERSION —
-// used when the real budget categories/amounts change after someone has already
-// opened the prototype and it auto-seeded with placeholder figures. Preserves
-// any real settings (annual budget, exchange rate), Budget Setup items, logged
-// actual spend, and transfers. Re-seeding categories drops the old isBuffer
-// flag (SEED_VERSION 2→3: Entertainment/Activities is now an ordinary
-// category with a manually-built Target, starting at $0 either way).
-async function migrateDB(db, existingSettings){
-  const seed = buildSeed();
-  try{
-    // Only add seed categories/items that don't already exist — never
-    // overwrite one that does. A migration used to re-set every seeded
-    // doc unconditionally, which meant any real edit to an original
-    // category or item would get silently reverted to its placeholder
-    // value the next time a structural change shipped. Real data (and
-    // anything new you've added) is never touched here.
-    const [catsRes, itemsRes] = await Promise.all([
-      db.collection("categories").get(),
-      db.collection("lineitems").get(),
-    ]);
-    const existingCatIds = new Set((catsRes.docs||[]).map(d=>d.id));
-    const existingItemIds = new Set((itemsRes.docs||[]).map(d=>d.id));
-    for(const c of seed.categories) if(!existingCatIds.has(c.id)) await db.collection("categories").doc(c.id).set(c);
-    for(const li of seed.lineitems) if(!existingItemIds.has(li.id)) await db.collection("lineitems").doc(li.id).set(li);
-    await db.doc("settings/main").update({ seedVersion: SEED_VERSION });
-  } catch(e){ /* fall through, will retry on next load */ }
 }
 
 function loadLocalFallback(){
@@ -881,37 +799,26 @@ function persistLocalFallback(){
   try{ localStorage.setItem("ledgercasa_local", JSON.stringify(state)); }catch(e){}
 }
 
+// These keep their old names/signatures (and stay async) purely so every
+// existing call site throughout the app — there are dozens — didn't need
+// touching. All five now do exactly one thing: write the whole state to
+// this device's localStorage.
 async function dbSet(collection, id, data){
-  if(ui.dbNS){
-    try{ await ui.dbNS.collection(collection).doc(id).set(data); return; } catch(e){ /* fall back */ }
-  }
   persistLocalFallback();
 }
 async function dbUpdate(collection, id, data){
-  if(ui.dbNS){
-    try{ await ui.dbNS.collection(collection).doc(id).update(data); return; } catch(e){}
-  }
   persistLocalFallback();
 }
 async function dbDelete(collection, id){
-  if(ui.dbNS){
-    try{ await ui.dbNS.collection(collection).doc(id).delete(); return; } catch(e){}
-  }
   persistLocalFallback();
 }
 async function dbSetSettings(){
-  if(ui.dbNS){
-    try{ await ui.dbNS.doc("settings/main").set(state.settings); return; } catch(e){}
-  }
   persistLocalFallback();
 }
 // monthCategoryData is a single document (like settings/main), not a
 // collection — one plain nested object {ym:{catId:entry}}, rewritten whole
 // on every change. Mirrors dbSetSettings exactly.
 async function dbSetMonthCategoryData(){
-  if(ui.dbNS){
-    try{ await ui.dbNS.doc("monthcat/main").set(state.monthCategoryData); return; } catch(e){}
-  }
   persistLocalFallback();
 }
 
@@ -1052,7 +959,16 @@ function rolloverForMonth(catId, ym){
     const adj = categoryAdjustmentForMonth(catId, k);
     const avail = base + roll + adj;
     const spent = spentForMonth(catId, k);
-    roll = avail - spent;
+    const result = avail - spent;
+    // A month with no target set for this category (Base allocation left
+    // at $0 — shown as "No target set — unbudgeted") is intentionally
+    // unplanned. Its own overspend shouldn't manufacture a debt the next
+    // month silently inherits — that forced typing a fake baseline back
+    // into an already-closed month just to zero it out. A genuine
+    // carried-in leftover balance still passes through unaffected; only a
+    // negative result produced by THIS unbudgeted month's own spend is
+    // floored at zero.
+    roll = (base===0 && result<0) ? 0 : result;
   }
   return roll;
 }
@@ -2038,6 +1954,7 @@ function renderMonthly(main){
         <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
       </div>
+      ${hasTarget ? `<div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">Budget ${fmtUSD(base)}</div>` : ""}
       <div class="catbar"><div style="width:${pct}%; background:${over?'var(--bad)':color}"></div></div>
       <div class="row">
         <span class="muted num">${fmtUSD(spent)} spent</span>
@@ -2486,9 +2403,9 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       entry.name = name;
     }
     await dbSetMonthCategoryData();
+    dlg.close();
     showToast(`Updated ${info.isLocal ? (entry.name) : info.name} for ${MONTHS[monthOfYM(ym)]}`);
     render();
-    openMonthlyCategoryDetailSheet(categoryId, ym);
   });
   body.querySelectorAll("[data-entry]").forEach(row=>{
     row.onclick = async ()=>{
@@ -2945,9 +2862,9 @@ function openCategoryDetailSheet(categoryId, ym){
     c.name = name;
     c.baseAmountUSD = amount;
     await dbSet("categories", c.id, c);
+    dlg.close();
     showToast(`Updated ${name}`);
     render();
-    openCategoryDetailSheet(categoryId, ym);
   });
   body.querySelector("#dAddItem").onclick = ()=> openLineItemDialog(categoryId, null, ym);
   if(c.onlyYM){
@@ -3203,9 +3120,9 @@ function openLineItemDialog(categoryId, existing, ym){
     }
     await dbSet("lineitems", rec.id, rec);
     clearDirty();
+    dlg.close();
     showToast(`${existing?"Updated":"Added"} ${name}`);
     render();
-    openCategoryDetailSheet(categoryId, ym);
   });
   if(existing && existing.onlyYM){
     body.querySelector("#iPromote").onclick = async ()=>{
