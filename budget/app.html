@@ -447,6 +447,11 @@
      to the viewport regardless — is never left reflecting a page that
      silently scrolled while hidden. */
   body.sheet-open{ position:fixed; left:0; right:0; width:100% }
+  /* Swipe-nav scroll lock: overflow:hidden on both html and body blocks
+     scroll without taking body out of flow or touching its position, so
+     it doesn't trigger the iOS Safari dynamic-toolbar/100dvh recalculation
+     that position:fixed+top-offset can (see wireSwipeNav's lockScroll). */
+  html.scroll-lock, body.scroll-lock{ overflow:hidden }
   dialog[open]{ animation: sheetUp .22s cubic-bezier(.2,.8,.2,1) both; }
   @media (prefers-reduced-motion: reduce){ dialog[open]{ animation:none; } }
   @keyframes sheetUp{ from{ transform:translateX(-50%) translateY(24px); opacity:.4 } to{ transform:translateX(-50%) translateY(0); opacity:1 } }
@@ -4242,7 +4247,7 @@ function wireSwipeNav(){
   let startX=0, startY=0, dx=0, vw=0;
   let liveEls=null, ghosts={ "-1":null, "1":null };
   let settleTimer=null;
-  let scrollLocked=false, lockedY=0;
+  let scrollLocked=false;
 
   // #subhead/#monthlyToggleSticky sit in a position:sticky container, so
   // they track the viewport the same way a position:fixed ghost does —
@@ -4253,21 +4258,25 @@ function wireSwipeNav(){
   // bottom, residual momentum — live #main moves against its own frozen
   // ghost and the two visibly misalign, worse the longer the drag runs
   // (a slow, deliberate swipe gives scroll drift more time to happen than
-  // a quick flick). Locking the page the same way an open sheet does —
-  // body taken out of flow, scroll position restored after — keeps #main
-  // pinned to its ghost for the whole gesture.
+  // a quick flick). Locking the page keeps #main pinned to its ghost for
+  // the whole gesture. This uses overflow:hidden on html/body rather than
+  // the dialog's position:fixed+top-offset trick — that trick takes body
+  // out of flow and repositions it, which on iOS Safari can trigger a
+  // dynamic-toolbar/100dvh viewport recalculation (the same mechanism
+  // that shifts nav.tabs's apparent height for an open sheet, normally
+  // hidden because the sheet covers the nav bar). overflow:hidden blocks
+  // scroll without moving anything, so there's no position to save or
+  // restore either.
   function lockScroll(){
     if(scrollLocked) return;
-    lockedY = window.scrollY || window.pageYOffset || 0;
-    document.body.style.top = `-${lockedY}px`;
-    document.body.classList.add("sheet-open");
+    document.documentElement.classList.add("scroll-lock");
+    document.body.classList.add("scroll-lock");
     scrollLocked = true;
   }
   function unlockScroll(){
     if(!scrollLocked) return;
-    document.body.classList.remove("sheet-open");
-    document.body.style.top = "";
-    window.scrollTo(0, lockedY);
+    document.documentElement.classList.remove("scroll-lock");
+    document.body.classList.remove("scroll-lock");
     scrollLocked = false;
   }
 
