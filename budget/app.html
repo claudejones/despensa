@@ -99,15 +99,14 @@
   /* min-height uses the DYNAMIC viewport unit (dvh), not just 100% — a
      short page (e.g. an unconfigured month's single CTA card) has nothing
      to scroll, so the mobile browser's address bar never collapses, and a
-     100%-tall #app stops short of the true visible bottom, leaving
-     nav.tabs (fixed, bottom:0) pinned above the browser chrome instead of
-     flush with the real screen edge — while a taller page (enough content
-     to scroll) collapses that chrome and looks fine by comparison. Sizing
+     100%-tall #app would stop short of the true visible bottom. Sizing
      against 100dvh instead means #app always fills the actual visible
-     viewport regardless of content length, so the nav lands in the same
-     place on every screen. 100% stays first as the fallback for browsers
+     viewport regardless of content length, so main's flex:1 (below) has
+     real remaining space to fill and nav.tabs — the last flex child,
+     position:sticky — lands flush with the real screen edge on every
+     screen, short or tall. 100% stays first as the fallback for browsers
      without dvh support. */
-  #app{max-width:640px; margin:0 auto; padding-inline:16px; padding-bottom:96px; min-height:100%; min-height:100dvh; display:flex; flex-direction:column}
+  #app{max-width:640px; margin:0 auto; padding-inline:16px; min-height:100%; min-height:100dvh; display:flex; flex-direction:column}
 
   /* Sticky header + subhead move together as one unit, so a per-tab
      subhead always sits flush under the app header regardless of the
@@ -334,8 +333,22 @@
      for Budget Setup's "This month only" category section. */
   .list-divider{ border-top:1px solid var(--line); padding-top:14px; margin-top:4px }
 
+  /* position:sticky rather than fixed, and a real last flex child of #app
+     (main is flex:1 above it) rather than an independently-overlaid layer —
+     on a short page (nothing to scroll) main's flex:1 pushes this flush to
+     the bottom of the dvh-tall #app on its own; on a tall page it sticks to
+     the viewport bottom as the page scrolls, same end result as fixed. The
+     difference is that a sticky element's position is computed as part of
+     normal layout/scroll, not pinned to a separately-tracked viewport layer,
+     which avoids the class of iOS Safari bug where a position:fixed element
+     visibly lags or jumps while the dynamic toolbar is animating (touched
+     off by a touch-drag gesture even when overflow:hidden blocks the actual
+     scroll — see wireSwipeNav's lockScroll). margin-inline cancels #app's
+     own padding-inline so the bar still reaches #app's full edge instead of
+     sitting inset by it now that it's part of #app's padded flow.
+  */
   nav.tabs{
-    position:fixed; left:0; right:0; bottom:0; z-index:10;
+    position:sticky; bottom:0; z-index:10; margin-inline:-16px;
     background:var(--surface); border-top:1px solid var(--line);
     padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));
     display:flex; justify-content:center;
@@ -443,9 +456,10 @@
      Taking body fully out of flow with position:fixed (top offset by the
      saved scroll position, restored on close — see openSheet/the dialog
      "close" handler) is the robust mobile fix: nothing behind the sheet can
-     move, and the page reappears exactly where it was, so nav.tabs — fixed
-     to the viewport regardless — is never left reflecting a page that
-     silently scrolled while hidden. */
+     move — including nav.tabs, whose own position:sticky depends on there
+     being no scroll to react to — and the page reappears exactly where it
+     was, so nothing is ever left reflecting a page that silently scrolled
+     while hidden. */
   body.sheet-open{ position:fixed; left:0; right:0; width:100% }
   /* Swipe-nav scroll lock: overflow:hidden on both html and body blocks
      scroll without taking body out of flow or touching its position, so
@@ -462,7 +476,23 @@
     display:flex; flex-direction:column; gap:16px;
     max-height:calc(85vh - 18px); overflow-y:auto; overscroll-behavior:contain;
   }
-  .dialog-actions{display:flex; gap:10px; justify-content:flex-end}
+  /* Sticky to the bottom of .dialog-body's own scroll box (not the page) —
+     a long checklist/category list inside a sheet otherwise buries Cancel/
+     Apply below everything, forcing a scroll to find them. Harmless on a
+     short dialog that never scrolls: sticky with nothing to stick against
+     just renders in its normal flow position. `bottom` is pulled down by
+     .dialog-body's own bottom padding (20px + safe-area) so the sticky bar
+     reaches that padding box's true outer edge instead of stopping short
+     of it and leaving dead space below the buttons; margin-inline cancels
+     the body's side padding the same way so it reaches full width; its own
+     padding then re-adds the safe-area clearance for the buttons. Opaque
+     background + top border so scrolled rows don't show through under it. */
+  .dialog-actions{
+    display:flex; gap:10px; justify-content:flex-end;
+    position:sticky; bottom:calc(-1 * (20px + env(safe-area-inset-bottom,0px)));
+    background:var(--surface); margin-inline:-20px; padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));
+    border-top:1px solid var(--line);
+  }
   .sheet-row{ min-height:44px; display:flex; align-items:center }
 
   details.advanced{ border-top:1px solid var(--line); padding-top:10px }
@@ -2755,41 +2785,82 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   openSheet();
 }
 
-// Entry point for adding a category to an already-set-up month — either
-// forking in a template category that isn't part of this month yet, or
-// creating one that only ever exists inside this one month.
+// Entry point for adding a category (or several at once) to an already-
+// set-up month — either forking in template categories that aren't part of
+// this month yet, or creating one that only ever exists inside this one
+// month. Multi-select with checkboxes + Select all, matching the pattern
+// openMonthSeedChecklistDialog already uses for the whole-month seed
+// checklist — one tap-to-add-and-close per category was a real usability
+// problem (adding several meant reopening this sheet each time), and the
+// two entry points (a month started from "Start with nothing" and then
+// built up one category at a time vs. starting from "Choose which to
+// include") should feel like the same control, not two different ones.
 function openMonthAddCategorySheet(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   const data = state.monthCategoryData[ym] || {};
   const available = state.categories.filter(c=> categoryAppliesToYM(c, ym) && !data[c.id]);
   const rows = available.length ? available.map(c=>`
-    <button type="button" class="setuprow" data-tmpl="${c.id}">
-      <span class="name">${c.name}</span>
-      <span class="amt num">${fmtUSD(c.baseAmountUSD||0)}</span>
-      <span class="chev">›</span>
-    </button>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px">
+      <input type="checkbox" class="macItem" data-tmpl="${c.id}" style="width:auto">
+      <span style="flex:1">${escapeHtml(c.name)}</span>
+      <span class="num muted">${fmtUSD(c.baseAmountUSD||0)}</span>
+    </label>
   `).join("") : `<div class="empty">Every Budget Setup category is already part of this month.</div>`;
   body.innerHTML = `
     <h3>Add category — ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</h3>
-    <p class="muted">Bring in a category from Budget Setup with its current budget, or create one just for this month.</p>
-    <div class="stack" id="macList" style="gap:0">${rows}</div>
-    <button class="btn accent block" id="macNewLocal">${iconPlus()}<span>New category just for this month</span></button>
-    <div class="dialog-actions"><button class="btn ghost" id="macClose">Cancel</button></div>
+    <p class="muted">Bring in categories from Budget Setup with their current budget, or create one just for this month.</p>
+    ${available.length ? `
+    <label class="sheet-row" id="macSelectAllRow" style="flex-direction:row; align-items:center; gap:10px; border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:2px">
+      <input type="checkbox" id="macSelectAll" style="width:auto">
+      <span style="flex:1; font-weight:600">Select all</span>
+    </label>` : ""}
+    <button type="button" class="btn accent block" id="macNewLocal">${iconPlus()}<span>New category just for this month</span></button>
+    <div class="stack" id="macList" style="gap:2px">${rows}</div>
+    <div class="dialog-actions">
+      <button class="btn ghost" id="macClose">Cancel</button>
+      ${available.length ? `<button class="btn primary" id="macSave" disabled>Add selected</button>` : ""}
+    </div>
   `;
-  body.querySelectorAll("[data-tmpl]").forEach(btn=>{
-    btn.onclick = async ()=>{
-      const c = state.categories.find(x=>x.id===btn.dataset.tmpl);
-      state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
-      state.monthCategoryData[ym][c.id] = { baseAmountUSD: c.baseAmountUSD||0, items: [], source:"template" };
-      await dbSetMonthCategoryData();
-      dlg.close();
-      showToast(`Added ${c.name} to ${MONTHS[monthOfYM(ym)]}`);
-      render();
-    };
-  });
+  const itemBoxes = [...body.querySelectorAll(".macItem")];
+  const selectAll = body.querySelector("#macSelectAll");
+  const saveBtn = body.querySelector("#macSave");
+  // Same tri-state Select-all + disabled-until-something's-checked pattern
+  // as the whole-month seed checklist (openMonthSeedChecklistDialog) — kept
+  // in sync deliberately so the two feel like one control.
+  function syncSelectAll(){
+    const checkedCount = itemBoxes.filter(b=>b.checked).length;
+    if(selectAll){
+      selectAll.checked = checkedCount>0 && checkedCount===itemBoxes.length;
+      selectAll.indeterminate = checkedCount>0 && checkedCount<itemBoxes.length;
+    }
+    if(saveBtn) saveBtn.disabled = checkedCount===0;
+  }
+  if(selectAll){
+    selectAll.addEventListener("change", ()=>{
+      itemBoxes.forEach(b=> b.checked = selectAll.checked);
+      syncSelectAll();
+    });
+    itemBoxes.forEach(b=> b.addEventListener("change", syncSelectAll));
+  }
+  syncSelectAll();
   body.querySelector("#macNewLocal").onclick = ()=> openMonthNewLocalCategoryDialog(ym);
   body.querySelector("#macClose").onclick = ()=> dlg.close();
+  if(saveBtn){
+    onceClick(saveBtn, async ()=>{
+      const checked = itemBoxes.filter(b=>b.checked).map(b=>b.dataset.tmpl);
+      if(checked.length===0) return;
+      state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
+      checked.forEach(id=>{
+        const c = state.categories.find(x=>x.id===id);
+        state.monthCategoryData[ym][c.id] = { baseAmountUSD: c.baseAmountUSD||0, items: [], source:"template" };
+      });
+      await dbSetMonthCategoryData();
+      dlg.close();
+      showToast(`Added ${checked.length} categor${checked.length===1?"y":"ies"} to ${MONTHS[monthOfYM(ym)]}`);
+      render();
+    });
+  }
   openSheet();
 }
 
