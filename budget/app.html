@@ -1461,14 +1461,17 @@ function categoryMxnBreakdownCard(ym, mIdx){
   const totalMxn = rows.reduce((s,r)=> s+r.mxn, 0);
   let primary = "USD"; // local to this card only — never written to state
 
-  // Rate rides along with the secondary (muted) figure, not as its own
-  // column — it's context for the MXN conversion, not a third number worth
-  // equal visual weight next to the actual spend amounts.
+  // The rate gets its own line below the converted amount, relabeled as
+  // "Rate X MXN/USD" instead of trailing the dollar figure as "· X/USD" —
+  // that old placement put a USD amount directly against "/USD" and read
+  // like the amount itself was somehow expressed per-dollar. On its own
+  // line, with a label, it can only read as what it is: the exchange rate
+  // used for this row's conversion.
   function amtCell(usd, mxn, rate, bold){
     const primaryText = primary==="USD" ? fmtUSD(usd) : fmtMXN(mxn);
     const secondaryText = primary==="USD" ? fmtMXN(mxn) : fmtUSD(usd);
-    const rateNote = rate!=null ? ` · ${rate.toFixed(2)}/USD` : "";
-    return `<span class="num" style="display:block; font-weight:${bold?700:600}; font-size:${bold?'14px':'13px'}">${primaryText}</span><span class="num muted" style="display:block; font-size:11px">${secondaryText}${rateNote}</span>`;
+    const rateLine = rate!=null ? `<span class="num muted" style="display:block; font-size:10px; margin-top:1px">Rate ${rate.toFixed(2)} MXN/USD</span>` : "";
+    return `<span class="num" style="display:block; font-weight:${bold?700:600}; font-size:${bold?'14px':'13px'}">${primaryText}</span><span class="num muted" style="display:block; font-size:11px">${secondaryText}</span>${rateLine}`;
   }
 
   function renderBody(){
@@ -2067,6 +2070,13 @@ function renderMonthly(main){
     // months with the same leftover dollar figure look identical unless
     // you can also see the base grew. This line is that proof.
     const showRoll = hasTarget && Math.abs(roll) > 0.005;
+    // Same reasoning as showRoll just above, for the other number that
+    // feeds Available: a transfer moved real money into or out of this
+    // category this month just as surely as rollover carried it in from
+    // last month, and hiding one while showing the other makes Available
+    // look unexplained whenever a category is funded (or drained) by
+    // transfer instead of — or in addition to — its own Base.
+    const showAdj = hasTarget && Math.abs(adj) > 0.005;
     const row = el("div","catrow");
     row.innerHTML = `
       <div class="head">
@@ -2081,6 +2091,7 @@ function renderMonthly(main){
         <span class="muted num" style="color:${remainingInfo.color}">${remainingInfo.text}</span>
       </div>
       ${showRoll ? `<div class="muted" style="font-size:11px; margin-top:-4px">${roll>0?'+':''}${fmtUSD(roll)} carried in from last month</div>` : ""}
+      ${showAdj ? `<div class="muted" style="font-size:11px; margin-top:-4px">${adj>0?'+':''}${fmtUSD(adj)} moved ${adj>0?'in':'out'} this month</div>` : ""}
     `;
     row.style.cursor = "pointer";
     // Row tap and the pencil icon both open the one category-management
@@ -4176,12 +4187,30 @@ function renderGhostContent(ym){
   if(ui.tab==="monthly"){
     const subhead = document.getElementById("subhead");
     const toggleBox = document.getElementById("monthlyToggleSticky");
-    const savedSub = subhead.innerHTML, savedToggle = toggleBox.innerHTML;
+    // renderSubhead() wires its buttons with real JS listeners (.onclick,
+    // and whatever viewToggleRow attaches) — none of that survives a
+    // round trip through innerHTML as a string, since a listener isn't
+    // part of the serialized markup. Reassigning `.innerHTML = savedHTML`
+    // would silently replace the live elements with inert look-alikes,
+    // permanently dropping their click handlers the moment a swipe starts
+    // (even one that never commits). So instead of saving strings, the
+    // actual original nodes (and the attributes renderSubhead() mutates
+    // directly on the containers) are moved out and put straight back —
+    // same objects, so their listeners are untouched.
+    const savedSubNodes = Array.from(subhead.childNodes);
+    const savedSubClass = subhead.className, savedSubBorder = subhead.style.borderBottom;
+    const savedToggleNodes = Array.from(toggleBox.childNodes);
+    const savedToggleClass = toggleBox.className;
     renderSubhead();
     subHTML = subhead.innerHTML;
     toggleHTML = toggleBox.innerHTML;
-    subhead.innerHTML = savedSub;
-    toggleBox.innerHTML = savedToggle;
+    subhead.innerHTML = "";
+    savedSubNodes.forEach(n=> subhead.appendChild(n));
+    subhead.className = savedSubClass;
+    subhead.style.borderBottom = savedSubBorder;
+    toggleBox.innerHTML = "";
+    savedToggleNodes.forEach(n=> toggleBox.appendChild(n));
+    toggleBox.className = savedToggleClass;
   }
   const tmpMain = document.createElement("div");
   if(ui.tab==="monthly") renderMonthly(tmpMain);
@@ -4212,6 +4241,7 @@ function wireSwipeNav(){
   let tracking=false, deciding=true, horiz=false;
   let startX=0, startY=0, dx=0, vw=0;
   let liveEls=null, ghosts={ "-1":null, "1":null };
+  let settleTimer=null;
 
   function liveElsForTab(){
     if(ui.tab==="monthly") return [
@@ -4271,6 +4301,18 @@ function wireSwipeNav(){
   }
 
   main.addEventListener("touchstart", (e)=>{
+    // Defensive cleanup: a prior gesture's settle() removes ghosts and
+    // resets live styles in a setTimeout that fires ~240ms after release.
+    // Starting a new swipe before that timeout runs — a quick double-swipe
+    // — would otherwise overwrite `ghosts` with a fresh set without ever
+    // removing the previous gesture's panels from the DOM, leaving them
+    // orphaned and visibly stacked on top of the live content. Cancelling
+    // the pending timer matters too: if it's left to fire mid-new-gesture,
+    // it clears THIS gesture's ghosts/styles out from under it and can
+    // call changePeriod with the previous gesture's stale direction.
+    if(settleTimer){ clearTimeout(settleTimer); settleTimer=null; }
+    clearGhosts();
+    if(liveEls) resetLiveStyles();
     if(document.getElementById("dlg").open || e.touches.length>1){ tracking=false; return; }
     if(!(ui.tab==="monthly" || ui.tab==="outlook")){ tracking=false; return; }
     const t = e.touches[0];
@@ -4328,7 +4370,8 @@ function wireSwipeNav(){
         p.style.transform = `translateX(${commit && k===String(dir) ? 0 : g.park}px)`;
       });
     });
-    setTimeout(()=>{
+    settleTimer = setTimeout(()=>{
+      settleTimer = null;
       clearGhosts();
       resetLiveStyles();
       if(commit) changePeriod(dir);
