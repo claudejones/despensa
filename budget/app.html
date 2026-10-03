@@ -447,9 +447,11 @@
   details.advanced summary::before{ content:"›"; display:inline-block; transition:transform .15s; font-size:16px }
   details.advanced[open] summary::before{ transform:rotate(90deg) }
   details.advanced > *:not(summary){ margin-top:12px }
-  details.xferpick summary{ font-size:14px; color:var(--ink) }
+  details.xferpick summary{ font-size:14px; color:var(--ink); flex-wrap:wrap; row-gap:4px }
   details.xferpick summary .eyebrow{ font-size:11px; color:var(--ink-soft); font-weight:700 }
-  details.xferpick summary .pickval{ margin-left:auto; font-weight:600; font-size:13px; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%; display:flex; align-items:center }
+  details.xferpick summary .pickval{ flex-basis:100%; margin-left:22px; font-weight:600; font-size:14px; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:calc(100% - 22px); display:flex; align-items:center }
+  input.err, select.err, textarea.err{ border-color:var(--bad) !important }
+  .form-err-msg{ color:var(--bad); font-size:13px; font-weight:600; margin:2px 0 8px }
 
   .danger-zone{ border-top:1px solid var(--line); padding-top:14px; margin-top:4px }
 
@@ -535,7 +537,28 @@
 --------------------------------------------------------------- */
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const SEED_YEAR = 2027; // the year the original seed data was written for
-const PALETTE = ["#1D3B36","#B8862E","#5B8A9A","#8A5B7A","#6E8F4E","#B2593E","#4E7A8F","#9A7B4E","#6E5B8F","#3F8F5F","#8F6B3F","#5B6B8F"];
+// 20 colors, not 12 — the old 12-color set put more than one category on
+// the same color past the 12th category (simple modulo wraparound). The
+// old first entry (#1D3B36) also nearly matched the .catbar track's own
+// dark-mode background (--surface-2 = #213732), making that category's
+// progress bar almost invisible against its own track — replaced below.
+const PALETTE = ["#B8453A","#B8862E","#5B8A9A","#8A5B7A","#6E8F4E","#B2593E","#4E7A8F","#9A7B4E","#6E5B8F","#3F8F5F","#8F6B3F","#5B6B8F","#A4486B","#4E8F7A","#8F4E6E","#6B8F3F","#3F6B8F","#8F7A3F","#5B3F8F","#8F5B3F"];
+
+// Picks a color for a new category — the first PALETTE entry not already
+// in use by a sibling, rather than a raw `length % PALETTE.length`, which
+// reintroduces a collision the moment any earlier category is deleted
+// (the count shifts, a later category's modulo result changes, and it can
+// land back on a color a surviving category already has). Once every
+// PALETTE color is taken at least once, falls back to the least-used one.
+function nextAvailableColor(existingColors){
+  const used = new Set(existingColors);
+  const free = PALETTE.find(c=> !used.has(c));
+  if(free) return free;
+  const counts = {};
+  PALETTE.forEach(c=> counts[c]=0);
+  existingColors.forEach(c=> { if(counts[c]!=null) counts[c]++; });
+  return PALETTE.reduce((best,c)=> counts[c]<counts[best] ? c : best, PALETTE[0]);
+}
 
 const SEED_VERSION = 3;
 
@@ -1097,16 +1120,6 @@ function hasActualsForMonth(ym){
   return state.actuals.some(a=>ymOfDate(a.date)===ym);
 }
 
-function cashNeededForMonth(ym){
-  const mIdx = monthOfYM(ym);
-  const rate = yearSettings(yearOfYM(ym)).baseRate;
-  let usd = 0;
-  state.lineitems.filter(li=>li.paymentMethod==="cash" && (!li.onlyYM || li.onlyYM===ym)).forEach(li=>{
-    usd += toUSD(li.schedule[mIdx]||0, li.currency, li.rate||rate);
-  });
-  return { usd, mxn: usd * rate };
-}
-
 // Year-to-date, bounded to the same calendar year as uptoYM — Jan of that
 // year through uptoYM, not a running total since the app began.
 function ytdActual(uptoYM){
@@ -1321,18 +1334,10 @@ function renderMonthlyDash(main, ym){
     return;
   }
 
-  const cash = cashNeededForMonth(ym);
-  const cashCard = el("div","card row");
-  cashCard.innerHTML = `
-    <div>
-      <div class="eyebrow" style="color:var(--cash)">ATM / cash needed</div>
-      <div style="font-weight:600; font-size:20px" class="num">${fmtMXN(cash.mxn)}</div>
-      <div class="muted num">${fmtUSD(cash.usd)} of this month's budget</div>
-    </div>
-    <div class="pill cash">Cash-flagged items</div>
-  `;
-  wrap.appendChild(cashCard);
-
+  // The old "ATM / cash needed" card was a forward-looking plan figure
+  // (sum of Budget Setup items flagged Cash) that didn't reflect what was
+  // actually spent in cash this month — dropped in favor of the real
+  // Cash vs. card split chart below, which now also carries MXN.
   wrap.appendChild(categoryMxnBreakdownCard(ym, mIdx));
 
   const splitCard = el("div","card stack");
@@ -1506,9 +1511,10 @@ function drawMonthlyChart(){
 function drawSplitChart(ym){
   const ctx = document.getElementById("chartSplit");
   if(!ctx || typeof Chart==="undefined") return;
+  const rate = yearSettings(yearOfYM(ym)).baseRate;
   let cash=0, card=0, transfer=0;
   state.actuals.filter(a=>ymOfDate(a.date)===ym).forEach(a=>{
-    const usd = toUSD(a.amount||0, a.currency, a.rate||yearSettings(yearOfYM(ym)).baseRate);
+    const usd = toUSD(a.amount||0, a.currency, a.rate||rate);
     if(a.paymentMethod==="cash") cash+=usd;
     else if(a.paymentMethod==="transfer") transfer+=usd;
     else card+=usd;
@@ -1519,7 +1525,9 @@ function drawSplitChart(ym){
     data:{ labels:["Cash","Card","Transfer"], datasets:[{ data:[cash,card,transfer], backgroundColor:[cssVar("--cash"), cssVar("--primary"), cssVar("--transfer")], borderRadius:6 }] },
     options:{ indexAxis:"y", plugins:{
       legend:{display:false},
-      tooltip:{ callbacks:{ label:(c)=> fmtUSD(c.parsed.x) } },
+      // MXN alongside USD — this month's rate, same as every other
+      // USD/MXN readout on this screen (categoryMxnBreakdownCard).
+      tooltip:{ callbacks:{ label:(c)=> `${fmtUSD(c.parsed.x)} · ${fmtMXN(c.parsed.x*rate)}` } },
     }, scales:{ x:{ticks:{color:cssVar("--ink-soft")},grid:{color:cssVar("--line")}}, y:{ticks:{color:cssVar("--ink-soft")},grid:{display:false}} } }
   });
 }
@@ -1954,7 +1962,7 @@ function renderMonthly(main){
         <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
       </div>
-      ${hasTarget ? `<div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">Budget ${fmtUSD(base)}</div>` : ""}
+      <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">${hasTarget ? `Budget ${fmtUSD(base)}` : "Budget: not set"}</div>
       <div class="catbar"><div style="width:${pct}%; background:${over?'var(--bad)':color}"></div></div>
       <div class="row">
         <span class="muted num">${fmtUSD(spent)} spent</span>
@@ -2001,7 +2009,7 @@ function openFundAdjustmentsSheet(ym){
 
   const rows = (fe.length===0 && tr.length===0) ? `<div class="empty">No fund adjustments or transfers this month.</div>` : `
     <div class="stack" id="faRows" style="gap:0">
-      ${fe.map(f=>`<div class="row"><span class="muted">${f.mode==="oneshot"?"One-time funds":"Redistributed funds"} · ${f.date}</span><span class="num">${fmtUSD(f.amountUSD)}</span></div>`).join("")}
+      ${fe.map(f=>`<div class="row"><span class="muted">${f.mode==="oneshot"?"One-time funds":"Redistributed funds"} · ${f.date}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">${fmtUSD(f.amountUSD)}</span></div>`).join("")}
       ${tr.map(t=>{
         const from = state.categories.find(c=>c.id===t.fromCategoryId);
         const to = state.categories.find(c=>c.id===t.toCategoryId);
@@ -2022,6 +2030,7 @@ function openFundAdjustmentsSheet(ym){
     <h3>Fund adjustments</h3>
     <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</p>
     ${rows}
+    <button class="btn accent block" id="faAddFunds">${iconPlus()}<span>Add funds</span></button>
     <div class="dialog-actions"><button class="btn ghost" id="faClose">Close</button></div>
   `;
   body.querySelectorAll("[data-del]").forEach(btn=>{
@@ -2038,6 +2047,9 @@ function openFundAdjustmentsSheet(ym){
       }, ()=> openFundAdjustmentsSheet(ym));
     };
   });
+  // Pre-filled to the month you're already looking at — this was previously
+  // view-only, with the only way to add funds at all being Settings.
+  body.querySelector("#faAddFunds").onclick = ()=> openFundDialog(ym, ()=> openFundAdjustmentsSheet(ym));
   body.querySelector("#faClose").onclick = ()=> dlg.close();
   openSheet();
 }
@@ -2097,9 +2109,9 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
   body.querySelector("#aCancel").onclick = ()=>{ if(onBack){ onBack(); } else { dlg.close(); } };
   onceClick(body.querySelector("#aSave"), async ()=>{
     const amount = linked.getNativeAmount();
-    if(!amount) return;
+    if(!amount){ formError(body, "Enter an amount.", body.querySelector("#itUSD")); return; }
     const date = body.querySelector("#aDate").value;
-    if(!date) return;
+    if(!date){ formError(body, "Pick a date.", body.querySelector("#aDate")); return; }
     const rec = {
       id: existing ? existing.id : uid("act"),
       categoryId,
@@ -2148,10 +2160,10 @@ function currencyFieldsHTML(){
       <span class="muted" style="margin-left:auto; font-size:11px">which one you actually know</span>
     </div>
     <div class="field-row">
-      <label>USD<input type="number" inputmode="decimal" id="itUSD" step="0.01" placeholder="0.00"></label>
-      <label>MXN<input type="number" inputmode="decimal" id="itMXN" step="0.01" placeholder="0.00"></label>
+      <label>USD<input type="text" inputmode="decimal" id="itUSD" placeholder="0.00"></label>
+      <label>MXN<input type="text" inputmode="decimal" id="itMXN" placeholder="0.00"></label>
     </div>
-    <label>Rate (USD → MXN)<input type="number" inputmode="decimal" id="itRate" step="0.0001"></label>
+    <label>Rate (USD → MXN)<input type="text" inputmode="decimal" id="itRate"></label>
   `;
 }
 function wireLinkedCurrency(body, initialCurrency){
@@ -2186,9 +2198,12 @@ function wireLinkedCurrency(body, initialCurrency){
     if(usd>0) rateEl.value = (mxn/usd).toFixed(4);
   }
   setToggle();
-  usdEl.addEventListener("input", ()=>{ currency==="USD" ? recalcFromNative() : recalcRateFromOther(); });
-  mxnEl.addEventListener("input", ()=>{ currency==="MXN" ? recalcFromNative() : recalcRateFromOther(); });
-  rateEl.addEventListener("input", recalcFromNative);
+  // Sanitize first (strips a pasted "$150.00"/"1,500.00" down to a plain
+  // decimal string) so the recalculation below always has a parseable
+  // value, whether typed or pasted.
+  usdEl.addEventListener("input", ()=>{ usdEl.value = cleanNumStr(usdEl.value); currency==="USD" ? recalcFromNative() : recalcRateFromOther(); });
+  mxnEl.addEventListener("input", ()=>{ mxnEl.value = cleanNumStr(mxnEl.value); currency==="MXN" ? recalcFromNative() : recalcRateFromOther(); });
+  rateEl.addEventListener("input", ()=>{ rateEl.value = cleanNumStr(rateEl.value); recalcFromNative(); });
   toggleUSD.onclick = ()=>{ currency="USD"; setToggle(); };
   toggleMXN.onclick = ()=>{ currency="MXN"; setToggle(); };
 
@@ -2267,7 +2282,10 @@ function openTransferDialog(ym){
     const amountUSD = parseFloat(body.querySelector("#tAmt").value||"0");
     const date = body.querySelector("#tDate").value;
     const note = body.querySelector("#tNote").value;
-    if(!amountUSD || !fromId || !toId || fromId===toId || !date) return;
+    if(!fromId || !toId){ formError(body, "Choose a From and To category."); return; }
+    if(fromId===toId){ formError(body, "From and To can't be the same category."); return; }
+    if(!amountUSD){ formError(body, "Enter an amount.", body.querySelector("#tAmt")); return; }
+    if(!date){ formError(body, "Pick a date.", body.querySelector("#tDate")); return; }
     const id = uid("xfer");
     const rec = { id, date, fromCategoryId:fromId, toCategoryId:toId, amountUSD, note };
     state.transfers.push(rec);
@@ -2343,11 +2361,11 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     <div class="stack" style="gap:8px">
       ${roll!==0 ? `<div class="row"><span class="muted">Rollover carried in</span><span class="num">${roll>0?"+":""}${fmtUSD(roll)}</span></div>` : ""}
       ${adj!==0 ? `<div class="row"><span class="muted">Net moved this month</span><span class="num">${adj>0?"+":""}${fmtUSD(adj)}</span></div>` : ""}
-      <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">Available</span><span class="num" style="font-weight:600">${fmtUSD(avail)}</span></div>
+      <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">Available</span><span class="num" id="mcAvail" style="font-weight:600">${fmtUSD(avail)}</span></div>
       <div class="row"><span class="muted">Spent</span><span class="num">${fmtUSD(spent)}</span></div>
-      ${hasTarget
-        ? `<div class="row"><span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${remaining>=0?"var(--good)":"var(--bad)"}">${fmtUSD(remaining)}</span></div>`
-        : `<div class="row"><span style="font-weight:600">Remaining</span><span class="muted" style="font-weight:600">No target set — unbudgeted</span></div>`}
+      <div class="row" id="mcRemainingRow">${hasTarget
+        ? `<span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${remaining>=0?"var(--good)":"var(--bad)"}">${fmtUSD(remaining)}</span>`
+        : `<span style="font-weight:600">Remaining</span><span class="muted" style="font-weight:600">No target set — unbudgeted</span>`}</div>
     </div>
     ${transferBlock}
     <div class="list-divider">
@@ -2388,18 +2406,34 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   }
   const backHere = ()=> openMonthlyCategoryDetailSheet(categoryId, ym);
 
+  // Live recompute — previously Available/Remaining only updated after
+  // Save closed and reopened this sheet, which read as broken. Typing a new
+  // Base allocation now recalculates both immediately; nothing is written
+  // until Save is actually pressed.
+  const mcBaseInput = body.querySelector("#mcBaseAmount");
+  mcBaseInput.addEventListener("input", ()=>{
+    const newBase = parseFloat(mcBaseInput.value||"0") || 0;
+    const newAvail = newBase + roll + adj;
+    const newRemaining = roundCents(newAvail - spent);
+    const newHasTarget = newBase > 0;
+    body.querySelector("#mcAvail").textContent = fmtUSD(newAvail);
+    body.querySelector("#mcRemainingRow").innerHTML = newHasTarget
+      ? `<span style="font-weight:600">Remaining</span><span class="num" style="font-weight:600; color:${newRemaining>=0?"var(--good)":"var(--bad)"}">${fmtUSD(newRemaining)}</span>`
+      : `<span style="font-weight:600">Remaining</span><span class="muted" style="font-weight:600">No target set — unbudgeted</span>`;
+  });
+
   body.querySelector("#miClose").onclick = ()=> dlg.close();
   onceClick(body.querySelector("#mcSave"), async ()=>{
     const amount = parseFloat(body.querySelector("#mcBaseAmount").value||"0") || 0;
     state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
     const entry = state.monthCategoryData[ym][categoryId];
-    if(!entry) return;
+    if(!entry){ dlg.close(); showToast("Couldn't save — try reopening this category."); return; }
     // Edits only this month's own copy — the template's baseAmountUSD (and
     // every other already-seeded month) is never touched.
     entry.baseAmountUSD = amount;
     if(info.isLocal){
       const name = body.querySelector("#mcName").value.trim();
-      if(!name) return;
+      if(!name){ formError(body, "Enter a name.", body.querySelector("#mcName")); return; }
       entry.name = name;
     }
     await dbSetMonthCategoryData();
@@ -2528,12 +2562,15 @@ function openMonthNewLocalCategoryDialog(ym){
   body.querySelector("#mlCancel").onclick = ()=> dlg.close();
   onceClick(body.querySelector("#mlSave"), async ()=>{
     const name = body.querySelector("#mlName").value.trim();
-    if(!name) return;
+    if(!name){ formError(body, "Enter a name.", body.querySelector("#mlName")); return; }
     const amount = parseFloat(body.querySelector("#mlAmount").value||"0") || 0;
     const newId = uid("mcat");
     state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
-    const colorIdx = Object.keys(state.monthCategoryData[ym]).filter(id=> id!==DROPPED_CREDITS_KEY).length % PALETTE.length;
-    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name, color: PALETTE[colorIdx] };
+    const usedColors = [
+      ...state.categories.map(c=>c.color),
+      ...Object.values(state.monthCategoryData[ym]).map(e=>e.color).filter(Boolean)
+    ];
+    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name, color: nextAvailableColor(usedColors) };
     await dbSetMonthCategoryData();
     dlg.close();
     showToast(`Added ${name}`);
@@ -2797,7 +2834,7 @@ function openCategoryDetailSheet(categoryId, ym){
     <h3>Edit Category</h3>
     <label>Name<input type="text" id="dName" value="${escapeHtml(c.name)}" placeholder="e.g. Pet care"></label>
     <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="dAmount" value="${(c.baseAmountUSD||0).toFixed(2)}"></label>
-    <p class="muted">Budget: <strong class="num">${fmtUSD(target)}</strong> · Planned <strong class="num">${fmtUSD(planned)}</strong> · Unallocated <strong class="num" style="color:${unallocated<0?'var(--bad)':'inherit'}">${fmtUSD(unallocated)}</strong></p>
+    <p class="muted" id="dSummaryLine">Budget: <strong class="num">${fmtUSD(target)}</strong> · Planned <strong class="num">${fmtUSD(planned)}</strong> · Unallocated <strong class="num" style="color:${unallocated<0?'var(--bad)':'inherit'}">${fmtUSD(unallocated)}</strong></p>
     <div class="stack" id="dItems" style="gap:0">${itemRows}</div>
     <button class="btn accent block" id="dAddItem">${iconPlus()}<span>Add Expense</span></button>
     ${c.onlyYM ? `<div class="danger-zone"><button class="btn small block" id="dPromote">Also add to master Budget Setup</button></div>` : ""}
@@ -2821,7 +2858,14 @@ function openCategoryDetailSheet(categoryId, ym){
     if(dupBtn) dupBtn.disabled = true;
   }
   body.querySelector("#dName").addEventListener("input", markDirty);
-  body.querySelector("#dAmount").addEventListener("input", markDirty);
+  // Live recompute — Budget/Unallocated previously only reflected a new
+  // Amount after Save closed and reopened this sheet.
+  body.querySelector("#dAmount").addEventListener("input", (ev)=>{
+    markDirty();
+    const newTarget = parseFloat(ev.target.value||"0") || 0;
+    const newUnallocated = newTarget - planned;
+    body.querySelector("#dSummaryLine").innerHTML = `Budget: <strong class="num">${fmtUSD(newTarget)}</strong> · Planned <strong class="num">${fmtUSD(planned)}</strong> · Unallocated <strong class="num" style="color:${newUnallocated<0?'var(--bad)':'inherit'}">${fmtUSD(newUnallocated)}</strong>`;
+  });
   body.querySelectorAll("[data-item]").forEach(row=>{
     row.onclick = ()=>{
       const li = items.find(x=>x.id===row.dataset.item);
@@ -2857,7 +2901,7 @@ function openCategoryDetailSheet(categoryId, ym){
   });
   onceClick(body.querySelector("#dSave"), async ()=>{
     const name = body.querySelector("#dName").value.trim();
-    if(!name) return;
+    if(!name){ formError(body, "Enter a name.", body.querySelector("#dName")); return; }
     const amount = parseFloat(body.querySelector("#dAmount").value||"0") || 0;
     c.name = name;
     c.baseAmountUSD = amount;
@@ -2934,10 +2978,10 @@ function openCategoryDialog(ym){
   body.querySelector("#cCancel").onclick = ()=> dlg.close();
   onceClick(body.querySelector("#cSave"), async ()=>{
     const name = body.querySelector("#cName").value.trim();
-    if(!name) return;
+    if(!name){ formError(body, "Enter a name.", body.querySelector("#cName")); return; }
     const amount = parseFloat(body.querySelector("#cAmount").value||"0") || 0;
     const id = uid("cat");
-    const color = PALETTE[state.categories.length % PALETTE.length];
+    const color = nextAvailableColor(state.categories.map(c=>c.color));
     const rec = { id, name, order: nextCategoryOrder(), color, baseAmountUSD: amount };
     state.categories.push(rec);
     await dbSet("categories", id, rec);
@@ -2949,11 +2993,18 @@ function openCategoryDialog(ym){
 }
 
 // The item editor — name, linked USD/MXN amount, payment method, and a
-// single "apply forward too" checkbox in place of a separate scope-picker
-// dialog: unchecked changes just the month you're on, checked changes
-// that month and every month after (never earlier months, so past actuals
-// never get rewritten). Full manual control over any individual month
-// still lives under "All 12 months" for edge cases.
+// single Amount field that, by default, IS the item's one flat number —
+// matching how the category's own Amount field already works, with no
+// hidden per-month variation. Internally an item still stores 12 monthly
+// slots (so a genuinely seasonal expense — a bigger December travel line,
+// say — can still be modeled), but unless "costs a different amount in
+// different months" is explicitly checked, every Save flattens all 12
+// slots to the one Amount typed here. This replaced an earlier design
+// where editing "the" amount silently touched only the current month's
+// hidden slot (unchecked by default) — which is exactly what made the
+// template look like it was randomly reverting: you were always editing
+// one invisible slot among twelve, never a single flat value, and this
+// screen never told you which slot that was.
 const WEEKS_PER_MONTH = 52/12;
 const BIWEEKS_PER_MONTH = 26/12;
 
@@ -2971,6 +3022,11 @@ function openLineItemDialog(categoryId, existing, ym){
   const mxnInit = curCurrency==="MXN" ? nativeThisMonth : nativeThisMonth*curRate;
   const isOnlyThisMonth = existing ? existing.onlyYM===ym : false;
   const monthLabel = `${MONTHS[mIdx]} ${yearOfYM(ym)}`;
+  // Already varies by month (someone genuinely set it up that way, or it
+  // drifted from the old per-slot-editing behavior) — default to the
+  // "varies" state so existing data is never silently flattened out from
+  // under you; a brand-new item, or one that's already flat, defaults off.
+  const alreadyVaries = existing ? !sched.every(v=> v===sched[0]) : false;
 
   body.innerHTML = `
     <h3>${existing?"Edit":"New"} Expense</h3>
@@ -2992,11 +3048,11 @@ function openLineItemDialog(categoryId, existing, ym){
         <option value="onetime" ${curFreq==="onetime"?"selected":""}>One-time / as needed</option>
       </select>
     </label>
-    <label class="sheet-row" id="iForwardRow" style="flex-direction:row; align-items:center; gap:8px">
-      <input type="checkbox" id="iForward" style="width:auto" ${!isOnlyThisMonth&&!existing?"checked":""} ${isOnlyThisMonth?"disabled":""}>
-      <span>Apply to ${monthLabel} and every month after${!existing?" (recommended for something new)":""} — unchecked means ${monthLabel} only</span>
+    <label class="sheet-row" id="iVaryRow" style="flex-direction:row; align-items:center; gap:8px">
+      <input type="checkbox" id="iVary" style="width:auto" ${alreadyVaries?"checked":""} ${isOnlyThisMonth?"disabled":""}>
+      <span>Costs a different amount in different months (e.g. bigger in December) — leave unchecked for one flat amount every month</span>
     </label>
-    <details class="advanced" id="iAdv">
+    <details class="advanced" id="iAdv" ${alreadyVaries?"open":""}>
       <summary>All 12 months</summary>
       <div class="schedule-grid" id="schedGrid"></div>
       <div class="row" style="gap:10px">
@@ -3027,24 +3083,30 @@ function openLineItemDialog(categoryId, existing, ym){
   // created here are always part of the recurring template. If you're
   // editing an item that already has onlyYM set (from before this change,
   // or promoted-and-reverted some other way), that flag is simply
-  // preserved on save without any checkbox to toggle it — "Apply to every
-  // month after" is locked off since there's nothing to apply forward to,
-  // and the only way out is the "Also add to master Budget Setup" button.
-  const forwardRow = body.querySelector("#iForwardRow");
-  if(isOnlyThisMonth) forwardRow.style.opacity = .45;
+  // preserved on save without any checkbox to toggle it — "varies by
+  // month" doesn't apply to something that only ever fires once, and the
+  // only way out is the "Also add to master Budget Setup" button.
+  const varyRow = body.querySelector("#iVaryRow");
+  if(isOnlyThisMonth) varyRow.style.opacity = .45;
 
-  // Live preview: the 12-month grid reflects what "apply forward" (or not)
-  // and the current amount would actually save, updated as you type —
-  // rather than only after you hit Save. Builds from whatever is CURRENTLY
-  // in the grid (not the original saved schedule), so a manual edit already
-  // sitting in the grid — e.g. "Zero out all months" — survives further
-  // amount/forward-checkbox changes instead of being discarded.
+  // Live preview, updated as you type. The common case (vary unchecked):
+  // the Amount field IS the item's one number, so every one of the 12
+  // slots mirrors it — that's what makes Save write a genuinely flat
+  // template value instead of one hidden month-of-year slot. Checked: this
+  // is a deliberately month-varying item, so only the month you're
+  // actually looking at follows the Amount field; the rest stay exactly
+  // what's already in the grid (manual control, same as "Zero out all
+  // months" below surviving further edits here).
   function previewSchedule(){
     const amt = linked.getNativeAmount();
-    const forward = body.querySelector("#iForward").checked;
-    const preview = [...grid.querySelectorAll("input")].map(inp=> parseFloat(inp.value||"0"));
-    if(forward){ for(let i=mIdx;i<12;i++) preview[i] = amt; } else { preview[mIdx] = amt; }
-    grid.querySelectorAll("input").forEach((inp,i)=>{ inp.value = preview[i]; });
+    const vary = body.querySelector("#iVary").checked;
+    if(!vary){
+      grid.querySelectorAll("input").forEach(inp=>{ inp.value = amt; });
+    } else {
+      const preview = [...grid.querySelectorAll("input")].map(inp=> parseFloat(inp.value||"0"));
+      preview[mIdx] = amt;
+      grid.querySelectorAll("input").forEach((inp,i)=>{ inp.value = preview[i]; });
+    }
   }
   // Duplicate (when editing an existing, saved expense) should only ever
   // clone the last-SAVED state — never the current, possibly-unsaved form
@@ -3084,7 +3146,15 @@ function openLineItemDialog(categoryId, existing, ym){
   });
   body.querySelector("#itCurUSD").addEventListener("click", markDirty);
   body.querySelector("#itCurMXN").addEventListener("click", markDirty);
-  body.querySelector("#iForward").addEventListener("change", ()=>{ previewSchedule(); markDirty(); });
+  body.querySelector("#iVary").addEventListener("change", ()=>{
+    // Unchecking "varies by month" immediately flattens whatever's in the
+    // grid back to the single Amount value — checking it just leaves the
+    // grid (currently flat, or whatever was there) alone for manual editing.
+    previewSchedule();
+    const adv = body.querySelector("#iAdv");
+    if(adv && body.querySelector("#iVary").checked) adv.open = true;
+    markDirty();
+  });
   body.querySelector("#iFreq").addEventListener("change", ()=>{ updatePerPeriod(); markDirty(); });
   body.querySelector("#iName").addEventListener("input", markDirty);
   body.querySelector("#iPay").addEventListener("change", markDirty);
@@ -3098,12 +3168,13 @@ function openLineItemDialog(categoryId, existing, ym){
 
   body.querySelector("#iCancel").onclick = ()=> dlg.close();
   // Single Save path: always reads the 12-month grid directly, which
-  // previewSchedule() keeps live-synced to the amount/forward controls and
-  // which "Zero out all months" edits directly — so whatever the grid shows
-  // is exactly what gets saved, with no separate recompute to disagree with it.
+  // previewSchedule() keeps live-synced to the Amount field and the "varies
+  // by month" checkbox, and which "Zero out all months" edits directly —
+  // so whatever the grid shows is exactly what gets saved, with no separate
+  // recompute to disagree with it.
   onceClick(body.querySelector("#iSave"), async ()=>{
     const name = body.querySelector("#iName").value.trim();
-    if(!name) return;
+    if(!name){ formError(body, "Enter a name.", body.querySelector("#iName")); return; }
     const currency = linked.getCurrency();
     const rate = linked.getRate();
     const onlyMonth = isOnlyThisMonth;
@@ -3280,16 +3351,19 @@ function renderSettings(main){
   fundCard.innerHTML = `<div class="eyebrow">Add funds</div><div class="muted">Add money mid-year and choose whether it spreads across the remaining months or applies once, to a single month.</div>`;
   const addFundBtn = el("button","btn accent block");
   addFundBtn.innerHTML = `${iconPlus()}<span>Add funds</span>`;
-  addFundBtn.onclick = openFundDialog;
+  addFundBtn.onclick = ()=> openFundDialog(ymOf(settingsYear, 0));
   fundCard.appendChild(addFundBtn);
-  if(state.fundevents.length){
+  // Only this panel's own year — previously showed every fund event ever
+  // added regardless of which year's panel you were looking at.
+  const yearFundEvents = state.fundevents.filter(f=> yearOfYM(f.targetYM)===settingsYear);
+  if(yearFundEvents.length){
     const list = el("div","stack");
-    state.fundevents.slice().reverse().forEach(f=>{
+    yearFundEvents.slice().reverse().forEach(f=>{
       const row = el("div","row");
       row.style.borderTop = "1px solid var(--line)";
       row.style.paddingTop = "8px";
       const label = `${MONTHS[monthOfYM(f.targetYM)]} ${yearOfYM(f.targetYM)}`;
-      row.innerHTML = `<span class="muted">${f.date} · ${f.mode==="oneshot"?("one-time, "+label):("spread from "+label)}</span><span class="num">+${fmtUSD(f.amountUSD)}</span>`;
+      row.innerHTML = `<span class="muted">${f.date} · ${f.mode==="oneshot"?("one-time, "+label):("spread from "+label)}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">+${fmtUSD(f.amountUSD)}</span>`;
       list.appendChild(row);
     });
     fundCard.appendChild(list);
@@ -3309,10 +3383,17 @@ function renderSettings(main){
   main.appendChild(wrap);
 }
 
-function openFundDialog(){
+// Shared by Settings (pick any month/year, usually a future one) and
+// Monthly's fund-adjustments sheet (always pre-filled to the month you're
+// already looking at). `targetYm`, when given, pre-fills Apply-starting to
+// that month/year; `onSaved`, when given, is called instead of just
+// closing — lets the Monthly entry point return you to the adjustments
+// sheet for the month you came from instead of leaving you nowhere.
+function openFundDialog(targetYm, onSaved){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const defaultYear = ui.settingsYear || yearOfYM(ui.ym);
+  const seedYm = targetYm!=null ? targetYm : ui.ym;
+  const defaultYear = yearOfYM(seedYm);
   body.innerHTML = `
     <h3>Add funds</h3>
     <label>Amount (USD)<input type="number" inputmode="decimal" id="fdAmt" step="0.01" placeholder="5000"></label>
@@ -3329,30 +3410,34 @@ function openFundDialog(){
         <option value="oneshot">One-time — that month only</option>
       </select>
     </label>
+    <label>Note (optional)<input type="text" id="fdNote" placeholder="e.g. tax refund"></label>
     <div class="dialog-actions">
       <button class="btn ghost" id="fdCancel">Cancel</button>
       <button class="btn primary" id="fdSave">Save</button>
     </div>
   `;
-  body.querySelector("#fdMonth").value = monthOfYM(ui.ym);
+  body.querySelector("#fdMonth").value = monthOfYM(seedYm);
   body.querySelector("#fdCancel").onclick = ()=> dlg.close();
   onceClick(body.querySelector("#fdSave"), async ()=>{
     const amt = parseFloat(body.querySelector("#fdAmt").value||"0");
-    if(!amt) return;
+    if(!amt){ formError(body, "Enter an amount.", body.querySelector("#fdAmt")); return; }
     const id = uid("fund");
     const year = parseInt(body.querySelector("#fdYear").value,10) || defaultYear;
     const mIdx = parseInt(body.querySelector("#fdMonth").value,10);
+    const note = body.querySelector("#fdNote").value.trim();
     const rec = {
       id, date: body.querySelector("#fdDate").value,
       amountUSD: amt,
       targetYM: ymOf(year, mIdx),
       mode: body.querySelector("#fdMode").value,
     };
+    if(note) rec.note = note;
     state.fundevents.push(rec);
     await dbSet("fundevents", id, rec);
     dlg.close();
     showToast(`Added ${fmtUSD(amt)} to the budget`);
     render();
+    if(onSaved) onSaved();
   });
   openSheet();
 }
@@ -3371,6 +3456,42 @@ function onceClick(btn, handler){
     try{ await handler(); }
     finally{ btn.disabled = false; }
   };
+}
+
+// Visible validation failure — every Save handler used to just `return`
+// silently when a required field was missing, which looked exactly like a
+// broken button. This puts a message in the dialog itself (toast is no
+// good here: it renders behind the open <dialog>'s top layer) and, when an
+// input is given, highlights it and clears itself the moment that field
+// changes.
+function formError(body, message, input){
+  let msg = body.querySelector(".form-err-msg");
+  if(!msg){
+    msg = document.createElement("div");
+    msg.className = "form-err-msg";
+    const actions = body.querySelector(".dialog-actions");
+    if(actions) actions.parentNode.insertBefore(msg, actions);
+    else body.appendChild(msg);
+  }
+  msg.textContent = message;
+  if(input){
+    input.classList.add("err");
+    input.focus();
+    input.addEventListener("input", ()=>{ input.classList.remove("err"); if(msg.isConnected) msg.remove(); }, {once:true});
+  }
+}
+
+// Strips whatever a paste brings in (currency symbols, thousands commas,
+// stray spaces) down to a plain decimal string a number field can actually
+// use. Needed because the linked USD/MXN fields are plain text inputs (a
+// native type="number" field silently rejects/clears a pasted "$150.00" or
+// "1,500.00" before any recalculation ever sees it).
+function cleanNumStr(v){
+  if(v==null) return "";
+  let s = String(v).replace(/[^0-9.\-]/g, "");
+  const parts = s.split(".");
+  if(parts.length > 2) s = parts[0] + "." + parts.slice(1).join("");
+  return s;
 }
 
 // Triggers a plain browser download of a Blob — the fallback used when
