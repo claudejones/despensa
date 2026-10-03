@@ -1046,15 +1046,16 @@ function rolloverForMonth(catId, ym){
     const avail = base + roll + adj;
     const spent = spentForMonth(catId, k);
     const result = avail - spent;
-    // A month with no target set for this category (Base allocation left
-    // at $0 — shown as "No target set — unbudgeted") is intentionally
-    // unplanned. Its own overspend shouldn't manufacture a debt the next
-    // month silently inherits — that forced typing a fake baseline back
-    // into an already-closed month just to zero it out. A genuine
-    // carried-in leftover balance still passes through unaffected; only a
-    // negative result produced by THIS unbudgeted month's own spend is
-    // floored at zero.
-    roll = (base===0 && result<0) ? 0 : result;
+    // A month where this category genuinely had no money at stake (no
+    // Base, no rollover in, no transfer — avail===0, shown as "No budget
+    // set") is intentionally unplanned. Its own overspend shouldn't
+    // manufacture a debt the next month silently inherits — that forced
+    // typing a fake baseline back into an already-closed month just to
+    // zero it out. But a category funded by transfer instead of Base had
+    // real money this month (avail!==0) — an overspend there is a genuine
+    // deficit and must carry forward like any other overspend. Only
+    // avail===0 (truly no money, from any source) floors the result.
+    roll = (avail===0 && result<0) ? 0 : result;
   }
   return roll;
 }
@@ -2034,14 +2035,17 @@ function renderMonthly(main){
   }
   monthCats.forEach(({id, name})=>{
     const base = categoryBaseForMonth(id, ym);
-    // "Has a target" used to mean "has line items" back when a category's
-    // budget only ever came from summing them. Now a flat category (no
-    // items, a real baseAmountUSD) is just as budgeted as an itemized one
-    // — the actual fixed amount is what decides it, not item count.
-    const hasTarget = base > 0;
     const roll = rolloverForMonth(id, ym);
     const adj = categoryAdjustmentForMonth(id, ym);
     const avail = base + roll + adj;
+    // "Has a target" used to mean "has line items" back when a category's
+    // budget only ever came from summing them, then just "has a non-zero
+    // Base allocation." Neither is right for a category funded by transfer
+    // instead of a recurring Base (e.g. a catch-all category with no set
+    // budget) — it has real money to track against even with base===0. What
+    // actually decides whether there's a target to show status against is
+    // whether there's any money available at all, from any source.
+    const hasTarget = avail !== 0;
     const spent = spentForMonth(id, ym);
     const remaining = roundCents(avail - spent);
     const pct = avail>0 ? Math.min(100, (spent/avail)*100) : (spent>0?100:0);
@@ -2059,7 +2063,7 @@ function renderMonthly(main){
         <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
       </div>
-      <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">${hasTarget ? `Budget ${fmtUSD(base)}` : "Budget: not set"}</div>
+      <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">${base > 0 ? `Budget ${fmtUSD(base)}` : "Budget: not set"}</div>
       <div class="catbar"><div style="${budgetBarStyle(hasTarget, remaining, pct)}"></div></div>
       <div class="row">
         <span class="muted num">${fmtUSD(spent)} spent</span>
@@ -2527,10 +2531,13 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   const body = document.getElementById("dlgBody");
   const info = categoryDisplayInfo(categoryId, ym);
   const base = categoryBaseForMonth(categoryId, ym);
-  const hasTarget = base > 0;
   const roll = rolloverForMonth(categoryId, ym);
   const adj = categoryAdjustmentForMonth(categoryId, ym);
   const avail = base + roll + adj;
+  // See the matching comment on the Monthly card list: a target to show
+  // status against means real money available, from any source — base,
+  // rollover, or transfer — not specifically a non-zero Base allocation.
+  const hasTarget = avail !== 0;
   const spent = spentForMonth(categoryId, ym);
   const remaining = roundCents(avail - spent);
   const remainingInfo = remainingDisplay(hasTarget, remaining);
