@@ -4242,6 +4242,34 @@ function wireSwipeNav(){
   let startX=0, startY=0, dx=0, vw=0;
   let liveEls=null, ghosts={ "-1":null, "1":null };
   let settleTimer=null;
+  let scrollLocked=false, lockedY=0;
+
+  // #subhead/#monthlyToggleSticky sit in a position:sticky container, so
+  // they track the viewport the same way a position:fixed ghost does —
+  // no drift there. #main is ordinary scrolling content though: its
+  // on-screen position depends on the page's scroll offset, which the
+  // ghost (captured once, fixed in place) knows nothing about. If the
+  // page scrolls even slightly mid-drag — rubber-banding near the top or
+  // bottom, residual momentum — live #main moves against its own frozen
+  // ghost and the two visibly misalign, worse the longer the drag runs
+  // (a slow, deliberate swipe gives scroll drift more time to happen than
+  // a quick flick). Locking the page the same way an open sheet does —
+  // body taken out of flow, scroll position restored after — keeps #main
+  // pinned to its ghost for the whole gesture.
+  function lockScroll(){
+    if(scrollLocked) return;
+    lockedY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.top = `-${lockedY}px`;
+    document.body.classList.add("sheet-open");
+    scrollLocked = true;
+  }
+  function unlockScroll(){
+    if(!scrollLocked) return;
+    document.body.classList.remove("sheet-open");
+    document.body.style.top = "";
+    window.scrollTo(0, lockedY);
+    scrollLocked = false;
+  }
 
   function liveElsForTab(){
     if(ui.tab==="monthly") return [
@@ -4313,6 +4341,7 @@ function wireSwipeNav(){
     if(settleTimer){ clearTimeout(settleTimer); settleTimer=null; }
     clearGhosts();
     if(liveEls) resetLiveStyles();
+    unlockScroll();
     if(document.getElementById("dlg").open || e.touches.length>1){ tracking=false; return; }
     if(!(ui.tab==="monthly" || ui.tab==="outlook")){ tracking=false; return; }
     const t = e.touches[0];
@@ -4333,6 +4362,7 @@ function wireSwipeNav(){
       liveEls = liveElsForTab();
       if(!liveEls){ tracking=false; horiz=false; return; }
       vw = window.innerWidth;
+      lockScroll();
       if(canStepPeriod(1)) ghosts["1"] = buildGhostSet(1);
       if(canStepPeriod(-1)) ghosts["-1"] = buildGhostSet(-1);
       setLiveTransition("none");
@@ -4374,6 +4404,12 @@ function wireSwipeNav(){
       settleTimer = null;
       clearGhosts();
       resetLiveStyles();
+      // Stays locked through the settle animation too, not just the live
+      // drag — #main is still being transform-animated for another
+      // SETTLE_MS here, so scroll needs to stay pinned until that's done
+      // and the real DOM (not just a translated copy of it) is what's on
+      // screen again.
+      unlockScroll();
       if(commit) changePeriod(dir);
     }, SETTLE_MS + 20);
   }
