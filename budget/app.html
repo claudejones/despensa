@@ -113,6 +113,12 @@
      subhead always sits flush under the app header regardless of the
      app header's own height. */
   #stickyTop{ position:sticky; top:0; z-index:5; background:var(--bg); padding-top:env(safe-area-inset-top,0px) }
+  /* Swipe's live preview pieces — fixed overlays positioned over the real
+     subhead/toggle/main's own rects at drag start, parked off to one side
+     until the drag reveals them. Above the live sticky header (z-index 5)
+     so a dragged-in preview of the subhead/toggle is never hidden behind
+     it; below the bottom nav (10), which a drag should never cover. */
+  .swipe-ghost{ position:fixed; z-index:6; overflow:hidden; pointer-events:none; background:var(--bg) }
 
   /* App identity — left side of the single header row, no row of its
      own. Compact so it doesn't fight the date widget on the right for
@@ -2271,10 +2277,12 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
     </label>
     <label>Date<input type="date" id="aDate" value="${existing?existing.date:defaultDate}"></label>
     <label>Notes (optional)<textarea id="aNote" rows="2" placeholder="Any detail worth remembering about this expense">${existing?escapeHtml(existing.note||""):""}</textarea></label>
-    ${existing ? `<div class="danger-zone"><button class="btn small danger" id="aDelete">${iconTrash()}<span>Delete entry</span></button></div>` : ""}
-    <div class="dialog-actions">
-      <button class="btn ghost" id="aCancel">Cancel</button>
-      <button class="btn primary" id="aSave">Save</button>
+    <div class="dialog-actions" style="justify-content:space-between">
+      ${existing ? `<button class="btn small danger" id="aDelete">${iconTrash()}<span>Delete entry</span></button>` : `<span></span>`}
+      <div style="display:flex; gap:10px">
+        <button class="btn ghost" id="aCancel">Cancel</button>
+        <button class="btn primary" id="aSave">Save</button>
+      </div>
     </div>
   `;
   const linked = wireLinkedCurrency(body, "USD");
@@ -2533,7 +2541,13 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     const rows = trs.map(t=>{
       const into = t.toCategoryId===categoryId;
       const otherId = into ? t.fromCategoryId : t.toCategoryId;
-      const otherName = categoryDisplayInfo(otherId, ym).name;
+      // otherId is null exactly when this transfer's From is "External
+      // source" (money brought in from outside the budget, not moved from
+      // another category) — categoryDisplayInfo has no record for a null
+      // id and would otherwise fall back to its generic "Untitled" label,
+      // same as it would for any other category it can't find. Named the
+      // same as every other transfer-label site in the app.
+      const otherName = otherId ? categoryDisplayInfo(otherId, ym).name : "External source";
       return `<div class="row"><span class="muted">${into?"From":"To"} ${otherName||"?"}${t.note?" · "+escapeHtml(t.note):""}</span><span class="num" style="color:${into?"var(--good)":"var(--bad)"}">${into?"+":"-"}${fmtUSD(t.amountUSD)}</span></div>`;
     }).join("");
     transferBlock = `<div class="danger-zone"><div class="eyebrow" style="margin-bottom:8px">Transfers this month</div>${rows}</div>`;
@@ -2577,12 +2591,12 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       <div class="stack" id="mcEntries" style="gap:0">${entryRows}</div>
       <button class="btn accent block" id="mcAddEntry" style="margin-top:10px">${iconPlus()}<span>Add Expense</span></button>
     </div>
-    <div class="danger-zone">
-      <button class="btn small danger" id="mcRemoveCat">${iconTrash()}<span>Remove from this month</span></button>
-    </div>
-    <div class="dialog-actions">
-      <button class="btn ghost" id="miClose">Cancel</button>
-      <button class="btn primary" id="mcSave">Save</button>
+    <div class="dialog-actions" style="justify-content:space-between">
+      <button class="btn small danger" id="mcRemoveCat">${iconTrash()}<span>Remove from month</span></button>
+      <div style="display:flex; gap:10px">
+        <button class="btn ghost" id="miClose">Cancel</button>
+        <button class="btn primary" id="mcSave">Save</button>
+      </div>
     </div>
   `;
   // Commits whatever is currently sitting in the Base allocation / Name
@@ -4061,15 +4075,20 @@ function wireSheetDrag(){
   handle.addEventListener("pointercancel", endDrag);
 }
 
-// Steps Monthly/Annual Outlook one unit forward or back (dir = -1 or 1) —
-// the single implementation both the header's ‹/› buttons and swipe
-// gestures call, so the two stay in sync (year bounds, etc.) by
-// construction instead of by two copies agreeing.
-function stepPeriod(dir){
+// The bare period-change mutation, with no entrance cue of its own — the
+// single implementation both stepPeriod (header ‹/› buttons) and the
+// swipe gesture's commit path call, so the two stay in sync (year bounds,
+// etc.) by construction instead of two copies agreeing. Swipe already
+// animates its own commit (the dragged card settling into place) and
+// would double-animate if this also played a cue; stepPeriod is the one
+// caller that still needs its own, since a button tap has no drag motion
+// to follow. Returns whether the period actually changed (false at an
+// Annual Outlook year bound).
+function changePeriod(dir){
   if(ui.tab==="monthly"){
     ui.ym = ui.ym + dir;
     render();
-    animatePeriodEnter(dir);
+    return true;
   } else if(ui.tab==="outlook"){
     const year = yearOfYM(ui.ym);
     const { minYear, maxYear } = yearNavBounds();
@@ -4077,9 +4096,28 @@ function stepPeriod(dir){
     if(newYear>=minYear && newYear<=maxYear){
       ui.ym = ymOf(newYear, monthOfYM(ui.ym));
       render();
-      animatePeriodEnter(dir);
+      return true;
     }
+    return false;
   }
+  return false;
+}
+// Same bounds check as changePeriod, without actually changing anything —
+// swipe uses this up front to decide whether dragging a direction can
+// ever commit (and so whether it's worth building a preview of what's
+// over there at all) versus just rubber-banding in place.
+function canStepPeriod(dir){
+  if(ui.tab==="monthly") return true;
+  if(ui.tab==="outlook"){
+    const year = yearOfYM(ui.ym);
+    const { minYear, maxYear } = yearNavBounds();
+    const newYear = year + dir;
+    return newYear>=minYear && newYear<=maxYear;
+  }
+  return false;
+}
+function stepPeriod(dir){
+  if(changePeriod(dir)) animatePeriodEnter(dir);
 }
 
 // The new content slides in from the direction of travel — forward (dir
@@ -4104,31 +4142,182 @@ function animatePeriodEnter(dir){
   );
 }
 
-// Swipe left/right over the main content area steps the period on
-// Monthly and Annual Outlook, same as tapping the header's ‹/› buttons —
-// a horizontal gesture reads more naturally than reaching for the small
-// header controls on a phone. Guards against: a dialog/sheet being open
-// (swipe shouldn't fire underneath it), a mostly-vertical drag (that's
-// just scrolling), and a swipe too short to be deliberate.
+// Renders `ym` for the current tab into detached/temporary output instead
+// of the live screen — Monthly's subhead and view-toggle row have no
+// parameter to redirect their output, so those two get the save-swap-
+// capture-restore treatment (safe because it all happens synchronously,
+// with no paint in between — the live screen never actually flashes the
+// neighboring period); #main's own render functions already take the
+// target container as an argument, so a plain detached div is enough
+// there, with nothing live ever touched. Used to build swipe's preview of
+// whichever period a drag might land on.
+function renderGhostContent(ym){
+  const savedYm = ui.ym;
+  ui.ym = ym;
+  let subHTML = "", toggleHTML = "";
+  if(ui.tab==="monthly"){
+    const subhead = document.getElementById("subhead");
+    const toggleBox = document.getElementById("monthlyToggleSticky");
+    const savedSub = subhead.innerHTML, savedToggle = toggleBox.innerHTML;
+    renderSubhead();
+    subHTML = subhead.innerHTML;
+    toggleHTML = toggleBox.innerHTML;
+    subhead.innerHTML = savedSub;
+    toggleBox.innerHTML = savedToggle;
+  }
+  const tmpMain = document.createElement("div");
+  if(ui.tab==="monthly") renderMonthly(tmpMain);
+  else if(ui.tab==="outlook") renderOutlook(tmpMain);
+  ui.ym = savedYm;
+  return { subHTML, toggleHTML, mainHTML: tmpMain.innerHTML };
+}
+
+// Swipe over Monthly/Annual Outlook — a live, finger-tracked drag, not a
+// fire-after-release gesture: the current period's content (Monthly's
+// subhead + view-toggle row + ledger together, since those are three
+// separate sticky elements in the DOM but read as one "card"; just the
+// body on Annual Outlook, which has no subhead of its own) moves with the
+// finger in real time, and the neighboring period's real content — built
+// via renderGhostContent, not a placeholder — slides in from the edge
+// being dragged toward, the same way switching between open apps reveals
+// the next one mid-swipe. Release past roughly a third of the screen
+// width commits (the preview is already fully in view, so committing is
+// just swapping the live DOM to match it and dropping the preview);
+// short of that, or dragging toward a blocked edge (Annual Outlook's year
+// bounds), snaps back to 0 with nothing built for that side at all.
+// Guards against: a dialog/sheet open, more than one finger down, and a
+// mostly-vertical drag (left alone as ordinary scrolling).
 function wireSwipeNav(){
   const main = document.getElementById("main");
-  let startX = 0, startY = 0, tracking = false;
+  const SETTLE_MS = 220;
+  const SETTLE_EASE = "cubic-bezier(.22,.68,.36,1)";
+  let tracking=false, deciding=true, horiz=false;
+  let startX=0, startY=0, dx=0, vw=0;
+  let liveEls=null, ghosts={ "-1":null, "1":null };
+
+  function liveElsForTab(){
+    if(ui.tab==="monthly") return [
+      document.getElementById("subhead"),
+      document.getElementById("monthlyToggleSticky"),
+      main,
+    ];
+    if(ui.tab==="outlook") return [main];
+    return null;
+  }
+
+  // One fixed-position overlay per live piece, positioned over that
+  // piece's current viewport rect and parked just off that edge
+  // (translateX ±vw) until the drag reveals it.
+  function buildGhostSet(dir){
+    const ym = ui.tab==="monthly" ? ui.ym+dir : ymOf(yearOfYM(ui.ym)+dir, monthOfYM(ui.ym));
+    const content = renderGhostContent(ym);
+    const park = dir>0 ? vw : -vw;
+    const pieces = liveEls.map((el, i)=>{
+      const rect = el.getBoundingClientRect();
+      const g = document.createElement("div");
+      // Inherits the live element's own classes (.subhead.show,
+      // .monthly-toggle-sticky.show) so every bit of their real CSS —
+      // padding, borders, flex layout — applies automatically, rather
+      // than hand-copying each rule here and risking one getting missed.
+      // <main> is the one exception: its layout comes from a bare `main`
+      // tag selector, which a plain ghost <div> never picks up regardless
+      // of class, so that one still needs the explicit copy below.
+      g.className = "swipe-ghost "+el.className;
+      g.style.top = rect.top+"px";
+      g.style.left = rect.left+"px";
+      g.style.width = rect.width+"px";
+      g.style.height = (el===main ? Math.max(rect.height, window.innerHeight-rect.top) : rect.height)+"px";
+      g.style.transform = `translateX(${park}px)`;
+      g.innerHTML = el===main ? content.mainHTML : (el.id==="subhead" ? content.subHTML : content.toggleHTML);
+      if(el===main) g.style.cssText += "padding-top:18px; display:flex; flex-direction:column; gap:20px; box-sizing:border-box";
+      document.body.appendChild(g);
+      return g;
+    });
+    return { dir, park, pieces };
+  }
+
+  function clearGhosts(){
+    Object.keys(ghosts).forEach(k=>{
+      if(ghosts[k]){ ghosts[k].pieces.forEach(g=>g.remove()); ghosts[k]=null; }
+    });
+  }
+
+  function setLiveTransition(t){
+    liveEls.forEach(el=> el.style.transition = t);
+  }
+  function setLiveTransform(x){
+    liveEls.forEach(el=> el.style.transform = `translateX(${x}px)`);
+  }
+  function resetLiveStyles(){
+    liveEls.forEach(el=>{ el.style.transform=""; el.style.transition=""; });
+  }
+
   main.addEventListener("touchstart", (e)=>{
-    if(document.getElementById("dlg").open) { tracking = false; return; }
-    if(!(ui.tab==="monthly" || ui.tab==="outlook")) { tracking = false; return; }
+    if(document.getElementById("dlg").open || e.touches.length>1){ tracking=false; return; }
+    if(!(ui.tab==="monthly" || ui.tab==="outlook")){ tracking=false; return; }
     const t = e.touches[0];
-    startX = t.clientX; startY = t.clientY;
-    tracking = true;
-  }, { passive: true });
-  main.addEventListener("touchend", (e)=>{
+    startX=t.clientX; startY=t.clientY; dx=0;
+    tracking=true; deciding=true; horiz=false;
+    liveEls=null;
+  }, { passive:true });
+
+  main.addEventListener("touchmove", (e)=>{
     if(!tracking) return;
-    tracking = false;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - startX;
-    const dy = t.clientY - startY;
-    if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    stepPeriod(dx < 0 ? 1 : -1);
-  }, { passive: true });
+    const t = e.touches[0];
+    const mdx = t.clientX-startX, mdy = t.clientY-startY;
+    if(deciding){
+      if(Math.abs(mdx)<8 && Math.abs(mdy)<8) return;
+      deciding=false;
+      horiz = Math.abs(mdx) > Math.abs(mdy)*1.3;
+      if(!horiz){ tracking=false; return; } // vertical — leave it to ordinary scrolling
+      liveEls = liveElsForTab();
+      if(!liveEls){ tracking=false; horiz=false; return; }
+      vw = window.innerWidth;
+      if(canStepPeriod(1)) ghosts["1"] = buildGhostSet(1);
+      if(canStepPeriod(-1)) ghosts["-1"] = buildGhostSet(-1);
+      setLiveTransition("none");
+    }
+    if(!horiz) return;
+    e.preventDefault(); // only once this is a confirmed horizontal drag
+    const dir = mdx<0 ? 1 : -1;
+    const blocked = !ghosts[String(dir)];
+    // Dragging toward a side with no ghost (a blocked Annual Outlook year
+    // bound) rubber-bands instead of tracking 1:1 — there's nothing back
+    // there to reveal, so the drag should feel like it's pushing against
+    // an edge, not sliding open onto nothing.
+    dx = blocked ? Math.sign(mdx)*Math.min(Math.abs(mdx)*0.35, 70) : Math.max(-vw, Math.min(vw, mdx));
+    setLiveTransform(dx);
+    const g = ghosts[String(dir)];
+    if(g) g.pieces.forEach(p=> p.style.transform = `translateX(${g.park+dx}px)`);
+    const other = ghosts[String(-dir)];
+    if(other) other.pieces.forEach(p=> p.style.transform = `translateX(${other.park+dx}px)`);
+  }, { passive:false });
+
+  function settle(e){
+    if(!tracking) return;
+    tracking=false;
+    if(!horiz){ return; }
+    const dir = dx<0 ? 1 : -1;
+    const commit = ghosts[String(dir)] && Math.abs(dx) >= vw*0.32;
+    setLiveTransition(`transform ${SETTLE_MS}ms ${SETTLE_EASE}`);
+    const target = commit ? dir*vw : 0;
+    setLiveTransform(target);
+    Object.keys(ghosts).forEach(k=>{
+      const g = ghosts[k];
+      if(!g) return;
+      g.pieces.forEach(p=>{
+        p.style.transition = `transform ${SETTLE_MS}ms ${SETTLE_EASE}`;
+        p.style.transform = `translateX(${commit && k===String(dir) ? 0 : g.park}px)`;
+      });
+    });
+    setTimeout(()=>{
+      clearGhosts();
+      resetLiveStyles();
+      if(commit) changePeriod(dir);
+    }, SETTLE_MS + 20);
+  }
+  main.addEventListener("touchend", settle, { passive:true });
+  main.addEventListener("touchcancel", ()=>{ dx=0; settle(); }, { passive:true });
 }
 
 /* ---------------------------------------------------------------
