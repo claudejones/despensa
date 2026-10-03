@@ -2029,8 +2029,8 @@ function openFundAdjustmentsSheet(ym){
   body.innerHTML = `
     <h3>Fund adjustments</h3>
     <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</p>
-    ${rows}
     <button class="btn accent block" id="faAddFunds">${iconPlus()}<span>Add funds</span></button>
+    ${rows}
     <div class="dialog-actions"><button class="btn ghost" id="faClose">Close</button></div>
   `;
   body.querySelectorAll("[data-del]").forEach(btn=>{
@@ -2047,9 +2047,16 @@ function openFundAdjustmentsSheet(ym){
       }, ()=> openFundAdjustmentsSheet(ym));
     };
   });
-  // Pre-filled to the month you're already looking at — this was previously
+  // Pre-filled to the month you're already looking at (month/year locked,
+  // not re-selectable — you're already here) — this was previously
   // view-only, with the only way to add funds at all being Settings.
-  body.querySelector("#faAddFunds").onclick = ()=> openFundDialog(ym, ()=> openFundAdjustmentsSheet(ym));
+  // Returns here on both Save and Cancel, same as the delete-transfer flow
+  // above, instead of just dropping you with nothing open.
+  body.querySelector("#faAddFunds").onclick = ()=> openFundDialog(ym, {
+    onSaved: ()=> openFundAdjustmentsSheet(ym),
+    onCancel: ()=> openFundAdjustmentsSheet(ym),
+    lockMonth: true,
+  });
   body.querySelector("#faClose").onclick = ()=> dlg.close();
   openSheet();
 }
@@ -3351,7 +3358,7 @@ function renderSettings(main){
   fundCard.innerHTML = `<div class="eyebrow">Add funds</div><div class="muted">Add money mid-year and choose whether it spreads across the remaining months or applies once, to a single month.</div>`;
   const addFundBtn = el("button","btn accent block");
   addFundBtn.innerHTML = `${iconPlus()}<span>Add funds</span>`;
-  addFundBtn.onclick = ()=> openFundDialog(ymOf(settingsYear, 0));
+  addFundBtn.onclick = ()=> openFundDialog(ymOf(settingsYear, monthOfYM(ui.ym)));
   fundCard.appendChild(addFundBtn);
   // Only this panel's own year — previously showed every fund event ever
   // added regardless of which year's panel you were looking at.
@@ -3383,53 +3390,68 @@ function renderSettings(main){
   main.appendChild(wrap);
 }
 
-// Shared by Settings (pick any month/year, usually a future one) and
-// Monthly's fund-adjustments sheet (always pre-filled to the month you're
-// already looking at). `targetYm`, when given, pre-fills Apply-starting to
-// that month/year; `onSaved`, when given, is called instead of just
-// closing — lets the Monthly entry point return you to the adjustments
-// sheet for the month you came from instead of leaving you nowhere.
-function openFundDialog(targetYm, onSaved){
+// Shared by Settings (pick any month/year, usually a future one — month
+// and year stay editable) and Monthly's fund-adjustments sheet (always the
+// month you're already looking at — `opts.lockMonth` swaps the Month/Year
+// selects for a plain label, since picking a month you're already in is
+// just noise). `opts.onSaved`/`opts.onCancel`, when given, replace the
+// default "just close" behavior — lets the Monthly entry point return you
+// to the adjustments sheet you came from (via Save OR Cancel) instead of
+// dropping you with no dialog open at all.
+function openFundDialog(targetYm, opts){
+  const { onSaved, onCancel, lockMonth } = opts || {};
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   const seedYm = targetYm!=null ? targetYm : ui.ym;
   const defaultYear = yearOfYM(seedYm);
-  body.innerHTML = `
-    <h3>Add funds</h3>
-    <label>Amount (USD)<input type="number" inputmode="decimal" id="fdAmt" step="0.01" placeholder="5000"></label>
-    <label>Date received<input type="date" id="fdDate" value="${new Date().toISOString().slice(0,10)}"></label>
+  const monthField = lockMonth
+    ? `<p class="muted">Applying to <strong>${MONTHS[monthOfYM(seedYm)]} ${defaultYear}</strong></p>`
+    : `
     <div class="field-row">
       <label>Apply starting
         <select id="fdMonth">${MONTHS.map((mn,i)=>`<option value="${i}">${mn}</option>`).join("")}</select>
       </label>
       <label>Year<input type="number" inputmode="numeric" id="fdYear" step="1" value="${defaultYear}"></label>
-    </div>
-    <label>How should it apply?
+    </div>`;
+  // Locked to one month, the "spread across the rest of the year" choice
+  // is a different action wearing this screen's clothes, not a real
+  // question about the month you're already in — one-time, this month
+  // only, is the only thing "Add funds" from Monthly ever means now.
+  // Spreading new money forward stays a Settings-only move.
+  const modeField = lockMonth
+    ? ""
+    : `<label>How should it apply?
       <select id="fdMode">
         <option value="redistribute">Spread across remaining months of that year (raises monthly budget)</option>
         <option value="oneshot">One-time — that month only</option>
       </select>
-    </label>
+    </label>`;
+  body.innerHTML = `
+    <h3>Add funds</h3>
+    <label>Amount (USD)<input type="number" inputmode="decimal" id="fdAmt" step="0.01" placeholder="5000"></label>
+    <label>Date received<input type="date" id="fdDate" value="${new Date().toISOString().slice(0,10)}"></label>
+    ${monthField}
+    ${modeField}
     <label>Note (optional)<input type="text" id="fdNote" placeholder="e.g. tax refund"></label>
     <div class="dialog-actions">
       <button class="btn ghost" id="fdCancel">Cancel</button>
       <button class="btn primary" id="fdSave">Save</button>
     </div>
   `;
-  body.querySelector("#fdMonth").value = monthOfYM(seedYm);
-  body.querySelector("#fdCancel").onclick = ()=> dlg.close();
+  if(!lockMonth) body.querySelector("#fdMonth").value = monthOfYM(seedYm);
+  body.querySelector("#fdCancel").onclick = ()=>{ dlg.close(); if(onCancel) onCancel(); };
   onceClick(body.querySelector("#fdSave"), async ()=>{
     const amt = parseFloat(body.querySelector("#fdAmt").value||"0");
     if(!amt){ formError(body, "Enter an amount.", body.querySelector("#fdAmt")); return; }
     const id = uid("fund");
-    const year = parseInt(body.querySelector("#fdYear").value,10) || defaultYear;
-    const mIdx = parseInt(body.querySelector("#fdMonth").value,10);
+    const year = lockMonth ? defaultYear : (parseInt(body.querySelector("#fdYear").value,10) || defaultYear);
+    const mIdx = lockMonth ? monthOfYM(seedYm) : parseInt(body.querySelector("#fdMonth").value,10);
     const note = body.querySelector("#fdNote").value.trim();
     const rec = {
       id, date: body.querySelector("#fdDate").value,
       amountUSD: amt,
       targetYM: ymOf(year, mIdx),
-      mode: body.querySelector("#fdMode").value,
+      mode: lockMonth ? "oneshot" : body.querySelector("#fdMode").value,
     };
     if(note) rec.note = note;
     state.fundevents.push(rec);
