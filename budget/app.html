@@ -274,6 +274,16 @@
     display:flex; align-items:center; justify-content:center; padding:0;
   }
   .infobtn:active{ background:var(--line) }
+  /* Bare icon buttons for a tight row — Fund adjustments' rows carry a
+     full sentence of description plus an amount already, so the fuller
+     circle-button treatment above (.infobtn) would crowd a narrow phone;
+     these are just the glyph, no background, sized to match the "delete"
+     text link they replace. */
+  .fa-iconbtn{
+    flex:none; background:none; border:none; padding:4px; margin:-4px 0;
+    color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .fa-iconbtn:active{ color:var(--ink) }
 
   /* A single clean tap target — no inline controls competing for space.
      Opens a detail sheet instead of growing in place. */
@@ -2092,9 +2102,9 @@ function openFundAdjustmentsSheet(ym){
       ${fe.map(f=>`
         <div class="row">
           <span class="muted">${feLabel(f)} · ${f.date}${f.note?" · "+escapeHtml(f.note):""}</span>
-          <span class="amt" style="display:flex; align-items:center; gap:8px">
+          <span class="amt" style="display:flex; align-items:center; gap:10px">
             <span class="num">${fmtUSD(f.amountUSD)}</span>
-            <button data-delfe="${f.id}" type="button" style="background:none; border:none; color:var(--ink-soft); font-size:11px; cursor:pointer; text-decoration:underline; padding:0">delete</button>
+            <button data-delfe="${f.id}" type="button" class="fa-iconbtn" aria-label="Delete fund adjustment">${iconTrash()}</button>
           </span>
         </div>
       `).join("")}
@@ -2105,9 +2115,10 @@ function openFundAdjustmentsSheet(ym){
         return `
           <div class="row">
             <span class="muted">Moved · ${fromLabel} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
-            <span class="amt" style="display:flex; align-items:center; gap:8px">
+            <span class="amt" style="display:flex; align-items:center; gap:10px">
               <span class="num">${fmtUSD(t.amountUSD)}</span>
-              <button data-del="${t.id}" type="button" style="background:none; border:none; color:var(--ink-soft); font-size:11px; cursor:pointer; text-decoration:underline; padding:0">delete</button>
+              <button data-editnote="${t.id}" type="button" class="fa-iconbtn" aria-label="Edit note">${iconEdit()}</button>
+              <button data-del="${t.id}" type="button" class="fa-iconbtn" aria-label="Delete transfer">${iconTrash()}</button>
             </span>
           </div>
         `;
@@ -2122,11 +2133,12 @@ function openFundAdjustmentsSheet(ym){
     ${rows}
     <div class="dialog-actions"><button class="btn ghost" id="faClose">Close</button></div>
   `;
-  // A transfer funded from "External source" was written together with a
-  // matching one-time fund event (same externalSourceLinkId) — one raises
-  // the whole-pot total, the other credits the category, and they only
-  // reconcile together. Deleting either one cascades to remove both in a
-  // single action so neither is ever left behind as orphaned state.
+  // Old data may still carry a transfer linked to a fund event from
+  // before External-source transfers stopped creating one (same
+  // externalSourceLinkId on both) — deleting either side of a leftover
+  // pair still cascades to remove both, so no orphaned fund event is ever
+  // left behind. A transfer saved under the current code never has this
+  // link at all.
   body.querySelectorAll("[data-del]").forEach(btn=>{
     btn.onclick = ()=>{
       const t = tr.find(x=>x.id===btn.dataset.del);
@@ -2171,6 +2183,12 @@ function openFundAdjustmentsSheet(ym){
       }, ()=> openFundAdjustmentsSheet(ym));
     };
   });
+  body.querySelectorAll("[data-editnote]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const t = tr.find(x=>x.id===btn.dataset.editnote);
+      openEditTransferNoteSheet(t, ym);
+    };
+  });
   // Pre-filled to the month you're already looking at (month/year locked,
   // not re-selectable — you're already here) — this was previously
   // view-only, with the only way to add funds at all being Settings.
@@ -2182,6 +2200,39 @@ function openFundAdjustmentsSheet(ym){
     lockMonth: true,
   });
   body.querySelector("#faClose").onclick = ()=> dlg.close();
+  openSheet();
+}
+
+// Editing a transfer only ever touches its note here — amount, date, and
+// From/To are fixed once saved, since changing any of those is really a
+// different move, not a correction to this one (delete and re-enter
+// instead). Keeping this to one field is deliberate, not a missing
+// feature: it's the one thing worth fixing after the fact (a typo, more
+// context) without reopening the whole linked bookkeeping.
+function openEditTransferNoteSheet(t, ym){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
+  const to = state.categories.find(c=>c.id===t.toCategoryId);
+  const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
+  body.innerHTML = `
+    <h3>Edit note</h3>
+    <p class="muted">${fmtUSD(t.amountUSD)} · ${fromLabel} → ${to?to.name:"?"} · ${t.date}</p>
+    <label>Note<input type="text" id="etnNote" value="${t.note ? escapeHtml(t.note) : ""}" placeholder="e.g. covered grocery overrun"></label>
+    <div class="dialog-actions">
+      <button class="btn ghost" id="etnCancel">Cancel</button>
+      <button class="btn primary" id="etnSave">Save</button>
+    </div>
+  `;
+  body.querySelector("#etnCancel").onclick = ()=> openFundAdjustmentsSheet(ym);
+  onceClick(body.querySelector("#etnSave"), async ()=>{
+    const note = body.querySelector("#etnNote").value.trim();
+    if(note) t.note = note; else delete t.note;
+    await dbSet("transfers", t.id, t);
+    showToast("Note updated");
+    render();
+    openFundAdjustmentsSheet(ym);
+  });
   openSheet();
 }
 
@@ -2354,9 +2405,11 @@ function wireLinkedCurrency(body, initialCurrency){
 // money landing in a single category this month, same as Settings' Add
 // Funds but scoped to one category instead of the whole year). The two
 // read the same here — pick From, pick To, enter an amount — but External
-// source writes an extra linked fund event so the whole-pot total rises
-// to match (see the save handler below); it never competes with another
-// category's balance, so it's never limited by surplus.
+// source is purely a this-month, this-category credit: it never competes
+// with another category's balance, so it's never limited by surplus, and
+// it never touches the whole-pot/yearly total — that stays a deliberate,
+// separate action in Settings' own Add Funds. A Monthly transfer, External
+// source or not, stays entirely at the monthly/category layer.
 const EXTERNAL_SOURCE_ID = "__external__";
 function openTransferDialog(ym){
   const dlg = document.getElementById("dlg");
@@ -2365,8 +2418,11 @@ function openTransferDialog(ym){
   const surplusSources = withRemaining.filter(x=> x.remaining > 0);
   const externalOption = { c:{ id:EXTERNAL_SOURCE_ID, name:"External source" }, remaining:null, external:true };
   const fromOptions = [externalOption, ...surplusSources];
-  let fromId = EXTERNAL_SOURCE_ID;
-  let toId = (state.categories[0] || {}).id || null;
+  // Neither side starts preselected — both pickers open collapsed with a
+  // plain "Choose a..." prompt, so picking is a deliberate tap, not an
+  // already-made choice the user has to notice and override.
+  let fromId = null;
+  let toId = null;
 
   function rowsHTML(list, group){
     return list.map(x=>`
@@ -2390,7 +2446,7 @@ function openTransferDialog(ym){
   body.innerHTML = `
     <h3>Move funds</h3>
     <p class="muted">Pull money from a category with surplus to cover one that's running over, or bring in new money from outside the budget — either way, this month only. It carries forward through rollover like any other balance change.</p>
-    <details class="advanced xferpick" id="fromPicker" open>
+    <details class="advanced xferpick" id="fromPicker">
       <summary><span class="eyebrow" style="margin:0">From</span><span class="pickval" id="fromSummary">${pickerSummary("from",fromOptions)}</span></summary>
       <div class="stack" id="fromList" style="gap:0">${rowsHTML(fromOptions,"from")}</div>
     </details>
@@ -2432,21 +2488,11 @@ function openTransferDialog(ym){
     if(!date){ formError(body, "Pick a date.", body.querySelector("#tDate")); return; }
     const id = uid("xfer");
     const rec = { id, date, fromCategoryId: fromExternal ? null : fromId, toCategoryId:toId, amountUSD, note };
-    // External source also raises the whole-pot total for this month by
-    // the same amount, via a linked one-time fund event — otherwise this
-    // category's available would grow without the month's overall total
-    // growing to match, reopening the exact surplus-vs-category-sum gap
-    // that was already resolved elsewhere. The shared id is what lets a
-    // delete later remove both halves together (see openFundAdjustmentsSheet).
-    if(fromExternal){
-      const linkId = uid("extlink");
-      rec.externalSourceLinkId = linkId;
-      const feId = uid("fund");
-      const feRec = { id: feId, date, amountUSD, targetYM: ym, mode: "oneshot", externalSourceLinkId: linkId };
-      if(note) feRec.note = note;
-      state.fundevents.push(feRec);
-      await dbSet("fundevents", feId, feRec);
-    }
+    // No linked fund event — an External-source transfer is purely a
+    // this-month, this-category credit (see comment above the picker
+    // setup). It never writes a second record at the yearly/whole-pot
+    // layer, so it never appears in Settings' Add Funds history and never
+    // moves the top-level Available/Surplus figures on its own.
     state.transfers.push(rec);
     await dbSet("transfers", id, rec);
     dlg.close();
@@ -4023,6 +4069,7 @@ function stepPeriod(dir){
   if(ui.tab==="monthly"){
     ui.ym = ui.ym + dir;
     render();
+    animatePeriodEnter(dir);
   } else if(ui.tab==="outlook"){
     const year = yearOfYM(ui.ym);
     const { minYear, maxYear } = yearNavBounds();
@@ -4030,8 +4077,31 @@ function stepPeriod(dir){
     if(newYear>=minYear && newYear<=maxYear){
       ui.ym = ymOf(newYear, monthOfYM(ui.ym));
       render();
+      animatePeriodEnter(dir);
     }
   }
+}
+
+// The new content slides in from the direction of travel — forward (dir
+// > 0, "next") enters from the right, back (dir < 0, "previous") enters
+// from the left — a quick, cheap cue that something moved, matching the
+// direction of the swipe or the ‹/› button tapped, rather than the whole
+// screen just silently repainting. Web Animations API, not a CSS
+// class/keyframe pair, specifically because it restarts cleanly on every
+// call even when fired in rapid succession (swipe, swipe, swipe) with no
+// forced-reflow trick needed. Feature-detected and a silent no-op where
+// unsupported — this is a polish cue, never load-bearing.
+function animatePeriodEnter(dir){
+  const main = document.getElementById("main");
+  if(!main || typeof main.animate !== "function") return;
+  const offset = dir > 0 ? 18 : -18;
+  main.animate(
+    [
+      { transform: `translateX(${offset}px)`, opacity: 0.5 },
+      { transform: "translateX(0)", opacity: 1 },
+    ],
+    { duration: 180, easing: "cubic-bezier(.22,.68,.36,1)" }
+  );
 }
 
 // Swipe left/right over the main content area steps the period on
