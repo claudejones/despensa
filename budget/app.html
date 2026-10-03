@@ -1079,10 +1079,21 @@ function remainingForMonth(catId, ym){
 // budget, and count as buffer for the whole month the same way an under-
 // spent category's leftover does. Using sum(categoryBase) here would
 // silently drop the unallocated slice from every month-level number.
-// Transfers net to zero across categories by construction, so they don't
-// need to appear here either.
+// A category-to-category transfer nets to zero across categories by
+// construction, so it never needs to appear here — no new money entered
+// the system, it just moved between buckets that were already counted.
+// An External-source transfer is different: it's new money brought in
+// from outside the budget, the same role a Settings fund event plays,
+// just entered through the Transfer dialog instead. It has to raise the
+// whole-pot total the same way a fund event does, or every dollar it
+// funds shows up as spend with nothing offsetting it.
+function externalTransfersInForMonth(ym){
+  return state.transfers
+    .filter(t=> t.fromCategoryId===null && ymOfDate(t.date)===ym)
+    .reduce((s,t)=> s + t.amountUSD, 0);
+}
 function totalBudgetForMonth(ym){
-  return (yearSettings(yearOfYM(ym)).yearBudgetUSD/12) + fundAdjustmentForMonth(ym);
+  return (yearSettings(yearOfYM(ym)).yearBudgetUSD/12) + fundAdjustmentForMonth(ym) + externalTransfersInForMonth(ym);
 }
 // Every actual dollar logged this month, full stop — NOT a sum over
 // state.categories (the live Budget Setup template list). Summing over
