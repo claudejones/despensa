@@ -230,17 +230,16 @@
   .viewbtn.active{ background:var(--primary); color:var(--primary-ink) }
 
   /* touch-action is read once, at the moment a touch begins, before any JS
-     runs — so it can stop iOS Safari's own gesture recognizer (the one
-     that drives the dynamic-toolbar show/hide animation) from reacting to
-     a touch at all, whereas wireSwipeNav's e.preventDefault() only fires
-     after it's classified the drag as horizontal (past an 8px threshold)
-     and by then the native recognizer already had a few pixels to react
-     to. pan-y keeps ordinary vertical scrolling working exactly as before;
-     it only tells the browser not to do its own thing with horizontal
-     movement here, which is what was still letting the toolbar animate
-     mid-swipe (and visibly shift nav.tabs under it) even with the
-     touchmove-time preventDefault() and the overflow:hidden scroll lock
-     both already in place. */
+     runs — so it can stop the browser's own native handling of horizontal
+     movement on this element (panning, rubber-band bounce) from engaging
+     at all, whereas wireSwipeNav's e.preventDefault() only fires after
+     it's classified the drag as horizontal (past an 8px threshold), by
+     which point native handling already had a few pixels to react to.
+     pan-y keeps ordinary vertical scrolling working exactly as before —
+     it only hands off horizontal movement to wireSwipeNav's own JS. This
+     plus that preventDefault() is what actually keeps the page from
+     scrolling during a horizontal swipe (see wireSwipeNav's comment on
+     why that's no longer also done by locking html/body's overflow). */
   main{flex:1; padding-top:18px; display:flex; flex-direction:column; gap:20px; touch-action:pan-y}
 
   .card{
@@ -479,11 +478,6 @@
      was, so nothing is ever left reflecting a page that silently scrolled
      while hidden. */
   body.sheet-open{ position:fixed; left:0; right:0; width:100% }
-  /* Swipe-nav scroll lock: overflow:hidden on both html and body blocks
-     scroll without taking body out of flow or touching its position, so
-     it doesn't trigger the iOS Safari dynamic-toolbar/100dvh recalculation
-     that position:fixed+top-offset can (see wireSwipeNav's lockScroll). */
-  html.scroll-lock, body.scroll-lock{ overflow:hidden }
   dialog[open]{ animation: sheetUp .22s cubic-bezier(.2,.8,.2,1) both; }
   @media (prefers-reduced-motion: reduce){ dialog[open]{ animation:none; } }
   @keyframes sheetUp{ from{ transform:translateX(-50%) translateY(24px); opacity:.4 } to{ transform:translateX(-50%) translateY(0); opacity:1 } }
@@ -610,6 +604,12 @@
 --------------------------------------------------------------- */
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const SEED_YEAR = 2027; // the year the original seed data was written for
+// Bumped by hand with every published revision (see Settings' "About"
+// card) — the only reliable way to tell, from on-device, whether a
+// home-screen install actually picked up the latest publish yet, since
+// iOS can hold a suspended copy of the page open for a long time without
+// reloading it.
+const APP_BUILD = "v86";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -3714,6 +3714,10 @@ function renderSettings(main){
   exportCard.appendChild(exportBtn);
   wrap.appendChild(exportCard);
 
+  const aboutCard = el("div","card stack");
+  aboutCard.innerHTML = `<div class="eyebrow">About</div><div class="muted">Ledger Casa ${escapeHtml(APP_BUILD)}</div>`;
+  wrap.appendChild(aboutCard);
+
   main.appendChild(wrap);
 }
 
@@ -4336,7 +4340,6 @@ function wireSwipeNav(){
   let startX=0, startY=0, dx=0, vw=0;
   let liveEls=null, ghosts={ "-1":null, "1":null };
   let settleTimer=null;
-  let scrollLocked=false;
 
   // #subhead/#monthlyToggleSticky sit in a position:sticky container, so
   // they track the viewport the same way a position:fixed ghost does —
@@ -4345,29 +4348,29 @@ function wireSwipeNav(){
   // ghost (captured once, fixed in place) knows nothing about. If the
   // page scrolls even slightly mid-drag — rubber-banding near the top or
   // bottom, residual momentum — live #main moves against its own frozen
-  // ghost and the two visibly misalign, worse the longer the drag runs
-  // (a slow, deliberate swipe gives scroll drift more time to happen than
-  // a quick flick). Locking the page keeps #main pinned to its ghost for
-  // the whole gesture. This uses overflow:hidden on html/body rather than
-  // the dialog's position:fixed+top-offset trick — that trick takes body
-  // out of flow and repositions it, which on iOS Safari can trigger a
-  // dynamic-toolbar/100dvh viewport recalculation (the same mechanism
-  // that shifts nav.tabs's apparent height for an open sheet, normally
-  // hidden because the sheet covers the nav bar). overflow:hidden blocks
-  // scroll without moving anything, so there's no position to save or
-  // restore either.
-  function lockScroll(){
-    if(scrollLocked) return;
-    document.documentElement.classList.add("scroll-lock");
-    document.body.classList.add("scroll-lock");
-    scrollLocked = true;
-  }
-  function unlockScroll(){
-    if(!scrollLocked) return;
-    document.documentElement.classList.remove("scroll-lock");
-    document.body.classList.remove("scroll-lock");
-    scrollLocked = false;
-  }
+  // ghost and the two visibly misalign.
+  //
+  // An earlier version of this fix locked the page by adding
+  // `overflow:hidden` to html/body for the duration of the gesture. That
+  // introduced a worse, confirmed-on-video regression: on any month whose
+  // category list is taller than one screen, overflow:hidden clips the
+  // page at the viewport's own height, so whatever was below the fold
+  // (the last category or two) visibly disappears — a blank gap where
+  // nav used to sit right after the last visible row — for as long as the
+  // lock is held, because the content is genuinely no longer reachable,
+  // not just mid-transition. Three earlier attempts (the lock itself,
+  // switching nav.tabs from fixed to sticky, touch-action:pan-y) all
+  // missed this because none of them touched the actual mechanism: it was
+  // never iOS's toolbar or nav's positioning, it was this lock clipping
+  // real content.
+  //
+  // touch-action:pan-y on #main (still in place below) plus this
+  // handler's own e.preventDefault() once a drag is classified as
+  // horizontal already stop the page from actually scrolling during the
+  // gesture — which is what the lock was for — without taking anything
+  // out of flow or clipping anything, so there's nothing left for a
+  // lock/unlock pair to do here. Keeping both would only reintroduce the
+  // clipping bug for no added protection.
 
   function liveElsForTab(){
     if(ui.tab==="monthly") return [
@@ -4439,7 +4442,6 @@ function wireSwipeNav(){
     if(settleTimer){ clearTimeout(settleTimer); settleTimer=null; }
     clearGhosts();
     if(liveEls) resetLiveStyles();
-    unlockScroll();
     if(document.getElementById("dlg").open || e.touches.length>1){ tracking=false; return; }
     if(!(ui.tab==="monthly" || ui.tab==="outlook")){ tracking=false; return; }
     const t = e.touches[0];
@@ -4460,7 +4462,6 @@ function wireSwipeNav(){
       liveEls = liveElsForTab();
       if(!liveEls){ tracking=false; horiz=false; return; }
       vw = window.innerWidth;
-      lockScroll();
       if(canStepPeriod(1)) ghosts["1"] = buildGhostSet(1);
       if(canStepPeriod(-1)) ghosts["-1"] = buildGhostSet(-1);
       setLiveTransition("none");
@@ -4502,12 +4503,6 @@ function wireSwipeNav(){
       settleTimer = null;
       clearGhosts();
       resetLiveStyles();
-      // Stays locked through the settle animation too, not just the live
-      // drag — #main is still being transform-animated for another
-      // SETTLE_MS here, so scroll needs to stay pinned until that's done
-      // and the real DOM (not just a translated copy of it) is what's on
-      // screen again.
-      unlockScroll();
       if(commit) changePeriod(dir);
     }, SETTLE_MS + 20);
   }
