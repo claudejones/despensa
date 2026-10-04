@@ -617,7 +617,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v92";
+const APP_BUILD = "v93";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1319,6 +1319,21 @@ function visibleYtdBudget(uptoYM){
   return roundCents(ytdBudget(uptoYM) - excludedSpendYTD(uptoYM));
 }
 
+// What the single most recent seeded month actually handed off — that
+// month's own displayed Surplus (visibleAvailable − visibleSpent), which
+// is already cumulative by construction (it includes whatever that month
+// itself carried in from before it). So this is never "just last month's
+// new money" in isolation — it's last month's whole ending number, exactly
+// what Available silently folded in. Returns null when there's no prior
+// seeded month to report (first month ever used), so the subhead note can
+// tell "nothing to show" apart from "exactly $0 carried in".
+function carriedInFromLastMonth(ym){
+  for(let k=ym-1; k>=earliestYM(); k--){
+    if(isMonthSeeded(k)) return roundCents(visibleAvailableForMonth(k) - visibleSpentForMonth(k));
+  }
+  return null;
+}
+
 /* ---------------------------------------------------------------
    RENDER: SHELL
 --------------------------------------------------------------- */
@@ -1443,8 +1458,16 @@ function renderSubhead(){
     // of both sides (visibleAvailableForMonth/visibleSpentForMonth) — this
     // note is purely informational, telling you how much was already
     // backed out, same reserved-height treatment as Budget Setup's Excluded
-    // note so toggling a category never shifts anything below it.
+    // note so toggling a category never shifts anything below it. Shares
+    // its one reserved line with the carried-in-from-last-month note below
+    // rather than each getting its own permanently-reserved blank line —
+    // keeps the subhead's height fixed at one extra line no matter how many
+    // of these footnotes exist, joined by " · " when more than one applies.
     const excludedAmt = excludedSpendForMonth(ym);
+    const carriedIn = showAvail ? carriedInFromLastMonth(ym) : null;
+    const noteParts = [];
+    if(excludedAmt>0) noteParts.push(`Excluded: ${fmtUSD(excludedAmt)}`);
+    if(carriedIn!==null && carriedIn!==0) noteParts.push(`${carriedIn>0?"+":""}${fmtUSD(carriedIn)} from last month`);
     sub.innerHTML = `
       <div class="sh-info">
         <div style="display:flex; flex-direction:row; gap:14px; align-items:baseline">
@@ -1452,7 +1475,7 @@ function renderSubhead(){
           <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
           <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
         </div>
-        <div class="sh-tiny" style="color:var(--accent); min-height:13px; margin-top:4px">${excludedAmt>0?`Excluded: ${fmtUSD(excludedAmt)}`:""}</div>
+        <div class="sh-tiny" style="color:var(--accent); min-height:13px; margin-top:4px">${noteParts.join(" · ")}</div>
       </div>
       <div class="sh-actions">
         <button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}</button>
