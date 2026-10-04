@@ -208,6 +208,19 @@
     border-radius:999px; background:var(--primary); color:#fff; font-size:10px; font-weight:700;
     display:flex; align-items:center; justify-content:center; line-height:1; pointer-events:none;
   }
+  /* Rollover/Excluded flag — a state, not a count, so it's a plain dot
+     rather than a number (see monthHasRolloverOrExcluded). Bottom-left so
+     it never collides with the badge number, which stays top-right. */
+  .iconbtn-dot{
+    position:absolute; bottom:-2px; left:-2px; width:11px; height:11px;
+    border-radius:50%; background:var(--accent); border:2px solid var(--bg);
+    pointer-events:none;
+  }
+  .iconbtn-dot.pulse{ animation:dotPulse .6s ease-out; }
+  @keyframes dotPulse{
+    0%{ box-shadow:0 0 0 0 rgba(227,178,92,.55); }
+    100%{ box-shadow:0 0 0 14px rgba(227,178,92,0); }
+  }
   /* Transfer funds + Ledger/Dashboard toggle — pinned as the bottom slice
      of the sticky header stack (brand row, subhead, this), so it's always
      reachable without scrolling back up, on every tab it applies to. Empty
@@ -617,7 +630,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v94";
+const APP_BUILD = "v95";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1016,21 +1029,31 @@ function fundAdjustmentForMonth(ym){
 // Count of fund events + transfers touching this month — drives the
 // numbered badge on Monthly's subhead "adjustments" icon. Same filters as
 // openFundAdjustmentsSheet, kept in sync with it.
-// Badge count on the sliders icon — now counts every distinct factor
-// shaping this month's Available, not just editable rows: each fund event
-// and transfer counts individually (they're separate loggable things you
-// can add/delete one at a time), but Rollover and Excluded each count as
-// at most 1 regardless of how many months or categories feed them — they're
-// a single aggregate line in the reconciliation sheet, not a list of
-// separate items, so the badge treats them the same way.
+// Badge count on the sliders icon — itemized, actionable rows only (fund
+// events + transfers), so it always matches the list length in the sheet
+// exactly, 1:1. Rollover and Excluded are states, not items (v94 tried
+// folding them into this same number and it broke down the moment someone
+// excluded 3 categories and the badge stayed at "1" — a number implies
+// counting, and these aren't counted, they're on/off). They get their own
+// non-numeric signal instead — see monthHasRolloverOrExcluded below.
 function fundAdjustmentsCountForMonth(ym){
   const fe = state.fundevents.filter(f=> fundAdjustmentPortion(f, ym) !== 0);
   const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
-  const rollover = carriedInFromLastMonth(ym);
-  const rolloverCounts = rollover!==null && rollover!==0;
-  const excludedCounts = excludedSpendForMonth(ym) > 0;
-  return fe.length + tr.length + (rolloverCounts?1:0) + (excludedCounts?1:0);
+  return fe.length + tr.length;
 }
+// Whether Rollover or Excluded apply to this month at all — a plain
+// boolean, not a count, because neither one is a tally of distinct items.
+function monthHasRolloverOrExcluded(ym){
+  const rollover = carriedInFromLastMonth(ym);
+  return (rollover!==null && rollover!==0) || excludedSpendForMonth(ym) > 0;
+}
+// Tracks whether that dot was already lit last time each screen rendered,
+// so the one-time pulse plays only on the actual transition into "on" —
+// not on every re-render while it's already on, and not from navigating
+// back to a month you've already seen with it lit. In-memory only; a page
+// reload just replays the pulse once on first render, which is harmless.
+const dotSeenMonthly = {};
+let dotSeenBudgetSetup = false;
 
 // Actual Spend for a category — independent of Target. Sums the actual-
 // spend entries logged in Monthly for that category and month, whether
@@ -1463,15 +1486,18 @@ function renderSubhead(){
     const avail = showAvail ? visibleAvailableForMonth(ym) : null;
     const spent = seeded ? visibleSpentForMonth(ym) : null;
     const surplus = seeded ? roundCents(avail - spent) : null;
-    // No note line here — Excluded and Rollover used to show as text under
-    // the stats (v93), but that meant two of the four factors shaping
-    // Available lived in the header while Fund adjustments/Transfers lived
-    // only in the sheet behind the sliders icon, with no principled reason
-    // for the split. All four now live together in that sheet's
-    // reconciliation block; the badge count below is the only signal that
-    // something's there to look at, same "quiet cue, full detail one tap
-    // away" pattern as the category list's eye-icon dimming.
+    // No note line here — the sliders icon is the one signal pointing at
+    // the sheet's full reconciliation (Template, Fund adjustments,
+    // Transfers, Rollover, Excluded). The badge number counts only
+    // itemized rows (fund events + transfers); Rollover/Excluded get a
+    // separate dot (see monthHasRolloverOrExcluded) since they're states,
+    // not counts — v94 tried folding them into the one number and it broke
+    // down visibly once someone excluded 3+ categories and the badge
+    // stayed stuck at "1".
     const adjCount = fundAdjustmentsCountForMonth(ym);
+    const dotActive = monthHasRolloverOrExcluded(ym);
+    const dotJustOn = dotActive && !dotSeenMonthly[ym];
+    dotSeenMonthly[ym] = dotActive;
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:14px; align-items:baseline">
         <div${showAvail?"":` style="text-align:center"`}><div class="sh-tiny">Available</div><div class="num sh-amt">${showAvail?fmtUSD(avail):"—"}</div></div>
@@ -1479,7 +1505,7 @@ function renderSubhead(){
         <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
       </div>
       <div class="sh-actions">
-        <button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}</button>
+        <button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}${dotActive?`<span class="iconbtn-dot${dotJustOn?" pulse":""}"></span>`:""}</button>
       </div>
     `;
     sub.classList.add("show");
@@ -1507,11 +1533,15 @@ function renderSubhead(){
     // (renderCategories), matching where Monthly's own "+ add category"
     // lives: on the card it actually adds to, not in this summary strip.
     // No inline Excluded note either — same reasoning as Monthly's v94
-    // change: a sliders icon + breakdown sheet replaces it, so both screens
-    // use the same "quiet badge, full detail one tap away" pattern instead
-    // of one screen showing its math inline and the other hiding it behind
-    // an icon.
-    const budgetAdjCount = excludedAmt>0 ? 1 : 0;
+    // change: a sliders icon + breakdown sheet replaces it. No badge number
+    // here at all, ever — Budget Setup has no itemized events/transfers to
+    // count, only the one Excluded on/off state, so a number would always
+    // just be 0 or 1 and never actually count anything. A dot is the
+    // honest representation; same one-time-pulse-on-transition rule as
+    // Monthly's dot.
+    const dotActive = excludedAmt>0;
+    const dotJustOn = dotActive && !dotSeenBudgetSetup;
+    dotSeenBudgetSetup = dotActive;
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:16px; align-items:baseline">
         <div><div class="sh-tiny">Target</div><div class="num sh-amt">${fmtUSD(target)}</div></div>
@@ -1519,7 +1549,7 @@ function renderSubhead(){
         <div><div class="sh-tiny">Unallocated</div><div class="num sh-amt" style="color:${unallocated>=0?'var(--good)':'var(--bad)'}">${fmtUSD(unallocated)}</div></div>
       </div>
       <div class="sh-actions">
-        <button class="iconbtn" id="shBudgetAdj" aria-label="Budget breakdown">${iconSliders()}${budgetAdjCount>0?`<span class="iconbtn-badge">${budgetAdjCount}</span>`:""}</button>
+        <button class="iconbtn" id="shBudgetAdj" aria-label="Budget breakdown">${iconSliders()}${dotActive?`<span class="iconbtn-dot${dotJustOn?" pulse":""}"></span>`:""}</button>
       </div>
     `;
     sub.querySelector("#shBudgetAdj").onclick = ()=> openBudgetSetupBreakdownSheet(ym, rawTarget, rawAllocated, excludedAmt);
