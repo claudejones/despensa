@@ -290,6 +290,14 @@
     display:flex; align-items:center; justify-content:center; padding:0;
   }
   .infobtn:active{ background:var(--line) }
+  /* Same accent treatment as .subhead .iconbtn (the fund-adjustments
+     button) and .btn.accent (Add Expense, etc.) — for the two "+" buttons
+     that add a NEW category/row to a list, as opposed to every other
+     .infobtn circle on a row, which only ever acts on that one existing
+     category (manage, log an expense, toggle excluded) and should read as
+     secondary next to it. */
+  .infobtn.accent{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent) }
+  .infobtn.accent:active{ opacity:.85; background:var(--accent) }
   /* Bare icon buttons for a tight row — Fund adjustments' rows carry a
      full sentence of description plus an amount already, so the fuller
      circle-button treatment above (.infobtn) would crowd a narrow phone;
@@ -609,7 +617,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v87";
+const APP_BUILD = "v90";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1163,6 +1171,37 @@ function totalSpentForMonth(ym){
     .filter(a=> ymOfDate(a.date)===ym)
     .reduce((s,a)=> s + toUSD(a.amount||0, a.currency, a.rate||yearSettings(yearOfYM(ym)).baseRate), 0);
 }
+// Every actual dollar logged this month against a category the user has
+// marked Excluded for that specific month — real spend, just already paid
+// for in some earlier month (a prepaid rent/deposit), so it shouldn't be
+// judged against THIS month's numbers. Used only by the "visible*" display
+// wrappers right below — never by totalSpentForMonth/totalBudgetForMonth/
+// totalAvailableForMonth themselves, which stay the true, unadjusted
+// ground truth that rollover and the cross-month running balance both
+// depend on (see totalAvailableForMonth's own comment below).
+function excludedSpendForMonth(ym){
+  const data = state.monthCategoryData[ym] || {};
+  return Object.keys(data)
+    .filter(id => id!==DROPPED_CREDITS_KEY && data[id] && data[id].excluded)
+    .reduce((s,id)=> s + spentForMonth(id, ym), 0);
+}
+// Display-only Spent/Budget/Available, with every Excluded category's real
+// spend removed from BOTH sides of the subtraction by the same amount —
+// Surplus (Available minus Spent) always comes out exactly the same either
+// way, by construction. That's deliberate: excluding a prepaid category
+// should stop its already-settled cost from distorting what a given month
+// looks like, never manufacture extra "surplus" that isn't really there.
+// Every screen that shows a whole-month Spent/Available/Surplus trio reads
+// from these, not the raw totals above.
+function visibleSpentForMonth(ym){
+  return roundCents(totalSpentForMonth(ym) - excludedSpendForMonth(ym));
+}
+function visibleBudgetForMonth(ym){
+  return roundCents(totalBudgetForMonth(ym) - excludedSpendForMonth(ym));
+}
+function visibleAvailableForMonth(ym){
+  return roundCents(totalAvailableForMonth(ym) - excludedSpendForMonth(ym));
+}
 // A single running balance for the whole pot, not a sum of each category's
 // own rollover — the Unallocated slice belongs to no category, so summing
 // per-category rollovers silently drops it. Walking from earliestYM means
@@ -1261,6 +1300,23 @@ function ytdBudget(uptoYM){
   let s = 0;
   for(let k=start;k<=uptoYM;k++) s += totalBudgetForMonth(k);
   return s;
+}
+// Same "remove the same figure from both sides" adjustment as
+// visibleSpentForMonth/visibleBudgetForMonth, carried through the
+// year-to-date totals Annual Outlook shows — so a category excluded in
+// several months this year doesn't inflate the running "under/over plan"
+// figure there either.
+function excludedSpendYTD(uptoYM){
+  const start = ymOf(yearOfYM(uptoYM), 0);
+  let s = 0;
+  for(let k=start;k<=uptoYM;k++) s += excludedSpendForMonth(k);
+  return s;
+}
+function visibleYtdActual(uptoYM){
+  return roundCents(ytdActual(uptoYM) - excludedSpendYTD(uptoYM));
+}
+function visibleYtdBudget(uptoYM){
+  return roundCents(ytdBudget(uptoYM) - excludedSpendYTD(uptoYM));
 }
 
 /* ---------------------------------------------------------------
@@ -1374,8 +1430,13 @@ function renderSubhead(){
     // board, same as before (see monthNotSetUpCard).
     const futureUnconfigured = !seeded && ym >= todayYM();
     const showAvail = seeded || futureUnconfigured;
-    const avail = showAvail ? totalAvailableForMonth(ym) : null;
-    const spent = seeded ? totalSpentForMonth(ym) : null;
+    // visibleAvailableForMonth/visibleSpentForMonth already fold in any
+    // Excluded categories for this month (and fall back to the plain
+    // totals when nothing's excluded) — Surplus below comes out identical
+    // to the un-adjusted figure either way, since the same amount is
+    // removed from both Available and Spent.
+    const avail = showAvail ? visibleAvailableForMonth(ym) : null;
+    const spent = seeded ? visibleSpentForMonth(ym) : null;
     const surplus = seeded ? roundCents(avail - spent) : null;
     const adjCount = fundAdjustmentsCountForMonth(ym);
     sub.innerHTML = `
@@ -1397,18 +1458,17 @@ function renderSubhead(){
     const target = yearSettings(yearOfYM(todayYM())).yearBudgetUSD/12;
     const allocated = state.categories.filter(c=>categoryAppliesToYM(c,ym)).reduce((s,c)=> s+(c.baseAmountUSD||0), 0);
     const unallocated = roundCents(target - allocated);
+    // No "+" here — New category moved onto the category list card itself
+    // (renderCategories), matching where Monthly's own "+ add category"
+    // lives: on the card it actually adds to, not in this summary strip.
     sub.innerHTML = `
       <div class="sh-info" style="flex-direction:row; gap:16px; align-items:baseline">
         <div><div class="sh-tiny">Target</div><div class="num sh-amt">${fmtUSD(target)}</div></div>
         <div><div class="sh-tiny">Allocated</div><div class="num sh-amt">${fmtUSD(allocated)}</div></div>
         <div><div class="sh-tiny">Unallocated</div><div class="num sh-amt" style="color:${unallocated>=0?'var(--good)':'var(--bad)'}">${fmtUSD(unallocated)}</div></div>
       </div>
-      <div class="sh-actions">
-        <button class="iconbtn" id="shAddCat" aria-label="New category">+</button>
-      </div>
     `;
     sub.classList.add("show");
-    sub.querySelector("#shAddCat").onclick = ()=> openCategoryDialog(ym);
   }
 }
 
@@ -1507,11 +1567,15 @@ function categoryMxnBreakdownForMonth(catId, ym){
 function categoryMxnBreakdownCard(ym, mIdx){
   const card = el("div","card stack");
   const rows = monthCategoryList(ym)
-    .map(c=> ({ c, ...categoryMxnBreakdownForMonth(c.id, ym) }))
+    .map(c=> ({ c, excluded: !!(c.entry && c.entry.excluded), ...categoryMxnBreakdownForMonth(c.id, ym) }))
     .filter(r=> r.usd > 0)
     .sort((a,b)=> b.usd - a.usd);
-  const totalUsd = rows.reduce((s,r)=> s+r.usd, 0);
-  const totalMxn = rows.reduce((s,r)=> s+r.mxn, 0);
+  // Excluded rows stay in the list (their own real numbers are never
+  // hidden, same as everywhere else this works) but drop out of the Total
+  // — the same category whose spend doesn't count toward this month in
+  // the ledger shouldn't count toward "Where this month is going" either.
+  const totalUsd = rows.filter(r=>!r.excluded).reduce((s,r)=> s+r.usd, 0);
+  const totalMxn = rows.filter(r=>!r.excluded).reduce((s,r)=> s+r.mxn, 0);
   let primary = "USD"; // local to this card only — never written to state
 
   // The rate gets its own line below the converted amount, relabeled as
@@ -1532,8 +1596,8 @@ function categoryMxnBreakdownCard(ym, mIdx){
     wrap.innerHTML = rows.length ? `
       <div class="stack" style="gap:0">
         ${rows.map(r=>`
-          <div class="row" style="align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--line)">
-            <span class="name" style="flex:1; font-weight:600; font-size:13px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${escapeHtml(r.c.name)}</span>
+          <div class="row" style="align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--line); ${r.excluded?"opacity:.55":""}">
+            <span class="name" style="flex:1; font-weight:600; font-size:13px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${escapeHtml(r.c.name)}${r.excluded?` <span class="muted" style="font-weight:500; font-size:11px">· excluded</span>`:""}</span>
             <span style="text-align:right">${amtCell(r.usd, r.mxn, r.rate, false)}</span>
           </div>
         `).join("")}
@@ -1578,8 +1642,8 @@ function renderOutlook(main){
   const ym = ui.ym;
   const year = yearOfYM(ym);
   const yearBudget = yearSettings(year).yearBudgetUSD;
-  const ytdSpent = ytdActual(ym);
-  const ytdBud = ytdBudget(ym);
+  const ytdSpent = visibleYtdActual(ym);
+  const ytdBud = visibleYtdBudget(ym);
   const ytdDiff = roundCents(ytdBud - ytdSpent);
 
   const wrap = el("div", "stack");
@@ -1643,8 +1707,8 @@ function drawMonthlyChart(){
   if(!ctx || typeof Chart==="undefined") return;
   const year = yearOfYM(ui.ym);
   const yms = MONTHS.map((_,i)=> ymOf(year, i));
-  const budgets = yms.map(ym=> totalBudgetForMonth(ym));
-  const actuals = yms.map(ym=> hasActualsForMonth(ym) ? totalSpentForMonth(ym) : null);
+  const budgets = yms.map(ym=> visibleBudgetForMonth(ym));
+  const actuals = yms.map(ym=> hasActualsForMonth(ym) ? visibleSpentForMonth(ym) : null);
   // One consistent color for every "Budget / plan" bar — the dark "Actual"
   // bar in front of it already signals which months have logged data, so
   // a second, unlabeled color on the plan bar itself only broke the
@@ -1681,8 +1745,14 @@ function drawSplitChart(ym){
   const ctx = document.getElementById("chartSplit");
   if(!ctx || typeof Chart==="undefined") return;
   const rate = yearSettings(yearOfYM(ym)).baseRate;
+  // Same Excluded-category filter as the month's Spent/Available/Surplus —
+  // this chart is part of the Dashboard, so a prepaid category's cash
+  // shouldn't show up in "where did this month's money go" any more than
+  // it counts toward this month's Spent.
+  const data = state.monthCategoryData[ym] || {};
+  const excludedIds = new Set(Object.keys(data).filter(id=> data[id] && data[id].excluded));
   let cash=0, card=0, transfer=0;
-  state.actuals.filter(a=>ymOfDate(a.date)===ym).forEach(a=>{
+  state.actuals.filter(a=>ymOfDate(a.date)===ym && !excludedIds.has(a.categoryId)).forEach(a=>{
     const usd = toUSD(a.amount||0, a.currency, a.rate||rate);
     if(a.paymentMethod==="cash") cash+=usd;
     else if(a.paymentMethod==="transfer") transfer+=usd;
@@ -1869,7 +1939,11 @@ function forkTemplateIntoMonth(ym, itemFilter){
     // forked, this month's display never depends on the template still
     // existing (see categoryDisplayInfo, which falls back to this exact
     // field the moment the template is gone).
-    data[c.id] = { baseAmountUSD: c.baseAmountUSD || 0, items, source: "template", name: c.name };
+    // excludedDefault is only ever a starting point: it's copied into this
+    // month's own `excluded` flag right here, once, same as baseAmountUSD —
+    // from here on this month's flag is independent, exactly like every
+    // other already-seeded month and the template itself.
+    data[c.id] = { baseAmountUSD: c.baseAmountUSD || 0, items, source: "template", name: c.name, excluded: !!c.excludedDefault };
   });
   state.monthCategoryData[ym] = data;
   dbSetMonthCategoryData();
@@ -2080,19 +2154,22 @@ function renderMonthly(main){
   }
 
   const catsCard = el("div","card stack");
-  catsCard.innerHTML = `
-    <div class="section-title">
-      <div class="eyebrow">Allocated by category</div>
-      <button class="infobtn" type="button" id="mAddCat" aria-label="Add a category to this month" style="font-size:18px; line-height:1">+</button>
-    </div>
-    <p class="muted" style="margin:-4px 0 0">Tap a category to review expenses this month, or + to log something quickly.</p>
-  `;
-  catsCard.querySelector("#mAddCat").onclick = ()=> openMonthAddCategorySheet(ym);
   // Driven by state.monthCategoryData[ym], not the live template list — a
   // set-up month only ever shows what it was actually forked with (plus
   // whatever's been added/removed directly in that month since), never
   // whatever Budget Setup happens to look like right now.
   const monthCats = monthCategoryList(ym);
+  // No separate "N excluded" banner — it reflowed the whole list every
+  // time one got toggled, and the dimmed rows below already say exactly
+  // which categories are excluded without needing a second place to look.
+  catsCard.innerHTML = `
+    <div class="section-title">
+      <div class="eyebrow">Allocated by category</div>
+      <button class="infobtn accent" type="button" id="mAddCat" aria-label="Add a category to this month" style="font-size:18px; line-height:1">+</button>
+    </div>
+    <p class="muted" style="margin:-4px 0 0">Tap a category to review expenses this month, or + to log something quickly.</p>
+  `;
+  catsCard.querySelector("#mAddCat").onclick = ()=> openMonthAddCategorySheet(ym);
   // A seeded month can legitimately have zero categories (chose "Start
   // with nothing", or removed its last one since) — distinct from never
   // having been set up at all. Without this, the card just goes blank,
@@ -2100,7 +2177,8 @@ function renderMonthly(main){
   if(monthCats.length===0){
     catsCard.appendChild(el("div","empty","No categories yet — tap + to add one."));
   }
-  monthCats.forEach(({id, name})=>{
+  monthCats.forEach(({id, name, entry})=>{
+    const excluded = !!(entry && entry.excluded);
     const base = categoryBaseForMonth(id, ym);
     const roll = rolloverForMonth(id, ym);
     const adj = categoryAdjustmentForMonth(id, ym);
@@ -2131,13 +2209,15 @@ function renderMonthly(main){
     // transfer instead of — or in addition to — its own Base.
     const showAdj = hasTarget && Math.abs(adj) > 0.005;
     const row = el("div","catrow");
+    if(excluded) row.style.opacity = ".6";
     row.innerHTML = `
       <div class="head">
         <span class="name">${name}</span>
         <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
+        <button class="infobtn" type="button" data-toggleexcl aria-label="${excluded?"Include":"Exclude"} ${escapeHtml(name)} from this month's totals" style="${excluded?`color:var(--accent)`:""}">${excluded?iconEyeOff():iconEye()}</button>
       </div>
-      <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px">${base > 0 ? `Budget ${fmtUSD(base)}` : "Budget: not set"}</div>
+      <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px; ${excluded?"color:var(--accent)":""}">${base > 0 ? `Budget ${fmtUSD(base)}` : "Budget: not set"}${excluded ? " · excluded" : ""}</div>
       <div class="catbar"><div style="${budgetBarStyle(hasTarget, remaining, pct)}"></div></div>
       <div class="row">
         <span class="muted num">${fmtUSD(spent)} spent</span>
@@ -2149,11 +2229,24 @@ function renderMonthly(main){
     row.style.cursor = "pointer";
     // Row tap and the pencil icon both open the one category-management
     // screen — same pattern as Budget Setup. The "$" icon is a shortcut
-    // that skips straight to logging an expense.
+    // that skips straight to logging an expense. The eye icon is its own
+    // quick on/off for this month's Excluded flag — no dialog, matches the
+    // category's own spent/left figures staying real and untouched either
+    // way (only the whole-month totals above react).
     row.onclick = ()=> openMonthlyCategoryDetailSheet(id, ym);
     row.querySelector("[data-edit]").onclick = (ev)=>{
       ev.stopPropagation();
       openMonthlyCategoryDetailSheet(id, ym);
+    };
+    row.querySelector("[data-toggleexcl]").onclick = async (ev)=>{
+      ev.stopPropagation();
+      state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
+      const e = state.monthCategoryData[ym][id];
+      if(!e) return;
+      e.excluded = !e.excluded;
+      await dbSetMonthCategoryData();
+      showToast(e.excluded ? `${name} excluded from ${MONTHS[monthOfYM(ym)]}` : `${name} counts toward ${MONTHS[monthOfYM(ym)]} again`);
+      render();
     };
     row.querySelector("[data-add]").onclick = (ev)=>{
       ev.stopPropagation();
@@ -2605,6 +2698,8 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
   const info = categoryDisplayInfo(categoryId, ym);
+  const entry = (state.monthCategoryData[ym]||{})[categoryId] || {};
+  const excluded = !!entry.excluded;
   const base = categoryBaseForMonth(categoryId, ym);
   const roll = rolloverForMonth(categoryId, ym);
   const adj = categoryAdjustmentForMonth(categoryId, ym);
@@ -2660,6 +2755,13 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     <h3>${info.isLocal ? "Edit Category" : escapeHtml(info.name)}</h3>
     ${info.isLocal ? `<label>Name<input type="text" id="mcName" value="${escapeHtml(info.name)}" placeholder="e.g. One-off repair"></label>` : ""}
     <label>Base allocation (USD)<input type="number" inputmode="decimal" step="0.01" id="mcBaseAmount" value="${(base||0).toFixed(2)}"></label>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
+      <input type="checkbox" id="mcExcluded" style="width:auto" ${excluded?"checked":""}>
+      <span style="flex:1">
+        <span style="display:block">Excluded this month</span>
+        <span class="muted" style="font-size:12px; display:block">Its real Spent/left above still shows — only ${MONTHS[monthOfYM(ym)]}'s Spent/Available/Surplus stop counting it.</span>
+      </span>
+    </label>
     <div class="stack" style="gap:8px">
       ${roll!==0 ? `<div class="row"><span class="muted">Rollover carried in</span><span class="num">${roll>0?"+":""}${fmtUSD(roll)}</span></div>` : ""}
       ${adj!==0 ? `<div class="row"><span class="muted">Net moved this month</span><span class="num">${adj>0?"+":""}${fmtUSD(adj)}</span></div>` : ""}
@@ -2697,6 +2799,8 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     const entry = state.monthCategoryData[ym][categoryId];
     if(!entry) return;
     entry.baseAmountUSD = amount;
+    const exclField = body.querySelector("#mcExcluded");
+    if(exclField) entry.excluded = exclField.checked;
     if(info.isLocal){
       const nameField = body.querySelector("#mcName");
       const name = nameField ? nameField.value.trim() : "";
@@ -2730,6 +2834,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     // Edits only this month's own copy — the template's baseAmountUSD (and
     // every other already-seeded month) is never touched.
     entry.baseAmountUSD = amount;
+    entry.excluded = body.querySelector("#mcExcluded").checked;
     if(info.isLocal){
       const name = body.querySelector("#mcName").value.trim();
       if(!name){ formError(body, "Enter a name.", body.querySelector("#mcName")); return; }
@@ -2821,7 +2926,7 @@ function openMonthAddCategorySheet(ym){
   const rows = available.length ? available.map(c=>`
     <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px">
       <input type="checkbox" class="macItem" data-tmpl="${c.id}" style="width:auto">
-      <span style="flex:1">${escapeHtml(c.name)}</span>
+      <span style="flex:1">${escapeHtml(c.name)}${c.excludedDefault ? `<span class="muted" style="font-size:11px; display:block">Excluded by default</span>` : ""}</span>
       <span class="num muted">${fmtUSD(c.baseAmountUSD||0)}</span>
     </label>
   `).join("") : `<div class="empty">Every Budget Setup category is already part of this month.</div>`;
@@ -2871,7 +2976,7 @@ function openMonthAddCategorySheet(ym){
       state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
       checked.forEach(id=>{
         const c = state.categories.find(x=>x.id===id);
-        state.monthCategoryData[ym][c.id] = { baseAmountUSD: c.baseAmountUSD||0, items: [], source:"template" };
+        state.monthCategoryData[ym][c.id] = { baseAmountUSD: c.baseAmountUSD||0, items: [], source:"template", excluded: !!c.excludedDefault };
       });
       await dbSetMonthCategoryData();
       dlg.close();
@@ -2893,6 +2998,13 @@ function openMonthNewLocalCategoryDialog(ym){
     <h3>New category — ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)} only</h3>
     <label>Name<input type="text" id="mlName" placeholder="e.g. One-off repair"></label>
     <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="mlAmount" placeholder="0.00"></label>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
+      <input type="checkbox" id="mlExcluded" style="width:auto">
+      <span style="flex:1">
+        <span style="display:block">Excluded this month</span>
+        <span class="muted" style="font-size:12px; display:block">Won't count toward ${MONTHS[monthOfYM(ym)]}'s Spent/Available/Surplus — e.g. a deposit already paid elsewhere.</span>
+      </span>
+    </label>
     <div class="dialog-actions">
       <button class="btn ghost" id="mlCancel">Cancel</button>
       <button class="btn primary" id="mlSave">Save</button>
@@ -2903,9 +3015,10 @@ function openMonthNewLocalCategoryDialog(ym){
     const name = body.querySelector("#mlName").value.trim();
     if(!name){ formError(body, "Enter a name.", body.querySelector("#mlName")); return; }
     const amount = parseFloat(body.querySelector("#mlAmount").value||"0") || 0;
+    const excluded = body.querySelector("#mlExcluded").checked;
     const newId = uid("mcat");
     state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
-    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name };
+    state.monthCategoryData[ym][newId] = { baseAmountUSD: amount, items: [], source:"local", name, excluded };
     await dbSetMonthCategoryData();
     dlg.close();
     showToast(`Added ${name}`);
@@ -3028,7 +3141,18 @@ function renderCategories(main){
   const monthCats = allCats.filter(c=> c.onlyYM === ym);
 
   const globalList = el("div","card stack");
-  if(!globalCats.length) globalList.appendChild(el("div","empty","No categories yet — add one from the + above."));
+  // Same section-title + "+" pattern as Monthly's "Allocated by category"
+  // card — the action lives on the card it actually adds to, not in the
+  // Target/Allocated/Unallocated summary above, which never said what it
+  // was for.
+  const header = el("div","section-title");
+  header.innerHTML = `
+    <div class="eyebrow">Categories</div>
+    <button class="infobtn accent" type="button" id="catAddBtn" aria-label="New category" style="font-size:18px; line-height:1">+</button>
+  `;
+  header.querySelector("#catAddBtn").onclick = ()=> openCategoryDialog(ym);
+  globalList.appendChild(header);
+  if(!globalCats.length) globalList.appendChild(el("div","empty","No categories yet — tap + to add one."));
   globalCats.forEach(c=> globalList.appendChild(renderCategoryRow(c, ym, globalCats)));
   wrap.appendChild(globalList);
 
@@ -3089,9 +3213,19 @@ function renderCategoryRow(c, ym, siblings){
   const row = el("div","setuprow");
   row.setAttribute("role","button");
   row.tabIndex = 0;
-  const meta = items.length===1 ? `<span class="meta-note ${paymentMetaClass(items[0].paymentMethod)}">${paymentLabel(items[0].paymentMethod)}</span>`
-    : items.length>1 ? `<span class="meta-note mm-neutral">${items.length} items</span>`
-    : `<span class="meta-note mm-neutral">Not set</span>`;
+  // One meta-note span, always — folding "Excluded by default" into
+  // whatever this line already says (instead of adding a second stacked
+  // span) means toggling it only ever changes text, never row height. The
+  // name-wrap column stacks every child of its own on a new line, so a
+  // second span here was the actual cause of the jump when this was tried
+  // as its own line.
+  const metaBase = items.length===1 ? paymentLabel(items[0].paymentMethod)
+    : items.length>1 ? `${items.length} items`
+    : "Not set";
+  const metaClass = items.length===1 ? paymentMetaClass(items[0].paymentMethod) : "mm-neutral";
+  const meta = c.excludedDefault
+    ? `<span class="meta-note" style="color:var(--accent)">${metaBase} · Excluded by default</span>`
+    : `<span class="meta-note ${metaClass}">${metaBase}</span>`;
   row.innerHTML = `
     <span class="movebtns">
       <button class="movebtn" type="button" data-up aria-label="Move ${escapeHtml(c.name)} up" ${idx<=0?"disabled":""}>${iconChevronUp()}</button>
@@ -3104,7 +3238,11 @@ function renderCategoryRow(c, ym, siblings){
     <span class="amt num" style="color:${amt<0?'var(--bad)':'inherit'}">${fmtUSD(amt)}</span>
     <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(c.name)}">${iconEdit()}</button>
     <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(c.name)}">${iconDollar()}</button>
+    <button class="infobtn" type="button" data-toggleexcl aria-label="${c.excludedDefault?"Stop excluding":"Exclude"} ${escapeHtml(c.name)} by default" style="${c.excludedDefault?`color:var(--accent)`:""}">${c.excludedDefault?iconEyeOff():iconEye()}</button>
   `;
+  // Dimmed whole-row, matching the Monthly ledger's Excluded rows — the
+  // meta line above already says why.
+  if(c.excludedDefault) row.style.opacity = ".6";
   row.onclick = ()=> openCategoryDetailSheet(c.id, ym);
   row.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); openCategoryDetailSheet(c.id, ym); } };
   row.querySelector("[data-edit]").onclick = (ev)=>{
@@ -3114,6 +3252,13 @@ function renderCategoryRow(c, ym, siblings){
   row.querySelector("[data-add]").onclick = (ev)=>{
     ev.stopPropagation();
     openLineItemDialog(c.id, null, ym);
+  };
+  row.querySelector("[data-toggleexcl]").onclick = async (ev)=>{
+    ev.stopPropagation();
+    c.excludedDefault = !c.excludedDefault;
+    await dbSet("categories", c.id, c);
+    showToast(c.excludedDefault ? `${c.name} now starts Excluded in new months` : `${c.name} no longer starts Excluded`);
+    render();
   };
   row.querySelector("[data-up]").onclick = (ev)=>{
     ev.stopPropagation();
@@ -3168,6 +3313,13 @@ function openCategoryDetailSheet(categoryId, ym){
     <h3>Edit Category</h3>
     <label>Name<input type="text" id="dName" value="${escapeHtml(c.name)}" placeholder="e.g. Pet care"></label>
     <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="dAmount" value="${(c.baseAmountUSD||0).toFixed(2)}"></label>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
+      <input type="checkbox" id="dExcluded" style="width:auto" ${c.excludedDefault?"checked":""}>
+      <span style="flex:1">
+        <span style="display:block">Exclude from totals by default</span>
+        <span class="muted" style="font-size:12px; display:block">New months will start ${escapeHtml(c.name)} Excluded — override per month anytime. Already-set-up months aren't changed retroactively.</span>
+      </span>
+    </label>
     <p class="muted" id="dSummaryLine">Budget: <strong class="num">${fmtUSD(target)}</strong> · Planned <strong class="num">${fmtUSD(planned)}</strong> · Unallocated <strong class="num" style="color:${unallocated<0?'var(--bad)':'inherit'}">${fmtUSD(unallocated)}</strong></p>
     <div class="stack" id="dItems" style="gap:0">${itemRows}</div>
     <button class="btn accent block" id="dAddItem">${iconPlus()}<span>Add Expense</span></button>
@@ -3192,6 +3344,7 @@ function openCategoryDetailSheet(categoryId, ym){
     if(dupBtn) dupBtn.disabled = true;
   }
   body.querySelector("#dName").addEventListener("input", markDirty);
+  body.querySelector("#dExcluded").addEventListener("change", markDirty);
   // Live recompute — Budget/Unallocated previously only reflected a new
   // Amount after Save closed and reopened this sheet.
   body.querySelector("#dAmount").addEventListener("input", (ev)=>{
@@ -3239,6 +3392,7 @@ function openCategoryDetailSheet(categoryId, ym){
     const amount = parseFloat(body.querySelector("#dAmount").value||"0") || 0;
     c.name = name;
     c.baseAmountUSD = amount;
+    c.excludedDefault = body.querySelector("#dExcluded").checked;
     await dbSet("categories", c.id, c);
     dlg.close();
     showToast(`Updated ${name}`);
@@ -3304,6 +3458,13 @@ function openCategoryDialog(ym){
     <h3>New category</h3>
     <label>Name<input type="text" id="cName" placeholder="e.g. Pet care"></label>
     <label>Amount (USD)<input type="number" inputmode="decimal" step="0.01" id="cAmount" placeholder="0.00"></label>
+    <label class="sheet-row" style="flex-direction:row; align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
+      <input type="checkbox" id="cExcluded" style="width:auto">
+      <span style="flex:1">
+        <span style="display:block">Exclude from totals by default</span>
+        <span class="muted" style="font-size:12px; display:block">Every month this is added to starts Excluded — override per month anytime.</span>
+      </span>
+    </label>
     <div class="dialog-actions">
       <button class="btn ghost" id="cCancel">Cancel</button>
       <button class="btn primary" id="cSave">Save</button>
@@ -3314,8 +3475,9 @@ function openCategoryDialog(ym){
     const name = body.querySelector("#cName").value.trim();
     if(!name){ formError(body, "Enter a name.", body.querySelector("#cName")); return; }
     const amount = parseFloat(body.querySelector("#cAmount").value||"0") || 0;
+    const excludedDefault = body.querySelector("#cExcluded").checked;
     const id = uid("cat");
-    const rec = { id, name, order: nextCategoryOrder(), baseAmountUSD: amount };
+    const rec = { id, name, order: nextCategoryOrder(), baseAmountUSD: amount, excludedDefault };
     state.categories.push(rec);
     await dbSet("categories", id, rec);
     dlg.close();
@@ -4042,6 +4204,16 @@ function iconEdit(){
 // clearer than a bare "+" once a row also has an edit/manage icon.
 function iconDollar(){
   return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+}
+// "eye" / "eye-off" from Feather Icons (MIT) — the quick Excluded toggle on
+// a category row. Open eye = counts toward this month's Spent/Available/
+// Surplus; crossed-out eye = excluded (paired with the row's own dimmed
+// styling, never dimming on its own).
+function iconEye(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+function iconEyeOff(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
 }
 // "sliders" from Feather Icons (MIT) — reads as "adjustments", distinct
 // from the swap icon used for "Transfer funds". Opens the fund
