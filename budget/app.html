@@ -229,7 +229,19 @@
   .viewbtn + .viewbtn{ border-left:1px solid var(--line) }
   .viewbtn.active{ background:var(--primary); color:var(--primary-ink) }
 
-  main{flex:1; padding-top:18px; display:flex; flex-direction:column; gap:20px}
+  /* touch-action is read once, at the moment a touch begins, before any JS
+     runs — so it can stop iOS Safari's own gesture recognizer (the one
+     that drives the dynamic-toolbar show/hide animation) from reacting to
+     a touch at all, whereas wireSwipeNav's e.preventDefault() only fires
+     after it's classified the drag as horizontal (past an 8px threshold)
+     and by then the native recognizer already had a few pixels to react
+     to. pan-y keeps ordinary vertical scrolling working exactly as before;
+     it only tells the browser not to do its own thing with horizontal
+     movement here, which is what was still letting the toolbar animate
+     mid-swipe (and visibly shift nav.tabs under it) even with the
+     touchmove-time preventDefault() and the overflow:hidden scroll lock
+     both already in place. */
+  main{flex:1; padding-top:18px; display:flex; flex-direction:column; gap:20px; touch-action:pan-y}
 
   .card{
     background:var(--surface); border:1px solid var(--line); border-radius:14px;
@@ -397,6 +409,12 @@
   .btn.ghost{background:transparent}
   .btn.small.active{background:var(--primary); color:var(--primary-ink); border-color:var(--primary)}
   .btn.danger{background:var(--bad); border-color:var(--bad); color:#fff}
+  /* Every other disabled control in the app (.navbtn, .hdr-stepper
+     .navbtn-ghost, .setuprow .movebtn, .monthtile) dims on :disabled —
+     .btn never had the matching rule, so any button using it (every
+     dialog's primary/ghost/accent buttons) looked fully active even once
+     JS set .disabled = true, with no visual sign it was non-functional. */
+  .btn:disabled{ opacity:.35; cursor:default; pointer-events:none }
 
   table.simple{width:100%; border-collapse:collapse; font-size:13px}
   table.simple th{text-align:left; color:var(--ink-soft); font-weight:600; padding:6px 4px; border-bottom:1px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:.04em}
