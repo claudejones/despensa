@@ -609,7 +609,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v86";
+const APP_BUILD = "v87";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -4461,6 +4461,22 @@ function wireSwipeNav(){
       if(!horiz){ tracking=false; return; } // vertical — leave it to ordinary scrolling
       liveEls = liveElsForTab();
       if(!liveEls){ tracking=false; horiz=false; return; }
+      // Snap to the top before measuring/building anything below. The
+      // ghost mechanism positions the incoming month's preview using
+      // #main's CURRENT on-screen rect — fine if the page is scrolled
+      // near the top, but if you're scrolled deep into a long category
+      // list (e.g. near the bottom of November) and swipe to a month
+      // with much shorter content (e.g. December, not set up yet), that
+      // short content doesn't reach anywhere near your current scroll
+      // position. The visible viewport ends up looking at a stretch of
+      // page where neither the live content nor the incoming ghost has
+      // anything to show — a dead blank/black frame, confirmed on video,
+      // worse than the earlier "gap above nav" bug since nothing at all
+      // is visible, not just a clipped-short list. Resetting scroll here
+      // means every rect measured below is relative to the same, stable
+      // reference point (top of page) for both live content and every
+      // ghost, regardless of where the gesture started.
+      window.scrollTo(0, 0);
       vw = window.innerWidth;
       if(canStepPeriod(1)) ghosts["1"] = buildGhostSet(1);
       if(canStepPeriod(-1)) ghosts["-1"] = buildGhostSet(-1);
