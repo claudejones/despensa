@@ -617,7 +617,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v93";
+const APP_BUILD = "v94";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1016,10 +1016,20 @@ function fundAdjustmentForMonth(ym){
 // Count of fund events + transfers touching this month — drives the
 // numbered badge on Monthly's subhead "adjustments" icon. Same filters as
 // openFundAdjustmentsSheet, kept in sync with it.
+// Badge count on the sliders icon — now counts every distinct factor
+// shaping this month's Available, not just editable rows: each fund event
+// and transfer counts individually (they're separate loggable things you
+// can add/delete one at a time), but Rollover and Excluded each count as
+// at most 1 regardless of how many months or categories feed them — they're
+// a single aggregate line in the reconciliation sheet, not a list of
+// separate items, so the badge treats them the same way.
 function fundAdjustmentsCountForMonth(ym){
   const fe = state.fundevents.filter(f=> fundAdjustmentPortion(f, ym) !== 0);
   const tr = state.transfers.filter(t=> ymOfDate(t.date)===ym);
-  return fe.length + tr.length;
+  const rollover = carriedInFromLastMonth(ym);
+  const rolloverCounts = rollover!==null && rollover!==0;
+  const excludedCounts = excludedSpendForMonth(ym) > 0;
+  return fe.length + tr.length + (rolloverCounts?1:0) + (excludedCounts?1:0);
 }
 
 // Actual Spend for a category — independent of Target. Sums the actual-
@@ -1453,29 +1463,20 @@ function renderSubhead(){
     const avail = showAvail ? visibleAvailableForMonth(ym) : null;
     const spent = seeded ? visibleSpentForMonth(ym) : null;
     const surplus = seeded ? roundCents(avail - spent) : null;
+    // No note line here — Excluded and Rollover used to show as text under
+    // the stats (v93), but that meant two of the four factors shaping
+    // Available lived in the header while Fund adjustments/Transfers lived
+    // only in the sheet behind the sliders icon, with no principled reason
+    // for the split. All four now live together in that sheet's
+    // reconciliation block; the badge count below is the only signal that
+    // something's there to look at, same "quiet cue, full detail one tap
+    // away" pattern as the category list's eye-icon dimming.
     const adjCount = fundAdjustmentsCountForMonth(ym);
-    // Available/Spent above already have excludedSpendForMonth folded out
-    // of both sides (visibleAvailableForMonth/visibleSpentForMonth) — this
-    // note is purely informational, telling you how much was already
-    // backed out, same reserved-height treatment as Budget Setup's Excluded
-    // note so toggling a category never shifts anything below it. Shares
-    // its one reserved line with the carried-in-from-last-month note below
-    // rather than each getting its own permanently-reserved blank line —
-    // keeps the subhead's height fixed at one extra line no matter how many
-    // of these footnotes exist, joined by " · " when more than one applies.
-    const excludedAmt = excludedSpendForMonth(ym);
-    const carriedIn = showAvail ? carriedInFromLastMonth(ym) : null;
-    const noteParts = [];
-    if(excludedAmt>0) noteParts.push(`Excluded: ${fmtUSD(excludedAmt)}`);
-    if(carriedIn!==null && carriedIn!==0) noteParts.push(`${carriedIn>0?"+":""}${fmtUSD(carriedIn)} from last month`);
     sub.innerHTML = `
-      <div class="sh-info">
-        <div style="display:flex; flex-direction:row; gap:14px; align-items:baseline">
-          <div${showAvail?"":` style="text-align:center"`}><div class="sh-tiny">Available</div><div class="num sh-amt">${showAvail?fmtUSD(avail):"—"}</div></div>
-          <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
-          <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
-        </div>
-        <div class="sh-tiny" style="color:var(--accent); min-height:13px; margin-top:4px">${noteParts.join(" · ")}</div>
+      <div class="sh-info" style="flex-direction:row; gap:14px; align-items:baseline">
+        <div${showAvail?"":` style="text-align:center"`}><div class="sh-tiny">Available</div><div class="num sh-amt">${showAvail?fmtUSD(avail):"—"}</div></div>
+        <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Spent</div><div class="num sh-amt">${seeded?fmtUSD(spent):"—"}</div></div>
+        <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
       </div>
       <div class="sh-actions">
         <button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}</button>
@@ -1505,16 +1506,23 @@ function renderSubhead(){
     // No "+" here — New category moved onto the category list card itself
     // (renderCategories), matching where Monthly's own "+ add category"
     // lives: on the card it actually adds to, not in this summary strip.
+    // No inline Excluded note either — same reasoning as Monthly's v94
+    // change: a sliders icon + breakdown sheet replaces it, so both screens
+    // use the same "quiet badge, full detail one tap away" pattern instead
+    // of one screen showing its math inline and the other hiding it behind
+    // an icon.
+    const budgetAdjCount = excludedAmt>0 ? 1 : 0;
     sub.innerHTML = `
-      <div class="sh-info">
-        <div style="display:flex; flex-direction:row; gap:16px; align-items:baseline">
-          <div><div class="sh-tiny">Target</div><div class="num sh-amt">${fmtUSD(target)}</div></div>
-          <div><div class="sh-tiny">Allocated</div><div class="num sh-amt">${fmtUSD(allocated)}</div></div>
-          <div><div class="sh-tiny">Unallocated</div><div class="num sh-amt" style="color:${unallocated>=0?'var(--good)':'var(--bad)'}">${fmtUSD(unallocated)}</div></div>
-        </div>
-        <div class="sh-tiny" style="color:var(--accent); min-height:13px; margin-top:4px">${excludedAmt>0?`Excluded: ${fmtUSD(excludedAmt)}`:""}</div>
+      <div class="sh-info" style="flex-direction:row; gap:16px; align-items:baseline">
+        <div><div class="sh-tiny">Target</div><div class="num sh-amt">${fmtUSD(target)}</div></div>
+        <div><div class="sh-tiny">Allocated</div><div class="num sh-amt">${fmtUSD(allocated)}</div></div>
+        <div><div class="sh-tiny">Unallocated</div><div class="num sh-amt" style="color:${unallocated>=0?'var(--good)':'var(--bad)'}">${fmtUSD(unallocated)}</div></div>
+      </div>
+      <div class="sh-actions">
+        <button class="iconbtn" id="shBudgetAdj" aria-label="Budget breakdown">${iconSliders()}${budgetAdjCount>0?`<span class="iconbtn-badge">${budgetAdjCount}</span>`:""}</button>
       </div>
     `;
+    sub.querySelector("#shBudgetAdj").onclick = ()=> openBudgetSetupBreakdownSheet(ym, rawTarget, rawAllocated, excludedAmt);
     sub.classList.add("show");
   }
 }
@@ -2312,6 +2320,41 @@ function renderMonthly(main){
   main.appendChild(wrap);
 }
 
+// Budget Setup's equivalent of Monthly's Fund Adjustments breakdown —
+// much simpler, since the template only ever has one contributing factor
+// (Excluded), not four. Still the same reconciliation shape and the same
+// reasoning for keeping it out of the subhead: one consistent interaction
+// pattern across both screens (quiet badge, full math one tap away) rather
+// than one screen spelling its math out inline and the other not.
+function openBudgetSetupBreakdownSheet(ym, rawTarget, rawAllocated, excludedAmt){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const target = roundCents(rawTarget - excludedAmt);
+  const allocated = roundCents(rawAllocated - excludedAmt);
+  const unallocated = roundCents(target - allocated);
+  const recHtml = `
+    <div class="stack" style="gap:8px; background:var(--surface-2); border-radius:12px; padding:14px 16px; margin-bottom:16px">
+      <div class="row"><span class="muted">Target (annual ÷ 12)</span><span class="num">${fmtUSD(rawTarget)}</span></div>
+      ${excludedAmt>0 ? `<div class="row"><span class="muted">− Excluded</span><span class="num">${fmtUSD(-excludedAmt)}</span></div>` : ""}
+      <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">= Target (adjusted)</span><span class="num" style="font-weight:600">${fmtUSD(target)}</span></div>
+    </div>
+    <div class="stack" style="gap:8px; background:var(--surface-2); border-radius:12px; padding:14px 16px; margin-bottom:16px">
+      <div class="row"><span class="muted">Allocated</span><span class="num">${fmtUSD(rawAllocated)}</span></div>
+      ${excludedAmt>0 ? `<div class="row"><span class="muted">− Excluded</span><span class="num">${fmtUSD(-excludedAmt)}</span></div>` : ""}
+      <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">= Allocated (adjusted)</span><span class="num" style="font-weight:600">${fmtUSD(allocated)}</span></div>
+    </div>
+    <div class="row" style="padding-top:2px"><span style="font-weight:600">= Unallocated</span><span class="num" style="font-weight:600; color:${unallocated>=0?'var(--good)':'var(--bad)'}">${fmtUSD(unallocated)}</span></div>
+  `;
+  body.innerHTML = `
+    <h3>Budget breakdown</h3>
+    <p class="muted">Template — applies every month unless overridden</p>
+    ${recHtml}
+    <div class="dialog-actions"><button class="btn ghost" id="bbClose">Close</button></div>
+  `;
+  body.querySelector("#bbClose").onclick = ()=> dlg.close();
+  openSheet();
+}
+
 // Itemized fund events (one-time/redistributed funding) and transfers for
 // this month, with the ability to delete a transfer — moved off the main
 // ledger scroll and behind the subhead's "adjustments" icon.
@@ -2353,10 +2396,44 @@ function openFundAdjustmentsSheet(ym){
     </div>
   `;
 
+  // The reconciliation — every factor that adds up to this month's
+  // Available, in the same order the math actually runs: template, then
+  // what's been added (fund adjustments, transfers), then what rolled in,
+  // then what's backed out for Excluded. Zero-value rows are skipped
+  // (there's no reserved-height/anti-jump concern here — this is a modal
+  // sheet, not a scrolling list with content below that a reflow would
+  // shift). Rollover and Excluded are each a single aggregate line, same
+  // as the badge counts them as a single factor regardless of how many
+  // months or categories feed into them — not itemized here, since neither
+  // is something added or removed from THIS sheet (Rollover isn't a
+  // logged event at all; Excluded categories are toggled from the category
+  // row/detail sheet, a different action in a different place).
+  const templateOnly = roundCents(yearSettings(yearOfYM(ym)).yearBudgetUSD/12);
+  const fundAdj = fundAdjustmentForMonth(ym);
+  const extIn = externalTransfersInForMonth(ym);
+  const rollover = carriedInFromLastMonth(ym) || 0;
+  const excludedAmt = excludedSpendForMonth(ym);
+  const availTotal = visibleAvailableForMonth(ym);
+  const recRows = [
+    ["Available Budget", templateOnly, null],
+    fundAdj!==0 ? ["+ Fund adjustments", fundAdj, "good"] : null,
+    extIn!==0 ? ["+ External transfers in", extIn, "good"] : null,
+    rollover!==0 ? [`+ Rollover carried forward`, rollover, rollover>0?"good":"bad"] : null,
+    excludedAmt>0 ? ["− Excluded", -excludedAmt, "bad"] : null,
+  ].filter(Boolean);
+  const recHtml = `
+    <div class="stack" style="gap:8px; background:var(--surface-2); border-radius:12px; padding:14px 16px; margin-bottom:16px">
+      ${recRows.map(([label,val])=> `<div class="row"><span class="muted">${label}</span><span class="num">${fmtUSD(val)}</span></div>`).join("")}
+      <div class="row" style="border-top:1px solid var(--line); padding-top:8px"><span style="font-weight:600">Available this month</span><span class="num" style="font-weight:600">${fmtUSD(availTotal)}</span></div>
+    </div>
+  `;
+
   body.innerHTML = `
     <h3>Fund adjustments</h3>
     <p class="muted">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}</p>
+    ${recHtml}
     <button class="btn accent block" id="faAddFunds">${iconPlus()}<span>Add funds</span></button>
+    <div class="eyebrow" style="margin-top:14px">Itemized this month</div>
     ${rows}
     <div class="dialog-actions"><button class="btn ghost" id="faClose">Close</button></div>
   `;
