@@ -85,7 +85,16 @@
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%}
+  /* 100vh, not 100%: on iOS 26 Home Screen apps using black-translucent +
+     viewport-fit=cover, a 100%-tall html/body is measured against a
+     containing block that stops short of the physical screen (WebKit bug
+     301108). Unverified on-device whether this alone closes it — see the
+     viewport readout in Settings > About. */
+  html,body{height:100vh}
+  /* Whatever strip of screen the page can't reach is painted with the page
+     background; while a sheet is open make that the sheet's own colour so it
+     reads as part of the sheet instead of a darker band under it. */
+  html:has(body.sheet-open){ background:var(--surface) }
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:'Work Sans', Arial, sans-serif;
@@ -637,7 +646,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v97";
+const APP_BUILD = "v98";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -4048,7 +4057,19 @@ function renderSettings(main){
   wrap.appendChild(exportCard);
 
   const aboutCard = el("div","card stack");
-  aboutCard.innerHTML = `<div class="eyebrow">About</div><div class="muted">Ledger Casa ${escapeHtml(APP_BUILD)}</div>`;
+  // Viewport readout — diagnoses the iOS 26 Home Screen "viewport stops short
+  // of the screen" bug (WebKit 301108): short = screen.height - innerHeight.
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;visibility:hidden;padding-bottom:env(safe-area-inset-bottom,0px);padding-top:env(safe-area-inset-top,0px)";
+  document.body.appendChild(probe);
+  const cs = getComputedStyle(probe);
+  const insB = cs.paddingBottom, insT = cs.paddingTop;
+  probe.remove();
+  const standalone = window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+  const vv = window.visualViewport ? Math.round(window.visualViewport.height) : "n/a";
+  const short = Math.round(screen.height - window.innerHeight);
+  aboutCard.innerHTML = `<div class="eyebrow">About</div><div class="muted">Ledger Casa ${escapeHtml(APP_BUILD)}</div>
+    <div class="muted" style="font-size:12px; line-height:1.5">Viewport: innerHeight ${Math.round(window.innerHeight)} · visualViewport ${vv} · screen ${screen.height} · short by ${short}px<br>Safe area: top ${escapeHtml(insT)} · bottom ${escapeHtml(insB)} · standalone ${standalone}</div>`;
   wrap.appendChild(aboutCard);
 
   main.appendChild(wrap);
