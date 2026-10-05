@@ -652,7 +652,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v99";
+const APP_BUILD = "v100";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1650,23 +1650,274 @@ function renderMonthlyDash(main, ym){
     return;
   }
 
-  // The old "ATM / cash needed" card was a forward-looking plan figure
-  // (sum of Budget Setup items flagged Cash) that didn't reflect what was
-  // actually spent in cash this month — dropped in favor of the real
-  // payment-method split chart below, which now also carries MXN. It leads
-  // the dashboard (payment method first, category detail second), per
-  // request. Title is "Spending by payment method", not "Cash vs. card" —
-  // the chart has always plotted three bars (Cash/Card/Transfer), and the
-  // old title quietly dropped the third one.
-  const splitCard = el("div","card stack");
-  splitCard.innerHTML = `<div class="eyebrow">Spending by payment method, ${MONTHS[mIdx]}</div><canvas id="chartSplit" height="140"></canvas>`;
-  wrap.appendChild(splitCard);
-
+  // Payment-method split leads (what was paid how), then the month's
+  // exchange rate paid (moved here from Annual Outlook), then anything
+  // flagged for reimbursement, then the per-category detail. The split is
+  // plain HTML bars, not a canvas, so USD and MXN can both always be read
+  // off the same row — its MXN is the sum of each entry's own rate, never
+  // USD times the year's baseline.
+  wrap.appendChild(paymentMethodCard(ym, mIdx));
+  const fx = fxMonthCard(ym, mIdx);
+  wrap.appendChild(fx.card);
+  const reimb = reimbursementsCard(ym, mIdx);
+  if(reimb) wrap.appendChild(reimb);
   wrap.appendChild(categoryMxnBreakdownCard(ym, mIdx));
 
   main.appendChild(wrap);
 
-  drawSplitChart(ym);
+  fx.draw();
+}
+
+// One look for every Chart.js tooltip in the app — the card surface, hairline
+// border, rounded corners and 2-decimal figures — so charts never fall back
+// to Chart.js's default dark-grey box.
+function chartTooltip(callbacks, extra){
+  return Object.assign({
+    backgroundColor: cssVar("--surface-2"),
+    titleColor: cssVar("--ink"),
+    bodyColor: cssVar("--ink-soft"),
+    borderColor: cssVar("--line"),
+    borderWidth: 1,
+    padding: 10,
+    cornerRadius: 8,
+    displayColors: false,
+    titleFont:{ family:"Work Sans", weight:"600", size:12 },
+    bodyFont:{ family:"Work Sans", size:12 },
+    callbacks: callbacks || {},
+  }, extra || {});
+}
+
+// Spending by payment method — four methods, USD/MXN toggle local to this
+// card (same button pattern as "Where [month] is going"). Same Excluded
+// filter as the month's Spent so a prepaid category doesn't show up here.
+function paymentMethodCard(ym, mIdx){
+  const card = el("div","card stack");
+  const baseRate = yearSettings(yearOfYM(ym)).baseRate;
+  const data = state.monthCategoryData[ym] || {};
+  const excludedIds = new Set(Object.keys(data).filter(id=> data[id] && data[id].excluded));
+  const methods = [["cash","Cash","--cash"],["card","Card","--primary"],["transfer","Bank transfer","--transfer"],["service","Transfer service","--transfer"]];
+  const tot = {}; methods.forEach(([k])=> tot[k] = { usd:0, mxn:0 });
+  state.actuals.filter(a=>ymOfDate(a.date)===ym && !excludedIds.has(a.categoryId)).forEach(a=>{
+    const rate = a.rate || baseRate;
+    const k = tot[a.paymentMethod] ? a.paymentMethod : "card";
+    tot[k].usd = roundCents(tot[k].usd + toUSD(a.amount||0, a.currency, rate));
+    tot[k].mxn = roundCents(tot[k].mxn + toMXN(a.amount||0, a.currency, rate));
+  });
+  let primary = "USD"; // local to this card only — never written to state
+  card.innerHTML = `
+    <div class="row" style="align-items:center">
+      <div class="eyebrow" style="flex:1">Spending by payment method, ${MONTHS[mIdx]}</div>
+      <div class="row" style="gap:4px; flex:none">
+        <button type="button" class="btn small active" id="pmUSD">USD</button>
+        <button type="button" class="btn small" id="pmMXN">MXN</button>
+      </div>
+    </div>
+    <div id="pmWrap" class="stack" style="gap:12px"></div>
+  `;
+  function renderBody(){
+    const key = primary==="USD" ? "usd" : "mxn";
+    const max = Math.max(...methods.map(([k])=> tot[k][key]), 0) || 1;
+    card.querySelector("#pmWrap").innerHTML = methods.map(([k,label,cv])=>{
+      const v = tot[k];
+      const main_ = primary==="USD" ? fmtUSD(v.usd) : fmtMXN(v.mxn);
+      const alt = primary==="USD" ? fmtMXN(v.mxn) : fmtUSD(v.usd);
+      const w = Math.max(0, Math.min(100, v[key]/max*100));
+      return `
+        <div>
+          <div class="row" style="align-items:flex-end; gap:8px">
+            <span style="flex:1; font-weight:600; font-size:13px">${label}</span>
+            <span style="text-align:right"><span class="num" style="display:block; font-weight:600; font-size:13px">${main_}</span><span class="num muted" style="display:block; font-size:11px">${alt}</span></span>
+          </div>
+          <div class="catbar" style="margin-top:4px"><div style="width:${w}%; background:var(${cv})"></div></div>
+        </div>`;
+    }).join("");
+  }
+  function setPrimary(cur){
+    primary = cur;
+    card.querySelector("#pmUSD").classList.toggle("active", cur==="USD");
+    card.querySelector("#pmMXN").classList.toggle("active", cur==="MXN");
+    renderBody();
+  }
+  card.querySelector("#pmUSD").onclick = ()=> setPrimary("USD");
+  card.querySelector("#pmMXN").onclick = ()=> setPrimary("MXN");
+  renderBody();
+  return card;
+}
+
+// Exchange rate paid, this month — one dot per entry that carries a rate
+// (cash at the ATM rate, card charges at the statement rate, transfer-
+// service transfers at the service's rate). Hollow dots are dated after
+// today, i.e. scheduled but not yet spent. Bank transfers carry no rate and
+// are not here. The average and "cost you / saved you" come from the same
+// exchangeImpactForMonth the rest of the app already uses.
+function fxMonthCard(ym, mIdx){
+  const card = el("div","card stack");
+  const baseRate = yearSettings(yearOfYM(ym)).baseRate;
+  const entries = state.actuals
+    .filter(a=>ymOfDate(a.date)===ym && a.amount && a.rate)
+    .sort((a,b)=> a.date<b.date ? -1 : a.date>b.date ? 1 : 0);
+  const todayStr = new Date().toISOString().slice(0,10);
+  const scheduled = entries.filter(a=> a.date > todayStr).length;
+  const fx = exchangeImpactForMonth(ym);
+  const eyeBtn = entries.length ? `<button type="button" class="infobtn" id="fxEye" aria-label="View entries with a rate">${iconEye()}</button>` : "";
+  card.innerHTML = `
+    <div class="row" style="align-items:center">
+      <div class="eyebrow" style="flex:1">Exchange rate paid, ${MONTHS[mIdx]}</div>
+      ${eyeBtn}
+    </div>
+    ${entries.length ? `
+      <div style="position:relative; height:190px"><canvas id="chartFxMonth"></canvas></div>
+      <div class="row" style="justify-content:flex-start; gap:12px; flex-wrap:wrap; font-size:11px">
+        <span class="muted"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--primary); margin-right:4px"></span>Entry</span>
+        <span class="muted"><span style="display:inline-block; width:7px; height:7px; border-radius:50%; border:1.5px solid var(--primary); margin-right:4px"></span>Dated after today</span>
+        <span class="muted"><span style="display:inline-block; width:14px; border-top:1.5px dashed var(--ink-soft); margin-right:4px; vertical-align:middle"></span>Baseline ${baseRate.toFixed(2)}</span>
+        <span class="muted"><span style="display:inline-block; width:14px; border-top:2px solid var(--accent); margin-right:4px; vertical-align:middle"></span>Month average</span>
+      </div>
+      <div class="row" style="align-items:flex-start; gap:16px; justify-content:flex-start">
+        <div><div class="muted" style="font-size:11px">Avg rate paid</div><div class="num" style="font-weight:700; font-size:16px">${fx.avgRate.toFixed(2)}</div></div>
+        <div><div class="muted" style="font-size:11px">vs. baseline ${baseRate.toFixed(2)}</div><div class="num" style="font-weight:700; font-size:16px; color:${fx.deltaUSD<=0?'var(--good)':'var(--bad)'}">${fx.deltaUSD<=0?'Saved you '+fmtUSD(Math.abs(fx.deltaUSD)):'Cost you '+fmtUSD(fx.deltaUSD)}</div></div>
+      </div>
+      <div class="muted" style="font-size:11px">${entries.length} ${entries.length===1?"entry":"entries"} with a rate${scheduled?`; ${scheduled} dated after today`:""}. Tap a dot for details.</div>
+    ` : `<div class="empty">No rate entries logged yet this month.</div>`}
+  `;
+  const eye = card.querySelector("#fxEye");
+  if(eye) eye.onclick = ()=> openRateEntriesSheet(`Exchange rate paid, ${MONTHS[mIdx]}`, entries, baseRate);
+  function draw(){
+    const ctx = document.getElementById("chartFxMonth");
+    if(!ctx || typeof Chart==="undefined") return;
+    const dim = new Date(yearOfYM(ym), mIdx+1, 0).getDate();
+    const seen = {};
+    const pts = entries.map(a=>{
+      const day = parseInt(a.date.slice(8,10),10);
+      const k = day+"|"+a.rate.toFixed(2);
+      seen[k] = (seen[k]||0) + 1;
+      return { x: day + (seen[k]-1)*0.3, y: a.rate, a, day, future: a.date > todayStr };
+    });
+    const rates = entries.map(a=>a.rate).concat([baseRate]);
+    const lo = Math.min(...rates) - 0.1, hi = Math.max(...rates) + 0.1;
+    const primary = cssVar("--primary"), soft = cssVar("--ink-soft");
+    const datasets = [
+      { label:"Entry", isPoint:true, data: pts.filter(p=>!p.future), backgroundColor: primary, borderColor: primary, pointRadius:4.5, pointHoverRadius:7 },
+      { label:"Dated after today", isPoint:true, data: pts.filter(p=>p.future), backgroundColor: cssVar("--surface"), borderColor: primary, borderWidth:1.5, pointRadius:4.5, pointHoverRadius:7 },
+      { type:"line", label:"Baseline", data:[{x:0,y:baseRate},{x:dim+1,y:baseRate}], borderColor: soft, borderDash:[5,4], borderWidth:1.5, pointRadius:0, tension:0 },
+    ];
+    if(fx) datasets.push({ type:"line", label:"Month average", data:[{x:0,y:fx.avgRate},{x:dim+1,y:fx.avgRate}], borderColor: cssVar("--accent"), borderWidth:2, pointRadius:0, tension:0 });
+    try{
+      if(charts.fxMonth) charts.fxMonth.destroy();
+      charts.fxMonth = new Chart(ctx, {
+        type:"scatter",
+        data:{ datasets },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          interaction:{ mode:"nearest", intersect:true },
+          plugins:{
+            legend:{ display:false },
+            tooltip: chartTooltip({
+              title:(items)=>{ const r = items[0].raw; return `${r.a.name || "Entry"} · ${MONTHS[mIdx]} ${r.day}`; },
+              label:(c)=>{
+                const r = c.raw, a = r.a;
+                const amt = a.currency==="MXN" ? fmtMXN(a.amount) : fmtUSD(a.amount);
+                return [`${amt} at ${a.rate.toFixed(4)}`].concat(r.future ? ["Dated after today"] : []);
+              },
+            }, { filter:(item)=> !!item.dataset.isPoint }),
+          },
+          scales:{
+            x:{ type:"linear", min:0, max:dim+1, ticks:{ color:soft, stepSize:5, callback:(v)=> (v>=1 && v<=dim) ? v : "" }, grid:{display:false} },
+            y:{ min:lo, max:hi, ticks:{ color:soft, maxTicksLimit:5, callback:(v)=> Number(v).toFixed(2) }, grid:{color:cssVar("--line")} },
+          },
+        },
+      });
+    } catch(e){ chartRenderError(ctx, e); }
+  }
+  return { card, draw };
+}
+
+// Read-only drawer listing the entries behind a rate card — same standard
+// sheet as everywhere else, so a long list scrolls inside the drawer instead
+// of stretching the dashboard.
+function sheetDate(iso){ return `${MONTHS[parseInt(iso.slice(5,7),10)-1].slice(0,3)} ${parseInt(iso.slice(8,10),10)}`; }
+function openRateEntriesSheet(title, entries, baseRate){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const rows = entries.length ? entries.map(a=>{
+    const day = sheetDate(a.date);
+    const amt = a.currency==="MXN" ? fmtMXN(a.amount) : fmtUSD(a.amount);
+    return `
+      <div class="row" style="gap:10px; padding:8px 0; border-bottom:1px solid var(--line); align-items:flex-start">
+        <span class="muted num" style="width:54px; flex:none; font-size:12px; white-space:nowrap">${day}</span>
+        <span style="flex:1; min-width:0">
+          <span style="display:block; font-weight:600; font-size:13px">${escapeHtml(a.name || "Expense")}</span>
+          <span class="muted" style="display:block; font-size:11px">${paymentLabel(a.paymentMethod)} · ${amt} at ${a.rate.toFixed(4)}</span>
+        </span>
+        <span class="num" style="font-weight:600; font-size:13px">${fmtUSD(toUSD(a.amount||0, a.currency, a.rate||baseRate))}</span>
+      </div>`;
+  }).join("") : `<div class="empty">No entries with a rate.</div>`;
+  body.innerHTML = `
+    <h3>${escapeHtml(title)}</h3>
+    <div class="muted" style="font-size:12px">${entries.length} ${entries.length===1?"entry":"entries"} · baseline ${baseRate.toFixed(2)}</div>
+    <div class="stack" style="gap:0">${rows}</div>
+    <div class="dialog-actions"><button class="btn ghost" id="reClose">Close</button></div>
+  `;
+  body.querySelector("#reClose").onclick = ()=> dlg.close();
+  openSheet();
+}
+
+// Reimbursements due — expenses flagged "Reimburse to" for this month,
+// totalled per person. Name + total only; the eye opens the read-only list.
+// Omitted entirely when nothing is flagged.
+function reimbursementTotalsForMonth(ym){
+  const baseRate = yearSettings(yearOfYM(ym)).baseRate;
+  const out = {};
+  state.actuals.forEach(a=>{
+    if(!a.reimburseTo || ymOfDate(a.date)!==ym) return;
+    const o = out[a.reimburseTo] || (out[a.reimburseTo] = { usd:0, items:[] });
+    o.usd = roundCents(o.usd + toUSD(a.amount||0, a.currency, a.rate||baseRate));
+    o.items.push(a);
+  });
+  return out;
+}
+function reimbursementsCard(ym, mIdx){
+  const totals = reimbursementTotalsForMonth(ym);
+  const people = REIMBURSE_OPTIONS.filter(o=> o.id && totals[o.id]);
+  if(!people.length) return null;
+  const card = el("div","card stack");
+  card.innerHTML = `
+    <div class="eyebrow">Reimbursements due, ${MONTHS[mIdx]}</div>
+    <div class="stack" style="gap:8px">
+      ${people.map(o=>`
+        <div class="row" style="align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
+          <span style="flex:1; font-weight:600">${escapeHtml(o.label)}</span>
+          <span class="num" style="font-weight:700; color:var(--accent)">${fmtUSD(totals[o.id].usd)}</span>
+          <button type="button" class="infobtn" data-person="${o.id}" aria-label="View expenses to reimburse ${escapeHtml(o.label)}">${iconEye()}</button>
+        </div>`).join("")}
+    </div>
+  `;
+  card.querySelectorAll("[data-person]").forEach(b=>{
+    b.onclick = ()=> openReimbursementSheet(ym, b.dataset.person);
+  });
+  return card;
+}
+function openReimbursementSheet(ym, personId){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const baseRate = yearSettings(yearOfYM(ym)).baseRate;
+  const t = reimbursementTotalsForMonth(ym)[personId] || { usd:0, items:[] };
+  const items = t.items.slice().sort((a,b)=> a.date<b.date ? -1 : a.date>b.date ? 1 : 0);
+  const rows = items.map(a=>`
+    <div class="row" style="gap:10px; padding:8px 0; border-bottom:1px solid var(--line)">
+      <span class="muted num" style="width:54px; flex:none; font-size:12px; white-space:nowrap">${sheetDate(a.date)}</span>
+      <span style="flex:1; min-width:0; font-weight:600; font-size:13px">${escapeHtml(a.name || "Expense")}</span>
+      <span class="num" style="font-weight:600; font-size:13px">${fmtUSD(toUSD(a.amount||0, a.currency, a.rate||baseRate))}</span>
+    </div>`).join("");
+  body.innerHTML = `
+    <h3>Reimburse ${escapeHtml(reimburseLabel(personId))}</h3>
+    <div class="muted" style="font-size:12px">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)} · ${items.length} ${items.length===1?"expense":"expenses"}</div>
+    <div class="stack" style="gap:0">${rows}</div>
+    <div class="row" style="align-items:center"><span class="muted" style="flex:1">Total to send</span><span class="num" style="font-weight:700; font-size:16px; color:var(--accent)">${fmtUSD(t.usd)}</span></div>
+    <div class="dialog-actions"><button class="btn ghost" id="reClose">Close</button></div>
+  `;
+  body.querySelector("#reClose").onclick = ()=> dlg.close();
+  openSheet();
 }
 
 // Per-category USD/MXN/effective-rate breakdown for the month — a table,
@@ -1800,31 +2051,73 @@ function renderOutlook(main){
   `;
   wrap.appendChild(chartCard);
 
-  // The base rate used to sit in the global header; it lives here now,
-  // next to the chart it actually explains, instead of on every screen.
-  // The averaging/impact lines below only appear once at least one entry
-  // anywhere this year has a rate recorded — ATM pulls, card charges, Wise
-  // transfers, whatever the real event was. Year-to-date figure, since
-  // this tab has no single month in view.
-  const fx = exchangeImpactForYear(year);
-  const fxCard = el("div","card stack");
-  fxCard.innerHTML = `
-    <div class="row" style="align-items:center">
-      <div class="eyebrow">Exchange rate over time</div>
-      <span class="muted num" style="font-size:12px; white-space:nowrap">Base USD → MXN ${yearSettings(year).baseRate.toFixed(2)}</span>
-    </div>
-    <canvas id="chartRate" height="160"></canvas>
-    ${fx ? `
-      <div class="muted" style="margin-top:2px">${fx.count} ${fx.count===1?"entry":"entries"} with a rate logged this year, averaging ${fx.avgRate.toFixed(2)} vs. your ${yearSettings(year).baseRate.toFixed(2)} baseline</div>
-      <div class="num" style="font-weight:600; color:${fx.deltaUSD<=0?'var(--good)':'var(--bad)'}">${fx.deltaUSD<=0?'Saved you '+fmtUSD(Math.abs(fx.deltaUSD)):'Cost you '+fmtUSD(fx.deltaUSD)} vs. your baseline rate, year to date</div>
-    ` : `<div class="muted" style="margin-top:2px">No rate entries logged yet this year.</div>`}
-  `;
-  wrap.appendChild(fxCard);
+  // The month-by-month exchange-rate line moved to the Monthly dashboard
+  // (one dot per entry). This card is the year view: what rate each payment
+  // method actually got, against the year's baseline.
+  wrap.appendChild(rateByMethodCard(year));
 
   main.appendChild(wrap);
 
   drawMonthlyChart();
-  drawRateChart();
+}
+
+// Rate paid by payment method, year to date. Dot = amount-weighted average
+// rate for entries that carry one; the bar runs from the baseline to the dot,
+// and the right-hand figure is what that gap cost (or saved) in USD. Bank
+// transfers carry no rate, so they're listed but not compared. Changing the
+// year's baseline restates the dollar figures (they're measured against it)
+// but never the rates themselves — each entry keeps the rate it was logged at.
+function rateByMethodCard(year){
+  const card = el("div","card stack");
+  const baseRate = yearSettings(year).baseRate;
+  const all = state.actuals.filter(a=> yearOfDate(a.date)===year && a.amount);
+  const withRate = all.filter(a=> a.rate);
+  const methods = [["cash","Cash"],["card","Card"],["service","Transfer service"],["transfer","Bank transfer"]];
+  const rows = methods.map(([k,label])=>{
+    const count = all.filter(a=>a.paymentMethod===k).length;
+    if(k==="transfer") return { label, count, none:"no rate" };
+    const L = withRate.filter(a=>a.paymentMethod===k);
+    if(!L.length) return { label, count, none: count ? "no rate" : "none yet" };
+    let mxn=0, usd=0;
+    L.forEach(a=>{ mxn += toMXN(a.amount, a.currency, a.rate); usd += toUSD(a.amount, a.currency, a.rate); });
+    return { label, count, n:L.length, avg: mxn/usd, delta: roundCents(usd - mxn/baseRate) };
+  });
+  const rates = rows.filter(r=>r.avg).map(r=>r.avg).concat([baseRate]);
+  const lo = Math.floor((Math.min(...rates)-0.1)*10)/10, hi = Math.ceil((Math.max(...rates)+0.1)*10)/10;
+  const pos = r=> ((r-lo)/(hi-lo)*100).toFixed(2);
+  const fx = exchangeImpactForYear(year);
+  const eyeBtn = withRate.length ? `<button type="button" class="infobtn" id="rbmEye" aria-label="View entries with a rate">${iconEye()}</button>` : "";
+  card.innerHTML = `
+    <div class="row" style="align-items:center">
+      <div class="eyebrow" style="flex:1">Rate paid by payment method, ${year}</div>
+      ${eyeBtn}
+    </div>
+    ${withRate.length ? `
+      <div style="display:grid; grid-template-columns:88px 1fr 112px; column-gap:8px; row-gap:10px; align-items:center">
+        <span></span>
+        <span style="position:relative; height:14px"><span class="muted" style="position:absolute; left:${pos(baseRate)}%; transform:translateX(-50%); font-size:10px; white-space:nowrap">Baseline ${baseRate.toFixed(2)}</span></span>
+        <span></span>
+        ${rows.map(r=>`
+          <span><span style="display:block; font-weight:600; font-size:13px">${r.label}</span><span class="muted" style="display:block; font-size:11px">${r.avg ? r.n+" with a rate" : (r.count+" "+(r.count===1?"entry":"entries"))}</span></span>
+          <span style="position:relative; height:26px">
+            <span style="position:absolute; left:0; right:0; top:13px; border-top:1px solid var(--line)"></span>
+            <span style="position:absolute; left:${pos(baseRate)}%; top:5px; height:16px; border-left:2px solid var(--ink-soft)"></span>
+            ${r.avg ? `
+              <span style="position:absolute; left:${Math.min(pos(r.avg),pos(baseRate))}%; width:${Math.abs(pos(r.avg)-pos(baseRate))}%; top:12px; height:3px; background:var(--primary)"></span>
+              <span style="position:absolute; left:${pos(r.avg)}%; top:8px; width:10px; height:10px; margin-left:-5px; border-radius:50%; background:var(--primary); border:2px solid var(--surface); box-sizing:content-box"></span>
+              <span class="num" style="position:absolute; left:${pos(r.avg)}%; top:-8px; transform:translateX(-50%); font-size:10px; font-weight:600">${r.avg.toFixed(2)}</span>
+            ` : `<span class="muted" style="position:absolute; left:6px; top:5px; font-size:11px">${r.none}</span>`}
+          </span>
+          <span class="num" style="text-align:right; font-size:12px; white-space:nowrap; color:${r.avg ? (r.delta<=0?'var(--good)':'var(--bad)') : 'var(--ink-soft)'}">${r.avg ? (r.delta<=0?'Saved '+fmtUSD(Math.abs(r.delta)):'Cost you '+fmtUSD(r.delta)) : "n/a"}</span>
+        `).join("")}
+      </div>
+      <div class="muted" style="font-size:11px">Dot = average rate paid, weighted by amount. Right = cost vs. your ${baseRate.toFixed(2)} baseline. Bank transfers carry no rate.</div>
+      ${fx ? `<div class="num" style="font-weight:600; color:${fx.deltaUSD<=0?'var(--good)':'var(--bad)'}">${fx.deltaUSD<=0?'Saved you '+fmtUSD(Math.abs(fx.deltaUSD)):'Cost you '+fmtUSD(fx.deltaUSD)} vs. your baseline, all ${fx.count} entries with a rate (avg ${fx.avgRate.toFixed(2)})</div>` : ""}
+    ` : `<div class="empty">No rate entries logged yet this year.</div>`}
+  `;
+  const eye = card.querySelector("#rbmEye");
+  if(eye) eye.onclick = ()=> openRateEntriesSheet(`Entries with a rate, ${year}`, withRate.slice().sort((a,b)=> a.date<b.date?-1:a.date>b.date?1:0), baseRate);
+  return card;
 }
 
 let charts = {};
@@ -1859,7 +2152,7 @@ function drawMonthlyChart(){
           // places on a raw JS number, which is why a summed actual like
           // 5372.335999... read as "$5,372.336" — every dollar figure in
           // this app is 2 decimals, tooltips included.
-          tooltip:{ callbacks:{ label:(c)=> `${c.dataset.label}: ${fmtUSD(c.parsed.y)}` } },
+          tooltip: chartTooltip({ label:(c)=> `${c.dataset.label}: ${fmtUSD(c.parsed.y)}` }),
         },
         scales:{
           x:{ ticks:{color:cssVar("--ink-soft")}, grid:{display:false} },
@@ -1870,35 +2163,6 @@ function drawMonthlyChart(){
   } catch(e){
     chartRenderError(ctx, e);
   }
-}
-function drawSplitChart(ym){
-  const ctx = document.getElementById("chartSplit");
-  if(!ctx || typeof Chart==="undefined") return;
-  const rate = yearSettings(yearOfYM(ym)).baseRate;
-  // Same Excluded-category filter as the month's Spent/Available/Surplus —
-  // this chart is part of the Dashboard, so a prepaid category's cash
-  // shouldn't show up in "where did this month's money go" any more than
-  // it counts toward this month's Spent.
-  const data = state.monthCategoryData[ym] || {};
-  const excludedIds = new Set(Object.keys(data).filter(id=> data[id] && data[id].excluded));
-  let cash=0, card=0, transfer=0;
-  state.actuals.filter(a=>ymOfDate(a.date)===ym && !excludedIds.has(a.categoryId)).forEach(a=>{
-    const usd = toUSD(a.amount||0, a.currency, a.rate||rate);
-    if(a.paymentMethod==="cash") cash+=usd;
-    else if(a.paymentMethod==="transfer") transfer+=usd;
-    else card+=usd;
-  });
-  if(charts.split) charts.split.destroy();
-  charts.split = new Chart(ctx, {
-    type:"bar",
-    data:{ labels:["Cash","Card","Transfer"], datasets:[{ data:[cash,card,transfer], backgroundColor:[cssVar("--cash"), cssVar("--primary"), cssVar("--transfer")], borderRadius:6 }] },
-    options:{ indexAxis:"y", plugins:{
-      legend:{display:false},
-      // MXN alongside USD — this month's rate, same as every other
-      // USD/MXN readout on this screen (categoryMxnBreakdownCard).
-      tooltip:{ callbacks:{ label:(c)=> `${fmtUSD(c.parsed.x)} · ${fmtMXN(c.parsed.x*rate)}` } },
-    }, scales:{ x:{ticks:{color:cssVar("--ink-soft")},grid:{color:cssVar("--line")}}, y:{ticks:{color:cssVar("--ink-soft")},grid:{display:false}} } }
-  });
 }
 function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#888"; }
 
@@ -1922,80 +2186,6 @@ function chartRenderError(canvas, err){
   msg.style.color = "var(--bad)";
   msg.textContent = "Chart failed to render: " + (err && err.message ? err.message : String(err));
   card.appendChild(msg);
-}
-
-// One point per month, not per transaction — plotting every logged entry
-// individually produced an unreadable, spiky line once dozens of entries
-// landed on the same handful of dates. A month with real rate entries
-// averages them (weighted by amount, same math as exchangeImpactForMonth);
-// a month with none plots the baseline instead, flagged as an estimate so
-// the line always has something to show — past AND future months both.
-function exchangeSeriesByMonth(){
-  const year = yearOfYM(ui.ym);
-  const baseRate = yearSettings(year).baseRate;
-  return MONTHS.map((_,mIdx)=>{
-    const ym = ymOf(year, mIdx);
-    const entries = state.actuals.filter(a=>ymOfDate(a.date)===ym && a.amount && a.rate);
-    if(!entries.length) return { month:mIdx, rate: baseRate, isEstimate:true };
-    let mxnTotal=0, actualUSD=0;
-    entries.forEach(a=>{
-      const mxnEquiv = a.currency==="MXN" ? a.amount : a.amount*a.rate;
-      const usdAtRate = a.currency==="MXN" ? a.amount/a.rate : a.amount;
-      mxnTotal += mxnEquiv;
-      actualUSD += usdAtRate;
-    });
-    return { month:mIdx, rate: mxnTotal/actualUSD, isEstimate:false };
-  });
-}
-function drawRateChart(){
-  const ctx = document.getElementById("chartRate");
-  if(!ctx || typeof Chart==="undefined") return;
-  const series = exchangeSeriesByMonth();
-  const rates = series.map(s=>s.rate);
-  const isEstimate = series.map(s=>s.isEstimate);
-  const baseRate = yearSettings(yearOfYM(ui.ym)).baseRate;
-  const baseline = series.map(()=> baseRate);
-  const accentColor = cssVar("--accent");
-  const mutedColor = cssVar("--ink-soft");
-  try{
-    if(charts.rate) charts.rate.destroy();
-    charts.rate = new Chart(ctx, {
-      type:"line",
-      data:{ labels:MONTHS, datasets:[
-        {
-          label:"Your rate", data:rates,
-          borderColor: accentColor, backgroundColor:"transparent", borderWidth:2, tension:0.15,
-          pointHoverRadius:5,
-          pointRadius: isEstimate.map(e=> e?4:3),
-          pointBackgroundColor: isEstimate.map(e=> e ? "transparent" : accentColor),
-          pointBorderColor: isEstimate.map(e=> e ? mutedColor : accentColor),
-          // A segment (the line between two adjacent months) dashes and
-          // mutes if either end is an estimate — so a stretch running into
-          // months you haven't reached yet visibly trails off instead of
-          // looking like more logged data.
-          segment:{
-            borderDash: c => (isEstimate[c.p0DataIndex] || isEstimate[c.p1DataIndex]) ? [5,4] : undefined,
-            borderColor: c => (isEstimate[c.p0DataIndex] || isEstimate[c.p1DataIndex]) ? mutedColor : accentColor,
-          },
-        },
-        { label:"Baseline", data:baseline, borderColor: mutedColor, backgroundColor:"transparent", borderWidth:1.5, borderDash:[5,4], pointRadius:0, tension:0 },
-      ]},
-      options:{
-        responsive:true,
-        interaction:{ mode:"index", intersect:false },
-        plugins:{
-          legend:{ labels:{ color:mutedColor, font:{family:"Work Sans"}, boxWidth:12 } },
-          tooltip:{ mode:"index", intersect:false, callbacks:{ label:(c)=> `${c.dataset.label}: ${c.parsed.y.toFixed(2)}` } },
-        },
-        scales:{
-          x:{ ticks:{ color:mutedColor }, grid:{display:false} },
-          y:{ ticks:{color:mutedColor}, grid:{color:cssVar("--line")} }
-        }
-      }
-    });
-  } catch(e){
-    chartRenderError(ctx, e);
-  }
 }
 
 /* ---------------------------------------------------------------
@@ -2645,9 +2835,16 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
         <option value="card" ${!existing||existing.paymentMethod==="card"?"selected":""}>Card</option>
         <option value="cash" ${existing&&existing.paymentMethod==="cash"?"selected":""}>Cash (ATM)</option>
         <option value="transfer" ${existing&&existing.paymentMethod==="transfer"?"selected":""}>Bank transfer</option>
+        <option value="service" ${existing&&existing.paymentMethod==="service"?"selected":""}>Transfer service</option>
       </select>
     </label>
     <label>Date<input type="date" id="aDate" value="${existing?existing.date:defaultDate}"></label>
+    <div class="field-block">
+      <div class="muted" style="font-size:12px; margin-bottom:6px">Reimburse to</div>
+      <div class="row" style="gap:6px; justify-content:flex-start" id="aReimb">
+        ${REIMBURSE_OPTIONS.map(o=>`<button type="button" class="btn small ${(existing&&existing.reimburseTo||"")===o.id?"active":""}" data-reimb="${o.id}">${o.label}</button>`).join("")}
+      </div>
+    </div>
     <label>Notes (optional)<textarea id="aNote" rows="2" placeholder="Any detail worth remembering about this expense">${existing?escapeHtml(existing.note||""):""}</textarea></label>
     <div class="dialog-actions" style="justify-content:space-between">
       ${existing ? `<button class="btn small danger" id="aDelete">${iconTrash()}<span>Delete entry</span></button>` : `<span></span>`}
@@ -2668,6 +2865,42 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
   body.querySelector("#itRate").value = curRate;
   if(curCurrency==="MXN") body.querySelector("#itCurMXN").click();
 
+  // Bank transfers carry no rate — the bank's own spread isn't something
+  // the person sees, and filling in a market rate would record a number
+  // that isn't what they paid. The currency toggle, MXN and Rate fields
+  // hide and the entry saves in USD with no rate, so FX stats leave it
+  // out (exchangeImpact* already skip rate-less entries). A legacy bank
+  // transfer that already carries a rate keeps showing it, untouched.
+  const payEl = body.querySelector("#aPay");
+  const hasLegacyRate = !!(existing && existing.paymentMethod==="transfer" && existing.rate);
+  const noRateMode = ()=> payEl.value==="transfer" && !hasLegacyRate;
+  function applyPayMode(){
+    const off = noRateMode();
+    if(off) body.querySelector("#itCurUSD").click();
+    ["#itCurUSD","#itMXN","#itRate"].forEach(sel=>{
+      const node = body.querySelector(sel);
+      const holder = sel==="#itCurUSD" ? node.closest(".row") : node.closest("label");
+      if(holder) holder.style.display = off ? "none" : "";
+    });
+    let note = body.querySelector("#aNoRateNote");
+    if(off && !note){
+      note = el("div","muted"); note.id = "aNoRateNote"; note.style.fontSize = "12px";
+      note.textContent = "Bank transfers are recorded in USD with no exchange rate.";
+      body.querySelector("#itUSD").closest("label").after(note);
+    }
+    if(!off && note) note.remove();
+  }
+  payEl.addEventListener("change", applyPayMode);
+  applyPayMode();
+
+  let reimburseTo = (existing && existing.reimburseTo) || "";
+  body.querySelectorAll("[data-reimb]").forEach(b=>{
+    b.onclick = ()=>{
+      reimburseTo = b.dataset.reimb;
+      body.querySelectorAll("[data-reimb]").forEach(x=> x.classList.toggle("active", x===b));
+    };
+  });
+
   body.querySelector("#aCancel").onclick = ()=>{ if(onBack){ onBack(); } else { dlg.close(); } };
   onceClick(body.querySelector("#aSave"), async ()=>{
     const amount = linked.getNativeAmount();
@@ -2681,10 +2914,11 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
       date,
       amount,
       currency: linked.getCurrency(),
-      rate: linked.getRate(),
+      rate: noRateMode() ? null : linked.getRate(),
       paymentMethod: body.querySelector("#aPay").value,
       note: body.querySelector("#aNote").value.trim(),
     };
+    if(reimburseTo) rec.reimburseTo = reimburseTo;
     if(existing){
       const idx = state.actuals.findIndex(x=>x.id===existing.id);
       state.actuals[idx] = rec;
@@ -2942,7 +3176,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       <div class="setuprow" role="button" tabindex="0" data-entry="${a.id}">
         <span class="name-wrap">
           <span class="name">${escapeHtml(a.name || "Expense")}</span>
-          <span class="meta-note ${paymentMetaClass(a.paymentMethod)}">${paymentLabel(a.paymentMethod)}</span>
+          <span class="meta-note ${paymentMetaClass(a.paymentMethod)}">${paymentLabel(a.paymentMethod)}${a.reimburseTo?` · Reimburse ${escapeHtml(reimburseLabel(a.reimburseTo))}`:""}</span>
         </span>
         <span class="amt num">${fmtUSD(amt)}</span>
         <button class="infobtn" type="button" data-edit="${a.id}" aria-label="Edit ${escapeHtml(a.name||"expense")}">${iconEdit()}</button>
@@ -3733,6 +3967,7 @@ function openLineItemDialog(categoryId, existing, ym){
         <option value="card" ${!existing||existing.paymentMethod==="card"?"selected":""}>Card</option>
         <option value="cash" ${existing&&existing.paymentMethod==="cash"?"selected":""}>Cash (ATM)</option>
         <option value="transfer" ${existing&&existing.paymentMethod==="transfer"?"selected":""}>Bank transfer</option>
+        <option value="service" ${existing&&existing.paymentMethod==="service"?"selected":""}>Transfer service</option>
       </select>
     </label>
     <label>How often it actually recurs
@@ -4462,10 +4697,19 @@ function iconChevronDown(){
 // generic glyph was tried and dropped as pure clutter with no information
 // of its own.
 
+// Who an expense has to be paid back to at month-end ("" = nobody). Expenses
+// only — transfers are money coming into the budget, never reimbursed.
+const REIMBURSE_OPTIONS = [
+  { id:"", label:"None" },
+  { id:"claude", label:"Claude" },
+  { id:"constance", label:"Constance" },
+];
+function reimburseLabel(id){ const o = REIMBURSE_OPTIONS.find(x=>x.id===id); return o && o.id ? o.label : ""; }
+
 // Short, sentence-case forms only — every pill in the app uses these, so
 // they need to be short and consistent-width, not full labels.
 function paymentLabel(pm){
-  return pm==="cash" ? "Cash" : pm==="transfer" ? "Transfer" : "Card";
+  return pm==="cash" ? "Cash" : pm==="transfer" ? "Bank transfer" : pm==="service" ? "Transfer service" : "Card";
 }
 // Only non-Monthly gets a label — Monthly is the default for nearly every
 // item, so calling it out on every row would just be noise. Returns "" for
@@ -4476,7 +4720,7 @@ function freqLabel(freq){
 // Color for the text-only meta-note variant (setuprow rows) — same
 // color language the old pills used, just applied to text instead of a badge.
 function paymentMetaClass(pm){
-  return pm==="cash" ? "mm-cash" : pm==="transfer" ? "mm-transfer" : "mm-card";
+  return pm==="cash" ? "mm-cash" : (pm==="transfer" || pm==="service") ? "mm-transfer" : "mm-card";
 }
 
 // All sheets share one <dialog>. Sheets can navigate to another sheet
