@@ -630,7 +630,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v95";
+const APP_BUILD = "v96";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1482,8 +1482,13 @@ function renderSubhead(){
     // Excluded categories for this month (and fall back to the plain
     // totals when nothing's excluded) — Surplus below comes out identical
     // to the un-adjusted figure either way, since the same amount is
-    // removed from both Available and Spent.
-    const avail = showAvail ? visibleAvailableForMonth(ym) : null;
+    // removed from both Available and Spent. For a future unconfigured
+    // month there's no seeded history to compute a real rollover-inclusive
+    // figure from, so Available falls back to the flat per-month template
+    // (yearBudgetUSD/12) instead — nothing has happened to this month yet.
+    const avail = seeded
+      ? visibleAvailableForMonth(ym)
+      : (futureUnconfigured ? roundCents(yearSettings(yearOfYM(ym)).yearBudgetUSD/12) : null);
     const spent = seeded ? visibleSpentForMonth(ym) : null;
     const surplus = seeded ? roundCents(avail - spent) : null;
     // No note line here — the sliders icon is the one signal pointing at
@@ -1493,9 +1498,12 @@ function renderSubhead(){
     // separate dot (see monthHasRolloverOrExcluded) since they're states,
     // not counts — v94 tried folding them into the one number and it broke
     // down visibly once someone excluded 3+ categories and the badge
-    // stayed stuck at "1".
-    const adjCount = fundAdjustmentsCountForMonth(ym);
-    const dotActive = monthHasRolloverOrExcluded(ym);
+    // stayed stuck at "1". The whole button is hidden for an unseeded
+    // month: Add Funds/Add Transfer only live inside this sheet, so without
+    // this guard someone could add activity to a month before it's set up,
+    // which contradicts Spent/Surplus staying "—" until it is.
+    const adjCount = seeded ? fundAdjustmentsCountForMonth(ym) : 0;
+    const dotActive = seeded && monthHasRolloverOrExcluded(ym);
     const dotJustOn = dotActive && !dotSeenMonthly[ym];
     dotSeenMonthly[ym] = dotActive;
     sub.innerHTML = `
@@ -1505,12 +1513,12 @@ function renderSubhead(){
         <div${seeded?"":` style="text-align:center"`}><div class="sh-tiny">Surplus</div><div class="num sh-amt"${seeded?` style="color:${surplus>=0?'var(--good)':'var(--bad)'}"`:""}>${seeded?fmtUSD(surplus):"—"}</div></div>
       </div>
       <div class="sh-actions">
-        <button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}${dotActive?`<span class="iconbtn-dot${dotJustOn?" pulse":""}"></span>`:""}</button>
+        ${seeded?`<button class="iconbtn" id="shFundAdj" aria-label="Fund adjustments and transfers this month">${iconSliders()}${adjCount>0?`<span class="iconbtn-badge">${adjCount}</span>`:""}${dotActive?`<span class="iconbtn-dot${dotJustOn?" pulse":""}"></span>`:""}</button>`:""}
       </div>
     `;
     sub.classList.add("show");
     sub.style.borderBottom = "none";
-    sub.querySelector("#shFundAdj").onclick = ()=> openFundAdjustmentsSheet(ym);
+    if(seeded) sub.querySelector("#shFundAdj").onclick = ()=> openFundAdjustmentsSheet(ym);
     toggleBox.appendChild(viewToggleRow(ym));
     toggleBox.classList.add("show");
   } else if(ui.tab==="categories"){
@@ -2448,7 +2456,7 @@ function openFundAdjustmentsSheet(ym){
     ["Available Budget", templateOnly, null],
     fundAdj!==0 ? ["+ Fund adjustments", fundAdj, "good"] : null,
     extIn!==0 ? ["+ External transfers in", extIn, "good"] : null,
-    rollover!==0 ? [`+ Rollover carried forward`, rollover, rollover>0?"good":"bad"] : null,
+    rollover!==0 ? [`+ Carried in from last month`, rollover, rollover>0?"good":"bad"] : null,
     excludedAmt>0 ? ["− Excluded", -excludedAmt, "bad"] : null,
   ].filter(Boolean);
   const recHtml = `
