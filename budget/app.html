@@ -483,7 +483,11 @@
     position:fixed; left:50%; right:auto; top:auto; bottom:0; margin:0;
     width:100%; max-width:640px; transform:translateX(-50%);
     max-height:85vh;
+    /* Flex column so .dialog-body takes exactly the space left after the
+       handle (flex:1, min-height:0) instead of a hardcoded vh-minus-guess. */
+    display:flex; flex-direction:column;
   }
+  dialog:not([open]){ display:none }
   dialog:focus{ outline:none }
   dialog::backdrop{background:rgba(18,32,29,.5)}
   /* Scroll lock while a sheet is open — prevents the page behind the sheet
@@ -502,13 +506,16 @@
   dialog[open]{ animation: sheetUp .22s cubic-bezier(.2,.8,.2,1) both; }
   @media (prefers-reduced-motion: reduce){ dialog[open]{ animation:none; } }
   @keyframes sheetUp{ from{ transform:translateX(-50%) translateY(24px); opacity:.4 } to{ transform:translateX(-50%) translateY(0); opacity:1 } }
-  .sheet-handle{ display:flex; justify-content:center; padding:10px 0 2px; touch-action:none }
+  .sheet-handle{ display:flex; justify-content:center; padding:10px 0 2px; touch-action:none; flex:0 0 auto }
   .sheet-handle span{ width:36px; height:4px; border-radius:999px; background:var(--line) }
   .dialog-body{
-    padding:6px 20px calc(20px + env(safe-area-inset-bottom,0px));
+    padding:6px 20px 0;
     display:flex; flex-direction:column; gap:16px;
-    max-height:calc(85vh - 18px); overflow-y:auto; overscroll-behavior:contain;
+    flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
   }
+  /* A sheet with no .dialog-actions bar (nothing owns the bottom padding)
+     still needs clearance below its last row + the safe area. */
+  .dialog-body:not(:has(.dialog-actions)){ padding-bottom:calc(20px + env(safe-area-inset-bottom,0px)) }
   /* Sticky to the bottom of .dialog-body's own scroll box (not the page) —
      a long checklist/category list inside a sheet otherwise buries Cancel/
      Apply below everything, forcing a scroll to find them. Harmless on a
@@ -522,8 +529,8 @@
      background + top border so scrolled rows don't show through under it. */
   .dialog-actions{
     display:flex; gap:10px; justify-content:flex-end;
-    position:sticky; bottom:calc(-1 * (20px + env(safe-area-inset-bottom,0px)));
-    background:var(--surface); margin-inline:-20px; padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));
+    position:sticky; bottom:0;
+    background:var(--surface); margin-inline:-20px; margin-top:4px; padding:12px 20px calc(20px + env(safe-area-inset-bottom,0px));
     border-top:1px solid var(--line);
   }
   .sheet-row{ min-height:44px; display:flex; align-items:center }
@@ -630,7 +637,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v96";
+const APP_BUILD = "v97";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
