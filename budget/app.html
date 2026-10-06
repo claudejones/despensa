@@ -308,6 +308,10 @@
 
   .catrow{display:flex; flex-direction:column; gap:6px; padding:12px 0; border-bottom:1px solid var(--line)}
   .catrow:last-child{border-bottom:none}
+  /* Excluded rows: the content dims, the buttons don't — they all still
+     work, so they shouldn't look disabled. */
+  .catrow.is-excluded > :not(.head), .catrow.is-excluded .head .name{ opacity:.6 }
+  .setuprow.is-excluded .name-wrap, .setuprow.is-excluded .amt{ opacity:.6 }
   .catrow .head{display:flex; justify-content:space-between; align-items:center; gap:8px}
   .catrow .head .name{font-weight:600; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .catrow .head .amt{font-size:14px}
@@ -652,7 +656,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v100";
+const APP_BUILD = "v103";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1706,7 +1710,7 @@ function paymentMethodCard(ym, mIdx){
   let primary = "USD"; // local to this card only — never written to state
   card.innerHTML = `
     <div class="row" style="align-items:center">
-      <div class="eyebrow" style="flex:1">Spending by payment method, ${MONTHS[mIdx]}</div>
+      <div class="eyebrow" style="flex:1">Spending by payment method</div>
       <div class="row" style="gap:4px; flex:none">
         <button type="button" class="btn small active" id="pmUSD">USD</button>
         <button type="button" class="btn small" id="pmMXN">MXN</button>
@@ -1744,11 +1748,15 @@ function paymentMethodCard(ym, mIdx){
   return card;
 }
 
-// Exchange rate paid, this month — one dot per entry that carries a rate
-// (cash at the ATM rate, card charges at the statement rate, transfer-
-// service transfers at the service's rate). Hollow dots are dated after
-// today, i.e. scheduled but not yet spent. Bank transfers carry no rate and
-// are not here. The average and "cost you / saved you" come from the same
+// Exchange rate paid, this month. Two views of the same entries (those that
+// carry a rate — cash at the ATM rate, card charges at the statement rate,
+// transfer-service transfers at the service's rate; bank transfers carry none):
+//  - By date: one dot per entry on a day axis. Hollow = dated after today.
+//  - By rate: one row per rate, bar = dollars spent at it. The default — it
+//    answers "what rates did I pay", and it still reads when most entries
+//    share a date (imports, scheduled-only months), where a date axis just
+//    stacks everything into one column.
+// The average and "cost you / saved you" come from the same
 // exchangeImpactForMonth the rest of the app already uses.
 function fxMonthCard(ym, mIdx){
   const card = el("div","card stack");
@@ -1759,13 +1767,85 @@ function fxMonthCard(ym, mIdx){
   const todayStr = new Date().toISOString().slice(0,10);
   const scheduled = entries.filter(a=> a.date > todayStr).length;
   const fx = exchangeImpactForMonth(ym);
-  const eyeBtn = entries.length ? `<button type="button" class="infobtn" id="fxEye" aria-label="View entries with a rate">${iconEye()}</button>` : "";
-  card.innerHTML = `
+  let view = "rate"; // always opens on By rate; local to this card, never written to state
+  const deltaTxt = fx ? (fx.deltaUSD<=0 ? "Saved you "+fmtUSD(Math.abs(fx.deltaUSD)) : "Cost you "+fmtUSD(fx.deltaUSD)) : "";
+  const deltaCol = fx && fx.deltaUSD<=0 ? "var(--good)" : "var(--bad)";
+  const statsHTML = fx ? `
+    <div class="row" style="align-items:flex-start; gap:16px; justify-content:flex-start">
+      <div><div class="muted" style="font-size:11px">Avg rate paid</div><div class="num" style="font-weight:700; font-size:16px">${fx.avgRate.toFixed(2)}</div></div>
+      <div><div class="muted" style="font-size:11px">vs. baseline ${baseRate.toFixed(2)}</div><div class="num" style="font-weight:700; font-size:16px; color:${deltaCol}">${deltaTxt}</div></div>
+    </div>` : "";
+  const footHTML = (hint)=> `<div class="muted" style="font-size:11px">${entries.length} ${entries.length===1?"entry":"entries"} with a rate${scheduled?`; ${scheduled} dated after today`:""}. ${hint}</div>`;
+  card.innerHTML = entries.length ? `
     <div class="row" style="align-items:center">
-      <div class="eyebrow" style="flex:1">Exchange rate paid, ${MONTHS[mIdx]}</div>
-      ${eyeBtn}
+      <div class="eyebrow" style="flex:1">Exchange rate paid</div>
+      <button type="button" class="infobtn" id="fxDetail" aria-label="View entries with a rate">${iconDocument()}</button>
     </div>
-    ${entries.length ? `
+    <div class="row" style="gap:4px; justify-content:flex-start">
+      <button type="button" class="btn small" id="fxByRate">By rate</button>
+      <button type="button" class="btn small" id="fxByDate">By date</button>
+    </div>
+    <div id="fxBody" class="stack"></div>
+  ` : `
+    <div class="eyebrow">Exchange rate paid</div>
+    <div class="empty">No rate entries logged yet this month.</div>
+  `;
+  const detailBtn = card.querySelector("#fxDetail");
+  if(detailBtn) detailBtn.onclick = ()=> openRateEntriesSheet(`Exchange rate paid, ${MONTHS[mIdx]}`, entries, baseRate);
+
+  // By-rate rows: one per distinct rate (rounded to 0.05 buckets once there
+  // are more than ten, so the list stays short). Bars are dollars at that
+  // rate; green = better than baseline, red = worse. Tap a row for a tooltip
+  // styled like the chart tooltips.
+  function rateGroups(){
+    let key = a=> Math.round(a.rate*10000)/10000;
+    if(new Set(entries.map(key)).size > 10) key = a=> Math.round(a.rate/0.05)*0.05;
+    const g = new Map();
+    entries.forEach(a=>{ const k = key(a); (g.get(k) || g.set(k,[]).get(k)).push(a); });
+    return [...g.entries()].sort((x,y)=> y[0]-x[0]).map(([rate,list])=>({ rate, list, usd: roundCents(list.reduce((t,a)=> t+toUSD(a.amount, a.currency, a.rate), 0)) }));
+  }
+  function renderRateView(body){
+    const groups = rateGroups();
+    const max = Math.max(...groups.map(g=>g.usd)) || 1;
+    body.innerHTML = `
+      <div class="muted" style="font-size:11px">Dollars spent at each rate. Green is better than your ${baseRate.toFixed(2)} baseline, red is worse.</div>
+      <div class="stack" style="gap:2px" id="fxRows">
+        ${groups.map((g,i)=>{
+          const diff = g.rate - baseRate, same = Math.abs(diff) < 0.005;
+          const col = same ? "var(--primary)" : diff>0 ? "var(--good)" : "var(--bad)";
+          return `
+          <div data-grp="${i}" style="position:relative; display:grid; grid-template-columns:62px 1fr 96px; column-gap:8px; align-items:center; padding:7px 0; cursor:pointer">
+            <span><span class="num" style="display:block; font-weight:700; font-size:14px">${g.rate.toFixed(2)}</span><span class="muted" style="display:block; font-size:11px">${same?"baseline":(diff>0?"+":"")+diff.toFixed(2)}</span></span>
+            <span style="display:block; height:16px; border-radius:6px; background:var(--surface-2)"><span style="display:block; height:100%; width:${(g.usd/max*100).toFixed(1)}%; min-width:4px; border-radius:6px; background:${col}"></span></span>
+            <span style="text-align:right"><span class="num" style="display:block; font-weight:600; font-size:13px">${fmtUSD(g.usd)}</span><span class="muted" style="display:block; font-size:11px">${g.list.length} ${g.list.length===1?"entry":"entries"}</span></span>
+          </div>`;
+        }).join("")}
+      </div>
+      ${statsHTML}
+      ${footHTML("Tap a row for details.")}
+    `;
+    let openTip = null;
+    function closeTip(){ if(openTip){ openTip.remove(); openTip = null; } }
+    body.querySelectorAll("[data-grp]").forEach(row=>{
+      row.onclick = (ev)=>{
+        ev.stopPropagation();
+        const wasOpen = openTip && openTip.parentNode === row;
+        closeTip();
+        if(wasOpen) return;
+        const g = groups[Number(row.dataset.grp)];
+        const names = g.list.map(a=> a.name || "Expense");
+        const shown = names.slice(0,3).join(", ") + (names.length>3 ? `, +${names.length-3} more` : "");
+        const t = el("div");
+        t.style.cssText = "position:absolute; left:70px; right:8px; top:100%; z-index:5; background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:10px; font-size:12px; line-height:1.4; box-shadow:0 4px 14px rgba(0,0,0,.25)";
+        t.innerHTML = `<div style="font-weight:600; color:var(--ink)">${g.rate.toFixed(2)} · ${g.list.length} ${g.list.length===1?"entry":"entries"}</div><div style="color:var(--ink-soft)">${escapeHtml(shown)}</div><div style="color:var(--ink-soft)">${fmtUSD(g.usd)} at this rate</div>`;
+        row.appendChild(t); openTip = t;
+      };
+    });
+    body.onclick = closeTip;
+  }
+
+  function renderDateView(body){
+    body.innerHTML = `
       <div style="position:relative; height:190px"><canvas id="chartFxMonth"></canvas></div>
       <div class="row" style="justify-content:flex-start; gap:12px; flex-wrap:wrap; font-size:11px">
         <span class="muted"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--primary); margin-right:4px"></span>Entry</span>
@@ -1773,17 +1853,13 @@ function fxMonthCard(ym, mIdx){
         <span class="muted"><span style="display:inline-block; width:14px; border-top:1.5px dashed var(--ink-soft); margin-right:4px; vertical-align:middle"></span>Baseline ${baseRate.toFixed(2)}</span>
         <span class="muted"><span style="display:inline-block; width:14px; border-top:2px solid var(--accent); margin-right:4px; vertical-align:middle"></span>Month average</span>
       </div>
-      <div class="row" style="align-items:flex-start; gap:16px; justify-content:flex-start">
-        <div><div class="muted" style="font-size:11px">Avg rate paid</div><div class="num" style="font-weight:700; font-size:16px">${fx.avgRate.toFixed(2)}</div></div>
-        <div><div class="muted" style="font-size:11px">vs. baseline ${baseRate.toFixed(2)}</div><div class="num" style="font-weight:700; font-size:16px; color:${fx.deltaUSD<=0?'var(--good)':'var(--bad)'}">${fx.deltaUSD<=0?'Saved you '+fmtUSD(Math.abs(fx.deltaUSD)):'Cost you '+fmtUSD(fx.deltaUSD)}</div></div>
-      </div>
-      <div class="muted" style="font-size:11px">${entries.length} ${entries.length===1?"entry":"entries"} with a rate${scheduled?`; ${scheduled} dated after today`:""}. Tap a dot for details.</div>
-    ` : `<div class="empty">No rate entries logged yet this month.</div>`}
-  `;
-  const eye = card.querySelector("#fxEye");
-  if(eye) eye.onclick = ()=> openRateEntriesSheet(`Exchange rate paid, ${MONTHS[mIdx]}`, entries, baseRate);
-  function draw(){
-    const ctx = document.getElementById("chartFxMonth");
+      ${statsHTML}
+      ${footHTML("Tap a dot for details.")}
+    `;
+    drawDateChart(body.querySelector("#chartFxMonth"));
+  }
+
+  function drawDateChart(ctx){
     if(!ctx || typeof Chart==="undefined") return;
     const dim = new Date(yearOfYM(ym), mIdx+1, 0).getDate();
     const seen = {};
@@ -1794,7 +1870,10 @@ function fxMonthCard(ym, mIdx){
       return { x: day + (seen[k]-1)*0.3, y: a.rate, a, day, future: a.date > todayStr };
     });
     const rates = entries.map(a=>a.rate).concat([baseRate]);
-    const lo = Math.min(...rates) - 0.1, hi = Math.max(...rates) + 0.1;
+    // Axis snaps to 0.2 steps so the ticks are round numbers (18.00, 18.20…)
+    // instead of whatever min/max the data happens to have.
+    const lo = Math.floor((Math.min(...rates) - 0.05) / 0.2 + 1e-9) * 0.2;
+    const hi = Math.ceil((Math.max(...rates) + 0.05) / 0.2 - 1e-9) * 0.2;
     const primary = cssVar("--primary"), soft = cssVar("--ink-soft");
     const datasets = [
       { label:"Entry", isPoint:true, data: pts.filter(p=>!p.future), backgroundColor: primary, borderColor: primary, pointRadius:4.5, pointHoverRadius:7 },
@@ -1823,13 +1902,26 @@ function fxMonthCard(ym, mIdx){
           },
           scales:{
             x:{ type:"linear", min:0, max:dim+1, ticks:{ color:soft, stepSize:5, callback:(v)=> (v>=1 && v<=dim) ? v : "" }, grid:{display:false} },
-            y:{ min:lo, max:hi, ticks:{ color:soft, maxTicksLimit:5, callback:(v)=> Number(v).toFixed(2) }, grid:{color:cssVar("--line")} },
+            y:{ min:lo, max:hi, ticks:{ color:soft, stepSize:0.2, callback:(v)=> Number(v).toFixed(2) }, grid:{color:cssVar("--line")} },
           },
         },
       });
     } catch(e){ chartRenderError(ctx, e); }
   }
-  return { card, draw };
+
+  function renderView(){
+    const body = card.querySelector("#fxBody");
+    if(!body) return;
+    card.querySelector("#fxByDate").classList.toggle("active", view==="date");
+    card.querySelector("#fxByRate").classList.toggle("active", view==="rate");
+    if(view!=="date" && charts.fxMonth){ charts.fxMonth.destroy(); charts.fxMonth = null; }
+    view==="date" ? renderDateView(body) : renderRateView(body);
+  }
+  if(entries.length){
+    card.querySelector("#fxByDate").onclick = ()=>{ view = "date"; renderView(); };
+    card.querySelector("#fxByRate").onclick = ()=>{ view = "rate"; renderView(); };
+  }
+  return { card, draw: renderView };
 }
 
 // Read-only drawer listing the entries behind a rate card — same standard
@@ -1863,7 +1955,7 @@ function openRateEntriesSheet(title, entries, baseRate){
 }
 
 // Reimbursements due — expenses flagged "Reimburse to" for this month,
-// totalled per person. Name + total only; the eye opens the read-only list.
+// totalled per person. Name + total only; the document icon opens the read-only list.
 // Omitted entirely when nothing is flagged.
 function reimbursementTotalsForMonth(ym){
   const baseRate = yearSettings(yearOfYM(ym)).baseRate;
@@ -1882,13 +1974,13 @@ function reimbursementsCard(ym, mIdx){
   if(!people.length) return null;
   const card = el("div","card stack");
   card.innerHTML = `
-    <div class="eyebrow">Reimbursements due, ${MONTHS[mIdx]}</div>
+    <div class="eyebrow">Reimbursements due</div>
     <div class="stack" style="gap:8px">
       ${people.map(o=>`
         <div class="row" style="align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
           <span style="flex:1; font-weight:600">${escapeHtml(o.label)}</span>
           <span class="num" style="font-weight:700; color:var(--accent)">${fmtUSD(totals[o.id].usd)}</span>
-          <button type="button" class="infobtn" data-person="${o.id}" aria-label="View expenses to reimburse ${escapeHtml(o.label)}">${iconEye()}</button>
+          <button type="button" class="infobtn" data-person="${o.id}" aria-label="View expenses to reimburse ${escapeHtml(o.label)}">${iconDocument()}</button>
         </div>`).join("")}
     </div>
   `;
@@ -1992,7 +2084,7 @@ function categoryMxnBreakdownCard(ym, mIdx){
 
   card.innerHTML = `
     <div class="row" style="align-items:center">
-      <div class="eyebrow" style="flex:1">Where ${MONTHS[mIdx]} is going</div>
+      <div class="eyebrow" style="flex:1">Spending by category</div>
       <div class="row" style="gap:4px; flex:none">
         <button type="button" class="btn small ${primary==="USD"?"active":""}" id="bdUSD">USD</button>
         <button type="button" class="btn small ${primary==="MXN"?"active":""}" id="bdMXN">MXN</button>
@@ -2086,10 +2178,10 @@ function rateByMethodCard(year){
   const lo = Math.floor((Math.min(...rates)-0.1)*10)/10, hi = Math.ceil((Math.max(...rates)+0.1)*10)/10;
   const pos = r=> ((r-lo)/(hi-lo)*100).toFixed(2);
   const fx = exchangeImpactForYear(year);
-  const eyeBtn = withRate.length ? `<button type="button" class="infobtn" id="rbmEye" aria-label="View entries with a rate">${iconEye()}</button>` : "";
+  const eyeBtn = withRate.length ? `<button type="button" class="infobtn" id="rbmDetail" aria-label="View entries with a rate">${iconDocument()}</button>` : "";
   card.innerHTML = `
     <div class="row" style="align-items:center">
-      <div class="eyebrow" style="flex:1">Rate paid by payment method, ${year}</div>
+      <div class="eyebrow" style="flex:1">Rate paid by payment method</div>
       ${eyeBtn}
     </div>
     ${withRate.length ? `
@@ -2115,8 +2207,8 @@ function rateByMethodCard(year){
       ${fx ? `<div class="num" style="font-weight:600; color:${fx.deltaUSD<=0?'var(--good)':'var(--bad)'}">${fx.deltaUSD<=0?'Saved you '+fmtUSD(Math.abs(fx.deltaUSD)):'Cost you '+fmtUSD(fx.deltaUSD)} vs. your baseline, all ${fx.count} entries with a rate (avg ${fx.avgRate.toFixed(2)})</div>` : ""}
     ` : `<div class="empty">No rate entries logged yet this year.</div>`}
   `;
-  const eye = card.querySelector("#rbmEye");
-  if(eye) eye.onclick = ()=> openRateEntriesSheet(`Entries with a rate, ${year}`, withRate.slice().sort((a,b)=> a.date<b.date?-1:a.date>b.date?1:0), baseRate);
+  const detailBtn = card.querySelector("#rbmDetail");
+  if(detailBtn) detailBtn.onclick = ()=> openRateEntriesSheet(`Entries with a rate, ${year}`, withRate.slice().sort((a,b)=> a.date<b.date?-1:a.date>b.date?1:0), baseRate);
   return card;
 }
 
@@ -2487,7 +2579,6 @@ function renderMonthly(main){
       <div class="eyebrow">Allocated by category</div>
       <button class="infobtn accent" type="button" id="mAddCat" aria-label="Add a category to this month" style="font-size:18px; line-height:1">+</button>
     </div>
-    <p class="muted" style="margin:-4px 0 0">Tap a category to review expenses this month, or + to log something quickly.</p>
   `;
   catsCard.querySelector("#mAddCat").onclick = ()=> openMonthAddCategorySheet(ym);
   // A seeded month can legitimately have zero categories (chose "Start
@@ -2529,13 +2620,13 @@ function renderMonthly(main){
     // transfer instead of — or in addition to — its own Base.
     const showAdj = hasTarget && Math.abs(adj) > 0.005;
     const row = el("div","catrow");
-    if(excluded) row.style.opacity = ".6";
+    if(excluded) row.classList.add("is-excluded");
     row.innerHTML = `
       <div class="head">
         <span class="name">${name}</span>
         <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
-        <button class="infobtn" type="button" data-toggleexcl aria-label="${excluded?"Include":"Exclude"} ${escapeHtml(name)} from this month's totals" style="${excluded?`color:var(--accent)`:""}">${excluded?iconEyeOff():iconEye()}</button>
+        <button class="infobtn" type="button" data-toggleexcl aria-label="${excluded?"Include":"Exclude"} ${escapeHtml(name)} from this month's totals" style="${excluded?`color:var(--accent)`:""}">${excluded?iconToggleOff():iconToggleOn()}</button>
       </div>
       <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px; ${excluded?"color:var(--accent)":""}">${base > 0 ? `Budget ${fmtUSD(base)}` : "Budget: not set"}${excluded ? " · excluded" : ""}</div>
       <div class="catbar"><div style="${budgetBarStyle(hasTarget, remaining, pct)}"></div></div>
@@ -2549,7 +2640,7 @@ function renderMonthly(main){
     row.style.cursor = "pointer";
     // Row tap and the pencil icon both open the one category-management
     // screen — same pattern as Budget Setup. The "$" icon is a shortcut
-    // that skips straight to logging an expense. The eye icon is its own
+    // that skips straight to logging an expense. The exclude icon is its own
     // quick on/off for this month's Excluded flag — no dialog, matches the
     // category's own spent/left figures staying real and untouched either
     // way (only the whole-month totals above react).
@@ -3672,11 +3763,11 @@ function renderCategoryRow(c, ym, siblings){
     <span class="amt num" style="color:${amt<0?'var(--bad)':'inherit'}">${fmtUSD(amt)}</span>
     <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(c.name)}">${iconEdit()}</button>
     <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(c.name)}">${iconDollar()}</button>
-    <button class="infobtn" type="button" data-toggleexcl aria-label="${c.excludedDefault?"Stop excluding":"Exclude"} ${escapeHtml(c.name)} by default" style="${c.excludedDefault?`color:var(--accent)`:""}">${c.excludedDefault?iconEyeOff():iconEye()}</button>
+    <button class="infobtn" type="button" data-toggleexcl aria-label="${c.excludedDefault?"Stop excluding":"Exclude"} ${escapeHtml(c.name)} by default" style="${c.excludedDefault?`color:var(--accent)`:""}">${c.excludedDefault?iconToggleOff():iconToggleOn()}</button>
   `;
-  // Dimmed whole-row, matching the Monthly ledger's Excluded rows — the
-  // meta line above already says why.
-  if(c.excludedDefault) row.style.opacity = ".6";
+  // Content dims, controls stay at full strength (same as Monthly's Excluded
+  // rows) — the meta line above already says why.
+  if(c.excludedDefault) row.classList.add("is-excluded");
   row.onclick = ()=> openCategoryDetailSheet(c.id, ym);
   row.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); openCategoryDetailSheet(c.id, ym); } };
   row.querySelector("[data-edit]").onclick = (ev)=>{
@@ -4652,15 +4743,20 @@ function iconEdit(){
 function iconDollar(){
   return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
 }
-// "eye" / "eye-off" from Feather Icons (MIT) — the quick Excluded toggle on
-// a category row. Open eye = counts toward this month's Spent/Available/
-// Surplus; crossed-out eye = excluded (paired with the row's own dimmed
-// styling, never dimming on its own).
-function iconEye(){
-  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+// Quick Excluded toggle on a category row — a switch: on (knob right) = the
+// category counts toward this month's totals, off (knob left) = excluded.
+// "toggle-right" / "toggle-left" from Feather Icons (MIT). The excluded row
+// also turns accent-colored and dims, so the knob is never the only signal.
+function iconToggleOn(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3"/></svg>`;
 }
-function iconEyeOff(){
-  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+function iconToggleOff(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="8" cy="12" r="3"/></svg>`;
+}
+// "file-text" from Feather Icons (MIT) — "see the entries behind this card"
+// (rate card, reimbursements). Deliberately not the Ledger tab's bare list.
+function iconDocument(){
+  return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
 }
 // "sliders" from Feather Icons (MIT) — reads as "adjustments", distinct
 // from the swap icon used for "Transfer funds". Opens the fund
