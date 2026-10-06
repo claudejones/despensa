@@ -619,7 +619,7 @@ const VOCAB_ADD = [
   // Greetings +14
   { spanish: "\xBFqu\xE9 tal?", english: "how's it going?", phonetic: "keh TAHL", emoji: "\u{1F44B}", category: "greetings" },
   { spanish: "perd\xF3n", english: "sorry / pardon", phonetic: "per-DON", emoji: "\u{1F64F}", category: "greetings" },
-  { spanish: "joven", english: "young man (call a waiter)", phonetic: "HOH-ven", emoji: "\u{1F64B}", category: "greetings" },
+  { spanish: "joven", english: "waiter! \u2014 literally 'young man', works at any age", phonetic: "HOH-ven", emoji: "\u{1F64B}", category: "greetings" },
   { spanish: "se\xF1orita", english: "miss", phonetic: "seh-nyoh-REE-tah", emoji: "\u{1F469}", category: "greetings" },
   { spanish: "se\xF1ora", english: "ma'am / Mrs.", phonetic: "seh-NYOH-rah", emoji: "\u{1F452}", category: "greetings" },
   { spanish: "se\xF1or", english: "sir / Mr.", phonetic: "seh-NYOR", emoji: "\u{1F3A9}", category: "greetings" },
@@ -762,7 +762,28 @@ const VOCAB_ADD = [
   { spanish: "diarrea", art: "la", english: "diarrhea", phonetic: "dee-ah-RREH-ah", emoji: "\u{1F922}", category: "doctor" },
   { spanish: "mareado", fem: "mareada", english: "dizzy", phonetic: "mah-reh-AH-doh", emoji: "\u{1F635}", category: "doctor" },
   { spanish: "vacuna", art: "la", english: "vaccine", phonetic: "vah-KOO-nah", emoji: "\u{1F489}", category: "doctor" },
-  { spanish: "an\xE1lisis de sangre", art: "el", english: "blood test", phonetic: "ah-NAH-lee-sees deh SAHN-greh", emoji: "\u{1FA78}", category: "doctor" }
+  { spanish: "an\xE1lisis de sangre", art: "el", english: "blood test", phonetic: "ah-NAH-lee-sees deh SAHN-greh", emoji: "\u{1FA78}", category: "doctor" },
+  { spanish: "\xBFqu\xE9 onda?", english: "what's up? (casual hi)", phonetic: "keh OHN-dah", emoji: "\u{1F919}", category: "sayings" },
+  { spanish: "\xBFmande?", english: 'come again? (the polite "what?")', phonetic: "MAHN-deh", emoji: "\u{1F442}", category: "sayings" },
+  { spanish: "\xF3rale", english: "wow / OK / let's go", phonetic: "OH-rah-leh", emoji: "\u{1F62E}", category: "sayings" },
+  { spanish: "sale", english: "OK, deal / sounds good", phonetic: "SAH-leh", emoji: "\u{1F44D}", category: "sayings" },
+  { spanish: "provecho", english: "enjoy your meal (said to anyone eating)", phonetic: "proh-VEH-choh", emoji: "\u{1F37D}\uFE0F", category: "sayings" },
+  { spanish: "ah\xED nos vemos", english: "see you around", phonetic: "ah-EE nohs VEH-mohs", emoji: "\u270C\uFE0F", category: "sayings" },
+  { spanish: "al rato", english: "in a while / later today", phonetic: "ahl RAH-toh", emoji: "\u23F3", category: "sayings" },
+  { spanish: "ya mero", english: "almost / any minute now", phonetic: "yah MEH-roh", emoji: "\u231B", category: "sayings" },
+  { spanish: "luego luego", english: "right away", phonetic: "LWEH-goh LWEH-goh", emoji: "\u26A1", category: "sayings" },
+  { spanish: "ni modo", english: "oh well \u2014 nothing to be done", phonetic: "nee MOH-doh", emoji: "\u{1F937}", category: "sayings" },
+  { spanish: "\xBFa poco?", english: "really? no way!", phonetic: "ah POH-koh", emoji: "\u{1F632}", category: "sayings" },
+  { spanish: "\xA1aguas!", english: "watch out!", phonetic: "AH-gwahs", emoji: "\u26A0\uFE0F", category: "sayings" },
+  { spanish: "qu\xE9 padre", english: "how cool", phonetic: "keh PAH-dreh", emoji: "\u{1F60E}", category: "sayings" },
+  { spanish: "qu\xE9 chido", english: "how cool (younger crowd)", phonetic: "keh CHEE-doh", emoji: "\u{1F918}", category: "sayings" },
+  { spanish: "no manches", english: "no way! come on!", phonetic: "noh MAHN-chehs", emoji: "\u{1F643}", category: "sayings" },
+  { spanish: "h\xEDjole", english: "yikes / oh wow", phonetic: "EE-hoh-leh", emoji: "\u{1F605}", category: "sayings" },
+  { spanish: "oiga", english: "excuse me (getting attention, polite)", phonetic: "OY-gah", emoji: "\u{1F64B}", category: "sayings" },
+  { spanish: "a sus \xF3rdenes", english: "at your service (you'll hear this)", phonetic: "ah soos OR-deh-nehs", emoji: "\u{1FAE1}", category: "sayings" },
+  { spanish: "p\xE1sale", english: "come in / go ahead", phonetic: "PAH-sah-leh", emoji: "\u{1F6AA}", category: "sayings" },
+  { spanish: "saludos", english: "regards / say hi for me", phonetic: "sah-LOO-dohs", emoji: "\u{1F48C}", category: "sayings" },
+  { spanish: "g\xFCey", english: "dude (friends only \u2014 never strangers)", phonetic: "wey", emoji: "\u{1F920}", category: "sayings" }
 ];
 VOCAB.push(...VOCAB_ADD);
 const CATEGORIES = {
@@ -776,6 +797,7 @@ const CATEGORIES = {
   colors: { label: "Colors", emoji: "\u{1F3A8}", color: "#C026D3" },
   time: { label: "Time & Weather", emoji: "\u23F0", color: "#0D9488" },
   phrases: { label: "Essential Phrases", emoji: "\u{1F4AC}", color: "#DB2777" },
+  sayings: { label: "Mexican Sayings", emoji: "\u{1F1F2}\u{1F1FD}", color: "#65A30D" },
   health: { label: "Body Parts", emoji: "\u{1F3C3}", color: "#E11D48" },
   doctor: { label: "At the Doctor", emoji: "\u{1F468}\u200D\u2695\uFE0F", color: "#BE185D" },
   dentist: { label: "At the Dentist", emoji: "\u{1F9B7}", color: "#7E22CE" },
@@ -960,7 +982,6 @@ Object.assign(SENTENCES, {
   "agua de jamaica": { text: "Una ___ grande.", en: "A large hibiscus water." },
   "\xBFme trae...?": { text: "\u2014___ \u2014Claro que s\xED.", en: "\u2014Could you bring me...? \u2014Of course." },
   // vegan (base)
-  "soy vegano": { text: "___, no como carne.", en: "I'm vegan, I don't eat meat." },
   "sin huevo": { text: "La torta ___, por favor.", en: "The sandwich without egg, please." },
   "sin leche": { text: "Un caf\xE9 ___.", en: "A coffee without milk." },
   "sin mantequilla": { text: "Las verduras ___, por favor.", en: "The vegetables without butter, please." },
@@ -1084,6 +1105,27 @@ Object.assign(SENTENCES, {
   "es todo": { text: "\u2014\xBFAlgo m\xE1s? \u2014No, ___.", en: "\u2014Anything else? \u2014No, that's all." },
   "cambio": { text: "No tengo ___. \xBFAcepta billete de 500?", en: "I don't have change \u2014 can you break a 500?" },
   "\xBFme puede dar cambio?": { text: "___ Solo tengo un billete de 500.", en: "Can you give me change? I only have a 500 bill." },
+  "\xBFqu\xE9 onda?": { text: "\u2014___ \u2014Todo bien, \xBFy t\xFA?", en: "\u2014What's up? \u2014All good, you?" },
+  "\xBFmande?": { text: "___ No escuch\xE9 bien.", en: "Come again? I didn't hear well." },
+  "\xF3rale": { text: "\u2014Pagu\xE9 cien pesos. \u2014\xA1___!", en: "\u2014I paid 100 pesos. \u2014Wow!" },
+  "sale": { text: "\u2014\xBFNos vemos a las ocho? \u2014___.", en: "\u2014See you at eight? \u2014Deal." },
+  "provecho": { text: "\u2014\xA1___! \u2014Gracias.", en: "\u2014Enjoy your meal! \u2014Thanks." },
+  "ah\xED nos vemos": { text: "Ya me voy. ___.", en: "I'm off \u2014 see you around." },
+  "al rato": { text: "Nos vemos ___.", en: "See you in a while." },
+  "ya mero": { text: "\u2014\xBFYa llegas? \u2014___.", en: "\u2014Are you almost here? \u2014Almost." },
+  "luego luego": { text: "El taxi lleg\xF3 ___.", en: "The taxi arrived right away." },
+  "ni modo": { text: "Est\xE1 cerrado. ___.", en: "It's closed. Oh well." },
+  "\xBFa poco?": { text: "\u2014Vivo en Playa. \u2014___", en: "\u2014I live in Playa. \u2014Really?" },
+  "\xA1aguas!": { text: "___ Viene un carro.", en: "Watch out! A car is coming." },
+  "qu\xE9 padre": { text: "\xA1___ est\xE1 la playa!", en: "The beach is so cool!" },
+  "qu\xE9 chido": { text: "\u2014Vamos a Tulum. \u2014\xA1___!", en: "\u2014We're going to Tulum. \u2014Cool!" },
+  "no manches": { text: "\xBFCien pesos el taco? \xA1___!", en: "A hundred pesos for a taco? No way!" },
+  "h\xEDjole": { text: "\xA1___! Olvid\xE9 mi cartera.", en: "Yikes \u2014 I forgot my wallet." },
+  "oiga": { text: "___, \xBFme trae la cuenta?", en: "Excuse me \u2014 can you bring me the check?" },
+  "a sus \xF3rdenes": { text: "\u2014Gracias. \u2014___.", en: "\u2014Thanks. \u2014At your service." },
+  "p\xE1sale": { text: "\u2014\xBFPuedo entrar? \u2014S\xED, ___.", en: "\u2014May I come in? \u2014Yes, come on in." },
+  "saludos": { text: "___ a tu familia.", en: "Say hi to your family for me." },
+  "g\xFCey": { text: "\xBFQu\xE9 onda, ___?", en: "What's up, dude? (friends only)" },
   "oferta": { text: "Los mangos est\xE1n en ___.", en: "Mangos are on sale." },
   "\xBFtiene...?": { text: "\u2014___ \u2014S\xED, aqu\xED est\xE1.", en: "\u2014Do you have...? \u2014Yes, here it is." },
   // colors
@@ -5679,7 +5721,7 @@ const FORM_MATCH = [
   { form: "pagu\xE9", inf: "pagar \u2014 paid", who: "yo" },
   { form: "pagaste", inf: "pagar \u2014 paid", who: "t\xFA" }
 ];
-const B1_CATS = ["greetings", "food", "vegan", "phrases", "shopping", "transport"];
+const B1_CATS = ["greetings", "food", "vegan", "phrases", "shopping", "transport", "sayings"];
 const TIERS = {
   b1: { id: "b1", label: "\u{1F331} Beginner", opts: 3, time: 20, numMax: 100 },
   b2: { id: "b2", label: "\u{1F33F} Intermediate", opts: 4, time: 15, numMax: 1e4 },
