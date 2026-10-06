@@ -663,7 +663,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v104";
+const APP_BUILD = "v106";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -3457,30 +3457,48 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       </div>
     </div>
   `;
-  // Commits whatever is currently sitting in the Base allocation / Name
-  // fields, without the toast/render/reopen song-and-dance Save does — used
-  // right before any action that navigates off this screen (Add Expense,
-  // opening/deleting a logged entry, Remove from month), so an in-progress
-  // edit is never silently discarded just because Save wasn't clicked
-  // first. A blank Name is skipped rather than blocking the amount from
-  // saving — this runs invisibly, so it shouldn't stall navigation over an
-  // unrelated field; the explicit Save button below still enforces it.
-  async function persistPendingEdits(){
+  // Has anything in Base allocation / Name / Excluded changed since this
+  // sheet opened (i.e. versus what's saved)?
+  function hasPendingEdits(){
     const amountField = body.querySelector("#mcBaseAmount");
-    if(!amountField) return;
-    const amount = parseFloat(amountField.value||"0") || 0;
-    state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
-    const entry = state.monthCategoryData[ym][categoryId];
-    if(!entry) return;
-    entry.baseAmountUSD = amount;
+    const entry = (state.monthCategoryData[ym] || {})[categoryId];
+    if(!amountField || !entry) return false;
+    const amount = roundCents(parseFloat(amountField.value||"0") || 0);
+    if(amount !== roundCents(entry.baseAmountUSD||0)) return true;
     const exclField = body.querySelector("#mcExcluded");
-    if(exclField) entry.excluded = exclField.checked;
+    if(exclField && exclField.checked !== !!entry.excluded) return true;
+    if(info.isLocal){
+      const nameField = body.querySelector("#mcName");
+      if(nameField && nameField.value.trim() !== (entry.name||"")) return true;
+    }
+    return false;
+  }
+  // Commits those edits (same fields as the Save button, same blank-Name
+  // rule). Returns false, with an error shown, when it can't.
+  async function savePendingEdits(){
+    const amountField = body.querySelector("#mcBaseAmount");
+    const entry = (state.monthCategoryData[ym] || {})[categoryId];
+    if(!amountField || !entry) return false;
     if(info.isLocal){
       const nameField = body.querySelector("#mcName");
       const name = nameField ? nameField.value.trim() : "";
-      if(name) entry.name = name;
+      if(!name){ formError(body, "Enter a name.", nameField); return false; }
+      entry.name = name;
     }
+    entry.baseAmountUSD = parseFloat(amountField.value||"0") || 0;
+    const exclField = body.querySelector("#mcExcluded");
+    if(exclField) entry.excluded = exclField.checked;
     await dbSetMonthCategoryData();
+    render();
+    return true;
+  }
+  // Runs `go` straight away when nothing changed; otherwise asks first.
+  function afterSavingEdits(go){
+    if(!hasPendingEdits()){ go(); return; }
+    promptSaveBeforeContinue(body, async ()=>{
+      if(!(await savePendingEdits())) return false;
+      go();
+    });
   }
   const backHere = ()=> openMonthlyCategoryDetailSheet(categoryId, ym);
 
@@ -3520,26 +3538,17 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
     render();
   });
   body.querySelectorAll("[data-entry]").forEach(row=>{
-    row.onclick = async ()=>{
-      await persistPendingEdits();
+    const open = ()=> afterSavingEdits(()=>{
       const a = entries.find(x=>x.id===row.dataset.entry);
       openActualEntryDialog(categoryId, ym, a, backHere);
-    };
-    row.onkeydown = async (ev)=>{
-      if(ev.key==="Enter" || ev.key===" "){
-        ev.preventDefault();
-        await persistPendingEdits();
-        const a = entries.find(x=>x.id===row.dataset.entry);
-        openActualEntryDialog(categoryId, ym, a, backHere);
-      }
+    });
+    row.onclick = open;
+    row.onkeydown = (ev)=>{
+      if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); open(); }
     };
   });
-  body.querySelector("#mcAddEntry").onclick = async ()=>{
-    await persistPendingEdits();
-    openActualEntryDialog(categoryId, ym, null, backHere);
-  };
-  body.querySelector("#mcRemoveCat").onclick = async ()=>{
-    await persistPendingEdits();
+  body.querySelector("#mcAddEntry").onclick = ()=> afterSavingEdits(()=> openActualEntryDialog(categoryId, ym, null, backHere));
+  body.querySelector("#mcRemoveCat").onclick = ()=>{
     confirmAction(`Remove "${info.name}" from ${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)}? Its balance stays part of this month's overall total — removing it here only stops tracking it as its own category.`, async ()=>{
       // No separate "sweep the balance into Unallocated" bookkeeping needed —
       // totalAvailableForMonth/totalSpentForMonth are whole-pot figures (the
@@ -3662,7 +3671,7 @@ function openMonthNewLocalCategoryDialog(ym){
       <button class="btn primary" id="mlSave">Save</button>
     </div>
   `;
-  body.querySelector("#mlCancel").onclick = ()=> dlg.close();
+  body.querySelector("#mlCancel").onclick = ()=> openMonthAddCategorySheet(ym);
   onceClick(body.querySelector("#mlSave"), async ()=>{
     const name = body.querySelector("#mlName").value.trim();
     if(!name){ formError(body, "Enter a name.", body.querySelector("#mlName")); return; }
@@ -3987,16 +3996,40 @@ function openCategoryDetailSheet(categoryId, ym){
     const newUnallocated = roundCents(newTarget - planned);
     body.querySelector("#dSummaryLine").innerHTML = `Budget: <strong class="num">${fmtUSD(newTarget)}</strong> · Planned <strong class="num">${fmtUSD(planned)}</strong> · Unallocated <strong class="num" style="color:${newUnallocated<0?'var(--bad)':'inherit'}">${fmtUSD(newUnallocated)}</strong>`;
   });
-  body.querySelectorAll("[data-item]").forEach(row=>{
-    row.onclick = ()=>{
-      const li = items.find(x=>x.id===row.dataset.item);
+  // Has Name / Amount / Exclude-by-default changed versus what's saved?
+  function hasPendingEdits(){
+    const nameField = body.querySelector("#dName");
+    if(!nameField) return false;
+    return nameField.value.trim() !== (c.name||"")
+      || roundCents(parseFloat(body.querySelector("#dAmount").value||"0") || 0) !== roundCents(c.baseAmountUSD||0)
+      || body.querySelector("#dExcluded").checked !== !!c.excludedDefault;
+  }
+  // Same fields and blank-Name rule as the Save button; false = didn't save.
+  async function savePendingEdits(){
+    const name = body.querySelector("#dName").value.trim();
+    if(!name){ formError(body, "Enter a name.", body.querySelector("#dName")); return false; }
+    c.name = name;
+    c.baseAmountUSD = parseFloat(body.querySelector("#dAmount").value||"0") || 0;
+    c.excludedDefault = body.querySelector("#dExcluded").checked;
+    await dbSet("categories", c.id, c);
+    render();
+    return true;
+  }
+  // Opens an expense straight away when nothing changed; otherwise asks
+  // whether to save first (Cancel/Save in the expense return to this sheet).
+  const openItem = (li)=>{
+    if(!hasPendingEdits()){ openLineItemDialog(categoryId, li, ym); return; }
+    promptSaveBeforeContinue(body, async ()=>{
+      if(!(await savePendingEdits())) return false;
       openLineItemDialog(categoryId, li, ym);
-    };
+    });
+  };
+  body.querySelectorAll("[data-item]").forEach(row=>{
+    row.onclick = ()=> openItem(items.find(x=>x.id===row.dataset.item));
     row.onkeydown = (ev)=>{
       if(ev.key==="Enter" || ev.key===" "){
         ev.preventDefault();
-        const li = items.find(x=>x.id===row.dataset.item);
-        openLineItemDialog(categoryId, li, ym);
+        openItem(items.find(x=>x.id===row.dataset.item));
       }
     };
   });
@@ -4012,7 +4045,7 @@ function openCategoryDetailSheet(categoryId, ym){
     showToast(`Updated ${name}`);
     render();
   });
-  body.querySelector("#dAddItem").onclick = ()=> openLineItemDialog(categoryId, null, ym);
+  body.querySelector("#dAddItem").onclick = ()=> openItem(null);
   if(c.onlyYM){
     body.querySelector("#dPromote").onclick = async ()=>{
       delete c.onlyYM;
@@ -4276,7 +4309,7 @@ function openLineItemDialog(categoryId, existing, ym){
     markDirty();
   };
 
-  body.querySelector("#iCancel").onclick = ()=> dlg.close();
+  body.querySelector("#iCancel").onclick = ()=> openCategoryDetailSheet(categoryId, ym);
   // Single Save path: always reads the 12-month grid directly, which
   // previewSchedule() keeps live-synced to the Amount field and the "varies
   // by month" checkbox, and which "Zero out all months" edits directly —
@@ -4301,9 +4334,9 @@ function openLineItemDialog(categoryId, existing, ym){
     }
     await dbSet("lineitems", rec.id, rec);
     clearDirty();
-    dlg.close();
     showToast(`${existing?"Updated":"Added"} ${name}`);
     render();
+    openCategoryDetailSheet(categoryId, ym);
   });
   if(existing && existing.onlyYM){
     body.querySelector("#iPromote").onclick = async ()=>{
@@ -4608,6 +4641,33 @@ function onceClick(btn, handler){
 // good here: it renders behind the open <dialog>'s top layer) and, when an
 // input is given, highlights it and clears itself the moment that field
 // changes.
+// "Save your changes first?" — shown inside the open category sheet (not as a
+// separate dialog, which would replace the sheet and lose the unsaved
+// fields). Stay here just dismisses it with every edit intact; Save and
+// continue runs saveFn, which returns false when it declined to save (e.g.
+// a blank Name) so the person stays put.
+function promptSaveBeforeContinue(body, saveFn){
+  const existing = body.querySelector("#unsavedPrompt");
+  if(existing){ existing.scrollIntoView({ block:"center" }); return; }
+  const box = document.createElement("div");
+  box.id = "unsavedPrompt";
+  box.style.cssText = "background:var(--surface-2); border:1px solid var(--accent); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:10px";
+  box.innerHTML = `
+    <div style="font-weight:600">Save your changes first?</div>
+    <div class="muted" style="font-size:12px">You've changed this category but haven't saved. Save before you continue.</div>
+    <div class="row" style="justify-content:flex-end; gap:10px">
+      <button type="button" class="btn small ghost" id="upStay">Stay here</button>
+      <button type="button" class="btn small primary" id="upSave">Save and continue</button>
+    </div>`;
+  const actions = body.querySelector(".dialog-actions");
+  if(actions) actions.parentNode.insertBefore(box, actions); else body.appendChild(box);
+  box.scrollIntoView({ block:"center" });
+  box.querySelector("#upStay").onclick = ()=> box.remove();
+  onceClick(box.querySelector("#upSave"), async ()=>{
+    const ok = await saveFn();
+    if(ok === false) box.remove();
+  });
+}
 function formError(body, message, input){
   let msg = body.querySelector(".form-err-msg");
   if(!msg){
