@@ -32,6 +32,7 @@
     --cash-bg:#F7ECD6;
     --transfer:#4E7A8F;
     --transfer-bg:#E4EDF0;
+    --service:#7A5BA6;
     --shadow: 0 1px 2px rgba(30,42,40,.06), 0 4px 16px rgba(30,42,40,.06);
     color-scheme: light;
   }
@@ -56,6 +57,7 @@
       --cash-bg:#3A2E17;
       --transfer:#7FB3CC;
       --transfer-bg:#1E3540;
+    --service:#B79BD8;
       --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.35);
       color-scheme: dark;
     }
@@ -80,6 +82,7 @@
     --cash-bg:#3A2E17;
     --transfer:#7FB3CC;
     --transfer-bg:#1E3540;
+    --service:#B79BD8;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.35);
     color-scheme: dark;
   }
@@ -316,6 +319,9 @@
   .catrow .head .name{font-weight:600; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .catrow .head .amt{font-size:14px}
   .catrow .head .chev{color:var(--ink-soft); font-size:18px; flex:none}
+  .rowchev{ color:var(--ink-soft); flex:none; display:flex; align-items:center }
+  .taprow{ cursor:pointer }
+  .taprow:active{ background:var(--surface-2) }
   .infobtn{
     flex:none; width:30px; height:30px; border-radius:50%; border:1px solid var(--line);
     background:var(--surface-2); color:var(--ink-soft); font-size:15px; line-height:1; cursor:pointer;
@@ -364,6 +370,7 @@
   .setuprow .meta-note.mm-card{color:var(--primary)}
   .setuprow .meta-note.mm-cash{color:var(--cash)}
   .setuprow .meta-note.mm-transfer{color:var(--transfer)}
+  .setuprow .meta-note.mm-service{color:var(--service)}
   .setuprow .meta-note.mm-neutral{color:var(--ink-soft)}
   .setuprow .amt{font-size:14px; white-space:nowrap; flex:none}
   .setuprow .chev{color:var(--ink-soft); font-size:18px; flex:none}
@@ -656,7 +663,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v103";
+const APP_BUILD = "v104";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -960,6 +967,30 @@ async function dbSetMonthCategoryData(){
 // displayed) keeps both its printed text AND any >=0 sign check used for
 // color consistent with each other.
 function roundCents(n){ return Math.round(n*100)/100; }
+// Largest-remainder allocation: split `targetUnits` (an integer) across the
+// exact, unrounded `exact` values (already expressed in those same units) so
+// the rounded parts always add up to the target exactly. Used wherever a
+// card shows rows plus a total that must agree with the header — rounding
+// each row on its own can leave the rows 1 unit off the total.
+function allocateUnits(exact, targetUnits){
+  const fl = exact.map(x=> Math.floor(x + 1e-6));
+  let diff = targetUnits - fl.reduce((a,b)=> a+b, 0);
+  const order = exact.map((_,i)=>i).sort((a,b)=> (exact[b]-fl[b]) - (exact[a]-fl[a]));
+  let i = 0;
+  while(diff>0 && order.length){ fl[order[i % order.length]]++; diff--; i++; }
+  i = order.length-1;
+  while(diff<0 && order.length){ fl[order[i]]--; diff++; i = i>0 ? i-1 : order.length-1; }
+  return fl;
+}
+function allocateCents(exactUSD, targetUSD){
+  return allocateUnits(exactUSD.map(x=> x*100), Math.round(targetUSD*100)).map(c=> c/100);
+}
+// Shares of a whole as tenths of a percent (123 = 12.3%) that add to exactly 100.0%.
+function allocateTenths(values){
+  const total = values.reduce((a,b)=> a+b, 0);
+  if(!(total>0)) return values.map(()=>0);
+  return allocateUnits(values.map(v=> v/total*1000), 1000);
+}
 function fmtUSD(n){ n = roundCents(n) || 0; const s = (n<0?"-":"") + "$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); return s; }
 function fmtMXN(n){ return (n<0?"-":"") + "MX$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}); }
 function toUSD(amount, currency, rate){ return currency==="MXN" ? amount/rate : amount; }
@@ -1654,18 +1685,18 @@ function renderMonthlyDash(main, ym){
     return;
   }
 
-  // Payment-method split leads (what was paid how), then the month's
-  // exchange rate paid (moved here from Annual Outlook), then anything
-  // flagged for reimbursement, then the per-category detail. The split is
-  // plain HTML bars, not a canvas, so USD and MXN can both always be read
-  // off the same row — its MXN is the sum of each entry's own rate, never
-  // USD times the year's baseline.
-  wrap.appendChild(paymentMethodCard(ym, mIdx));
-  const fx = fxMonthCard(ym, mIdx);
-  wrap.appendChild(fx.card);
+  // Anything flagged for reimbursement leads (it's money to send), then the
+  // payment-method split (what was paid how), the per-category detail, and
+  // last the month's exchange rate paid. Every figure that adds up to the
+  // header's Spent is reconciled to it, so the cards never drift from it by
+  // a cent; MXN is the sum of each entry's own rate, never USD times the
+  // year's baseline.
   const reimb = reimbursementsCard(ym, mIdx);
   if(reimb) wrap.appendChild(reimb);
+  wrap.appendChild(paymentMethodCard(ym, mIdx));
   wrap.appendChild(categoryMxnBreakdownCard(ym, mIdx));
+  const fx = fxMonthCard(ym, mIdx);
+  wrap.appendChild(fx.card);
 
   main.appendChild(wrap);
 
@@ -1691,22 +1722,41 @@ function chartTooltip(callbacks, extra){
   }, extra || {});
 }
 
-// Spending by payment method — four methods, USD/MXN toggle local to this
-// card (same button pattern as "Where [month] is going"). Same Excluded
-// filter as the month's Spent so a prepaid category doesn't show up here.
-function paymentMethodCard(ym, mIdx){
-  const card = el("div","card stack");
+// Spending by payment method — a donut plus a row per method (all four are
+// always listed, at $0 / 0% when unused). USD/MXN toggle is local to this
+// card. Same Excluded filter as the month's Spent, and the USD figures are
+// allocated by largest remainder so they add up to exactly the header's
+// Spent, not a cent off from rounding each entry on its own.
+const PAY_METHODS = [["cash","Cash","--cash"],["card","Card","--primary"],["transfer","Bank transfer","--transfer"],["service","Transfer service","--service"]];
+function paymentMethodData(ym){
   const baseRate = yearSettings(yearOfYM(ym)).baseRate;
   const data = state.monthCategoryData[ym] || {};
   const excludedIds = new Set(Object.keys(data).filter(id=> data[id] && data[id].excluded));
-  const methods = [["cash","Cash","--cash"],["card","Card","--primary"],["transfer","Bank transfer","--transfer"],["service","Transfer service","--transfer"]];
-  const tot = {}; methods.forEach(([k])=> tot[k] = { usd:0, mxn:0 });
+  const ex = {}; PAY_METHODS.forEach(([k])=> ex[k] = { usd:0, mxn:0, items:[] });
   state.actuals.filter(a=>ymOfDate(a.date)===ym && !excludedIds.has(a.categoryId)).forEach(a=>{
     const rate = a.rate || baseRate;
-    const k = tot[a.paymentMethod] ? a.paymentMethod : "card";
-    tot[k].usd = roundCents(tot[k].usd + toUSD(a.amount||0, a.currency, rate));
-    tot[k].mxn = roundCents(tot[k].mxn + toMXN(a.amount||0, a.currency, rate));
+    const k = ex[a.paymentMethod] ? a.paymentMethod : "card";
+    ex[k].usd += toUSD(a.amount||0, a.currency, rate);
+    ex[k].mxn += toMXN(a.amount||0, a.currency, rate);
+    ex[k].items.push(a);
   });
+  const keys = PAY_METHODS.map(([k])=>k);
+  const sumUsd = roundCents(keys.reduce((s,k)=> s+ex[k].usd, 0));
+  const header = visibleSpentForMonth(ym);
+  // Only snap to the header when the gap is rounding-sized; a bigger gap
+  // means something else is going on and the honest figure is the sum.
+  const totalUsd = Math.abs(header - sumUsd) <= 0.05 ? header : sumUsd;
+  const usdVals = allocateCents(keys.map(k=> ex[k].usd), totalUsd);
+  const mxnTotal = Math.round(keys.reduce((s,k)=> s+ex[k].mxn, 0));
+  const mxnVals = allocateUnits(keys.map(k=> ex[k].mxn), mxnTotal);
+  const tenths = allocateTenths(usdVals);
+  const out = {};
+  keys.forEach((k,i)=>{ out[k] = { usd:usdVals[i], mxn:mxnVals[i], pct:tenths[i]/10, items:ex[k].items }; });
+  return { by: out, totalUsd, totalMxn: mxnTotal };
+}
+function paymentMethodCard(ym, mIdx){
+  const card = el("div","card stack");
+  const d = paymentMethodData(ym);
   let primary = "USD"; // local to this card only — never written to state
   card.innerHTML = `
     <div class="row" style="align-items:center">
@@ -1716,25 +1766,55 @@ function paymentMethodCard(ym, mIdx){
         <button type="button" class="btn small" id="pmMXN">MXN</button>
       </div>
     </div>
-    <div id="pmWrap" class="stack" style="gap:12px"></div>
+    <div id="pmWrap"></div>
   `;
+  function donut(){
+    const r = 62, cx = 80, cy = 80, C = 2*Math.PI*r;
+    let off = 0, arcs = "";
+    PAY_METHODS.forEach(([k,,cv])=>{
+      const v = d.by[k];
+      if(!(v.usd>0) || !(d.totalUsd>0)) return;
+      const L = C * v.usd / d.totalUsd;
+      const dash = Math.max(L-2, 0.1);
+      arcs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" style="stroke:var(${cv})" stroke-width="22" stroke-dasharray="${dash.toFixed(2)} ${(C-dash).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;
+      off += L;
+    });
+    const big = primary==="USD" ? fmtUSD(d.totalUsd) : fmtMXN(d.totalMxn);
+    const small = primary==="USD" ? fmtMXN(d.totalMxn) : fmtUSD(d.totalUsd);
+    return `<svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Spent ${escapeHtml(big)}">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" style="stroke:var(--surface-2)" stroke-width="22"/>
+      <g transform="rotate(-90 ${cx} ${cy})">${arcs}</g>
+      <text x="${cx}" y="${cy-8}" style="fill:var(--ink-soft)" font-size="11" text-anchor="middle">Spent</text>
+      <text x="${cx}" y="${cy+10}" style="fill:var(--ink)" font-size="16" font-weight="700" text-anchor="middle">${big}</text>
+      <text x="${cx}" y="${cy+26}" style="fill:var(--ink-soft)" font-size="11" text-anchor="middle">${small}</text>
+    </svg>`;
+  }
   function renderBody(){
-    const key = primary==="USD" ? "usd" : "mxn";
-    const max = Math.max(...methods.map(([k])=> tot[k][key]), 0) || 1;
-    card.querySelector("#pmWrap").innerHTML = methods.map(([k,label,cv])=>{
-      const v = tot[k];
-      const main_ = primary==="USD" ? fmtUSD(v.usd) : fmtMXN(v.mxn);
-      const alt = primary==="USD" ? fmtMXN(v.mxn) : fmtUSD(v.usd);
-      const w = Math.max(0, Math.min(100, v[key]/max*100));
-      return `
-        <div>
-          <div class="row" style="align-items:flex-end; gap:8px">
-            <span style="flex:1; font-weight:600; font-size:13px">${label}</span>
-            <span style="text-align:right"><span class="num" style="display:block; font-weight:600; font-size:13px">${main_}</span><span class="num muted" style="display:block; font-size:11px">${alt}</span></span>
-          </div>
-          <div class="catbar" style="margin-top:4px"><div style="width:${w}%; background:var(${cv})"></div></div>
-        </div>`;
-    }).join("");
+    card.querySelector("#pmWrap").innerHTML = `
+      <div style="display:flex; justify-content:center; margin:10px 0 6px">${donut()}</div>
+      ${PAY_METHODS.map(([k,label,cv])=>{
+        const v = d.by[k];
+        const n = v.items.length;
+        const main_ = primary==="USD" ? fmtUSD(v.usd) : fmtMXN(v.mxn);
+        const alt = primary==="USD" ? fmtMXN(v.mxn) : fmtUSD(v.usd);
+        const tappable = n>0;
+        return `
+          <div class="row ${tappable?"taprow":""}" ${tappable?`role="button" tabindex="0" data-pm="${k}"`:""} style="gap:10px; padding:9px 0; border-top:1px solid var(--line); align-items:flex-start; ${tappable?"":"opacity:.6"}">
+            <span style="width:10px; height:10px; border-radius:3px; background:var(${cv}); margin-top:4px; flex:none"></span>
+            <span style="flex:1; min-width:0">
+              <span style="display:block; font-weight:600; font-size:14px">${label} <span class="muted" style="font-weight:500; font-size:12px">· ${v.pct.toFixed(1)}%</span></span>
+              <span class="muted" style="display:block; font-size:11px">${n} ${n===1?"entry":"entries"}</span>
+            </span>
+            <span style="text-align:right"><span class="num" style="display:block; font-weight:600; font-size:14px">${main_}</span><span class="num muted" style="display:block; font-size:11px">${alt}</span></span>
+            <span class="rowchev" style="margin-top:3px; ${tappable?"":"visibility:hidden"}">${iconChevronRight()}</span>
+          </div>`;
+      }).join("")}
+    `;
+    card.querySelectorAll("[data-pm]").forEach(r=>{
+      const open = ()=> openPaymentMethodSheet(ym, r.dataset.pm, primary);
+      r.onclick = open;
+      r.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); open(); } };
+    });
   }
   function setPrimary(cur){
     primary = cur;
@@ -1746,6 +1826,41 @@ function paymentMethodCard(ym, mIdx){
   card.querySelector("#pmMXN").onclick = ()=> setPrimary("MXN");
   renderBody();
   return card;
+}
+// Read-only list of the entries behind one payment-method row — same filter
+// as the card, so its total is the row's figure.
+function openPaymentMethodSheet(ym, k, primary){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  const baseRate = yearSettings(yearOfYM(ym)).baseRate;
+  const d = paymentMethodData(ym);
+  const v = d.by[k];
+  const label = (PAY_METHODS.find(m=>m[0]===k)||[k,k])[1];
+  const items = v.items.slice().sort((a,b)=> a.date<b.date ? -1 : a.date>b.date ? 1 : 0);
+  const rows = items.map(a=>{
+    const rate = a.rate || baseRate;
+    const u = toUSD(a.amount||0, a.currency, rate), m = toMXN(a.amount||0, a.currency, rate);
+    const main_ = primary==="USD" ? fmtUSD(u) : fmtMXN(m);
+    const alt = primary==="USD" ? fmtMXN(m) : fmtUSD(u);
+    return `
+    <div class="row" style="gap:10px; padding:8px 0; border-bottom:1px solid var(--line); align-items:flex-start">
+      <span class="muted num" style="width:54px; flex:none; font-size:12px; white-space:nowrap">${sheetDate(a.date)}</span>
+      <span style="flex:1; min-width:0">
+        <span style="display:block; font-weight:600; font-size:13px">${escapeHtml(a.name || "Expense")}</span>
+        <span class="muted" style="display:block; font-size:11px">${escapeHtml(categoryDisplayInfo(a.categoryId, ym).name||"")}</span>
+      </span>
+      <span style="text-align:right"><span class="num" style="display:block; font-weight:600; font-size:13px">${main_}</span><span class="num muted" style="display:block; font-size:11px">${alt}</span></span>
+    </div>`;
+  }).join("");
+  const totalMain = primary==="USD" ? fmtUSD(v.usd) : fmtMXN(v.mxn);
+  body.innerHTML = `
+    <h3>${escapeHtml(label)}</h3>
+    <div class="muted" style="font-size:12px">${MONTHS[monthOfYM(ym)]} ${yearOfYM(ym)} · ${items.length} ${items.length===1?"entry":"entries"} · ${totalMain}</div>
+    <div class="stack" style="gap:0">${rows || `<div class="empty">No entries.</div>`}</div>
+    <div class="dialog-actions"><button class="btn ghost" id="pmClose">Close</button></div>
+  `;
+  body.querySelector("#pmClose").onclick = ()=> dlg.close();
+  openSheet();
 }
 
 // Exchange rate paid, this month. Two views of the same entries (those that
@@ -1977,15 +2092,17 @@ function reimbursementsCard(ym, mIdx){
     <div class="eyebrow">Reimbursements due</div>
     <div class="stack" style="gap:8px">
       ${people.map(o=>`
-        <div class="row" style="align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
+        <div class="row taprow" role="button" tabindex="0" data-person="${o.id}" aria-label="View expenses to reimburse ${escapeHtml(o.label)}" style="align-items:center; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px">
           <span style="flex:1; font-weight:600">${escapeHtml(o.label)}</span>
           <span class="num" style="font-weight:700; color:var(--accent)">${fmtUSD(totals[o.id].usd)}</span>
-          <button type="button" class="infobtn" data-person="${o.id}" aria-label="View expenses to reimburse ${escapeHtml(o.label)}">${iconDocument()}</button>
+          <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
         </div>`).join("")}
     </div>
   `;
   card.querySelectorAll("[data-person]").forEach(b=>{
-    b.onclick = ()=> openReimbursementSheet(ym, b.dataset.person);
+    const open = ()=> openReimbursementSheet(ym, b.dataset.person);
+    b.onclick = open;
+    b.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); open(); } };
   });
   return card;
 }
@@ -2033,9 +2150,10 @@ function categoryMxnBreakdownForMonth(catId, ym){
     if(a.currency==="MXN"){ mxn += amt; usd += amt/rate; }
     else { usd += amt; mxn += amt*rate; }
   });
+  const usdExact = usd, mxnExact = mxn;
   usd = roundCents(usd);
   mxn = roundCents(mxn);
-  return { usd, mxn, rate: usd>0 ? mxn/usd : baseRate };
+  return { usd, mxn, usdExact, mxnExact, rate: usd>0 ? mxn/usd : baseRate };
 }
 function categoryMxnBreakdownCard(ym, mIdx){
   const card = el("div","card stack");
@@ -2045,23 +2163,27 @@ function categoryMxnBreakdownCard(ym, mIdx){
     .sort((a,b)=> b.usd - a.usd);
   // Excluded rows stay in the list (their own real numbers are never
   // hidden, same as everywhere else this works) but drop out of the Total
-  // — the same category whose spend doesn't count toward this month in
-  // the ledger shouldn't count toward "Where this month is going" either.
-  const totalUsd = roundCents(rows.filter(r=>!r.excluded).reduce((s,r)=> s+r.usd, 0));
-  const totalMxn = roundCents(rows.filter(r=>!r.excluded).reduce((s,r)=> s+r.mxn, 0));
+  // and the % — the same category whose spend doesn't count toward this
+  // month in the ledger shouldn't count toward this card's Total either.
+  // The counted rows are allocated by largest remainder so they add up to
+  // exactly the header's Spent (only when the gap is rounding-sized).
+  const counted = rows.filter(r=>!r.excluded);
+  const sumUsd = roundCents(counted.reduce((s,r)=> s+r.usdExact, 0));
+  const header = visibleSpentForMonth(ym);
+  const totalUsd = Math.abs(header - sumUsd) <= 0.05 ? header : sumUsd;
+  const usdVals = allocateCents(counted.map(r=> r.usdExact), totalUsd);
+  const totalMxn = Math.round(counted.reduce((s,r)=> s+r.mxnExact, 0));
+  const mxnVals = allocateUnits(counted.map(r=> r.mxnExact), totalMxn);
+  const tenths = allocateTenths(usdVals);
+  counted.forEach((r,i)=>{ r.usd = usdVals[i]; r.mxn = mxnVals[i]; r.pct = tenths[i]/10; });
   let primary = "USD"; // local to this card only — never written to state
 
-  // The rate gets its own line below the converted amount, relabeled as
-  // "Rate X MXN/USD" instead of trailing the dollar figure as "· X/USD" —
-  // that old placement put a USD amount directly against "/USD" and read
-  // like the amount itself was somehow expressed per-dollar. On its own
-  // line, with a label, it can only read as what it is: the exchange rate
-  // used for this row's conversion.
-  function amtCell(usd, mxn, rate, bold){
+  // The rate stays on each row's sub line next to its share of the month —
+  // "Rate X MXN/USD" can only read as the exchange rate used for the row.
+  function amtCell(usd, mxn, bold){
     const primaryText = primary==="USD" ? fmtUSD(usd) : fmtMXN(mxn);
     const secondaryText = primary==="USD" ? fmtMXN(mxn) : fmtUSD(usd);
-    const rateLine = rate!=null ? `<span class="num muted" style="display:block; font-size:10px; margin-top:1px">Rate ${rate.toFixed(2)} MXN/USD</span>` : "";
-    return `<span class="num" style="display:block; font-weight:${bold?700:600}; font-size:${bold?'14px':'13px'}">${primaryText}</span><span class="num muted" style="display:block; font-size:11px">${secondaryText}</span>${rateLine}`;
+    return `<span class="num" style="display:block; font-weight:${bold?700:600}; font-size:${bold?'14px':'13px'}">${primaryText}</span><span class="num muted" style="display:block; font-size:11px">${secondaryText}</span>`;
   }
 
   function renderBody(){
@@ -2069,17 +2191,29 @@ function categoryMxnBreakdownCard(ym, mIdx){
     wrap.innerHTML = rows.length ? `
       <div class="stack" style="gap:0">
         ${rows.map(r=>`
-          <div class="row" style="align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--line); ${r.excluded?"opacity:.55":""}">
-            <span class="name" style="flex:1; font-weight:600; font-size:13px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${escapeHtml(r.c.name)}${r.excluded?` <span class="muted" style="font-weight:500; font-size:11px">· excluded</span>`:""}</span>
-            <span style="text-align:right">${amtCell(r.usd, r.mxn, r.rate, false)}</span>
+          <div class="taprow" role="button" tabindex="0" data-cat="${escapeHtml(r.c.id)}" style="padding:9px 0; border-top:1px solid var(--line); ${r.excluded?"opacity:.55":""}">
+            <div class="row" style="align-items:center; gap:8px">
+              <span style="flex:1; min-width:0">
+                <span class="name" style="display:block; font-weight:600; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${escapeHtml(r.c.name)}${r.excluded?` <span class="muted" style="font-weight:500; font-size:11px">· excluded</span>`:""}</span>
+                <span class="muted num" style="display:block; font-size:11px">${r.excluded ? "" : `${r.pct.toFixed(1)}% of spend · `}Rate ${r.rate.toFixed(2)}</span>
+              </span>
+              <span style="text-align:right">${amtCell(r.usd, r.mxn, false)}</span>
+              <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
+            </div>
+            ${r.excluded ? "" : `<div class="catbar" style="margin-top:6px; height:5px"><div style="width:${Math.max(0, Math.min(100, r.pct))}%; min-width:3px; background:var(--primary)"></div></div>`}
           </div>
         `).join("")}
       </div>
-      <div class="row" style="padding-top:10px; align-items:center">
-        <span style="font-weight:700; flex:1">Total</span>
-        <span style="text-align:right">${amtCell(totalUsd, totalMxn, null, true)}</span>
+      <div class="row" style="padding-top:10px; align-items:center; border-top:1px solid var(--line)">
+        <span style="font-weight:700; flex:1">Total <span class="muted" style="font-weight:500; font-size:12px">· 100%</span></span>
+        <span style="text-align:right">${amtCell(totalUsd, totalMxn, true)}</span>
       </div>
     ` : `<div class="empty">Nothing logged yet this month.</div>`;
+    wrap.querySelectorAll("[data-cat]").forEach(r=>{
+      const open = ()=> openMonthlyCategoryDetailSheet(r.dataset.cat, ym);
+      r.onclick = open;
+      r.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); open(); } };
+    });
   }
 
   card.innerHTML = `
@@ -2624,9 +2758,9 @@ function renderMonthly(main){
     row.innerHTML = `
       <div class="head">
         <span class="name">${name}</span>
-        <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(name)}">${iconEdit()}</button>
         <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(name)}">${iconDollar()}</button>
         <button class="infobtn" type="button" data-toggleexcl aria-label="${excluded?"Include":"Exclude"} ${escapeHtml(name)} from this month's totals" style="${excluded?`color:var(--accent)`:""}">${excluded?iconToggleOff():iconToggleOn()}</button>
+        <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
       </div>
       <div class="muted" style="font-size:10px; letter-spacing:.04em; text-transform:uppercase; margin-top:-2px; ${excluded?"color:var(--accent)":""}">${base > 0 ? `Budget ${fmtUSD(base)}` : "Budget: not set"}${excluded ? " · excluded" : ""}</div>
       <div class="catbar"><div style="${budgetBarStyle(hasTarget, remaining, pct)}"></div></div>
@@ -2638,17 +2772,13 @@ function renderMonthly(main){
       ${showAdj ? `<div class="muted" style="font-size:11px; margin-top:-4px">${adj>0?'+':''}${fmtUSD(adj)} moved ${adj>0?'in':'out'} this month</div>` : ""}
     `;
     row.style.cursor = "pointer";
-    // Row tap and the pencil icon both open the one category-management
-    // screen — same pattern as Budget Setup. The "$" icon is a shortcut
-    // that skips straight to logging an expense. The exclude icon is its own
+    // Row tap (and its chevron) opens the one category-management screen —
+    // same pattern as Budget Setup. The "$" icon is a shortcut that skips
+    // straight to logging an expense. The exclude icon is its own
     // quick on/off for this month's Excluded flag — no dialog, matches the
     // category's own spent/left figures staying real and untouched either
     // way (only the whole-month totals above react).
     row.onclick = ()=> openMonthlyCategoryDetailSheet(id, ym);
-    row.querySelector("[data-edit]").onclick = (ev)=>{
-      ev.stopPropagation();
-      openMonthlyCategoryDetailSheet(id, ym);
-    };
     row.querySelector("[data-toggleexcl]").onclick = async (ev)=>{
       ev.stopPropagation();
       state.monthCategoryData[ym] = state.monthCategoryData[ym] || {};
@@ -2738,13 +2868,10 @@ function openFundAdjustmentsSheet(ym){
         const to = state.categories.find(c=>c.id===t.toCategoryId);
         const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
         return `
-          <div class="row">
-            <span class="muted">Moved · ${fromLabel} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
-            <span class="amt" style="display:flex; align-items:center; gap:10px">
-              <span class="num">${fmtUSD(t.amountUSD)}</span>
-              <button data-editnote="${t.id}" type="button" class="fa-iconbtn" aria-label="Edit note">${iconEdit()}</button>
-              <button data-del="${t.id}" type="button" class="fa-iconbtn" aria-label="Delete transfer">${iconTrash()}</button>
-            </span>
+          <div class="row taprow" role="button" tabindex="0" data-editnote="${t.id}" style="align-items:flex-start; gap:10px">
+            <span class="muted" style="flex:1; min-width:0">Moved · ${fromLabel} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
+            <span class="num" style="white-space:nowrap; flex:none">${fmtUSD(t.amountUSD)}</span>
+            <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
           </div>
         `;
       }).join("")}
@@ -2798,29 +2925,6 @@ function openFundAdjustmentsSheet(ym){
   // pair still cascades to remove both, so no orphaned fund event is ever
   // left behind. A transfer saved under the current code never has this
   // link at all.
-  body.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const t = tr.find(x=>x.id===btn.dataset.del);
-      const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
-      const to = state.categories.find(c=>c.id===t.toCategoryId);
-      const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
-      const linkedFe = t.externalSourceLinkId ? state.fundevents.find(f=>f.externalSourceLinkId===t.externalSourceLinkId) : null;
-      const msg = linkedFe
-        ? `Delete this ${fmtUSD(t.amountUSD)} addition (${fromLabel} → ${to?to.name:"?"})? This also removes the matching funds added to the budget.`
-        : `Delete this ${fmtUSD(t.amountUSD)} move (${fromLabel} → ${to?to.name:"?"})?`;
-      confirmAction(msg, async ()=>{
-        state.transfers = state.transfers.filter(x=>x.id!==t.id);
-        await dbDelete("transfers", t.id);
-        if(linkedFe){
-          state.fundevents = state.fundevents.filter(x=>x.id!==linkedFe.id);
-          await dbDelete("fundevents", linkedFe.id);
-        }
-        showToast("Deleted");
-        render();
-        openFundAdjustmentsSheet(ym);
-      }, ()=> openFundAdjustmentsSheet(ym));
-    };
-  });
   body.querySelectorAll("[data-delfe]").forEach(btn=>{
     btn.onclick = ()=>{
       const f = fe.find(x=>x.id===btn.dataset.delfe);
@@ -2843,10 +2947,9 @@ function openFundAdjustmentsSheet(ym){
     };
   });
   body.querySelectorAll("[data-editnote]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const t = tr.find(x=>x.id===btn.dataset.editnote);
-      openEditTransferNoteSheet(t, ym);
-    };
+    const open = ()=> openEditTransferNoteSheet(tr.find(x=>x.id===btn.dataset.editnote), ym);
+    btn.onclick = open;
+    btn.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); open(); } };
   });
   // Pre-filled to the month you're already looking at (month/year locked,
   // not re-selectable — you're already here) — this was previously
@@ -2860,6 +2963,30 @@ function openFundAdjustmentsSheet(ym){
   });
   body.querySelector("#faClose").onclick = ()=> dlg.close();
   openSheet();
+}
+
+// Deleting a transfer (and, for a leftover linked external-source pair, its
+// matching fund event so nothing is orphaned) — reached from inside the
+// transfer's own detail sheet. Returns to the Fund adjustments list.
+function confirmDeleteTransfer(t, ym){
+  const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
+  const to = state.categories.find(c=>c.id===t.toCategoryId);
+  const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
+  const linkedFe = t.externalSourceLinkId ? state.fundevents.find(f=>f.externalSourceLinkId===t.externalSourceLinkId) : null;
+  const msg = linkedFe
+    ? `Delete this ${fmtUSD(t.amountUSD)} addition (${fromLabel} → ${to?to.name:"?"})? This also removes the matching funds added to the budget.`
+    : `Delete this ${fmtUSD(t.amountUSD)} move (${fromLabel} → ${to?to.name:"?"})?`;
+  confirmAction(msg, async ()=>{
+    state.transfers = state.transfers.filter(x=>x.id!==t.id);
+    await dbDelete("transfers", t.id);
+    if(linkedFe){
+      state.fundevents = state.fundevents.filter(x=>x.id!==linkedFe.id);
+      await dbDelete("fundevents", linkedFe.id);
+    }
+    showToast("Deleted");
+    render();
+    openFundAdjustmentsSheet(ym);
+  }, ()=> openEditTransferNoteSheet(t, ym));
 }
 
 // Editing a transfer only ever touches its note here — amount, date, and
@@ -2878,12 +3005,16 @@ function openEditTransferNoteSheet(t, ym){
     <h3>Edit note</h3>
     <p class="muted">${fmtUSD(t.amountUSD)} · ${fromLabel} → ${to?to.name:"?"} · ${t.date}</p>
     <label>Note<input type="text" id="etnNote" value="${t.note ? escapeHtml(t.note) : ""}" placeholder="e.g. covered grocery overrun"></label>
-    <div class="dialog-actions">
-      <button class="btn ghost" id="etnCancel">Cancel</button>
-      <button class="btn primary" id="etnSave">Save</button>
+    <div class="dialog-actions" style="justify-content:space-between">
+      <button class="btn small danger" id="etnDelete">${iconTrash()}<span>Delete transfer</span></button>
+      <div style="display:flex; gap:10px">
+        <button class="btn ghost" id="etnCancel">Cancel</button>
+        <button class="btn primary" id="etnSave">Save</button>
+      </div>
     </div>
   `;
   body.querySelector("#etnCancel").onclick = ()=> openFundAdjustmentsSheet(ym);
+  body.querySelector("#etnDelete").onclick = ()=> confirmDeleteTransfer(t, ym);
   onceClick(body.querySelector("#etnSave"), async ()=>{
     const note = body.querySelector("#etnNote").value.trim();
     if(note) t.note = note; else delete t.note;
@@ -2938,7 +3069,7 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
     </div>
     <label>Notes (optional)<textarea id="aNote" rows="2" placeholder="Any detail worth remembering about this expense">${existing?escapeHtml(existing.note||""):""}</textarea></label>
     <div class="dialog-actions" style="justify-content:space-between">
-      ${existing ? `<button class="btn small danger" id="aDelete">${iconTrash()}<span>Delete entry</span></button>` : `<span></span>`}
+      ${existing ? `<div style="display:flex; gap:8px"><button class="btn small ghost" id="aDuplicate">${iconCopy()}<span>Duplicate</span></button><button class="btn small danger" id="aDelete">${iconTrash()}<span>Delete</span></button></div>` : `<span></span>`}
       <div style="display:flex; gap:10px">
         <button class="btn ghost" id="aCancel">Cancel</button>
         <button class="btn primary" id="aSave">Save</button>
@@ -3022,6 +3153,25 @@ function openActualEntryDialog(categoryId, ym, existing, onBack){
     openMonthlyCategoryDetailSheet(categoryId, ym);
   });
   if(existing){
+    // Duplicate clones the last-SAVED entry (same category, today's date when
+    // today falls in this month, otherwise the original's date) and opens the
+    // copy to edit. Disabled as soon as anything in the form changes, so
+    // in-progress edits are never silently dropped — same rule as Setup.
+    const dupBtn = body.querySelector("#aDuplicate");
+    const markDirty = ()=>{ dupBtn.disabled = true; };
+    body.querySelectorAll("input, select, textarea").forEach(n=>{ n.addEventListener("input", markDirty); n.addEventListener("change", markDirty); });
+    body.querySelectorAll("[data-reimb], #itCurUSD, #itCurMXN").forEach(n=> n.addEventListener("click", markDirty));
+    onceClick(dupBtn, async ()=>{
+      const t = new Date();
+      const todayISO = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;
+      const rec = { ...existing, id: uid("act"), date: ymOfDate(todayISO)===ym ? todayISO : existing.date };
+      if(existing.name) rec.name = existing.name + " (copy)";
+      state.actuals.push(rec);
+      await dbSet("actuals", rec.id, rec);
+      showToast("Duplicated — edit the copy");
+      render();
+      openActualEntryDialog(categoryId, ym, rec, onBack);
+    });
     body.querySelector("#aDelete").onclick = ()=> confirmAction(`Delete this ${fmtUSD(toUSD(existing.amount||0, existing.currency, existing.rate||baseRate))} entry?`, async ()=>{
       state.actuals = state.actuals.filter(x=>x.id!==existing.id);
       await dbDelete("actuals", existing.id);
@@ -3250,7 +3400,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
       // same as it would for any other category it can't find. Named the
       // same as every other transfer-label site in the app.
       const otherName = otherId ? categoryDisplayInfo(otherId, ym).name : "External source";
-      return `<div class="row"><span class="muted">${into?"From":"To"} ${otherName||"?"}${t.note?" · "+escapeHtml(t.note):""}</span><span class="num" style="color:${into?"var(--good)":"var(--bad)"}">${into?"+":"-"}${fmtUSD(t.amountUSD)}</span></div>`;
+      return `<div class="row" style="align-items:flex-start; gap:10px"><span class="muted" style="flex:1; min-width:0">${into?"From":"To"} ${otherName||"?"}${t.note?" · "+escapeHtml(t.note):""}</span><span class="num" style="white-space:nowrap; flex:none; color:${into?"var(--good)":"var(--bad)"}">${into?"+":"-"}${fmtUSD(t.amountUSD)}</span></div>`;
     }).join("");
     transferBlock = `<div class="danger-zone"><div class="eyebrow" style="margin-bottom:8px">Transfers this month</div>${rows}</div>`;
   }
@@ -3270,8 +3420,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
           <span class="meta-note ${paymentMetaClass(a.paymentMethod)}">${paymentLabel(a.paymentMethod)}${a.reimburseTo?` · Reimburse ${escapeHtml(reimburseLabel(a.reimburseTo))}`:""}</span>
         </span>
         <span class="amt num">${fmtUSD(amt)}</span>
-        <button class="infobtn" type="button" data-edit="${a.id}" aria-label="Edit ${escapeHtml(a.name||"expense")}">${iconEdit()}</button>
-        <button class="infobtn" type="button" data-del="${a.id}" aria-label="Delete ${escapeHtml(a.name||"expense")}">${iconTrash()}</button>
+        <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
       </div>
     `;
   }).join("") : `<div class="empty">Nothing logged yet — add a total or itemize as you go.</div>`;
@@ -3383,28 +3532,6 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
         const a = entries.find(x=>x.id===row.dataset.entry);
         openActualEntryDialog(categoryId, ym, a, backHere);
       }
-    };
-  });
-  body.querySelectorAll("[data-edit]").forEach(btn=>{
-    btn.onclick = async (ev)=>{
-      ev.stopPropagation();
-      await persistPendingEdits();
-      const a = entries.find(x=>x.id===btn.dataset.edit);
-      openActualEntryDialog(categoryId, ym, a, backHere);
-    };
-  });
-  body.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.onclick = async (ev)=>{
-      ev.stopPropagation();
-      await persistPendingEdits();
-      const a = entries.find(x=>x.id===btn.dataset.del);
-      confirmAction(`Delete this ${fmtUSD(toUSD(a.amount||0, a.currency, a.rate||rate))} entry?`, async ()=>{
-        state.actuals = state.actuals.filter(x=>x.id!==a.id);
-        await dbDelete("actuals", a.id);
-        showToast("Entry deleted");
-        render();
-        openMonthlyCategoryDetailSheet(categoryId, ym);
-      }, backHere);
     };
   });
   body.querySelector("#mcAddEntry").onclick = async ()=>{
@@ -3761,30 +3888,13 @@ function renderCategoryRow(c, ym, siblings){
       ${meta}
     </span>
     <span class="amt num" style="color:${amt<0?'var(--bad)':'inherit'}">${fmtUSD(amt)}</span>
-    <button class="infobtn" type="button" data-edit aria-label="Manage ${escapeHtml(c.name)}">${iconEdit()}</button>
-    <button class="infobtn" type="button" data-add aria-label="Add expense to ${escapeHtml(c.name)}">${iconDollar()}</button>
-    <button class="infobtn" type="button" data-toggleexcl aria-label="${c.excludedDefault?"Stop excluding":"Exclude"} ${escapeHtml(c.name)} by default" style="${c.excludedDefault?`color:var(--accent)`:""}">${c.excludedDefault?iconToggleOff():iconToggleOn()}</button>
+    <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
   `;
   // Content dims, controls stay at full strength (same as Monthly's Excluded
   // rows) — the meta line above already says why.
   if(c.excludedDefault) row.classList.add("is-excluded");
   row.onclick = ()=> openCategoryDetailSheet(c.id, ym);
   row.onkeydown = (ev)=>{ if(ev.key==="Enter" || ev.key===" "){ ev.preventDefault(); openCategoryDetailSheet(c.id, ym); } };
-  row.querySelector("[data-edit]").onclick = (ev)=>{
-    ev.stopPropagation();
-    openCategoryDetailSheet(c.id, ym);
-  };
-  row.querySelector("[data-add]").onclick = (ev)=>{
-    ev.stopPropagation();
-    openLineItemDialog(c.id, null, ym);
-  };
-  row.querySelector("[data-toggleexcl]").onclick = async (ev)=>{
-    ev.stopPropagation();
-    c.excludedDefault = !c.excludedDefault;
-    await dbSet("categories", c.id, c);
-    showToast(c.excludedDefault ? `${c.name} now starts Excluded in new months` : `${c.name} no longer starts Excluded`);
-    render();
-  };
   row.querySelector("[data-up]").onclick = (ev)=>{
     ev.stopPropagation();
     moveCategory(c, -1, siblings);
@@ -3828,8 +3938,7 @@ function openCategoryDetailSheet(categoryId, ym){
           <span class="meta-note ${paymentMetaClass(li.paymentMethod)}">${meta}</span>
         </span>
         <span class="amt num">${fmtUSD(amt)}</span>
-        <button class="infobtn" type="button" data-edit="${li.id}" aria-label="Edit ${escapeHtml(li.name)}">${iconEdit()}</button>
-        <button class="infobtn" type="button" data-del="${li.id}" aria-label="Delete ${escapeHtml(li.name)}">${iconTrash()}</button>
+        <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
       </div>
     `;
   }).join("") : `<div class="empty">No expenses yet — add what makes up ${escapeHtml(c.name)}.</div>`;
@@ -3889,26 +3998,6 @@ function openCategoryDetailSheet(categoryId, ym){
         const li = items.find(x=>x.id===row.dataset.item);
         openLineItemDialog(categoryId, li, ym);
       }
-    };
-  });
-  body.querySelectorAll("[data-edit]").forEach(btn=>{
-    btn.onclick = (ev)=>{
-      ev.stopPropagation();
-      const li = items.find(x=>x.id===btn.dataset.edit);
-      openLineItemDialog(categoryId, li, ym);
-    };
-  });
-  body.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.onclick = (ev)=>{
-      ev.stopPropagation();
-      const li = items.find(x=>x.id===btn.dataset.del);
-      confirmAction(`Delete "${li.name}"?`, async ()=>{
-        state.lineitems = state.lineitems.filter(x=>x.id!==li.id);
-        await dbDelete("lineitems", li.id);
-        showToast(`Deleted ${li.name}`);
-        render();
-        openCategoryDetailSheet(categoryId, ym);
-      }, ()=> openCategoryDetailSheet(categoryId, ym));
     };
   });
   onceClick(body.querySelector("#dSave"), async ()=>{
@@ -4783,6 +4872,9 @@ function iconCheck(){
 function iconChevronUp(){
   return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>`;
 }
+function iconChevronRight(){
+  return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+}
 function iconChevronDown(){
   return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
 }
@@ -4816,7 +4908,7 @@ function freqLabel(freq){
 // Color for the text-only meta-note variant (setuprow rows) — same
 // color language the old pills used, just applied to text instead of a badge.
 function paymentMetaClass(pm){
-  return pm==="cash" ? "mm-cash" : (pm==="transfer" || pm==="service") ? "mm-transfer" : "mm-card";
+  return pm==="cash" ? "mm-cash" : pm==="transfer" ? "mm-transfer" : pm==="service" ? "mm-service" : "mm-card";
 }
 
 // All sheets share one <dialog>. Sheets can navigate to another sheet
