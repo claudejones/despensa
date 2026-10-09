@@ -411,13 +411,45 @@
     padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));
     display:flex; justify-content:center;
   }
-  nav.tabs .wrap{max-width:640px; width:100%; display:grid; grid-template-columns:repeat(4,1fr); gap:4px}
+  nav.tabs .wrap{max-width:640px; width:100%; display:grid; grid-template-columns:repeat(5,1fr); gap:4px}
   nav.tabs button{
     background:none; border:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
     min-height:44px; padding:6px 2px; border-radius:10px; color:var(--ink-soft); cursor:pointer; font-size:11px; font-weight:600;
     box-sizing:border-box;
   }
   nav.tabs button.active{color:var(--primary); background:var(--surface-2)}
+  nav.tabs button svg{flex:none}
+  /* Cash Flow */
+  .cf-tiles{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .cf-tile{background:var(--surface-2); border-radius:12px; padding:12px; min-width:0}
+  .cf-k{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:700}
+  .cf-v{font-size:20px; font-weight:600; margin-top:4px; overflow-wrap:anywhere}
+  .cf-sub{font-size:12px; color:var(--ink-soft); margin-top:2px}
+  .cf-good{color:var(--good)} .cf-bad{color:var(--bad)} .cf-warn{color:var(--accent)}
+  .cf-table{border-collapse:collapse; width:100%; font-size:11.5px; font-variant-numeric:tabular-nums}
+  .cf-table th,.cf-table td{padding:8px 3px; text-align:right; border-top:1px solid var(--line)}
+  .cf-table th{border-top:none; font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); font-weight:700}
+  .cf-table td:first-child,.cf-table th:first-child{text-align:left}
+  .cf-table tr.tap{cursor:pointer}
+  .cf-table tr.tap:active{background:var(--surface-2)}
+  .cf-table .ph{color:var(--ink-soft); font-style:italic}
+  .cf-table tr.tot td{font-weight:700}
+  .cf-row{display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--line)}
+  .cf-row .nm{font-weight:600; font-size:14px}
+  .cf-legend{display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); margin:2px 0 6px}
+  .cf-line{display:inline-block; width:14px; border-top:2.5px solid; vertical-align:middle; margin-right:4px}
+  .cf-line.dashed{border-top-style:dashed}
+  .cf-dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--accent); margin-right:4px}
+  .cf-ph{color:var(--ink-soft); font-style:italic}
+  .cf-cols{display:flex; justify-content:space-between; gap:8px; margin-top:4px}
+  .cf-cols b{font-size:13.5px; font-variant-numeric:tabular-nums}
+  .acc-head{display:flex; align-items:center; gap:10px; width:100%; background:none; border:0; padding:0; text-align:left; color:inherit; font:inherit; cursor:pointer}
+  .acc-head .acc-t{flex:1; min-width:0}
+  .acc-head .rowchev{transition:transform .15s; transform:rotate(90deg)}
+  .acc-head[aria-expanded="true"] .rowchev{transform:rotate(-90deg)}
+  .acc-body{margin-top:12px}
+  [data-acc]{scroll-margin-top:84px}
+
 
   input[type=text], input[type=number], input[type=date], select, textarea{
     width:100%; min-width:0; box-sizing:border-box; padding:10px 12px; border-radius:9px; border:1px solid var(--line);
@@ -615,10 +647,11 @@
 
   <nav class="tabs">
     <div class="wrap">
-      <button data-tab="monthly"><span>Monthly</span></button>
-      <button data-tab="outlook"><span>Annual Outlook</span></button>
-      <button data-tab="categories"><span>Budget Setup</span></button>
-      <button data-tab="settings"><span>Settings</span></button>
+      <button data-tab="monthly"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg><span>Monthly</span></button>
+      <button data-tab="outlook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="11"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg><span>Annual</span></button>
+      <button data-tab="categories"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Categories</span></button>
+      <button data-tab="cashflow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 3 21 7 17 11"/><line x1="21" y1="7" x2="9" y2="7"/><polyline points="7 21 3 17 7 13"/><line x1="3" y1="17" x2="15" y2="17"/></svg><span>Cash Flow</span></button>
+      <button data-tab="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></button>
     </div>
   </nav>
 </div>
@@ -663,7 +696,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v106";
+const APP_BUILD = "v109";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -720,6 +753,9 @@ let state = {
   // state.categories). See categoryBaseForMonth/rolloverForMonth below for
   // how this drives the money math.
   monthCategoryData: {},
+  // Cash Flow: per-year opening accounts, reserve goal, income estimates/actuals,
+  // quarter-end balances. See the CASH FLOW section.
+  cashflow: { years: {} },
 };
 
 // monthlyView switches the Monthly tab between its ledger (category list)
@@ -729,7 +765,7 @@ let state = {
 // ym defaults to the real current calendar month, not a fixed Jan-of-the-
 // seed-year — the app should open on whatever month you're actually
 // managing right now.
-let ui = { tab: "monthly", ym: todayYM(), loaded: false, monthlyView: "ledger", settingsYear: null };
+let ui = { tab: "monthly", ym: todayYM(), loaded: false, monthlyView: "ledger", settingsYear: null, cfQ: null, cfQY: null, cfOpen: {}, cfWI: null, setOpen: {}, settingsAnchor: null };
 // Tracks which tab was on screen for the previous render() call, so we can
 // tell an actual tab switch (scroll back to top) apart from a re-render of
 // the same tab (e.g. a chart update) which should leave scroll position alone.
@@ -1469,6 +1505,7 @@ function render(){
   if(ui.tab==="monthly") renderMonthly(main);
   else if(ui.tab==="outlook") renderOutlook(main);
   else if(ui.tab==="categories") renderCategories(main);
+  else if(ui.tab==="cashflow") renderCashFlow(main);
   else if(ui.tab==="settings") renderSettings(main);
 }
 
@@ -1487,7 +1524,7 @@ function renderHeaderStepper(){
   const box = document.getElementById("hdrStepper");
   const headerEl = box.closest("header.top");
   box.innerHTML = "";
-  const hasWidget = ui.loaded && (ui.tab==="monthly" || ui.tab==="outlook");
+  const hasWidget = ui.loaded && (ui.tab==="monthly" || ui.tab==="outlook" || ui.tab==="cashflow");
   headerEl.classList.toggle("has-stepper", hasWidget);
   if(!hasWidget) return;
   const ym = ui.ym;
@@ -1503,7 +1540,7 @@ function renderHeaderStepper(){
     box.querySelector("#hdrPrev").onclick = ()=> stepPeriod(-1);
     box.querySelector("#hdrNext").onclick = ()=> stepPeriod(1);
     box.querySelector("#hdrCal").onclick = ()=> openYearGridSheet(yearOfYM(ui.ym));
-  } else if(ui.tab==="outlook"){
+  } else if(ui.tab==="outlook" || ui.tab==="cashflow"){
     const year = yearOfYM(ym);
     const { minYear, maxYear } = yearNavBounds();
     box.innerHTML = `
@@ -1665,6 +1702,434 @@ document.querySelectorAll("nav.tabs button").forEach(b=>{
   });
 });
 
+
+/* ---------------------------------------------------------------
+   CASH FLOW
+   The funding side of the budget: investment income in, the year's
+   budget out, cash left over, and how many months of next year's
+   spending that cash covers. Spending is never entered here — each
+   month's spending is exactly Monthly's own top-line total for that
+   month (annual ÷ 12 plus any Add funds / External-source transfers),
+   so the two tabs cannot disagree.
+   Per year (state.cashflow.years[y]):
+     accounts:      [{id,label,amountUSD,asOf}]   opening cash accounts
+     reserveMonths: number                          reserve goal, in months
+     annualIncomeUSD: number|null                   fallback ÷ 12 for months with no estimate
+     months:        {0..11: {est?, act?}}           monthly income estimate / actual
+     quarters:      {1..4: {asOf, balances:{accId:amt}}}  actual balances at quarter end
+--------------------------------------------------------------- */
+const CF_QEND = ["Mar 31","Jun 30","Sep 30","Dec 31"];
+const CF_QEND_MD = ["-03-31","-06-30","-09-30","-12-31"];
+function cfYearRec(y){ const ys = state.cashflow && state.cashflow.years; return (ys && ys[y]) || null; }
+function cfEnsureYear(y){
+  if(!state.cashflow) state.cashflow = { years:{} };
+  if(!state.cashflow.years) state.cashflow.years = {};
+  if(!state.cashflow.years[y]) state.cashflow.years[y] = { accounts:[], reserveMonths:null, annualIncomeUSD:null, months:{}, quarters:{} };
+  return state.cashflow.years[y];
+}
+// A year with no value of its own inherits the nearest earlier year's,
+// same rule yearSettings uses for the budget.
+function cfInherit(y, key, def){
+  const ys = (state.cashflow && state.cashflow.years) || {};
+  if(ys[y] && ys[y][key]!=null) return ys[y][key];
+  const prior = Object.keys(ys).map(Number).filter(k=> k<y && ys[k][key]!=null).sort((a,b)=> b-a);
+  return prior.length ? ys[prior[0]][key] : def;
+}
+function cfSigned(v){ return (v>=0 ? "+" : "-") + fmtUSD(Math.abs(v)); }
+function cfModel(y){
+  const rec = cfYearRec(y) || { accounts:[], months:{}, quarters:{} };
+  const accounts = (rec.accounts || []).filter(a=> a.amountUSD!=null);
+  const opening = roundCents(accounts.reduce((s,a)=> s + (a.amountUSD||0), 0));
+  const annualInc = cfInherit(y, "annualIncomeUSD", 0);
+  const reserveMonths = cfInherit(y, "reserveMonths", 12);
+  const ysBudget = yearSettings(y).yearBudgetUSD || 0;
+  const hasOwnBudget = !!(state.settings.perYear && state.settings.perYear[y]);
+  // Running cash is built from exact (unrounded) cumulative income and
+  // spending, rounded once per step, so the year lands on the true figure
+  // (e.g. 12 x $8,040.1667 is exactly $96,482.00, not $96,482.04) while each
+  // month's displayed income/spending stays what Monthly shows for it.
+  const rows = [], cash = [opening];
+  let cumInc = 0, cumSpend = 0;
+  for(let m=0; m<12; m++){
+    const mm = (rec.months||{})[m] || {};
+    const placeholder = mm.est==null;
+    const incExact = placeholder ? annualInc/12 : mm.est;
+    const ym = ymOf(y, m);
+    const spend = totalBudgetForMonth(ym);
+    const base = roundCents(ysBudget/12);
+    const spendExact = (spend - base) + ysBudget/12;
+    cumInc += incExact; cumSpend += spendExact;
+    cash.push(roundCents(opening + cumInc - cumSpend));
+    rows.push({ m, ym, inc: roundCents(incExact), incExact, placeholder, est: mm.est==null ? null : mm.est, act: mm.act==null ? null : mm.act, spend, base, added: roundCents(spend - base), end: cash[m+1] });
+  }
+  const spendTotal = roundCents(cumSpend), incTotal = roundCents(cumInc);
+  const end = cash[12];
+  const reserve = roundCents(reserveMonths * spendTotal / 12);
+  const coverage = spendTotal>0 ? end / (spendTotal/12) : null;
+  const nextMonthly = (yearSettings(y+1).yearBudgetUSD || 0) / 12;
+  const runwayNext = nextMonthly>0 ? end / nextMonthly : null;
+  const quarters = [];
+  for(let q=0; q<4; q++){
+    const qrec = (rec.quarters||{})[q+1] || {};
+    const bals = qrec.balances || {};
+    const allIn = accounts.length>0 && accounts.every(a=> bals[a.id]!=null);
+    const actCash = allIn ? roundCents(accounts.reduce((s,a)=> s + bals[a.id], 0)) : null;
+    const mrows = rows.slice(3*q, 3*q+3);
+    const estInc = roundCents(mrows.reduce((s,r)=> s + r.incExact, 0));
+    const actAll = mrows.every(r=> r.act!=null);
+    const actInc = actAll ? roundCents(mrows.reduce((s,r)=> s + r.act, 0)) : null;
+    quarters.push({ q:q+1, asOf: qrec.asOf || null, estCash: cash[3*q+3], actCash, estInc, actInc, rows: mrows,
+      hasAny: actCash!=null || mrows.some(r=> r.act!=null) });
+  }
+  let latest = null; quarters.forEach(qq=>{ if(qq.actCash!=null) latest = qq; });
+  const gap = latest ? roundCents(latest.actCash - latest.estCash) : 0;
+  const revisedEnd = roundCents(end + gap);
+  const revisedRunway = nextMonthly>0 ? revisedEnd / nextMonthly : null;
+  const endEff = latest ? revisedEnd : end;
+  const covEff = spendTotal>0 ? endEff / (spendTotal/12) : null;
+  const runwayEff = latest ? revisedRunway : runwayNext;
+  return { endEff, aboveEff: roundCents(endEff - reserve), covEff, runwayEff, accounts, opening, annualInc, reserveMonths, ysBudget, hasOwnBudget, rows, cash, spendTotal, incTotal, end, reserve,
+    above: roundCents(end - reserve), coverage, nextMonthly, runwayNext, quarters, latest, gap, revisedEnd, revisedRunway, hasSetup: accounts.length>0 };
+}
+function cfFundsAddedForMonth(ym){
+  const out = [];
+  state.fundevents.forEach(fe=>{
+    const p = roundCents(fundAdjustmentPortion(fe, ym));
+    if(p!==0) out.push({ amount:p, note: fe.note || "", date: fe.date, spread: fe.mode!=="oneshot" });
+  });
+  state.transfers.forEach(t=>{
+    if(t.fromCategoryId===null && ymOfDate(t.date)===ym) out.push({ amount:t.amountUSD, note: t.note || "", date: t.date, spread:false });
+  });
+  return out;
+}
+function cfNice(lo, hi, n){
+  const raw = ((hi-lo)/n) || 1, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1,2,2.5,5,10].map(m=> m*mag).find(s=> s>=raw);
+  return { a: Math.floor(lo/step)*step, b: Math.ceil(hi/step)*step, step };
+}
+// Cash chart. A small dot marks each month-end (tap one: month + balance),
+// larger accent dots are your actual quarter-end balances, dashed lines are
+// the revised forecast / what-if. Axis ticks land on round numbers.
+function cfSvgChart(pts, opts){
+  opts = opts || {};
+  const rev = opts.rev || [], dots = opts.dots || [], wi = opts.wi || [];
+  const w = 322, h = 200;
+  const vals = pts.concat(rev.map(p=>p[1]), dots.map(p=>p[1]), wi);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi-lo)*0.08 || 1000; lo -= pad; hi += pad;
+  const t = cfNice(lo, hi, 4), a = t.a, b = t.b;
+  const x = i=> 44 + i*(w-56)/12;
+  const y = v=> h-26 - (v-a)/(b-a)*(h-46);
+  const lab = v=> (t.step>=1000 ? String(Math.round(v/1000)) : (v/1000).toFixed(1)) + "k";
+  let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block" role="img" aria-label="${escapeHtml(opts.label||"Cash by month")}">`;
+  for(let v=a; v<=b+t.step/1000; v+=t.step){
+    s += `<line x1="44" x2="${w-12}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--line)" stroke-dasharray="3 4"/><text x="38" y="${(y(v)+4).toFixed(1)}" text-anchor="end" font-size="10" style="fill:var(--ink-soft)">${lab(v)}</text>`;
+  }
+  s += `<polyline fill="none" stroke-width="2.5" style="stroke:var(--primary)" points="${pts.map((v,i)=> x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}"/>`;
+  if(rev.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--accent)" points="${rev.map(p=> x(p[0]).toFixed(1)+","+y(p[1]).toFixed(1)).join(" ")}"/>`;
+  if(wi.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--accent)" points="${wi.map((v,i)=> x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}"/>`;
+  if(!opts.noDots){
+    for(let i=1; i<=12; i++) s += `<circle cx="${x(i).toFixed(1)}" cy="${y(pts[i]).toFixed(1)}" r="3.2" stroke-width="1.5" style="fill:var(--primary);stroke:var(--surface)"/>`;
+  }
+  dots.forEach(p=>{ s += `<circle cx="${x(p[0]).toFixed(1)}" cy="${y(p[1]).toFixed(1)}" r="5.5" stroke-width="2" style="fill:var(--accent);stroke:var(--surface)"/>`; });
+  [0,3,6,9,12].forEach(i=>{ s += `<text x="${x(i).toFixed(1)}" y="${h-8}" font-size="10" text-anchor="middle" style="fill:var(--ink-soft)">${i===0 ? "Open" : MONTHS[i-1]}</text>`; });
+  if(!opts.noDots){
+    for(let i=1; i<=12; i++) s += `<circle class="cf-hit" data-i="${i}" data-cx="${x(i).toFixed(1)}" data-cy="${y(pts[i]).toFixed(1)}" cx="${x(i).toFixed(1)}" cy="${y(pts[i]).toFixed(1)}" r="13" fill="transparent" style="cursor:pointer"/>`;
+  }
+  return s + `</svg>`;
+}
+function cfWireChart(box, pts){
+  const svg = box.querySelector("svg"); if(!svg) return;
+  const NS = "http://www.w3.org/2000/svg", W = 322;
+  svg.addEventListener("click", e=>{
+    const old = svg.querySelector("#cfTip"); if(old) old.remove();
+    const hit = e.target.closest ? e.target.closest(".cf-hit") : null;
+    if(!hit) return;
+    const i = parseInt(hit.dataset.i,10), cx = parseFloat(hit.dataset.cx), cy = parseFloat(hit.dataset.cy);
+    const bx = Math.min(Math.max(cx-56, 46), W-12-112), by = cy>76 ? cy-52 : cy+14;
+    const g = document.createElementNS(NS, "g"); g.setAttribute("id","cfTip"); g.setAttribute("pointer-events","none");
+    g.innerHTML = `<line x1="${cx}" x2="${cx}" y1="10" y2="174" stroke-width="1" style="stroke:var(--ink-soft)"/>
+      <circle cx="${cx}" cy="${cy}" r="6" stroke-width="2.5" style="fill:var(--primary);stroke:var(--surface)"/>
+      <rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="112" height="38" rx="8" style="fill:var(--surface-2);stroke:var(--line)"/>
+      <text x="${(bx+10).toFixed(1)}" y="${(by+16).toFixed(1)}" font-size="10" style="fill:var(--ink-soft)">End of ${MONTHS[i-1]}</text>
+      <text x="${(bx+10).toFixed(1)}" y="${(by+31).toFixed(1)}" font-size="12" font-weight="700" style="fill:var(--ink)">${escapeHtml(fmtUSD(pts[i]))}</text>`;
+    svg.appendChild(g);
+  });
+}
+function cfLegend(items){
+  return `<div class="cf-legend">${items.map(it=>{
+    if(it.dot) return `<span><i class="cf-dot"></i>${escapeHtml(it.label)}</span>`;
+    return `<span><i class="cf-line ${it.dashed?"dashed":""}" style="border-top-color:${it.color}"></i>${escapeHtml(it.label)}</span>`;
+  }).join("")}</div>`;
+}
+function cfTile(k, v, sub, cls){
+  return `<div class="cf-tile"><div class="cf-k">${k}</div><div class="cf-v ${cls||""}">${v}</div>${sub ? `<div class="cf-sub">${sub}</div>` : ""}</div>`;
+}
+function cfNum(v){ return v==null ? "—" : fmtUSD(v); }
+function cfCoverageClass(c, goal){ return c==null ? "" : (c>=goal ? "cf-good" : (c>=Math.min(9, goal*0.75) ? "cf-warn" : "cf-bad")); }
+
+// Collapsible card: title + one-line summary, tap to open. `store` is a plain
+// object on `ui` so open/closed survives re-renders for the session.
+function accCard(store, key, title, summary, buildBody, tagHTML){
+  const open = !!store[key];
+  const c = el("div","card");
+  c.dataset.acc = key;
+  c.innerHTML = `<button type="button" class="acc-head" aria-expanded="${open}"><div class="acc-t"><div class="eyebrow">${title}</div>${summary ? `<div class="muted" style="font-size:12px; margin-top:3px">${summary}</div>` : ""}</div>${tagHTML||""}<span class="rowchev">${iconChevronRight()}</span></button>`;
+  if(open){ const b = el("div","acc-body stack"); buildBody(b); c.appendChild(b); }
+  c.querySelector(".acc-head").onclick = ()=>{ store[key] = !open; render(); };
+  return c;
+}
+const cfMoney0 = v=> fmtUSD(v).replace(/\.00$/, "");
+
+function renderCashFlow(main){
+  const y = yearOfYM(ui.ym);
+  const M = cfModel(y);
+  const wrap = el("div", "stack");
+  if(!M.hasOwnBudget){
+    const n = el("div", "muted");
+    n.textContent = M.ysBudget>0 ? `No budget is set for ${y} yet, so this uses the nearest earlier year's (${fmtUSD(M.ysBudget)}). Set it in Settings.` : `No budget set yet for ${y}. Set it in Settings to see spending here.`;
+    wrap.appendChild(n);
+  }
+  if(!M.hasSetup){ cfSetupCard(wrap, y); main.appendChild(wrap); return; }
+  cfRenderTop(wrap, y, M);
+  const nextBudget = M.runwayEff==null ? "Set a budget to see runway" : `Into ${y+1}: ${M.runwayEff.toFixed(1)} months`;
+  wrap.appendChild(accCard(ui.cfOpen, "runway", "Runway", nextBudget, b=> cfRunwayBody(b, y, M)));
+  wrap.appendChild(accCard(ui.cfOpen, "whatif", "What-if", "", b=> cfWhatIfBody(b, y, M)));
+  const done = M.quarters.filter(q=> q.hasAny).map(q=> "Q"+q.q);
+  wrap.appendChild(accCard(ui.cfOpen, "monthly", "Monthly cash flow", done.length ? `${done.join(", ")} actuals in` : "No actuals yet", b=> cfMonthlyBody(b, y, M)));
+  main.appendChild(wrap);
+}
+
+function cfGoSettings(y){
+  ui.settingsYear = y; ui.setOpen.cf = true; ui.settingsAnchor = "cf"; ui.tab = "settings"; render();
+}
+function cfSetupCard(wrap, y){
+  const c = el("div", "card stack");
+  c.innerHTML = `<div class="eyebrow">Set up ${y}</div>
+    <div class="muted">Cash Flow starts from your opening balances for the year: Morgan Stanley and Navy Federal Credit Union. Enter them in Settings for ${y}, along with the reserve goal and your annual income estimate.</div>
+    <button type="button" class="btn primary" id="cfGoSet">Open Settings for ${y}</button>`;
+  c.querySelector("#cfGoSet").onclick = ()=> cfGoSettings(y);
+  wrap.appendChild(c);
+}
+function cfFmtDate(d){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d||""); if(!m) return d||"";
+  return MONTHS[parseInt(m[2],10)-1] + " " + parseInt(m[3],10) + ", " + m[1];
+}
+
+// Headline. Once any quarter has actual balances, every figure here is on the
+// revised basis (plan + latest actual gap); the plan year-end stays visible as
+// the sub-line of the end-of-Dec tile.
+function cfRenderTop(wrap, y, M){
+  const goal = M.reserveMonths, cov = M.covEff;
+  const status = cov==null ? "" : (cov>=goal ? `<span class="pill good">✓ Reserve funded</span>` : (cov>=Math.min(9, goal*0.75) ? `<span class="pill cash">Below ${goal} months</span>` : `<span class="pill bad">Below ${Math.min(9, goal*0.75)} months</span>`));
+  const hd = el("div", "card stack");
+  hd.innerHTML = `
+    <div class="row">${status || "<span></span>"}<span class="muted" style="font-size:12px">${M.latest ? `After Q${M.latest.q} actuals` : ""}</span></div>
+    ${cfTile(`Opening cash · ${y}`, fmtUSD(M.opening), `Jan 1, ${y}`)}
+    <div class="cf-tiles">
+      ${cfTile("Cash, end of Dec", fmtUSD(M.endEff), M.latest ? `Plan ${fmtUSD(M.end)}` : "Projected")}
+      ${cfTile(`${goal}-month reserve`, fmtUSD(M.reserve), `${y} spending`)}
+      ${cfTile("Above reserve", fmtUSD(M.aboveEff), "", M.aboveEff>=0 ? "cf-good" : "cf-bad")}
+      ${cfTile("Months covered", cov==null ? "—" : cov.toFixed(1) + " mo", `of ${y} spending`, cfCoverageClass(cov, goal))}
+    </div>`;
+  if(M.annualInc===0 && !M.rows.some(r=> r.est!=null)){
+    const nt = el("div","muted"); nt.textContent = `No annual income estimate for ${y}. Add it in Settings, or enter monthly estimates under Monthly cash flow.`;
+    hd.appendChild(nt);
+  }
+  wrap.appendChild(hd);
+}
+
+function cfRunwayBody(b, y, M){
+  const hasNext = !!(state.settings.perYear && state.settings.perYear[y+1]);
+  const dots = [];
+  M.quarters.forEach(qq=>{ if(qq.actCash!=null) dots.push([3*qq.q, qq.actCash]); });
+  const rev = M.latest ? [[3*M.latest.q, M.latest.actCash]].concat(Array.from({length:12-3*M.latest.q}, (_,k)=> { const i = 3*M.latest.q + 1 + k; return [i, roundCents(M.cash[i] + M.gap)]; })) : [];
+  const lg = [{label:"Estimated cash", color:"var(--primary)"}];
+  if(dots.length) lg.push({label:"Your balances", dot:true});
+  if(rev.length>1) lg.push({label:"Revised", color:"var(--accent)", dashed:true});
+  b.innerHTML = `
+    <div class="row"><span class="muted">Into ${y+1}</span><b>${M.runwayEff==null ? "—" : M.runwayEff.toFixed(1) + " months"}</b></div>
+    <div class="muted" style="font-size:12px">${M.runwayEff==null ? "Set a budget to see runway." : `Year-end cash ÷ your ${y+1} monthly budget (${fmtUSD(M.nextMonthly)}).${hasNext ? "" : ` <span class="cf-warn">Uses ${y}'s budget because ${y+1} has none yet.</span>`}${M.latest && M.runwayNext!=null ? ` Plan: ${M.runwayNext.toFixed(1)} months.` : ""}`}</div>
+    <div id="cfChartBox">${cfSvgChart(M.cash, { rev: rev.length>1 ? rev : [], dots, label:`Estimated cash for ${y}` })}</div>
+    ${cfLegend(lg)}
+    <div class="muted" style="font-size:12px">A dot marks each month-end. Tap one for the month and balance.</div>`;
+  cfWireChart(b.querySelector("#cfChartBox"), M.cash);
+}
+
+function cfWhatIfBody(b, y, M){
+  if(!(M.incTotal>0) || !(M.ysBudget>0)){
+    b.innerHTML = `<div class="muted">Set ${y}'s budget and annual income estimate to try what-ifs.</div>`; return;
+  }
+  if(!ui.cfWI || ui.cfWI.y!==y) ui.cfWI = { y, inc: M.incTotal, sp: M.ysBudget, tr: 0 };
+  const w = ui.cfWI;
+  const r0 = v=> Math.round(v/500)*500;
+  const rng = (v)=> ({ min: Math.max(0, r0(v*0.5)), max: Math.max(500, r0(v*1.5)) });
+  const ri = rng(M.incTotal), rs = rng(M.ysBudget);
+  const slider = (id, label, min, max, val, step)=> `<div><div class="row"><span class="nm" style="font-weight:600; font-size:14px">${label}</span><b class="num" id="${id}V"></b></div>
+      <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" style="width:100%; accent-color:var(--primary)">
+      <div class="muted" style="font-size:12px" id="${id}D"></div></div>`;
+  b.innerHTML = `
+    ${slider("wiInc", "Annual income", ri.min, ri.max, Math.min(Math.max(w.inc, ri.min), ri.max), 500)}
+    ${slider("wiSp", "Annual spending", rs.min, rs.max, Math.min(Math.max(w.sp, rs.min), rs.max), 500)}
+    ${slider("wiTr", "Extra travel", 0, 20000, w.tr, 250)}
+    <table class="cf-table"><thead><tr><th></th><th>Current</th><th>What-if</th></tr></thead><tbody>
+      <tr><td>Year-end cash</td><td>${fmtUSD(M.endEff)}</td><td><b id="wiEnd"></b></td></tr>
+      <tr><td>${M.reserveMonths}-month reserve</td><td>${fmtUSD(M.reserve)}</td><td><b id="wiRes"></b></td></tr>
+      <tr><td>Above reserve</td><td>${fmtUSD(M.aboveEff)}</td><td><b id="wiAbv"></b></td></tr>
+      <tr><td>Months covered</td><td>${M.covEff==null ? "—" : M.covEff.toFixed(1)}</td><td><b id="wiCov"></b></td></tr>
+      <tr><td>Runway into ${y+1}</td><td>${M.runwayEff==null ? "—" : M.runwayEff.toFixed(1)}</td><td><b id="wiRun"></b></td></tr>
+    </tbody></table>
+    <div id="wiChart"></div>
+    ${cfLegend([{label:"Estimate", color:"var(--primary)"}, {label:"What-if", color:"var(--accent)", dashed:true}])}
+    <div class="row"><span></span><button type="button" class="btn small" id="wiReset">Reset</button></div>`;
+  const q = s=> b.querySelector(s);
+  const upd = ()=>{
+    const dI = w.inc - M.incTotal, dS = (w.sp - M.ysBudget) + w.tr;
+    const ST = M.spendTotal + dS;
+    const end = roundCents(M.endEff + dI - dS), reserve = roundCents(M.reserveMonths * ST / 12);
+    const cov = ST>0 ? end / (ST/12) : null, run = M.nextMonthly>0 ? end / M.nextMonthly : null;
+    q("#wiIncV").textContent = cfMoney0(w.inc); q("#wiSpV").textContent = cfMoney0(w.sp); q("#wiTrV").textContent = cfMoney0(w.tr);
+    q("#wiIncD").textContent = `${cfSigned(roundCents(dI)).replace(/\.00$/,"")} vs ${y} estimate ${cfMoney0(M.incTotal)}`;
+    q("#wiSpD").textContent = `${cfSigned(roundCents(w.sp - M.ysBudget)).replace(/\.00$/,"")} vs budget ${cfMoney0(M.ysBudget)}`;
+    q("#wiTrD").textContent = "On top of any funds already added";
+    q("#wiEnd").textContent = fmtUSD(end); q("#wiEnd").className = end < M.endEff ? "cf-warn" : "";
+    q("#wiRes").textContent = fmtUSD(reserve);
+    q("#wiAbv").textContent = fmtUSD(roundCents(end - reserve)); q("#wiAbv").className = end-reserve>=0 ? "cf-good" : "cf-bad";
+    q("#wiCov").textContent = cov==null ? "—" : cov.toFixed(1); q("#wiCov").className = cfCoverageClass(cov, M.reserveMonths);
+    q("#wiRun").textContent = run==null ? "—" : run.toFixed(1);
+    const delta = end - M.end;
+    const line = M.cash.map((v,i)=> roundCents(v + delta*i/12));
+    q("#wiChart").innerHTML = cfSvgChart(M.cash, { wi: line, noDots:true, label:`Estimate and what-if cash for ${y}` });
+  };
+  [["wiInc","inc"],["wiSp","sp"],["wiTr","tr"]].forEach(([id,k])=> q("#"+id).addEventListener("input", ()=>{ w[k] = parseFloat(q("#"+id).value); upd(); }));
+  q("#wiReset").onclick = ()=>{ ui.cfWI = null; render(); };
+  upd();
+}
+
+function cfMonthlyBody(b, y, M){
+  if(ui.cfQ==null || ui.cfQY!==y){
+    const todayY = yearOfYM(todayYM());
+    ui.cfQ = M.latest ? Math.min(4, M.latest.q + 1) : (y===todayY ? Math.floor(monthOfYM(todayYM())/3)+1 : 1);
+    ui.cfQY = y;
+  }
+  const Q = M.quarters[ui.cfQ-1], qs = Q.q-1;
+  const names = ["Q1","Q2","Q3","Q4"];
+  const diff = (est, act)=> `<span class="${act-est>=0 ? "cf-good" : "cf-bad"}">${cfSigned(roundCents(act-est))}</span>`;
+  const rows = Q.rows.map(r=>{
+    const has = r.act!=null;
+    const right = has ? `<span class="num nm">${fmtUSD(r.act)}</span>` : `<span class="num nm ${r.placeholder ? "cf-ph" : ""}" style="${r.placeholder ? "" : "color:var(--ink-soft)"}">${fmtUSD(r.inc)}</span>`;
+    const sub = has ? `Estimate ${fmtUSD(r.inc)} · ${diff(r.inc, r.act)}` : `Estimate${r.placeholder ? " (annual ÷ 12)" : ""} · no actual yet`;
+    let h = `<div class="cf-row taprow" data-m="${r.m}"><div style="flex:1; min-width:0"><div class="nm">${MONTHS[r.m]}</div><div class="muted" style="font-size:12px">${sub}</div></div>${right}<span class="rowchev">${iconChevronRight()}</span></div>`;
+    if(r.added!==0){
+      const notes = cfFundsAddedForMonth(r.ym).map(f=> f.note).filter(Boolean).join(", ");
+      h += `<div class="cf-row taprow" data-m="${r.m}" style="border-top:none; padding-top:0"><div style="flex:1; min-width:0; padding-left:14px" class="muted"><span style="font-size:12px">Funds added${notes ? " · " + escapeHtml(notes) : ""}</span></div><span class="num cf-warn nm">${cfSigned(r.added)}</span><span class="rowchev">${iconChevronRight()}</span></div>`;
+    }
+    return h;
+  }).join("");
+  b.innerHTML = `
+    <div class="viewtoggle">${names.map((n,i)=> `<button type="button" class="viewbtn ${i+1===ui.cfQ?"active":""}" data-q="${i+1}" style="flex:1; justify-content:center">${n}</button>`).join("")}</div>
+    <div class="cf-tile"><div class="cf-k">Cash at ${CF_QEND[qs]}</div>
+      <div class="cf-cols"><div><div class="cf-sub">Estimate</div><b>${fmtUSD(Q.estCash)}</b></div><div><div class="cf-sub">Actual</div><b>${cfNum(Q.actCash)}</b></div><div style="text-align:right"><div class="cf-sub">Difference</div><b>${Q.actCash==null ? "—" : diff(Q.estCash, Q.actCash)}</b></div></div></div>
+    <div>${rows}
+      <div class="cf-row"><div style="flex:1"><div class="nm" style="font-weight:700">${names[qs]} income</div><div class="muted" style="font-size:12px">Estimate ${fmtUSD(Q.estInc)}</div></div><div style="text-align:right"><b>${cfNum(Q.actInc)}</b>${Q.actInc==null ? "" : `<div style="font-size:12px">${diff(Q.estInc, Q.actInc)}</div>`}</div></div>
+    </div>
+    <button type="button" class="btn block" id="cfEditQ">Edit ${names[qs]}</button>`;
+  b.querySelectorAll("[data-q]").forEach(x=> x.onclick = ()=>{ ui.cfQ = parseInt(x.dataset.q,10); render(); });
+  b.querySelectorAll("[data-m]").forEach(x=> x.onclick = ()=> cfMonthSheet(y, parseInt(x.dataset.m,10)));
+  b.querySelector("#cfEditQ").onclick = ()=> cfQuarterSheet(y, Q.q);
+}
+
+
+/* ---- Cash Flow sheets ---- */
+function cfParseMoney(v){ const s = cleanNumStr(v); if(s==="" || s==="-" || s===".") return null; const n = parseFloat(s); return isFinite(n) ? n : null; }
+function cfShowSheet(html){
+  const dlg = document.getElementById("dlg"), body = document.getElementById("dlgBody");
+  body.innerHTML = html; openSheet(); return { dlg, body };
+}
+function cfMonthSheet(y, m){
+  const rec = cfEnsureYear(y);
+  const M = cfModel(y);
+  const r = M.rows[m];
+  const mm = (rec.months[m] = rec.months[m] || {});
+  const funds = cfFundsAddedForMonth(r.ym);
+  const fundsHtml = funds.length ? funds.map(f=> `<div class="cf-row"><div style="flex:1; min-width:0"><div class="nm">${f.amount>=0?"+":"-"}${fmtUSD(Math.abs(f.amount))}</div><div class="muted">${escapeHtml(f.note || "Funds added")}${f.spread ? " · spread across months" : ""}${f.date ? " · " + escapeHtml(cfFmtDate(f.date)) : ""}</div></div></div>`).join("") : `<div class="muted" style="padding:6px 0">None.</div>`;
+  const addedTotal = roundCents(r.added);
+  const impact = addedTotal!==0 && M.hasSetup ? `<div class="cf-tile" style="margin-top:4px"><div class="cf-k">What these funds change</div>
+      <div class="cf-row" style="border-top:none"><span class="muted" style="flex:1">Year-end cash</span><span class="num">${fmtUSD(roundCents(M.end+addedTotal))} → <b>${fmtUSD(M.end)}</b></span></div>
+      ${M.nextMonthly>0 ? `<div class="cf-row"><span class="muted" style="flex:1">Runway into ${y+1}</span><span class="num">${((M.end+addedTotal)/M.nextMonthly).toFixed(1)} → <b>${(M.end/M.nextMonthly).toFixed(1)} mo</b></span></div>` : ""}</div>` : "";
+  const { dlg, body } = cfShowSheet(`
+    <h3>${MONTHS[m]} ${y}</h3>
+    <label>Income estimate<input type="number" inputmode="decimal" step="0.01" min="0" id="cmEst" value="${mm.est==null ? "" : mm.est}" placeholder="${r.placeholder ? roundCents(M.annualInc/12).toFixed(2) : ""}"></label>
+    <div class="muted" style="font-size:12px; margin-top:-6px">${mm.est==null ? "Blank: using annual ÷ 12 as a placeholder" : "Your estimate for this month"}</div>
+    <label>Income actual<input type="number" inputmode="decimal" step="0.01" min="0" id="cmAct" value="${mm.act==null ? "" : mm.act}" placeholder="Not received yet"></label>
+    <div class="eyebrow" style="margin-top:6px">Spending</div>
+    <div class="cf-row" style="border-top:none"><span class="muted" style="flex:1">Base (annual ÷ 12)</span><span class="num">${fmtUSD(r.base)}</span></div>
+    <div class="muted" style="font-size:12px">Funds added</div>
+    ${fundsHtml}
+    <div class="cf-row"><b style="flex:1">Total spending</b><b class="num">${fmtUSD(r.spend)}</b></div>
+    <div class="cf-row"><span class="muted" style="flex:1">Estimated cash, end of ${MONTHS[m]}</span><span class="num">${fmtUSD(r.end)}</span></div>
+    <button type="button" class="btn small block" id="cmAdd">Add funds to ${MONTHS[m]}</button>
+    <div class="muted" style="font-size:12px">Funds come out of your cash pool. Edit or remove them on Monthly.</div>
+    ${impact}
+    <div class="dialog-actions"><button class="btn ghost" id="cmCancel">Cancel</button><button class="btn primary" id="cmSave">Save</button></div>`);
+  const read = ()=> ({ est: cfParseMoney(body.querySelector("#cmEst").value), act: cfParseMoney(body.querySelector("#cmAct").value) });
+  const dirty = ()=>{ const v = read(); return (v.est==null ? null : v.est) !== (mm.est==null ? null : mm.est) || (v.act==null ? null : v.act) !== (mm.act==null ? null : mm.act); };
+  const save = async ()=>{
+    const v = read();
+    if((v.est!=null && v.est<0) || (v.act!=null && v.act<0)){ formError(body, "Amounts can't be negative."); return false; }
+    if(v.est==null) delete mm.est; else mm.est = roundCents(v.est);
+    if(v.act==null) delete mm.act; else mm.act = roundCents(v.act);
+    await dbSet("cashflow", String(y), rec);
+    return true;
+  };
+  body.querySelector("#cmCancel").onclick = ()=> dlg.close();
+  onceClick(body.querySelector("#cmSave"), async ()=>{ if(await save()===false) return; dlg.close(); render(); });
+  const goFunds = ()=> openFundDialog(r.ym, { lockMonth:true, onSaved:()=>{ render(); cfMonthSheet(y, m); }, onCancel:()=> cfMonthSheet(y, m) });
+  body.querySelector("#cmAdd").onclick = ()=>{
+    if(dirty()) promptSaveBeforeContinue(body, async ()=>{ const ok = await save(); if(ok===false) return false; goFunds(); }, "month");
+    else goFunds();
+  };
+}
+function cfQuarterSheet(y, q){
+  const rec = cfEnsureYear(y);
+  const M = cfModel(y);
+  const Q = M.quarters[q-1];
+  const qrec = (rec.quarters[q] = rec.quarters[q] || { asOf:null, balances:{} });
+  qrec.balances = qrec.balances || {};
+  const dflt = y + CF_QEND_MD[q-1];
+  const incRows = Q.rows.map((r,i)=> `<div class="row" style="gap:8px"><span style="width:38px">${MONTHS[r.m]}</span>
+      <input type="number" inputmode="decimal" step="0.01" min="0" data-est="${r.m}" value="${r.est==null ? "" : r.est}" placeholder="${roundCents(M.annualInc/12).toFixed(2)}" style="flex:1">
+      <input type="number" inputmode="decimal" step="0.01" min="0" data-act="${r.m}" value="${r.act==null ? "" : r.act}" placeholder="—" style="flex:1"></div>`).join("");
+  const balRows = M.accounts.length ? M.accounts.map(a=> `<label>${escapeHtml(a.label||"Account")}<input type="number" inputmode="decimal" step="0.01" data-bal="${a.id}" value="${qrec.balances[a.id]==null ? "" : qrec.balances[a.id]}" placeholder="0.00"></label>`).join("") : `<div class="muted">Set up this year in Settings first.</div>`;
+  const mons = ["Jan–Mar","Apr–Jun","Jul–Sep","Oct–Dec"];
+  const { dlg, body } = cfShowSheet(`
+    <h3>Q${q} · ${mons[q-1]} ${y}</h3>
+    <div class="eyebrow">Income</div>
+    <div class="row" style="gap:8px; margin:0"><span style="width:38px"></span><span class="muted" style="flex:1; text-align:center">Estimate</span><span class="muted" style="flex:1; text-align:center">Actual</span></div>
+    ${incRows}
+    <div class="muted" style="font-size:12px">Leave an estimate blank to use annual ÷ 12. Leave an actual blank until you have it.</div>
+    <div class="eyebrow" style="margin-top:8px">Balances at ${CF_QEND[q-1]} (actual)</div>
+    <label>As of<input type="date" id="cqDate" value="${qrec.asOf || dflt}"></label>
+    ${balRows}
+    <div class="muted" style="font-size:12px">Actual cash shows once every account has a balance.</div>
+    <div class="dialog-actions"><button class="btn ghost" id="cqCancel">Cancel</button><button class="btn primary" id="cqSave">Save</button></div>`);
+  body.querySelector("#cqCancel").onclick = ()=> dlg.close();
+  onceClick(body.querySelector("#cqSave"), async ()=>{
+    const bad = [...body.querySelectorAll("[data-est],[data-act]")].find(i=>{ const v = cfParseMoney(i.value); return v!=null && v<0; });
+    if(bad){ formError(body, "Income can't be negative.", bad); return; }
+    Q.rows.forEach(r=>{
+      const mm = (rec.months[r.m] = rec.months[r.m] || {});
+      const e = cfParseMoney(body.querySelector(`[data-est="${r.m}"]`).value);
+      const a = cfParseMoney(body.querySelector(`[data-act="${r.m}"]`).value);
+      if(e==null) delete mm.est; else mm.est = roundCents(e);
+      if(a==null) delete mm.act; else mm.act = roundCents(a);
+    });
+    const balances = {};
+    body.querySelectorAll("[data-bal]").forEach(i=>{ const v = cfParseMoney(i.value); if(v!=null) balances[i.dataset.bal] = roundCents(v); });
+    qrec.balances = balances; qrec.asOf = body.querySelector("#cqDate").value || dflt;
+    await dbSet("cashflow", String(y), rec); dlg.close(); render();
+  });
+}
 
 /* ---------------------------------------------------------------
    RENDER: MONTHLY — DASHBOARD SUB-VIEW
@@ -4380,12 +4845,10 @@ function renderSettings(main){
   const viewCard = el("div","card stack");
   viewCard.innerHTML = `
     <div class="eyebrow">Monthly opens to</div>
-    <div class="muted">Which view the Monthly tab lands on when you switch to it from elsewhere. Its in-tab toggle still works either way — this just sets the starting point.</div>
-    <div class="row" style="gap:8px; justify-content:flex-start">
-      <button type="button" class="btn small ${curView==="ledger"?"active":""}" id="dvLedger">Ledger</button>
-      <button type="button" class="btn small ${curView==="dash"?"active":""}" id="dvDash">Dashboard</button>
-    </div>
-  `;
+    <div class="viewtoggle">
+      <button type="button" class="viewbtn ${curView==="ledger"?"active":""}" id="dvLedger" style="flex:1; justify-content:center">Ledger</button>
+      <button type="button" class="viewbtn ${curView==="dash"?"active":""}" id="dvDash" style="flex:1; justify-content:center">Dashboard</button>
+    </div>`;
   viewCard.querySelector("#dvLedger").onclick = async ()=>{
     state.settings.monthlyDefaultView = "ledger";
     await dbSetSettings();
@@ -4400,19 +4863,14 @@ function renderSettings(main){
   };
   wrap.appendChild(viewCard);
 
-  // Annual budget and exchange rate are now per-year (perYear[year]) — this
-  // small selector picks which year the two cards below read and write,
-  // defaulting to whatever year Monthly is currently showing.
+  // Everything below the picker is per-year (perYear[year], cashflow.years[year]).
+  // Each section is a collapsed card with a one-line summary; Cash Flow's
+  // "Set up" button opens Settings straight to its section (ui.settingsAnchor).
   const settingsYear = ui.settingsYear || yearOfYM(ui.ym);
   ui.settingsYear = settingsYear;
   const ys = yearSettings(settingsYear);
 
-  // Year-scoped settings (selector, data, budget, rate, funds) render as
-  // sub-sections of one panel rather than five independent .card elements
-  // — see .yearpanel/.yp-section in the <style> block.
-  const yearPanel = el("div","card yearpanel");
-
-  const panelHead = el("div","yp-head");
+  const panelHead = el("div","card");
   const { minYear: setMinYear, maxYear: setMaxYear } = yearNavBounds();
   panelHead.innerHTML = `
     <div class="eyebrow">Year settings</div>
@@ -4422,26 +4880,138 @@ function renderSettings(main){
         <button class="navbtn" id="setPrevY" aria-label="Previous year" ${settingsYear<=setMinYear?"disabled":""}>‹</button>
         <button class="navbtn" id="setNextY" aria-label="Next year" ${settingsYear>=setMaxYear?"disabled":""}>›</button>
       </div>
-    </div>
-  `;
+    </div>`;
   panelHead.querySelector("#setPrevY").onclick = ()=>{ if(settingsYear>setMinYear){ ui.settingsYear = settingsYear - 1; render(); } };
   panelHead.querySelector("#setNextY").onclick = ()=>{ if(settingsYear<setMaxYear){ ui.settingsYear = settingsYear + 1; render(); } };
-  yearPanel.appendChild(panelHead);
+  wrap.appendChild(panelHead);
 
+  // Budget: annual total + base exchange rate, one Save.
+  wrap.appendChild(accCard(ui.setOpen, "budget", "Budget", `${cfMoney0(ys.yearBudgetUSD)} · rate ${ys.baseRate}`, b=>{
+    b.innerHTML = `
+      <label>Annual budget for ${settingsYear} (USD)
+        <input type="number" inputmode="decimal" id="sYearBudget" value="${ys.yearBudgetUSD}">
+      </label>
+      <div class="muted" style="font-size:12px; margin-top:-6px">Monthly baseline ${fmtUSD(ys.yearBudgetUSD/12)}.</div>
+      <label>Base exchange rate, USD → MXN
+        <input type="number" inputmode="decimal" id="sRate" step="0.01" value="${ys.baseRate}">
+      </label>
+      <div class="muted" style="font-size:12px; margin-top:-6px">New items start at this rate. Existing items keep theirs.</div>
+      <button class="btn primary" id="saveBudget">Save</button>`;
+    b.querySelector("#saveBudget").onclick = async ()=>{
+      await setYearSetting(settingsYear, {
+        yearBudgetUSD: parseFloat(b.querySelector("#sYearBudget").value||"0"),
+        baseRate: parseFloat(b.querySelector("#sRate").value||"17.79")
+      });
+      showToast(`${settingsYear} budget saved`);
+      render();
+    };
+  }));
+
+  // Cash Flow: the year's opening balances (the buffer), reserve goal and
+  // annual income estimate. Monthly/quarterly estimates and actuals are
+  // entered on the Cash Flow tab.
+  const cfRec = cfYearRec(settingsYear);
+  const cfAcc = (cfRec && cfRec.accounts) || [];
+  const cfById = id=> cfAcc.find(a=> a.id===id);
+  const cfExtras = cfAcc.filter(a=> a.id!=="cf_ms" && a.id!=="cf_nfcu");
+  const cfM = cfModel(settingsYear);
+  const cfIncV = cfInherit(settingsYear, "annualIncomeUSD", 0);
+  wrap.appendChild(accCard(ui.setOpen, "cf", "Cash Flow",
+    cfM.hasSetup ? `Opening ${cfMoney0(cfM.opening)} · ${cfM.reserveMonths}-month reserve goal` : "Not set up", b=>{
+    b.innerHTML = `
+      <div class="muted" style="font-size:12px">Your cash on Jan 1, ${settingsYear}. Leave an account blank if it isn't part of ${settingsYear}.</div>
+      <label>Morgan Stanley (USD)
+        <input type="number" inputmode="decimal" step="0.01" id="cfMS" value="${cfById("cf_ms") ? cfById("cf_ms").amountUSD : ""}" placeholder="0.00">
+      </label>
+      <label>Navy Federal Credit Union (USD)
+        <input type="number" inputmode="decimal" step="0.01" id="cfNF" value="${cfById("cf_nfcu") ? cfById("cf_nfcu").amountUSD : ""}" placeholder="0.00">
+      </label>
+      <div id="cfExtra" class="stack"></div>
+      <button type="button" class="btn small" id="cfAddX">Add account</button>
+      <label>Reserve goal (months of spending)
+        <input type="number" inputmode="numeric" step="1" min="1" id="cfRes" value="${cfInherit(settingsYear, "reserveMonths", 12)}">
+      </label>
+      <label>Annual income estimate (USD)
+        <input type="number" inputmode="decimal" step="0.01" min="0" id="cfInc" value="${cfIncV || ""}" placeholder="0.00">
+      </label>
+      <div class="muted" style="font-size:12px; margin-top:-6px">After-tax investment income. Months with no estimate use this ÷ 12. The reserve goal and income estimate carry to later years until you change them.</div>
+      <button class="btn primary" id="saveCF">Save</button>`;
+    const addExtra = (a)=>{
+      const r = el("div","stack");
+      r.dataset.xrow = "1"; if(a) r.dataset.id = a.id;
+      r.innerHTML = `<div class="row" style="gap:8px"><input type="text" data-xname placeholder="Account name" value="${a ? escapeHtml(a.label) : ""}" style="flex:1"><button type="button" class="btn small ghost" data-xdel aria-label="Remove account">Remove</button></div>
+        <input type="number" inputmode="decimal" step="0.01" data-xamt placeholder="0.00" value="${a ? a.amountUSD : ""}">`;
+      r.querySelector("[data-xdel]").onclick = ()=> r.remove();
+      b.querySelector("#cfExtra").appendChild(r);
+    };
+    cfExtras.forEach(addExtra);
+    b.querySelector("#cfAddX").onclick = ()=> addExtra(null);
+    b.querySelector("#saveCF").onclick = async ()=>{
+      const q = sel=> b.querySelector(sel);
+      const asOf = settingsYear + "-01-01";
+      const accounts = [];
+      const ms = cfParseMoney(q("#cfMS").value), nf = cfParseMoney(q("#cfNF").value);
+      if(ms!=null) accounts.push({ id:"cf_ms", label:"Morgan Stanley", amountUSD: roundCents(ms), asOf });
+      if(nf!=null) accounts.push({ id:"cf_nfcu", label:"Navy Federal Credit Union", amountUSD: roundCents(nf), asOf });
+      let incomplete = false;
+      b.querySelectorAll("[data-xrow]").forEach(r=>{
+        const name = r.querySelector("[data-xname]").value.trim(), amt = cfParseMoney(r.querySelector("[data-xamt]").value);
+        if(!name && amt==null) return;
+        if(!name || amt==null){ incomplete = true; return; }
+        accounts.push({ id: r.dataset.id || uid("cfa"), label: name, amountUSD: roundCents(amt), asOf });
+      });
+      if(incomplete){ showToast("Each added account needs a name and a balance"); return; }
+      const resRaw = q("#cfRes").value.trim();
+      const resN = resRaw==="" ? null : parseInt(resRaw, 10);
+      if(resN!=null && !(resN>=1 && resN<=120)){ showToast("Reserve goal: enter a whole number of months, 1 or more"); return; }
+      const incN = cfParseMoney(q("#cfInc").value);
+      if(incN!=null && incN<0){ showToast("Annual income can't be negative"); return; }
+      const rec = cfEnsureYear(settingsYear);
+      rec.accounts = accounts;
+      rec.reserveMonths = resN;
+      rec.annualIncomeUSD = incN==null ? null : roundCents(incN);
+      const keep = new Set(accounts.map(a=> a.id));
+      Object.values(rec.quarters||{}).forEach(qq=>{ if(qq.balances) Object.keys(qq.balances).forEach(k=>{ if(!keep.has(k)) delete qq.balances[k]; }); });
+      await dbSet("cashflow", String(settingsYear), rec);
+      showToast(`${settingsYear} Cash Flow saved`);
+      render();
+    };
+  }));
+
+  // Add funds: raises the year's overall budget.
+  const yearFundEvents = state.fundevents.filter(f=> yearOfYM(f.targetYM)===settingsYear);
+  wrap.appendChild(accCard(ui.setOpen, "funds", "Add funds", yearFundEvents.length ? `${yearFundEvents.length} added in ${settingsYear}` : "Raise this year's budget", b=>{
+    b.innerHTML = `<div class="muted" style="font-size:12px">Raises this year's overall budget: split evenly across all 12 months, or ramped in from the month you're viewing. For one category, use Transfer funds on Monthly.</div>`;
+    const addFundBtn = el("button","btn accent block");
+    addFundBtn.innerHTML = `${iconPlus()}<span>Add funds</span>`;
+    addFundBtn.onclick = ()=> openFundDialog(ymOf(settingsYear, monthOfYM(ui.ym)));
+    b.appendChild(addFundBtn);
+    if(yearFundEvents.length){
+      const list = el("div","stack");
+      yearFundEvents.slice().reverse().forEach(f=>{
+        const row = el("div","row");
+        row.style.borderTop = "1px solid var(--line)";
+        row.style.paddingTop = "8px";
+        const label = `${MONTHS[monthOfYM(f.targetYM)]} ${yearOfYM(f.targetYM)}`;
+        const modeDesc = f.mode==="oneshot" ? `one-time, ${label}` : f.mode==="evenly" ? "evenly across all 12 months" : `spread from ${label}`;
+        row.innerHTML = `<span class="muted">${f.date} · ${modeDesc}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">+${fmtUSD(f.amountUSD)}</span>`;
+        list.appendChild(row);
+      });
+      b.appendChild(list);
+    }
+  }));
+
+  // Data: this year's download/clear, and the full export.
   const configuredN = (state.settings.seededYMs||[]).filter(ym=>yearOfYM(ym)===settingsYear).length;
-  const yearDataCard = el("div","yp-section stack");
-  yearDataCard.innerHTML = `
-    <div class="eyebrow">${settingsYear} data</div>
-    <div class="muted">Download just this year's logged expenses, transfers, fund events, and settings — or wipe ${settingsYear} entirely to set it up fresh.</div>
-    <div class="muted">Configured: ${configuredN} of 12 months</div>
-  `;
-  const downloadYearBtn = el("button","btn ghost block");
-  downloadYearBtn.innerHTML = `${iconDownload()}<span>Download ${settingsYear} data</span>`;
-  downloadYearBtn.onclick = ()=> exportYearData(settingsYear);
-  yearDataCard.appendChild(downloadYearBtn);
-  const clearYearBtn = el("button","btn block danger");
-  clearYearBtn.innerHTML = `${iconTrash()}<span>Clear ${settingsYear}</span>`;
-  clearYearBtn.onclick = ()=>{
+  const dataCard = el("div","card");
+  dataCard.innerHTML = `<div class="eyebrow">Data</div>
+    <div class="muted" style="font-size:12px; margin-top:3px">${configuredN} of 12 months configured for ${settingsYear}</div>
+    <div class="cf-row taprow" id="dlYear" style="margin-top:8px"><span class="nm" style="flex:1">Download ${settingsYear} data</span><span class="rowchev">${iconChevronRight()}</span></div>
+    <div class="cf-row taprow" id="clrYear"><span class="nm" style="flex:1; color:var(--bad)">Clear ${settingsYear}</span><span class="rowchev">${iconChevronRight()}</span></div>
+    <div class="cf-row taprow" id="expAll"><span class="nm" style="flex:1">Export everything (JSON)</span><span class="rowchev">${iconChevronRight()}</span></div>`;
+  dataCard.querySelector("#dlYear").onclick = ()=> exportYearData(settingsYear);
+  dataCard.querySelector("#expAll").onclick = exportData;
+  dataCard.querySelector("#clrYear").onclick = ()=>{
     const actualsN = state.actuals.filter(a=>yearOfDate(a.date)===settingsYear).length;
     const transfersN = state.transfers.filter(t=>yearOfDate(t.date)===settingsYear).length;
     const fundN = state.fundevents.filter(fe=>yearOfYM(fe.targetYM)===settingsYear).length;
@@ -4455,92 +5025,17 @@ function renderSettings(main){
       }
     );
   };
-  yearDataCard.appendChild(clearYearBtn);
-  yearPanel.appendChild(yearDataCard);
-
-  const budgetCard = el("div","yp-section stack");
-  budgetCard.innerHTML = `
-    <div class="eyebrow">Annual budget</div>
-    <label>Total for ${settingsYear} (USD)
-      <input type="number" inputmode="decimal" id="sYearBudget" value="${ys.yearBudgetUSD}">
-    </label>
-    <div class="muted">Monthly baseline = annual ÷ 12 = ${fmtUSD(ys.yearBudgetUSD/12)}. Category schedules on the Categories tab don't have to match this evenly — this figure is just your top-line target.</div>
-    <button class="btn primary" id="saveBudget">Save</button>
-  `;
-  budgetCard.querySelector("#saveBudget").onclick = async ()=>{
-    await setYearSetting(settingsYear, { yearBudgetUSD: parseFloat(budgetCard.querySelector("#sYearBudget").value||"0") });
-    showToast(`${settingsYear} annual budget saved`);
-    render();
-  };
-  yearPanel.appendChild(budgetCard);
-
-  const rateCard = el("div","yp-section stack");
-  rateCard.innerHTML = `
-    <div class="eyebrow">Exchange rate</div>
-    <label>Base rate — USD → MXN, ${settingsYear}
-      <input type="number" inputmode="decimal" id="sRate" step="0.01" value="${ys.baseRate}">
-    </label>
-    <div class="muted">Used as the default rate for a new item in this year. Each item keeps its own locked rate — changing this won't reprice items already set up.</div>
-    <button class="btn primary" id="saveRate">Save</button>
-  `;
-  rateCard.querySelector("#saveRate").onclick = async ()=>{
-    await setYearSetting(settingsYear, { baseRate: parseFloat(rateCard.querySelector("#sRate").value||"17.79") });
-    showToast(`${settingsYear} exchange rate saved`);
-    render();
-  };
-  yearPanel.appendChild(rateCard);
-
-  const fundCard = el("div","yp-section stack");
-  fundCard.innerHTML = `<div class="eyebrow">Add funds</div><div class="muted">Raises this year's overall budget — split it evenly across all 12 months, or ramp it in from the month you're currently viewing. To add money to one specific category instead, use Transfer funds from that month's view.</div>`;
-  const addFundBtn = el("button","btn accent block");
-  addFundBtn.innerHTML = `${iconPlus()}<span>Add funds</span>`;
-  addFundBtn.onclick = ()=> openFundDialog(ymOf(settingsYear, monthOfYM(ui.ym)));
-  fundCard.appendChild(addFundBtn);
-  // Only this panel's own year — previously showed every fund event ever
-  // added regardless of which year's panel you were looking at.
-  const yearFundEvents = state.fundevents.filter(f=> yearOfYM(f.targetYM)===settingsYear);
-  if(yearFundEvents.length){
-    const list = el("div","stack");
-    yearFundEvents.slice().reverse().forEach(f=>{
-      const row = el("div","row");
-      row.style.borderTop = "1px solid var(--line)";
-      row.style.paddingTop = "8px";
-      const label = `${MONTHS[monthOfYM(f.targetYM)]} ${yearOfYM(f.targetYM)}`;
-      const modeDesc = f.mode==="oneshot" ? `one-time, ${label}` : f.mode==="evenly" ? "evenly across all 12 months" : `spread from ${label}`;
-      row.innerHTML = `<span class="muted">${f.date} · ${modeDesc}${f.note?" · "+escapeHtml(f.note):""}</span><span class="num">+${fmtUSD(f.amountUSD)}</span>`;
-      list.appendChild(row);
-    });
-    fundCard.appendChild(list);
-  }
-  yearPanel.appendChild(fundCard);
-
-  wrap.appendChild(yearPanel);
-
-  const exportCard = el("div","card stack");
-  exportCard.innerHTML = `<div class="eyebrow">Export data</div><div class="muted">Download everything — categories, Budget Setup items, logged expenses, transfers, and settings — as a single JSON file. Hand that file to Claude in a future conversation to carry your real data into a rebuild.</div>`;
-  const exportBtn = el("button","btn ghost block");
-  exportBtn.innerHTML = `${iconDownload()}<span>Download JSON</span>`;
-  exportBtn.onclick = exportData;
-  exportCard.appendChild(exportBtn);
-  wrap.appendChild(exportCard);
+  wrap.appendChild(dataCard);
 
   const aboutCard = el("div","card stack");
-  // Viewport readout — diagnoses the iOS 26 Home Screen "viewport stops short
-  // of the screen" bug (WebKit 301108): short = screen.height - innerHeight.
-  const probe = document.createElement("div");
-  probe.style.cssText = "position:fixed;visibility:hidden;padding-bottom:env(safe-area-inset-bottom,0px);padding-top:env(safe-area-inset-top,0px)";
-  document.body.appendChild(probe);
-  const cs = getComputedStyle(probe);
-  const insB = cs.paddingBottom, insT = cs.paddingTop;
-  probe.remove();
-  const standalone = window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
-  const vv = window.visualViewport ? Math.round(window.visualViewport.height) : "n/a";
-  const short = Math.round(screen.height - window.innerHeight);
-  aboutCard.innerHTML = `<div class="eyebrow">About</div><div class="muted">Ledger Casa ${escapeHtml(APP_BUILD)}</div>
-    <div class="muted" style="font-size:12px; line-height:1.5">Viewport: innerHeight ${Math.round(window.innerHeight)} · visualViewport ${vv} · screen ${screen.height} · short by ${short}px<br>Safe area: top ${escapeHtml(insT)} · bottom ${escapeHtml(insB)} · standalone ${standalone}</div>`;
+  aboutCard.innerHTML = `<div class="eyebrow">About</div><div class="muted">Ledger Casa ${escapeHtml(APP_BUILD)}</div>`;
   wrap.appendChild(aboutCard);
 
   main.appendChild(wrap);
+  if(ui.settingsAnchor){
+    const key = ui.settingsAnchor; ui.settingsAnchor = null;
+    requestAnimationFrame(()=>{ const t = wrap.querySelector(`[data-acc="${key}"]`); if(t) t.scrollIntoView({ block:"start" }); });
+  }
 }
 
 // Shared by Settings (year-level only — adding funds there always means
@@ -4646,7 +5141,8 @@ function onceClick(btn, handler){
 // fields). Stay here just dismisses it with every edit intact; Save and
 // continue runs saveFn, which returns false when it declined to save (e.g.
 // a blank Name) so the person stays put.
-function promptSaveBeforeContinue(body, saveFn){
+function promptSaveBeforeContinue(body, saveFn, what){
+  what = what || "category";
   const existing = body.querySelector("#unsavedPrompt");
   if(existing){ existing.scrollIntoView({ block:"center" }); return; }
   const box = document.createElement("div");
@@ -4654,7 +5150,7 @@ function promptSaveBeforeContinue(body, saveFn){
   box.style.cssText = "background:var(--surface-2); border:1px solid var(--accent); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:10px";
   box.innerHTML = `
     <div style="font-weight:600">Save your changes first?</div>
-    <div class="muted" style="font-size:12px">You've changed this category but haven't saved. Save before you continue.</div>
+    <div class="muted" style="font-size:12px">You've changed this ${what} but haven't saved. Save before you continue.</div>
     <div class="row" style="justify-content:flex-end; gap:10px">
       <button type="button" class="btn small ghost" id="upStay">Stay here</button>
       <button type="button" class="btn small primary" id="upSave">Save and continue</button>
@@ -4731,6 +5227,7 @@ async function exportData(){
     fundevents: state.fundevents,
     transfers: state.transfers,
     monthCategoryData: state.monthCategoryData,
+    cashflow: state.cashflow,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
   const filename = `ledgercasa-export-${new Date().toISOString().slice(0,10)}.json`;
@@ -5092,7 +5589,7 @@ function changePeriod(dir){
     ui.ym = ui.ym + dir;
     render();
     return true;
-  } else if(ui.tab==="outlook"){
+  } else if(ui.tab==="outlook" || ui.tab==="cashflow"){
     const year = yearOfYM(ui.ym);
     const { minYear, maxYear } = yearNavBounds();
     const newYear = year + dir;
@@ -5111,7 +5608,7 @@ function changePeriod(dir){
 // over there at all) versus just rubber-banding in place.
 function canStepPeriod(dir){
   if(ui.tab==="monthly") return true;
-  if(ui.tab==="outlook"){
+  if(ui.tab==="outlook" || ui.tab==="cashflow"){
     const year = yearOfYM(ui.ym);
     const { minYear, maxYear } = yearNavBounds();
     const newYear = year + dir;
