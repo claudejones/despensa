@@ -443,6 +443,17 @@
   .cf-ldot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; background:var(--good)}
   .cf-ldot.warn{background:var(--accent)} .cf-ldot.bad{background:var(--bad)}
   .cf-sub2{font-size:12px; padding-left:16px}
+  .cf-trio{display:flex; gap:6px; align-items:flex-start}
+  .cf-trio>div{flex:1; min-width:0}
+  .cf-trio>div:nth-child(2){text-align:center} .cf-trio>div:nth-child(3){text-align:right}
+  .cf-trio b{font-size:15.5px; font-variant-numeric:tabular-nums; display:block; margin-top:1px}
+  .cf-hr{border-top:1px solid var(--line); margin:12px 0}
+  .cf-trow{display:flex; align-items:center; gap:6px; padding:11px 0; border-top:1px solid var(--line); font-size:13px}
+  .cf-trow>span.num,.cf-trow>b.num,.cf-thead>span:not(.cf-tm):not([style]){flex:1; text-align:right}
+  .cf-trow .cf-tm{width:52px; flex:none; font-weight:600; font-size:14px}
+  .cf-thead{border-top:none; padding:0 0 6px; font-size:11px; color:var(--ink-soft)}
+  .cf-thead>span:not(.cf-tm){flex:1; text-align:right}
+  .cf-thead>span[style]{flex:none}
   .cf-ph{color:var(--ink-soft); font-style:italic}
   .cf-cols{display:flex; justify-content:space-between; gap:8px; margin-top:4px}
   .cf-cols b{font-size:13.5px; font-variant-numeric:tabular-nums}
@@ -699,7 +710,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v111";
+const APP_BUILD = "v112";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -2100,22 +2111,30 @@ function cfMonthlyBody(b, y, M){
     return;
   }
   const Q = M.quarters[ui.cfQ-1], qs = Q.q-1;
-  const names = ["Q1","Q2","Q3","Q4"];
-  const diff = (est, act)=> `<span class="${act-est>=0 ? "cf-good" : "cf-bad"}">${cfSigned(roundCents(act-est))}</span>`;
+  const names = ["Q1","Q2","Q3","Q4"], mons = ["Jan–Mar","Apr–Jun","Jul–Sep","Oct–Dec"];
+  const r0 = v=> cfMoney0(Math.round(v));
+  const sg0 = v=> cfSigned(Math.round(v)).replace(/\.00$/, "");
+  const cls = v=> v>=0 ? "cf-good" : "cf-bad";
   const dot = c=> `<i class="cf-ldot ${c}"></i>`;
-  const netCls = v=> v>=0 ? "cf-good" : "cf-bad";
-  const rows = Q.rows.map(r=>{
-    const incTxt = r.placeholder ? `<span class="cf-ph">${fmtUSD(r.inc)}</span>` : fmtUSD(r.inc);
-    return `<div class="cf-row taprow" data-m="${r.m}"><div style="flex:1; min-width:0"><div class="nm">${dot(r.light)}${MONTHS[r.m]}</div><div class="muted cf-sub2">Income ${incTxt} · Cash out ${fmtUSD(r.out)}</div><div class="muted cf-sub2">Above reserve <span class="${r.above>=0 ? "" : "cf-bad"}">${fmtUSD(r.above)}</span></div></div><div style="text-align:right"><b class="num ${netCls(r.net)}">${cfSigned(r.net)}</b><div class="muted cf-sub2">Net</div></div><span class="rowchev">${iconChevronRight()}</span></div>`;
-  }).join("");
-  const total = `<div class="cf-row"><div style="flex:1; min-width:0"><div class="nm" style="font-weight:700">${dot(Q.light)}${names[qs]} total</div><div class="muted cf-sub2">Income ${fmtUSD(Q.inc)} · Cash out ${fmtUSD(Q.out)}</div><div class="muted cf-sub2">Above reserve <span class="${Q.above>=0 ? "" : "cf-bad"}">${fmtUSD(Q.above)}</span></div></div><div style="text-align:right"><b class="num ${netCls(Q.net)}">${cfSigned(Q.net)}</b><div class="muted cf-sub2">Net</div></div><span style="width:16px"></span></div>`;
+  const estInc = roundCents(Q.rows.reduce((s,r)=> s + (r.est!=null ? r.est : M.annualInc/12), 0));
+  const actAll = Q.rows.every(r=> r.act!=null);
+  const actInc = actAll ? roundCents(Q.rows.reduce((s,r)=> s + r.act, 0)) : null;
+  const trio = (labels, vals, classes)=> `<div class="cf-trio">${labels.map((l,i)=> `<div><div class="cf-sub">${l}</div><b class="${classes[i]||""}">${vals[i]}</b></div>`).join("")}</div>`;
+  const rows = Q.rows.map(r=> `<div class="cf-trow taprow" data-m="${r.m}"><span class="cf-tm">${dot(r.light)}${MONTHS[r.m]}</span><span class="num">${r0(r.inc)}${r.placeholder ? "<sup class=\"cf-ph\">e</sup>" : ""}</span><span class="num">${r0(r.out)}</span><b class="num ${cls(r.net)}">${sg0(r.net)}</b><span class="rowchev">${iconChevronRight()}</span></div>`).join("");
   b.innerHTML = `
     ${toggle}
     <div class="viewtoggle">${names.map((n,i)=> `<button type="button" class="viewbtn ${i+1===ui.cfQ?"active":""}" data-q="${i+1}" style="flex:1; justify-content:center">${n}</button>`).join("")}</div>
-    <div class="cf-tile"><div class="cf-k">Cash at ${CF_QEND[qs]}</div>
-      <div class="cf-cols"><div><div class="cf-sub">Estimate</div><b>${fmtUSD(Q.estCash)}</b></div><div><div class="cf-sub">Actual</div><b>${cfNum(Q.actCash)}</b></div><div style="text-align:right"><div class="cf-sub">Difference</div><b>${Q.actCash==null ? "—" : diff(Q.estCash, Q.actCash)}</b></div></div>
-      ${Q.actCash==null ? `<div class="cf-sub" style="margin-top:6px">Enter your ${CF_QEND[qs]} balances in Edit ${names[qs]} to compare.</div>` : ""}</div>
-    <div>${rows}${total}</div>
+    <div class="cf-tile">
+      <div class="cf-k">${names[qs]} · ${mons[qs]}</div>
+      <div style="margin-top:8px">${trio(["Income est.","Actual","Difference"], [fmtUSD(estInc), actInc==null ? "—" : fmtUSD(actInc), actInc==null ? "—" : cfSigned(roundCents(actInc-estInc))], ["","", actInc==null ? "" : cls(actInc-estInc)])}</div>
+      <div class="cf-hr"></div>
+      ${trio(["Cash out","Net","Above reserve"], [fmtUSD(Q.out), cfSigned(Q.net), fmtUSD(Q.above)], ["", cls(Q.net), Q.above>=0 ? "" : "cf-bad"])}
+      ${actInc==null ? `<div class="cf-sub" style="margin-top:8px">Enter all three months' actuals in Edit ${names[qs]} to compare income.</div>` : ""}
+    </div>
+    <div>
+      <div class="cf-trow cf-thead"><span class="cf-tm"></span><span>Income</span><span>Cash out</span><span>Net</span><span style="width:16px"></span></div>
+      ${rows}
+    </div>
     <button type="button" class="btn block" id="cfEditQ">Edit ${names[qs]}</button>`;
   b.querySelectorAll("[data-view]").forEach(x=> x.onclick = ()=>{ ui.cfView = x.dataset.view; render(); });
   b.querySelectorAll("[data-q]").forEach(x=> x.onclick = ()=>{ ui.cfQ = parseInt(x.dataset.q,10); render(); });
@@ -2177,12 +2196,28 @@ function cfQuarterSheet(y, q){
     <div class="row" style="gap:8px; margin:0"><span style="width:38px"></span><span class="muted" style="flex:1; text-align:center">Estimate</span><span class="muted" style="flex:1; text-align:center">Actual</span></div>
     ${incRows}
     <div class="muted" style="font-size:12px">Leave an estimate blank to use annual ÷ 12. Leave an actual blank until you have it.</div>
-    <div class="eyebrow" style="margin-top:8px">Balances at ${CF_QEND[q-1]} (actual)</div>
+    <div class="eyebrow" style="margin-top:8px">Balances at ${CF_QEND[q-1]} (optional)</div>
+    <div class="muted" style="font-size:12px">Only needed to compare your real bank balance with the estimate. Leave blank to skip. The comparison shows once every account has a balance.</div>
     <label>As of<input type="date" id="cqDate" value="${qrec.asOf || dflt}"></label>
     ${balRows}
-    <div class="muted" style="font-size:12px">Actual cash shows once every account has a balance.</div>
+    ${M.accounts.length ? `<div class="cf-tile" id="cqCmp" style="margin-top:4px"></div>` : ""}
     <div class="dialog-actions"><button class="btn ghost" id="cqCancel">Cancel</button><button class="btn primary" id="cqSave">Save</button></div>`);
   body.querySelector("#cqCancel").onclick = ()=> dlg.close();
+  const cmp = body.querySelector("#cqCmp");
+  const updCmp = ()=>{
+    if(!cmp) return;
+    const ins = [...body.querySelectorAll("[data-bal]")];
+    const vals = ins.map(i=> cfParseMoney(i.value));
+    const missing = ins.filter((i,k)=> vals[k]==null).map(i=> (M.accounts.find(a=> a.id===i.dataset.bal)||{}).label || "an account");
+    if(missing.length){
+      cmp.innerHTML = `<div class="cf-k">Estimate at ${CF_QEND[q-1]}</div><div class="cf-v" style="font-size:17px">${fmtUSD(Q.estCash)}</div><div class="cf-sub">Add ${escapeHtml(missing.join(" and "))} to compare.</div>`;
+      return;
+    }
+    const tot = roundCents(vals.reduce((s,v)=> s+v, 0)), d = roundCents(tot - Q.estCash);
+    cmp.innerHTML = `<div class="cf-trio"><div><div class="cf-sub">Estimate</div><b>${fmtUSD(Q.estCash)}</b></div><div><div class="cf-sub">Your balance</div><b>${fmtUSD(tot)}</b></div><div><div class="cf-sub">Difference</div><b class="${d>=0 ? "cf-good" : "cf-bad"}">${cfSigned(d)}</b></div></div><div class="cf-sub" style="margin-top:6px">Saving updates the revised Dec figures on the Cash Flow page.</div>`;
+  };
+  body.querySelectorAll("[data-bal]").forEach(i=> i.addEventListener("input", updCmp));
+  updCmp();
   onceClick(body.querySelector("#cqSave"), async ()=>{
     const bad = [...body.querySelectorAll("[data-est],[data-act]")].find(i=>{ const v = cfParseMoney(i.value); return v!=null && v<0; });
     if(bad){ formError(body, "Income can't be negative.", bad); return; }
