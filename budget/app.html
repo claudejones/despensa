@@ -439,7 +439,10 @@
   .cf-legend{display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); margin:2px 0 6px}
   .cf-line{display:inline-block; width:14px; border-top:2.5px solid; vertical-align:middle; margin-right:4px}
   .cf-line.dashed{border-top-style:dashed}
-  .cf-dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--accent); margin-right:4px}
+  .cf-dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--transfer); margin-right:4px}
+  .cf-ldot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; background:var(--good)}
+  .cf-ldot.warn{background:var(--accent)} .cf-ldot.bad{background:var(--bad)}
+  .cf-sub2{font-size:12px; padding-left:16px}
   .cf-ph{color:var(--ink-soft); font-style:italic}
   .cf-cols{display:flex; justify-content:space-between; gap:8px; margin-top:4px}
   .cf-cols b{font-size:13.5px; font-variant-numeric:tabular-nums}
@@ -696,7 +699,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v109";
+const APP_BUILD = "v110";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1736,6 +1739,22 @@ function cfInherit(y, key, def){
   return prior.length ? ys[prior[0]][key] : def;
 }
 function cfSigned(v){ return (v>=0 ? "+" : "-") + fmtUSD(Math.abs(v)); }
+// Base allocation of every category the user marked Excluded for this month
+// (Monthly's Exclude). Cash Flow subtracts the allocation, not logged spend,
+// because it forecasts months that have nothing logged yet. Anything added to
+// that category (Add funds, external transfers) still counts as cash out.
+function cfExcludedForMonth(ym){
+  const data = state.monthCategoryData[ym] || {};
+  const items = [];
+  Object.keys(data).forEach(id=>{
+    if(id===DROPPED_CREDITS_KEY || !data[id] || !data[id].excluded) return;
+    const base = roundCents(data[id].baseAmountUSD || 0);
+    if(base<=0) return;
+    const cat = state.categories.find(x=> x.id===id);
+    items.push({ id, name: data[id].name || (cat && cat.name) || "Category", amount: base });
+  });
+  return items;
+}
 function cfModel(y){
   const rec = cfYearRec(y) || { accounts:[], months:{}, quarters:{} };
   const accounts = (rec.accounts || []).filter(a=> a.amountUSD!=null);
@@ -1744,30 +1763,36 @@ function cfModel(y){
   const reserveMonths = cfInherit(y, "reserveMonths", 12);
   const ysBudget = yearSettings(y).yearBudgetUSD || 0;
   const hasOwnBudget = !!(state.settings.perYear && state.settings.perYear[y]);
-  // Running cash is built from exact (unrounded) cumulative income and
-  // spending, rounded once per step, so the year lands on the true figure
-  // (e.g. 12 x $8,040.1667 is exactly $96,482.00, not $96,482.04) while each
-  // month's displayed income/spending stays what Monthly shows for it.
+  const monthly = ysBudget/12;
+  // The reserve is the goal months x THIS year's monthly budget. It does not
+  // move when funds are added or money is transferred in; those are cash out.
+  const reserve = roundCents(reserveMonths * monthly);
+  // Running cash is built from exact (unrounded) cumulative income and cash
+  // out, rounded once per step, so the year lands on the true figure. Income
+  // for a month is the actual if entered, else the estimate, else annual / 12.
   const rows = [], cash = [opening];
-  let cumInc = 0, cumSpend = 0;
+  let cumInc = 0, cumOut = 0, exclTotal = 0;
   for(let m=0; m<12; m++){
     const mm = (rec.months||{})[m] || {};
-    const placeholder = mm.est==null;
-    const incExact = placeholder ? annualInc/12 : mm.est;
+    const placeholder = mm.est==null && mm.act==null;
+    const incExact = mm.act!=null ? mm.act : (mm.est!=null ? mm.est : annualInc/12);
     const ym = ymOf(y, m);
     const spend = totalBudgetForMonth(ym);
-    const base = roundCents(ysBudget/12);
-    const spendExact = (spend - base) + ysBudget/12;
-    cumInc += incExact; cumSpend += spendExact;
-    cash.push(roundCents(opening + cumInc - cumSpend));
-    rows.push({ m, ym, inc: roundCents(incExact), incExact, placeholder, est: mm.est==null ? null : mm.est, act: mm.act==null ? null : mm.act, spend, base, added: roundCents(spend - base), end: cash[m+1] });
+    const base = roundCents(monthly);
+    const excl = cfExcludedForMonth(ym);
+    const exclAmt = roundCents(excl.reduce((s,e)=> s + e.amount, 0));
+    const outExact = (spend - base) + monthly - exclAmt;
+    cumInc += incExact; cumOut += outExact; exclTotal += exclAmt;
+    cash.push(roundCents(opening + cumInc - cumOut));
+    const net = roundCents(incExact - outExact);
+    const end = cash[m+1];
+    const light = end < reserve ? "bad" : (net >= 0 ? "good" : "warn");
+    rows.push({ m, ym, inc: roundCents(incExact), incExact, placeholder, src: mm.act!=null ? "actual" : (mm.est!=null ? "estimate" : "annual"), est: mm.est==null ? null : mm.est, act: mm.act==null ? null : mm.act,
+      spend, base, added: roundCents(spend - base), excl, exclAmt, outExact, out: roundCents(outExact), net, end, above: roundCents(end - reserve), light });
   }
-  const spendTotal = roundCents(cumSpend), incTotal = roundCents(cumInc);
+  const spendTotal = roundCents(cumOut), incTotal = roundCents(cumInc);
   const end = cash[12];
-  const reserve = roundCents(reserveMonths * spendTotal / 12);
-  const coverage = spendTotal>0 ? end / (spendTotal/12) : null;
-  const nextMonthly = (yearSettings(y+1).yearBudgetUSD || 0) / 12;
-  const runwayNext = nextMonthly>0 ? end / nextMonthly : null;
+  const runway = monthly>0 ? end / monthly : null;
   const quarters = [];
   for(let q=0; q<4; q++){
     const qrec = (rec.quarters||{})[q+1] || {};
@@ -1775,30 +1800,30 @@ function cfModel(y){
     const allIn = accounts.length>0 && accounts.every(a=> bals[a.id]!=null);
     const actCash = allIn ? roundCents(accounts.reduce((s,a)=> s + bals[a.id], 0)) : null;
     const mrows = rows.slice(3*q, 3*q+3);
-    const estInc = roundCents(mrows.reduce((s,r)=> s + r.incExact, 0));
-    const actAll = mrows.every(r=> r.act!=null);
-    const actInc = actAll ? roundCents(mrows.reduce((s,r)=> s + r.act, 0)) : null;
-    quarters.push({ q:q+1, asOf: qrec.asOf || null, estCash: cash[3*q+3], actCash, estInc, actInc, rows: mrows,
+    const inc = roundCents(mrows.reduce((s,r)=> s + r.incExact, 0));
+    const out = roundCents(mrows.reduce((s,r)=> s + r.outExact, 0));
+    const estCash = cash[3*q+3];
+    const qNet = roundCents(mrows.reduce((s,r)=> s + r.incExact - r.outExact, 0));
+    quarters.push({ q:q+1, asOf: qrec.asOf || null, estCash, actCash, inc, out, net: qNet, above: roundCents(estCash - reserve),
+      light: estCash < reserve ? "bad" : (qNet >= 0 ? "good" : "warn"), rows: mrows,
       hasAny: actCash!=null || mrows.some(r=> r.act!=null) });
   }
   let latest = null; quarters.forEach(qq=>{ if(qq.actCash!=null) latest = qq; });
   const gap = latest ? roundCents(latest.actCash - latest.estCash) : 0;
   const revisedEnd = roundCents(end + gap);
-  const revisedRunway = nextMonthly>0 ? revisedEnd / nextMonthly : null;
   const endEff = latest ? revisedEnd : end;
-  const covEff = spendTotal>0 ? endEff / (spendTotal/12) : null;
-  const runwayEff = latest ? revisedRunway : runwayNext;
-  return { endEff, aboveEff: roundCents(endEff - reserve), covEff, runwayEff, accounts, opening, annualInc, reserveMonths, ysBudget, hasOwnBudget, rows, cash, spendTotal, incTotal, end, reserve,
-    above: roundCents(end - reserve), coverage, nextMonthly, runwayNext, quarters, latest, gap, revisedEnd, revisedRunway, hasSetup: accounts.length>0 };
+  const runwayEff = monthly>0 ? endEff / monthly : null;
+  return { endEff, aboveEff: roundCents(endEff - reserve), runway, runwayEff, accounts, opening, annualInc, reserveMonths, ysBudget, monthly, hasOwnBudget, rows, cash, spendTotal, incTotal, exclTotal: roundCents(exclTotal), end, reserve,
+    above: roundCents(end - reserve), quarters, latest, gap, revisedEnd, hasSetup: accounts.length>0 };
 }
 function cfFundsAddedForMonth(ym){
   const out = [];
   state.fundevents.forEach(fe=>{
     const p = roundCents(fundAdjustmentPortion(fe, ym));
-    if(p!==0) out.push({ amount:p, note: fe.note || "", date: fe.date, spread: fe.mode!=="oneshot" });
+    if(p!==0) out.push({ amount:p, note: fe.note || "", date: fe.date, spread: fe.mode!=="oneshot", kind:"funds" });
   });
   state.transfers.forEach(t=>{
-    if(t.fromCategoryId===null && ymOfDate(t.date)===ym) out.push({ amount:t.amountUSD, note: t.note || "", date: t.date, spread:false });
+    if(t.fromCategoryId===null && ymOfDate(t.date)===ym) out.push({ amount:t.amountUSD, note: t.note || "", date: t.date, spread:false, kind:"transfer" });
   });
   return out;
 }
@@ -1808,13 +1833,13 @@ function cfNice(lo, hi, n){
   return { a: Math.floor(lo/step)*step, b: Math.ceil(hi/step)*step, step };
 }
 // Cash chart. A small dot marks each month-end (tap one: month + balance),
-// larger accent dots are your actual quarter-end balances, dashed lines are
-// the revised forecast / what-if. Axis ticks land on round numbers.
+// larger blue dots are your actual quarter-end balances, dashed blue lines are
+// the revised forecast / what-if, and the dashed amber line is the reserve.
 function cfSvgChart(pts, opts){
   opts = opts || {};
-  const rev = opts.rev || [], dots = opts.dots || [], wi = opts.wi || [];
+  const rev = opts.rev || [], dots = opts.dots || [], wi = opts.wi || [], reserve = opts.reserve;
   const w = 322, h = 200;
-  const vals = pts.concat(rev.map(p=>p[1]), dots.map(p=>p[1]), wi);
+  const vals = pts.concat(rev.map(p=>p[1]), dots.map(p=>p[1]), wi, reserve!=null ? [reserve] : []);
   let lo = Math.min(...vals), hi = Math.max(...vals);
   const pad = (hi-lo)*0.08 || 1000; lo -= pad; hi += pad;
   const t = cfNice(lo, hi, 4), a = t.a, b = t.b;
@@ -1825,18 +1850,58 @@ function cfSvgChart(pts, opts){
   for(let v=a; v<=b+t.step/1000; v+=t.step){
     s += `<line x1="44" x2="${w-12}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--line)" stroke-dasharray="3 4"/><text x="38" y="${(y(v)+4).toFixed(1)}" text-anchor="end" font-size="10" style="fill:var(--ink-soft)">${lab(v)}</text>`;
   }
+  if(reserve!=null) s += `<line x1="44" x2="${w-12}" y1="${y(reserve).toFixed(1)}" y2="${y(reserve).toFixed(1)}" stroke-width="2" stroke-dasharray="6 5" style="stroke:var(--accent)"/><text x="50" y="${(y(reserve)-5).toFixed(1)}" font-size="10" style="fill:var(--accent)">Reserve ${escapeHtml(cfMoney0(reserve))}</text>`;
   s += `<polyline fill="none" stroke-width="2.5" style="stroke:var(--primary)" points="${pts.map((v,i)=> x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}"/>`;
-  if(rev.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--accent)" points="${rev.map(p=> x(p[0]).toFixed(1)+","+y(p[1]).toFixed(1)).join(" ")}"/>`;
-  if(wi.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--accent)" points="${wi.map((v,i)=> x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}"/>`;
+  if(rev.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--transfer)" points="${rev.map(p=> x(p[0]).toFixed(1)+","+y(p[1]).toFixed(1)).join(" ")}"/>`;
+  if(wi.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--transfer)" points="${wi.map((v,i)=> x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}"/>`;
   if(!opts.noDots){
     for(let i=1; i<=12; i++) s += `<circle cx="${x(i).toFixed(1)}" cy="${y(pts[i]).toFixed(1)}" r="3.2" stroke-width="1.5" style="fill:var(--primary);stroke:var(--surface)"/>`;
   }
-  dots.forEach(p=>{ s += `<circle cx="${x(p[0]).toFixed(1)}" cy="${y(p[1]).toFixed(1)}" r="5.5" stroke-width="2" style="fill:var(--accent);stroke:var(--surface)"/>`; });
+  dots.forEach(p=>{ s += `<circle cx="${x(p[0]).toFixed(1)}" cy="${y(p[1]).toFixed(1)}" r="5.5" stroke-width="2" style="fill:var(--transfer);stroke:var(--surface)"/>`; });
   [0,3,6,9,12].forEach(i=>{ s += `<text x="${x(i).toFixed(1)}" y="${h-8}" font-size="10" text-anchor="middle" style="fill:var(--ink-soft)">${i===0 ? "Open" : MONTHS[i-1]}</text>`; });
   if(!opts.noDots){
     for(let i=1; i<=12; i++) s += `<circle class="cf-hit" data-i="${i}" data-cx="${x(i).toFixed(1)}" data-cy="${y(pts[i]).toFixed(1)}" cx="${x(i).toFixed(1)}" cy="${y(pts[i]).toFixed(1)}" r="13" fill="transparent" style="cursor:pointer"/>`;
   }
   return s + `</svg>`;
+}
+// Income bars vs a cash-out line, one axis, whole year. Lighter bars use the
+// annual / 12 placeholder. Tap a month for its numbers.
+function cfBarChart(M){
+  const w = 322, h = 210;
+  const mx = Math.max(1000, ...M.rows.map(r=> Math.max(r.incExact, r.out)));
+  const t = cfNice(0, mx*1.05, 4), b = t.b;
+  const x = i=> 44 + (i+.5)*(w-56)/12;
+  const y = v=> h-26 - v/b*(h-46);
+  const lab = v=> (t.step>=1000 ? String(Math.round(v/1000)) : (v/1000).toFixed(1)) + "k";
+  let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block" role="img" aria-label="Income and cash out by month">`;
+  for(let v=0; v<=b+t.step/1000; v+=t.step) s += `<line x1="44" x2="${w-12}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--line)" stroke-dasharray="3 4"/><text x="38" y="${(y(v)+4).toFixed(1)}" text-anchor="end" font-size="10" style="fill:var(--ink-soft)">${lab(v)}</text>`;
+  const bw = 13;
+  M.rows.forEach((r,i)=>{
+    const top = y(r.incExact), x0 = x(i)-bw/2, base = y(0);
+    s += `<path d="M${x0.toFixed(1)},${base.toFixed(1)} V${(top+4).toFixed(1)} a4,4 0 0 1 4,-4 h${bw-8} a4,4 0 0 1 4,4 V${base.toFixed(1)} Z" style="fill:var(--primary)" fill-opacity="${r.placeholder ? .45 : 1}"/>`;
+    s += `<text x="${x(i).toFixed(1)}" y="${h-8}" font-size="9.5" text-anchor="middle" style="fill:var(--ink-soft)">${MONTHS[i][0]}</text>`;
+  });
+  s += `<polyline fill="none" stroke-width="2.5" style="stroke:var(--accent)" points="${M.rows.map((r,i)=> x(i).toFixed(1)+","+y(r.out).toFixed(1)).join(" ")}"/>`;
+  M.rows.forEach((r,i)=>{ s += `<circle cx="${x(i).toFixed(1)}" cy="${y(r.out).toFixed(1)}" r="3" stroke-width="1.5" style="fill:var(--accent);stroke:var(--surface)"/>`; });
+  M.rows.forEach((r,i)=>{ s += `<rect class="cf-bhit" data-i="${i}" x="${(x(i)-12).toFixed(1)}" y="8" width="24" height="${(h-34).toFixed(1)}" fill="transparent" style="cursor:pointer"/>`; });
+  return s + `</svg>`;
+}
+function cfWireBarChart(box, M){
+  const svg = box.querySelector("svg"); if(!svg) return;
+  const NS = "http://www.w3.org/2000/svg", W = 322;
+  svg.addEventListener("click", e=>{
+    const old = svg.querySelector("#cfTip"); if(old) old.remove();
+    const hit = e.target.closest ? e.target.closest(".cf-bhit") : null; if(!hit) return;
+    const i = parseInt(hit.dataset.i,10), r = M.rows[i];
+    const cx = 44 + (i+.5)*(W-56)/12, bx = Math.min(Math.max(cx-62, 46), W-12-140);
+    const g = document.createElementNS(NS, "g"); g.setAttribute("id","cfTip"); g.setAttribute("pointer-events","none");
+    g.innerHTML = `<line x1="${cx.toFixed(1)}" x2="${cx.toFixed(1)}" y1="8" y2="184" stroke-width="1" style="stroke:var(--ink-soft)"/>
+      <rect x="${bx.toFixed(1)}" y="10" width="140" height="52" rx="8" style="fill:var(--surface-2);stroke:var(--line)"/>
+      <text x="${(bx+10).toFixed(1)}" y="26" font-size="10" style="fill:var(--ink-soft)">${MONTHS[i]}</text>
+      <text x="${(bx+10).toFixed(1)}" y="40" font-size="11" font-weight="700" style="fill:var(--ink)">Income ${escapeHtml(cfMoney0(r.inc))}</text>
+      <text x="${(bx+10).toFixed(1)}" y="54" font-size="11" style="fill:var(--ink)">Cash out ${escapeHtml(cfMoney0(r.out))}</text>`;
+    svg.appendChild(g);
+  });
 }
 function cfWireChart(box, pts){
   const svg = box.querySelector("svg"); if(!svg) return;
@@ -1892,11 +1957,11 @@ function renderCashFlow(main){
   }
   if(!M.hasSetup){ cfSetupCard(wrap, y); main.appendChild(wrap); return; }
   cfRenderTop(wrap, y, M);
-  const nextBudget = M.runwayEff==null ? "Set a budget to see runway" : `Into ${y+1}: ${M.runwayEff.toFixed(1)} months`;
-  wrap.appendChild(accCard(ui.cfOpen, "runway", "Runway", nextBudget, b=> cfRunwayBody(b, y, M)));
-  wrap.appendChild(accCard(ui.cfOpen, "whatif", "What-if", "", b=> cfWhatIfBody(b, y, M)));
   const done = M.quarters.filter(q=> q.hasAny).map(q=> "Q"+q.q);
   wrap.appendChild(accCard(ui.cfOpen, "monthly", "Monthly cash flow", done.length ? `${done.join(", ")} actuals in` : "No actuals yet", b=> cfMonthlyBody(b, y, M)));
+  const abv = M.aboveEff;
+  wrap.appendChild(accCard(ui.cfOpen, "cash", "Cash vs reserve", M.ysBudget>0 ? `Dec: ${cfMoney0(Math.abs(abv))} ${abv>=0 ? "above" : "below"} reserve` : "Set a budget to see the reserve", b=> cfCashBody(b, y, M)));
+  wrap.appendChild(accCard(ui.cfOpen, "whatif", "What-if", "", b=> cfWhatIfBody(b, y, M)));
   main.appendChild(wrap);
 }
 
@@ -1916,43 +1981,49 @@ function cfFmtDate(d){
   return MONTHS[parseInt(m[2],10)-1] + " " + parseInt(m[3],10) + ", " + m[1];
 }
 
-// Headline. Once any quarter has actual balances, every figure here is on the
-// revised basis (plan + latest actual gap); the plan year-end stays visible as
-// the sub-line of the end-of-Dec tile.
+// Overall Summary: always open. Once any quarter has actual balances, the
+// Dec figures, Above reserve and Runway are on the revised basis (plan + the
+// latest actual gap); the plan year-end stays as the sub-line of that tile.
 function cfRenderTop(wrap, y, M){
-  const goal = M.reserveMonths, cov = M.covEff;
+  const goal = M.reserveMonths, cov = M.runwayEff;
   const status = cov==null ? "" : (cov>=goal ? `<span class="pill good">✓ Reserve funded</span>` : (cov>=Math.min(9, goal*0.75) ? `<span class="pill cash">Below ${goal} months</span>` : `<span class="pill bad">Below ${Math.min(9, goal*0.75)} months</span>`));
+  const hasAct = M.rows.some(r=> r.act!=null);
   const hd = el("div", "card stack");
   hd.innerHTML = `
-    <div class="row">${status || "<span></span>"}<span class="muted" style="font-size:12px">${M.latest ? `After Q${M.latest.q} actuals` : ""}</span></div>
+    <div class="row"><div class="eyebrow">Overall Summary</div>${status}</div>
+    ${M.latest ? `<div class="muted" style="font-size:12px; margin-top:-6px">After Q${M.latest.q} actuals</div>` : ""}
     ${cfTile(`Opening cash · ${y}`, fmtUSD(M.opening), `Jan 1, ${y}`)}
     <div class="cf-tiles">
+      ${cfTile("Income", fmtUSD(M.incTotal), hasAct ? "Actuals + estimates" : "Estimated")}
+      ${cfTile("Spending", fmtUSD(M.spendTotal), M.exclTotal>0 ? "Budget + funds − excluded" : "Budget + funds added")}
       ${cfTile("Cash, end of Dec", fmtUSD(M.endEff), M.latest ? `Plan ${fmtUSD(M.end)}` : "Projected")}
-      ${cfTile(`${goal}-month reserve`, fmtUSD(M.reserve), `${y} spending`)}
-      ${cfTile("Above reserve", fmtUSD(M.aboveEff), "", M.aboveEff>=0 ? "cf-good" : "cf-bad")}
-      ${cfTile("Months covered", cov==null ? "—" : cov.toFixed(1) + " mo", `of ${y} spending`, cfCoverageClass(cov, goal))}
+      ${cfTile(`${goal}-month reserve`, fmtUSD(M.reserve), `${goal} × monthly budget`)}
+      ${cfTile("Above reserve", fmtUSD(M.aboveEff), "Cash − reserve", M.aboveEff>=0 ? "cf-good" : "cf-bad")}
+      ${cfTile("Runway", cov==null ? "—" : cov.toFixed(1) + " mo", "Dec cash ÷ monthly budget", cfCoverageClass(cov, goal))}
     </div>`;
-  if(M.annualInc===0 && !M.rows.some(r=> r.est!=null)){
+  if(M.annualInc===0 && !M.rows.some(r=> r.est!=null || r.act!=null)){
     const nt = el("div","muted"); nt.textContent = `No annual income estimate for ${y}. Add it in Settings, or enter monthly estimates under Monthly cash flow.`;
     hd.appendChild(nt);
   }
   wrap.appendChild(hd);
 }
 
-function cfRunwayBody(b, y, M){
-  const hasNext = !!(state.settings.perYear && state.settings.perYear[y+1]);
+function cfCashBody(b, y, M){
   const dots = [];
   M.quarters.forEach(qq=>{ if(qq.actCash!=null) dots.push([3*qq.q, qq.actCash]); });
   const rev = M.latest ? [[3*M.latest.q, M.latest.actCash]].concat(Array.from({length:12-3*M.latest.q}, (_,k)=> { const i = 3*M.latest.q + 1 + k; return [i, roundCents(M.cash[i] + M.gap)]; })) : [];
   const lg = [{label:"Estimated cash", color:"var(--primary)"}];
   if(dots.length) lg.push({label:"Your balances", dot:true});
-  if(rev.length>1) lg.push({label:"Revised", color:"var(--accent)", dashed:true});
+  if(rev.length>1) lg.push({label:"Revised", color:"var(--transfer)", dashed:true});
+  if(M.ysBudget>0) lg.push({label:`${M.reserveMonths}-month reserve`, color:"var(--accent)", dashed:true});
+  const abv = M.aboveEff;
   b.innerHTML = `
-    <div class="row"><span class="muted">Into ${y+1}</span><b>${M.runwayEff==null ? "—" : M.runwayEff.toFixed(1) + " months"}</b></div>
-    <div class="muted" style="font-size:12px">${M.runwayEff==null ? "Set a budget to see runway." : `Year-end cash ÷ your ${y+1} monthly budget (${fmtUSD(M.nextMonthly)}).${hasNext ? "" : ` <span class="cf-warn">Uses ${y}'s budget because ${y+1} has none yet.</span>`}${M.latest && M.runwayNext!=null ? ` Plan: ${M.runwayNext.toFixed(1)} months.` : ""}`}</div>
-    <div id="cfChartBox">${cfSvgChart(M.cash, { rev: rev.length>1 ? rev : [], dots, label:`Estimated cash for ${y}` })}</div>
+    <div class="row"><span class="muted">Cash, end of Dec</span><b>${fmtUSD(M.endEff)}</b></div>
+    <div class="row"><span class="muted">Above reserve</span><b class="${abv>=0 ? "cf-good" : "cf-bad"}">${M.ysBudget>0 ? fmtUSD(abv) : "—"}</b></div>
+    ${M.latest ? `<div class="muted" style="font-size:12px">Plan ${fmtUSD(M.end)} · revised by the Q${M.latest.q} balance (${cfSigned(M.gap)}).</div>` : ""}
+    <div id="cfChartBox">${cfSvgChart(M.cash, { rev: rev.length>1 ? rev : [], dots, reserve: M.ysBudget>0 ? M.reserve : null, label:`Estimated cash for ${y}` })}</div>
     ${cfLegend(lg)}
-    <div class="muted" style="font-size:12px">A dot marks each month-end. Tap one for the month and balance.</div>`;
+    <div class="muted" style="font-size:12px">The gap between the lines is Above reserve. A dot marks each month-end; tap one for the month and balance. Large dots are quarter-end balances you entered.</div>`;
   cfWireChart(b.querySelector("#cfChartBox"), M.cash);
 }
 
@@ -1968,38 +2039,42 @@ function cfWhatIfBody(b, y, M){
   const slider = (id, label, min, max, val, step)=> `<div><div class="row"><span class="nm" style="font-weight:600; font-size:14px">${label}</span><b class="num" id="${id}V"></b></div>
       <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" style="width:100%; accent-color:var(--primary)">
       <div class="muted" style="font-size:12px" id="${id}D"></div></div>`;
+  const held0 = Math.min(Math.max(M.endEff,0), M.reserve), abv0 = Math.max(0, roundCents(M.endEff - M.reserve)), from0 = Math.max(0, roundCents(M.reserve - M.endEff));
   b.innerHTML = `
     ${slider("wiInc", "Annual income", ri.min, ri.max, Math.min(Math.max(w.inc, ri.min), ri.max), 500)}
     ${slider("wiSp", "Annual spending", rs.min, rs.max, Math.min(Math.max(w.sp, rs.min), rs.max), 500)}
     ${slider("wiTr", "Extra travel", 0, 20000, w.tr, 250)}
     <table class="cf-table"><thead><tr><th></th><th>Current</th><th>What-if</th></tr></thead><tbody>
-      <tr><td>Year-end cash</td><td>${fmtUSD(M.endEff)}</td><td><b id="wiEnd"></b></td></tr>
-      <tr><td>${M.reserveMonths}-month reserve</td><td>${fmtUSD(M.reserve)}</td><td><b id="wiRes"></b></td></tr>
-      <tr><td>Above reserve</td><td>${fmtUSD(M.aboveEff)}</td><td><b id="wiAbv"></b></td></tr>
-      <tr><td>Months covered</td><td>${M.covEff==null ? "—" : M.covEff.toFixed(1)}</td><td><b id="wiCov"></b></td></tr>
-      <tr><td>Runway into ${y+1}</td><td>${M.runwayEff==null ? "—" : M.runwayEff.toFixed(1)}</td><td><b id="wiRun"></b></td></tr>
+      <tr><td>Year-end cash</td><td>${cfMoney0(M.endEff)}</td><td><b id="wiEnd"></b></td></tr>
+      <tr><td>${M.reserveMonths}-month reserve</td><td>${cfMoney0(held0)}</td><td><b id="wiRes"></b></td></tr>
+      <tr><td>Above reserve</td><td>${cfMoney0(abv0)}</td><td><b id="wiAbv"></b></td></tr>
+      <tr><td>From reserve</td><td>${from0>0 ? cfMoney0(from0) : "—"}</td><td><b id="wiFrom"></b></td></tr>
+      <tr><td>Runway</td><td>${M.runwayEff==null ? "—" : M.runwayEff.toFixed(1)}</td><td><b id="wiRun"></b></td></tr>
     </tbody></table>
     <div id="wiChart"></div>
-    ${cfLegend([{label:"Estimate", color:"var(--primary)"}, {label:"What-if", color:"var(--accent)", dashed:true}])}
-    <div class="row"><span></span><button type="button" class="btn small" id="wiReset">Reset</button></div>`;
+    ${cfLegend([{label:"Estimate", color:"var(--primary)"}, {label:"What-if", color:"var(--transfer)", dashed:true}, {label:`${M.reserveMonths}-month reserve`, color:"var(--accent)", dashed:true}])}
+    <div class="row"><span class="muted" style="font-size:12px; flex:1" id="wiNote"></span><button type="button" class="btn small" id="wiReset">Reset</button></div>`;
   const q = s=> b.querySelector(s);
   const upd = ()=>{
+    // The reserve target stays fixed. Extra spending, travel and lower income
+    // reduce Above reserve first; only past that do they come out of the reserve.
     const dI = w.inc - M.incTotal, dS = (w.sp - M.ysBudget) + w.tr;
-    const ST = M.spendTotal + dS;
-    const end = roundCents(M.endEff + dI - dS), reserve = roundCents(M.reserveMonths * ST / 12);
-    const cov = ST>0 ? end / (ST/12) : null, run = M.nextMonthly>0 ? end / M.nextMonthly : null;
+    const end = roundCents(M.endEff + dI - dS);
+    const held = Math.min(Math.max(end,0), M.reserve), abv = Math.max(0, roundCents(end - M.reserve)), from = Math.max(0, roundCents(M.reserve - end));
+    const run = M.monthly>0 ? end / M.monthly : null;
     q("#wiIncV").textContent = cfMoney0(w.inc); q("#wiSpV").textContent = cfMoney0(w.sp); q("#wiTrV").textContent = cfMoney0(w.tr);
     q("#wiIncD").textContent = `${cfSigned(roundCents(dI)).replace(/\.00$/,"")} vs ${y} estimate ${cfMoney0(M.incTotal)}`;
     q("#wiSpD").textContent = `${cfSigned(roundCents(w.sp - M.ysBudget)).replace(/\.00$/,"")} vs budget ${cfMoney0(M.ysBudget)}`;
     q("#wiTrD").textContent = "On top of any funds already added";
-    q("#wiEnd").textContent = fmtUSD(end); q("#wiEnd").className = end < M.endEff ? "cf-warn" : "";
-    q("#wiRes").textContent = fmtUSD(reserve);
-    q("#wiAbv").textContent = fmtUSD(roundCents(end - reserve)); q("#wiAbv").className = end-reserve>=0 ? "cf-good" : "cf-bad";
-    q("#wiCov").textContent = cov==null ? "—" : cov.toFixed(1); q("#wiCov").className = cfCoverageClass(cov, M.reserveMonths);
-    q("#wiRun").textContent = run==null ? "—" : run.toFixed(1);
-    const delta = end - M.end;
-    const line = M.cash.map((v,i)=> roundCents(v + delta*i/12));
-    q("#wiChart").innerHTML = cfSvgChart(M.cash, { wi: line, noDots:true, label:`Estimate and what-if cash for ${y}` });
+    q("#wiEnd").textContent = cfMoney0(end); q("#wiEnd").className = end < M.reserve ? "cf-bad" : (end < M.endEff ? "cf-warn" : "");
+    q("#wiRes").textContent = cfMoney0(held); q("#wiRes").className = from>0 ? "cf-bad" : "";
+    q("#wiAbv").textContent = cfMoney0(abv); q("#wiAbv").className = abv>0 ? "cf-good" : "";
+    q("#wiFrom").textContent = from>0 ? cfMoney0(from) : "—"; q("#wiFrom").className = from>0 ? "cf-bad" : "";
+    q("#wiRun").textContent = run==null ? "—" : run.toFixed(1); q("#wiRun").className = run!=null && run<M.reserveMonths ? "cf-bad" : "";
+    const nt = q("#wiNote"); nt.textContent = from>0 ? `Reserve touched: ${cfMoney0(from)} below your ${M.reserveMonths}-month reserve.` : ""; nt.className = "muted" + (from>0 ? " cf-bad" : "");
+    const delta = end - M.endEff;
+    const line = M.cash.map((v,i)=> roundCents(v + (M.endEff - M.end) * (i>=(M.latest ? 3*M.latest.q : 0) ? 1 : 0) + delta*i/12));
+    q("#wiChart").innerHTML = cfSvgChart(M.cash, { wi: line, noDots:true, reserve: M.reserve, label:`Estimate and what-if cash for ${y}` });
   };
   [["wiInc","inc"],["wiSp","sp"],["wiTr","tr"]].forEach(([id,k])=> q("#"+id).addEventListener("input", ()=>{ w[k] = parseFloat(q("#"+id).value); upd(); }));
   q("#wiReset").onclick = ()=>{ ui.cfWI = null; render(); };
@@ -2012,28 +2087,37 @@ function cfMonthlyBody(b, y, M){
     ui.cfQ = M.latest ? Math.min(4, M.latest.q + 1) : (y===todayY ? Math.floor(monthOfYM(todayYM())/3)+1 : 1);
     ui.cfQY = y;
   }
+  const view = ui.cfView==="chart" ? "chart" : "table";
+  const toggle = `<div class="viewtoggle">${[["table","Table"],["chart","Chart"]].map(([k,n])=> `<button type="button" class="viewbtn ${k===view?"active":""}" data-view="${k}" style="flex:1; justify-content:center">${n}</button>`).join("")}</div>`;
+  if(view==="chart"){
+    b.innerHTML = `${toggle}
+      <div class="muted" style="font-size:12px">${y} · income vs cash out</div>
+      <div id="cfBarBox">${cfBarChart(M)}</div>
+      ${cfLegend([{label:"Income", color:"var(--primary)"}, {label:"Cash out", color:"var(--accent)"}])}
+      <div class="muted" style="font-size:12px">Lighter bars are placeholders (annual ÷ 12). Tap a month for its numbers.</div>`;
+    b.querySelectorAll("[data-view]").forEach(x=> x.onclick = ()=>{ ui.cfView = x.dataset.view; render(); });
+    cfWireBarChart(b.querySelector("#cfBarBox"), M);
+    return;
+  }
   const Q = M.quarters[ui.cfQ-1], qs = Q.q-1;
   const names = ["Q1","Q2","Q3","Q4"];
   const diff = (est, act)=> `<span class="${act-est>=0 ? "cf-good" : "cf-bad"}">${cfSigned(roundCents(act-est))}</span>`;
+  const dot = c=> `<i class="cf-ldot ${c}"></i>`;
+  const netCls = v=> v>=0 ? "cf-good" : "cf-bad";
   const rows = Q.rows.map(r=>{
-    const has = r.act!=null;
-    const right = has ? `<span class="num nm">${fmtUSD(r.act)}</span>` : `<span class="num nm ${r.placeholder ? "cf-ph" : ""}" style="${r.placeholder ? "" : "color:var(--ink-soft)"}">${fmtUSD(r.inc)}</span>`;
-    const sub = has ? `Estimate ${fmtUSD(r.inc)} · ${diff(r.inc, r.act)}` : `Estimate${r.placeholder ? " (annual ÷ 12)" : ""} · no actual yet`;
-    let h = `<div class="cf-row taprow" data-m="${r.m}"><div style="flex:1; min-width:0"><div class="nm">${MONTHS[r.m]}</div><div class="muted" style="font-size:12px">${sub}</div></div>${right}<span class="rowchev">${iconChevronRight()}</span></div>`;
-    if(r.added!==0){
-      const notes = cfFundsAddedForMonth(r.ym).map(f=> f.note).filter(Boolean).join(", ");
-      h += `<div class="cf-row taprow" data-m="${r.m}" style="border-top:none; padding-top:0"><div style="flex:1; min-width:0; padding-left:14px" class="muted"><span style="font-size:12px">Funds added${notes ? " · " + escapeHtml(notes) : ""}</span></div><span class="num cf-warn nm">${cfSigned(r.added)}</span><span class="rowchev">${iconChevronRight()}</span></div>`;
-    }
-    return h;
+    const incTxt = r.placeholder ? `<span class="cf-ph">${fmtUSD(r.inc)}</span>` : fmtUSD(r.inc);
+    return `<div class="cf-row taprow" data-m="${r.m}"><div style="flex:1; min-width:0"><div class="nm">${dot(r.light)}${MONTHS[r.m]}</div><div class="muted cf-sub2">Income ${incTxt} · Cash out ${fmtUSD(r.out)}</div><div class="muted cf-sub2">Above reserve <span class="${r.above>=0 ? "" : "cf-bad"}">${fmtUSD(r.above)}</span></div></div><div style="text-align:right"><b class="num ${netCls(r.net)}">${cfSigned(r.net)}</b><div class="muted cf-sub2">Net</div></div><span class="rowchev">${iconChevronRight()}</span></div>`;
   }).join("");
+  const total = `<div class="cf-row"><div style="flex:1; min-width:0"><div class="nm" style="font-weight:700">${dot(Q.light)}${names[qs]} total</div><div class="muted cf-sub2">Income ${fmtUSD(Q.inc)} · Cash out ${fmtUSD(Q.out)}</div><div class="muted cf-sub2">Above reserve <span class="${Q.above>=0 ? "" : "cf-bad"}">${fmtUSD(Q.above)}</span></div></div><div style="text-align:right"><b class="num ${netCls(Q.net)}">${cfSigned(Q.net)}</b><div class="muted cf-sub2">Net</div></div><span style="width:16px"></span></div>`;
   b.innerHTML = `
+    ${toggle}
     <div class="viewtoggle">${names.map((n,i)=> `<button type="button" class="viewbtn ${i+1===ui.cfQ?"active":""}" data-q="${i+1}" style="flex:1; justify-content:center">${n}</button>`).join("")}</div>
     <div class="cf-tile"><div class="cf-k">Cash at ${CF_QEND[qs]}</div>
-      <div class="cf-cols"><div><div class="cf-sub">Estimate</div><b>${fmtUSD(Q.estCash)}</b></div><div><div class="cf-sub">Actual</div><b>${cfNum(Q.actCash)}</b></div><div style="text-align:right"><div class="cf-sub">Difference</div><b>${Q.actCash==null ? "—" : diff(Q.estCash, Q.actCash)}</b></div></div></div>
-    <div>${rows}
-      <div class="cf-row"><div style="flex:1"><div class="nm" style="font-weight:700">${names[qs]} income</div><div class="muted" style="font-size:12px">Estimate ${fmtUSD(Q.estInc)}</div></div><div style="text-align:right"><b>${cfNum(Q.actInc)}</b>${Q.actInc==null ? "" : `<div style="font-size:12px">${diff(Q.estInc, Q.actInc)}</div>`}</div></div>
-    </div>
+      <div class="cf-cols"><div><div class="cf-sub">Estimate</div><b>${fmtUSD(Q.estCash)}</b></div><div><div class="cf-sub">Actual</div><b>${cfNum(Q.actCash)}</b></div><div style="text-align:right"><div class="cf-sub">Difference</div><b>${Q.actCash==null ? "—" : diff(Q.estCash, Q.actCash)}</b></div></div>
+      ${Q.actCash==null ? `<div class="cf-sub" style="margin-top:6px">Enter your ${CF_QEND[qs]} balances in Edit ${names[qs]} to compare.</div>` : ""}</div>
+    <div>${rows}${total}</div>
     <button type="button" class="btn block" id="cfEditQ">Edit ${names[qs]}</button>`;
+  b.querySelectorAll("[data-view]").forEach(x=> x.onclick = ()=>{ ui.cfView = x.dataset.view; render(); });
   b.querySelectorAll("[data-q]").forEach(x=> x.onclick = ()=>{ ui.cfQ = parseInt(x.dataset.q,10); render(); });
   b.querySelectorAll("[data-m]").forEach(x=> x.onclick = ()=> cfMonthSheet(y, parseInt(x.dataset.m,10)));
   b.querySelector("#cfEditQ").onclick = ()=> cfQuarterSheet(y, Q.q);
@@ -2046,49 +2130,34 @@ function cfShowSheet(html){
   const dlg = document.getElementById("dlg"), body = document.getElementById("dlgBody");
   body.innerHTML = html; openSheet(); return { dlg, body };
 }
+// Read-only: income estimates, actuals and balances are entered in Edit Q.
 function cfMonthSheet(y, m){
-  const rec = cfEnsureYear(y);
   const M = cfModel(y);
-  const r = M.rows[m];
-  const mm = (rec.months[m] = rec.months[m] || {});
+  const r = M.rows[m], q = Math.floor(m/3)+1;
   const funds = cfFundsAddedForMonth(r.ym);
-  const fundsHtml = funds.length ? funds.map(f=> `<div class="cf-row"><div style="flex:1; min-width:0"><div class="nm">${f.amount>=0?"+":"-"}${fmtUSD(Math.abs(f.amount))}</div><div class="muted">${escapeHtml(f.note || "Funds added")}${f.spread ? " · spread across months" : ""}${f.date ? " · " + escapeHtml(cfFmtDate(f.date)) : ""}</div></div></div>`).join("") : `<div class="muted" style="padding:6px 0">None.</div>`;
-  const addedTotal = roundCents(r.added);
-  const impact = addedTotal!==0 && M.hasSetup ? `<div class="cf-tile" style="margin-top:4px"><div class="cf-k">What these funds change</div>
-      <div class="cf-row" style="border-top:none"><span class="muted" style="flex:1">Year-end cash</span><span class="num">${fmtUSD(roundCents(M.end+addedTotal))} → <b>${fmtUSD(M.end)}</b></span></div>
-      ${M.nextMonthly>0 ? `<div class="cf-row"><span class="muted" style="flex:1">Runway into ${y+1}</span><span class="num">${((M.end+addedTotal)/M.nextMonthly).toFixed(1)} → <b>${(M.end/M.nextMonthly).toFixed(1)} mo</b></span></div>` : ""}</div>` : "";
+  const line = (l, v, cls, b)=> `<div class="cf-row" style="align-items:flex-start; padding:6px 0"><span class="muted" style="flex:1; min-width:0; padding-right:14px">${l}</span><span class="num ${cls||""}" style="white-space:nowrap; ${b ? "font-weight:700" : ""}">${v}</span></div>`;
+  const fundsHtml = funds.length ? funds.map(f=> line(`${f.kind==="transfer" ? "External transfer" : "Funds added"}${f.note ? " · " + escapeHtml(f.note) : ""}${f.spread ? " · spread across months" : ""}`, (f.amount>=0?"+":"-") + fmtUSD(Math.abs(f.amount)), "cf-warn")).join("") : line("Funds added", "None");
+  const exclHtml = r.excl.length ? r.excl.map(e=> line(`Excluded · ${escapeHtml(e.name)}`, "-" + fmtUSD(e.amount), "cf-bad")).join("") : line("Excluded on Monthly", "None");
+  const estTxt = r.est==null ? `${fmtUSD(roundCents(M.annualInc/12))} <span class="muted">(annual ÷ 12)</span>` : fmtUSD(r.est);
   const { dlg, body } = cfShowSheet(`
     <h3>${MONTHS[m]} ${y}</h3>
-    <label>Income estimate<input type="number" inputmode="decimal" step="0.01" min="0" id="cmEst" value="${mm.est==null ? "" : mm.est}" placeholder="${r.placeholder ? roundCents(M.annualInc/12).toFixed(2) : ""}"></label>
-    <div class="muted" style="font-size:12px; margin-top:-6px">${mm.est==null ? "Blank: using annual ÷ 12 as a placeholder" : "Your estimate for this month"}</div>
-    <label>Income actual<input type="number" inputmode="decimal" step="0.01" min="0" id="cmAct" value="${mm.act==null ? "" : mm.act}" placeholder="Not received yet"></label>
-    <div class="eyebrow" style="margin-top:6px">Spending</div>
-    <div class="cf-row" style="border-top:none"><span class="muted" style="flex:1">Base (annual ÷ 12)</span><span class="num">${fmtUSD(r.base)}</span></div>
-    <div class="muted" style="font-size:12px">Funds added</div>
+    <div class="eyebrow">Income</div>
+    ${line("Estimate", estTxt)}
+    ${line("Actual", r.act==null ? "Not received yet" : fmtUSD(r.act))}
+    ${r.act==null ? `<div class="muted" style="font-size:12px">Enter income in Edit Q${q}.</div>` : ""}
+    <div class="eyebrow" style="margin-top:8px">Cash out</div>
+    ${line("Budget (annual ÷ 12)", fmtUSD(r.base))}
     ${fundsHtml}
-    <div class="cf-row"><b style="flex:1">Total spending</b><b class="num">${fmtUSD(r.spend)}</b></div>
-    <div class="cf-row"><span class="muted" style="flex:1">Estimated cash, end of ${MONTHS[m]}</span><span class="num">${fmtUSD(r.end)}</span></div>
-    <button type="button" class="btn small block" id="cmAdd">Add funds to ${MONTHS[m]}</button>
-    <div class="muted" style="font-size:12px">Funds come out of your cash pool. Edit or remove them on Monthly.</div>
-    ${impact}
-    <div class="dialog-actions"><button class="btn ghost" id="cmCancel">Cancel</button><button class="btn primary" id="cmSave">Save</button></div>`);
-  const read = ()=> ({ est: cfParseMoney(body.querySelector("#cmEst").value), act: cfParseMoney(body.querySelector("#cmAct").value) });
-  const dirty = ()=>{ const v = read(); return (v.est==null ? null : v.est) !== (mm.est==null ? null : mm.est) || (v.act==null ? null : v.act) !== (mm.act==null ? null : mm.act); };
-  const save = async ()=>{
-    const v = read();
-    if((v.est!=null && v.est<0) || (v.act!=null && v.act<0)){ formError(body, "Amounts can't be negative."); return false; }
-    if(v.est==null) delete mm.est; else mm.est = roundCents(v.est);
-    if(v.act==null) delete mm.act; else mm.act = roundCents(v.act);
-    await dbSet("cashflow", String(y), rec);
-    return true;
-  };
-  body.querySelector("#cmCancel").onclick = ()=> dlg.close();
-  onceClick(body.querySelector("#cmSave"), async ()=>{ if(await save()===false) return; dlg.close(); render(); });
-  const goFunds = ()=> openFundDialog(r.ym, { lockMonth:true, onSaved:()=>{ render(); cfMonthSheet(y, m); }, onCancel:()=> cfMonthSheet(y, m) });
-  body.querySelector("#cmAdd").onclick = ()=>{
-    if(dirty()) promptSaveBeforeContinue(body, async ()=>{ const ok = await save(); if(ok===false) return false; goFunds(); }, "month");
-    else goFunds();
-  };
+    ${exclHtml}
+    ${line("Cash out", fmtUSD(r.out), "", true)}
+    <div class="cf-row" style="padding:6px 0"><b style="flex:1">Net</b><b class="num ${r.net>=0 ? "cf-good" : "cf-bad"}">${cfSigned(r.net)}</b></div>
+    ${r.net<0 && r.end>=M.reserve ? `<div class="muted" style="font-size:12px">Drawn from Above reserve. Replenished as income comes in.</div>` : ""}
+    ${line(`Cash, end of ${MONTHS[m]}`, fmtUSD(r.end))}
+    ${line(`Above reserve, end of ${MONTHS[m]}`, fmtUSD(r.above), r.above>=0 ? "cf-good" : "cf-bad")}
+    <div class="muted" style="font-size:12px">You choose what is excluded on Monthly. Change it there and these numbers follow.</div>
+    <div class="dialog-actions"><button class="btn small" id="cmAdd">+ Add funds</button><span style="flex:1"></span><button class="btn primary" id="cmDone">Done</button></div>`);
+  body.querySelector("#cmDone").onclick = ()=> dlg.close();
+  body.querySelector("#cmAdd").onclick = ()=> openFundDialog(r.ym, { lockMonth:true, onSaved:()=>{ render(); cfMonthSheet(y, m); }, onCancel:()=> cfMonthSheet(y, m) });
 }
 function cfQuarterSheet(y, q){
   const rec = cfEnsureYear(y);
@@ -5686,6 +5755,7 @@ function renderGhostContent(ym){
   const tmpMain = document.createElement("div");
   if(ui.tab==="monthly") renderMonthly(tmpMain);
   else if(ui.tab==="outlook") renderOutlook(tmpMain);
+  else if(ui.tab==="cashflow") renderCashFlow(tmpMain);
   ui.ym = savedYm;
   return { subHTML, toggleHTML, mainHTML: tmpMain.innerHTML };
 }
@@ -5751,7 +5821,7 @@ function wireSwipeNav(){
       document.getElementById("monthlyToggleSticky"),
       main,
     ];
-    if(ui.tab==="outlook") return [main];
+    if(ui.tab==="outlook" || ui.tab==="cashflow") return [main];
     return null;
   }
 
@@ -5816,7 +5886,9 @@ function wireSwipeNav(){
     clearGhosts();
     if(liveEls) resetLiveStyles();
     if(document.getElementById("dlg").open || e.touches.length>1){ tracking=false; return; }
-    if(!(ui.tab==="monthly" || ui.tab==="outlook")){ tracking=false; return; }
+    if(!(ui.tab==="monthly" || ui.tab==="outlook" || ui.tab==="cashflow")){ tracking=false; return; }
+    // What-if sliders keep their own horizontal drag.
+    if(e.target && e.target.closest && e.target.closest('input[type="range"]')){ tracking=false; return; }
     const t = e.touches[0];
     startX=t.clientX; startY=t.clientY; dx=0;
     tracking=true; deciding=true; horiz=false;
