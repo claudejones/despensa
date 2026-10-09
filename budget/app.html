@@ -699,7 +699,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v110";
+const APP_BUILD = "v111";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -3197,6 +3197,13 @@ function categoryDisplayInfo(catId, ym){
   return { id: catId, name: (entry && entry.name) || "Untitled", isLocal:true };
 }
 
+// Display name for either end of a transfer, resolved in the month of the
+// transfer's own date so a month-only category isn't shown as "?".
+function transferCatName(catId, t){
+  if(catId===null || catId===undefined) return "External source";
+  return categoryDisplayInfo(catId, ymOfDate(t.date)).name;
+}
+
 // Every category that's actually part of a SET-UP month — driven by
 // state.monthCategoryData[ym], never by the live template list, since a
 // seeded month only shows what it was actually forked with (plus whatever
@@ -3398,12 +3405,11 @@ function openFundAdjustmentsSheet(ym){
         </div>
       `).join("")}
       ${tr.map(t=>{
-        const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
-        const to = state.categories.find(c=>c.id===t.toCategoryId);
-        const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
+        const fromLabel = transferCatName(t.fromCategoryId, t);
+        const toName = transferCatName(t.toCategoryId, t);
         return `
           <div class="row taprow" role="button" tabindex="0" data-editnote="${t.id}" style="align-items:flex-start; gap:10px">
-            <span class="muted" style="flex:1; min-width:0">Moved · ${fromLabel} → ${to?to.name:"?"}${t.note?" · "+escapeHtml(t.note):""}</span>
+            <span class="muted" style="flex:1; min-width:0">Moved · ${escapeHtml(fromLabel)} → ${escapeHtml(toName)}${t.note?" · "+escapeHtml(t.note):""}</span>
             <span class="num" style="white-space:nowrap; flex:none">${fmtUSD(t.amountUSD)}</span>
             <span class="rowchev" aria-hidden="true">${iconChevronRight()}</span>
           </div>
@@ -3503,13 +3509,12 @@ function openFundAdjustmentsSheet(ym){
 // matching fund event so nothing is orphaned) — reached from inside the
 // transfer's own detail sheet. Returns to the Fund adjustments list.
 function confirmDeleteTransfer(t, ym){
-  const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
-  const to = state.categories.find(c=>c.id===t.toCategoryId);
-  const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
+  const fromLabel = transferCatName(t.fromCategoryId, t);
+  const toName = transferCatName(t.toCategoryId, t);
   const linkedFe = t.externalSourceLinkId ? state.fundevents.find(f=>f.externalSourceLinkId===t.externalSourceLinkId) : null;
   const msg = linkedFe
-    ? `Delete this ${fmtUSD(t.amountUSD)} addition (${fromLabel} → ${to?to.name:"?"})? This also removes the matching funds added to the budget.`
-    : `Delete this ${fmtUSD(t.amountUSD)} move (${fromLabel} → ${to?to.name:"?"})?`;
+    ? `Delete this ${fmtUSD(t.amountUSD)} addition (${fromLabel} → ${toName})? This also removes the matching funds added to the budget.`
+    : `Delete this ${fmtUSD(t.amountUSD)} move (${fromLabel} → ${toName})?`;
   confirmAction(msg, async ()=>{
     state.transfers = state.transfers.filter(x=>x.id!==t.id);
     await dbDelete("transfers", t.id);
@@ -3532,12 +3537,11 @@ function confirmDeleteTransfer(t, ym){
 function openEditTransferNoteSheet(t, ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const from = t.fromCategoryId ? state.categories.find(c=>c.id===t.fromCategoryId) : null;
-  const to = state.categories.find(c=>c.id===t.toCategoryId);
-  const fromLabel = t.fromCategoryId ? (from?from.name:"?") : "External source";
+  const fromLabel = transferCatName(t.fromCategoryId, t);
+  const toName = transferCatName(t.toCategoryId, t);
   body.innerHTML = `
     <h3>Edit note</h3>
-    <p class="muted">${fmtUSD(t.amountUSD)} · ${fromLabel} → ${to?to.name:"?"} · ${t.date}</p>
+    <p class="muted">${fmtUSD(t.amountUSD)} · ${escapeHtml(fromLabel)} → ${escapeHtml(toName)} · ${t.date}</p>
     <label>Note<input type="text" id="etnNote" value="${t.note ? escapeHtml(t.note) : ""}" placeholder="e.g. covered grocery overrun"></label>
     <div class="dialog-actions" style="justify-content:space-between">
       <button class="btn small danger" id="etnDelete">${iconTrash()}<span>Delete transfer</span></button>
@@ -3803,7 +3807,13 @@ const EXTERNAL_SOURCE_ID = "__external__";
 function openTransferDialog(ym){
   const dlg = document.getElementById("dlg");
   const body = document.getElementById("dlgBody");
-  const withRemaining = state.categories.map(c=>({ c, remaining: remainingForMonth(c.id, ym) }));
+  // The month's OWN categories (template-forked + month-only), not the live
+  // template list: a category added only to this month must be selectable,
+  // and one removed from this month must not be.
+  const monthCats = isMonthSeeded(ym)
+    ? monthCategoryList(ym).map(x=> ({ id:x.id, name:x.name }))
+    : state.categories.filter(c=> categoryAppliesToYM(c, ym)).map(c=> ({ id:c.id, name:c.name }));
+  const withRemaining = monthCats.map(c=>({ c, remaining: remainingForMonth(c.id, ym) }));
   const surplusSources = withRemaining.filter(x=> x.remaining > 0);
   const externalOption = { c:{ id:EXTERNAL_SOURCE_ID, name:"External source" }, remaining:null, external:true };
   const fromOptions = [externalOption, ...surplusSources];
@@ -3885,8 +3895,8 @@ function openTransferDialog(ym){
     state.transfers.push(rec);
     await dbSet("transfers", id, rec);
     dlg.close();
-    const fromName = fromExternal ? "External source" : (state.categories.find(x=>x.id===fromId)||{}).name || "?";
-    const toName = (state.categories.find(x=>x.id===toId)||{}).name || "?";
+    const fromName = fromExternal ? "External source" : categoryDisplayInfo(fromId, ym).name;
+    const toName = categoryDisplayInfo(toId, ym).name;
     showToast(`Moved ${fmtUSD(amountUSD)}: ${fromName} → ${toName}`);
     render();
   });
