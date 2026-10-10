@@ -455,6 +455,13 @@
   .cf-rd-g b{font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink)} .cf-rd-g b.cf-bad{color:var(--bad)} .cf-rd-g b.cf-good{color:var(--good)}
   .cf-rd-h{display:flex; justify-content:space-between; align-items:center; font-size:13px}
   .cf-cbox{touch-action:manipulation}
+  .wi-det{display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:12px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); flex:none}
+  .wi-det:active{background:var(--line)}
+  .wi-lever{margin-bottom:18px}
+  .wi-help{margin-top:8px; font-size:11.5px; font-style:italic; opacity:.85}
+  .cf-wsum{display:flex; gap:10px; padding:9px 12px; margin:2px 0 10px; border:1px solid var(--line); border-radius:12px; background:var(--surface-2)}
+  .cf-wsum>div{flex:1; min-width:0} .cf-wsum b{display:block; font-size:16px; font-variant-numeric:tabular-nums; margin:1px 0}
+  .cf-wsum .cf-sub{font-size:10.5px}
   .cf-range{width:100%; height:40px; margin:-8px 0; accent-color:var(--primary)}
   .cf-caps{display:flex; justify-content:space-between; gap:8px; font-size:12px; color:var(--ink-soft)}
   .cf-sub2{font-size:12px; padding-left:16px}
@@ -725,7 +732,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v116";
+const APP_BUILD = "v117";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1980,7 +1987,11 @@ function renderCashFlow(main){
   wrap.appendChild(accCard(ui.cfOpen, "monthly", "Monthly cash flow", done.length ? `${done.join(", ")} actuals in` : "No actuals yet", b=> cfMonthlyBody(b, y, M)));
   const abv = M.aboveEff;
   wrap.appendChild(accCard(ui.cfOpen, "cash", "Cash vs reserve", M.ysBudget>0 ? (abv>=0 ? `Dec buffer: ${cfMoney0(abv)}` : `Dec: reserve ${cfMoney0(-abv)} short`) : "Set a budget to see the reserve", b=> cfCashBody(b, y, M)));
-  wrap.appendChild(accCard(ui.cfOpen, "whatif", "What-if", "", b=> cfWhatIfBody(b, y, M)));
+  const wiTag = ui.cfOpen.whatif ? `<span class="wi-det" role="button" tabindex="0" aria-label="What-if details table"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg></span>` : "";
+  const wiCard = accCard(ui.cfOpen, "whatif", "What-if", "", b=> cfWhatIfBody(b, y, M), wiTag);
+  const wiBtn = wiCard.querySelector(".wi-det");
+  if(wiBtn) wiBtn.addEventListener("click", e=>{ e.stopPropagation(); cfWhatIfSheet(y, M); });
+  wrap.appendChild(wiCard);
   main.appendChild(wrap);
 }
 
@@ -2062,6 +2073,41 @@ function cfCashBody(b, y, M){
   paint();
 }
 
+// What-if figures. Same rules as the real app: the reserve is months x the
+// year's monthly budget, so it follows the spending lever, and so does runway.
+function cfWiCalc(M, w){
+  const monW = w.sp/12;
+  const end = roundCents(M.endEff + (w.inc - M.incTotal) - (w.sp - M.ysBudget) - w.tr);
+  const resW = roundCents(w.rm * monW);
+  return { monW, end, resW, held: Math.min(Math.max(end,0), resW), buf: Math.max(0, roundCents(end - resW)), short: Math.max(0, roundCents(resW - end)), run: monW>0 ? end/monW : null };
+}
+function cfWiTableHTML(M, w){
+  const m0 = v=> cfMoney0(Math.round(v)), c = cfWiCalc(M, w);
+  const other = roundCents(M.spendTotal - M.ysBudget);
+  const sg = v=> cfSigned(Math.round(v)).replace(/\.00$/,"");
+  const gapRow = M.latest ? `<tr><td>Adjusted to your Q${M.latest.q} balance</td><td>${sg(M.gap)}</td><td>${sg(M.gap)}</td></tr>` : "";
+  const otherRow = other!==0 ? `<tr><td>${other>0 ? "− Funds already added" : "+ Excluded on Monthly"}</td><td>${m0(Math.abs(other))}</td><td>${m0(Math.abs(other))}</td></tr>` : "";
+  const held0 = Math.min(Math.max(M.endEff,0), M.reserve), buf0 = Math.max(0, roundCents(M.endEff - M.reserve));
+  const run0 = M.runwayEff==null ? "—" : M.runwayEff.toFixed(1) + " mo";
+  const rmTxt = +(+w.rm).toFixed(1);
+  const sub = `${rmTxt} ${rmTxt===1 ? "month" : "months"} · target ${m0(M.reserve)}${Math.round(c.resW)!==Math.round(M.reserve) ? " → " + m0(c.resW) : ""}` + (c.short>0 ? ` · ${m0(c.short)} short` : "");
+  return `<table class="cf-table"><thead><tr><th></th><th>Current</th><th>What-if</th></tr></thead><tbody>
+      <tr><td>Opening cash</td><td>${m0(M.opening)}</td><td>${m0(M.opening)}</td></tr>
+      <tr><td>+ Income</td><td>${m0(M.incTotal)}</td><td>${m0(w.inc)}</td></tr>
+      <tr><td>− Spending (budget)</td><td>${m0(M.ysBudget)}</td><td>${m0(w.sp)}</td></tr>
+      ${otherRow}${gapRow}
+      <tr><td>− Extra travel</td><td>—</td><td>${w.tr>0 ? m0(w.tr) : "—"}</td></tr>
+      <tr class="tot"><td>Year-end cash</td><td>${m0(M.endEff)}</td><td class="${c.end < c.resW ? "cf-bad" : ""}">${m0(c.end)}</td></tr>
+      <tr><td>Reserve held<div class="cf-sub">${sub}</div></td><td>${m0(held0)}</td><td class="${c.short>0 ? "cf-bad" : ""}">${m0(c.held)}</td></tr>
+      <tr><td>Buffer</td><td>${m0(buf0)}</td><td>${m0(c.buf)}</td></tr>
+      <tr><td>Runway</td><td>${run0}</td><td class="${c.run!=null && c.run < w.rm ? "cf-bad" : ""}">${c.run==null ? "—" : c.run.toFixed(1) + " mo"}</td></tr>
+    </tbody></table>`;
+}
+function cfWhatIfSheet(y, M){
+  const w = ui.cfWI; if(!w || w.y!==y) return;
+  const { dlg, body } = cfShowSheet(`<div class="row" style="align-items:center; margin-bottom:6px"><h3 style="flex:1; margin:0">What-if details</h3><button type="button" class="btn small" id="wiReset">Reset</button></div>${cfWiTableHTML(M, w)}`);
+  body.querySelector("#wiReset").onclick = ()=>{ ui.cfWI = null; dlg.close(); render(); };
+}
 function cfWhatIfBody(b, y, M){
   if(!(M.incTotal>0) || !(M.ysBudget>0)){
     b.innerHTML = `<div class="muted">Set ${y}'s budget and annual income estimate to try what-ifs.</div>`; return;
@@ -2087,54 +2133,40 @@ function cfWhatIfBody(b, y, M){
     { id:"wiTr", k:"tr", label:"Extra travel", min:0, max:trMax, step:500, floor:0, capL:"$0", capR:`Up to ${m0(trMax)} = Dec cash` },
     { id:"wiRm", k:"rm", label:"Reserve target", min:0, max:24, step:1, floor:0, capL:"0", capR:"24 months", months:true }
   ];
-  const slider = l=> `<div><div class="row"><span class="nm" style="font-weight:600; font-size:14px">${l.label}</span><button type="button" class="cf-val num" id="${l.id}V" aria-label="${l.label}: tap to type an amount"></button></div>
+  const slider = l=> `<div class="wi-lever"><div class="row"><span class="nm" style="font-weight:600; font-size:14px">${l.label}</span><button type="button" class="cf-val num" id="${l.id}V" aria-label="${l.label}: tap to type ${l.months ? "months or dollars" : "an amount"}"></button></div>
       <input type="range" class="cf-range" id="${l.id}" min="${l.min}" max="${l.max}" step="${l.step}" value="${Math.min(Math.max(w[l.k], l.min), l.max)}">
       <div class="cf-caps"><span>${l.capL}</span><span>${l.capR}</span></div>
-      <div class="cf-sub" id="${l.id}D"></div></div>`;
+      <div class="cf-sub wi-help" id="${l.id}D"></div></div>`;
   const held0 = Math.min(Math.max(M.endEff,0), M.reserve), buf0 = Math.max(0, roundCents(M.endEff - M.reserve));
-  const gapRow = M.latest ? `<tr><td>Adjusted to your Q${M.latest.q} balance</td><td>${cfSigned(Math.round(M.gap)).replace(/\.00$/,"")}</td><td>${cfSigned(Math.round(M.gap)).replace(/\.00$/,"")}</td></tr>` : "";
-  const otherRow = other!==0 ? `<tr><td>${other>0 ? "− Funds already added" : "+ Excluded on Monthly"}</td><td>${m0(Math.abs(other))}</td><td>${m0(Math.abs(other))}</td></tr>` : "";
   const run0 = M.runwayEff==null ? "—" : M.runwayEff.toFixed(1) + " mo";
+  const sumCell = (k, id, now)=> `<div><div class="cf-sub">${k}</div><b id="${id}"></b><div class="cf-sub">now ${now}</div></div>`;
   b.innerHTML = `
-    <div><div class="cf-ss" style="margin-top:0">Cash by month · changes are spread evenly across the year</div><div id="wiChart"></div></div>
+    <div><div class="cf-ss" style="margin-top:0">Cash by month · changes are spread evenly across the year</div>
+    <div class="cf-wsum">${sumCell("Year-end cash","wiSEnd",m0(M.endEff))}${sumCell("Buffer","wiSBuf",m0(buf0))}${sumCell("Runway","wiSRun",run0)}</div>
+    <div id="wiChart"></div></div>
     ${cfLegend([{label:"Reserve", fill:"var(--accent)"}, {label:"Buffer", fill:"var(--good)"}, {label:"Below target", fill:"var(--bad)", op:.6}, {label:"Plan", color:"var(--ink-soft)", dashed:true}])}
+    <div style="height:14px"></div>
     ${L.map(slider).join("")}
-    <table class="cf-table"><thead><tr><th></th><th>Current</th><th>What-if</th></tr></thead><tbody>
-      <tr><td>Opening cash</td><td>${m0(M.opening)}</td><td>${m0(M.opening)}</td></tr>
-      <tr><td>+ Income</td><td>${m0(M.incTotal)}</td><td id="wiTbI"></td></tr>
-      <tr><td>− Spending (budget)</td><td>${m0(M.ysBudget)}</td><td id="wiTbS"></td></tr>
-      ${otherRow}${gapRow}
-      <tr><td>− Extra travel</td><td>—</td><td id="wiTbT"></td></tr>
-      <tr class="tot"><td>Year-end cash</td><td>${m0(M.endEff)}</td><td id="wiEnd"></td></tr>
-      <tr><td>Reserve held<div class="cf-sub" id="wiHeldSub"></div></td><td>${m0(held0)}</td><td id="wiHeld"></td></tr>
-      <tr><td>Buffer</td><td>${m0(buf0)}</td><td id="wiBuf"></td></tr>
-      <tr><td>Runway</td><td>${run0}</td><td id="wiRun"></td></tr>
-    </tbody></table>
-    <div class="row"><span class="muted" style="font-size:12px; flex:1" id="wiNote"></span><button type="button" class="btn small" id="wiReset">Reset</button></div>`;
+    <div class="muted" style="font-size:12px" id="wiNote"></div>`;
   const q = s=> b.querySelector(s);
   const setC = (sel, txt, bad)=>{ const e = q(sel); e.textContent = txt; e.className = bad ? "cf-bad" : ""; };
   const upd = ()=>{
     // Income, spending and travel change cash. The reserve target only moves the
     // split between reserve and buffer. Spending comes out of the buffer first.
     const dI = w.inc - M.incTotal, dS = w.sp - M.ysBudget;
-    const end = roundCents(M.endEff + dI - dS - w.tr);
-    const resW = roundCents(w.rm * mon);
-    const held = Math.min(Math.max(end,0), resW), buf = Math.max(0, roundCents(end - resW)), short = Math.max(0, roundCents(resW - end));
-    const run = mon>0 ? end / mon : null;
+    const { end, resW, buf, short, run } = cfWiCalc(M, w);
+    const rmTxt = +(+w.rm).toFixed(1);
     L.forEach(l=>{
-      q("#"+l.id+"V").textContent = l.months ? `${+(+w.rm).toFixed(1)} ${+(+w.rm).toFixed(1)===1 ? "month" : "months"} · ${m0(resW)}` : m0(w[l.k]);
+      q("#"+l.id+"V").textContent = l.months ? `${rmTxt} ${rmTxt===1 ? "month" : "months"} · ${m0(resW)}` : m0(w[l.k]);
     });
     q("#wiIncD").textContent = `${cfSigned(Math.round(dI)).replace(/\.00$/,"")} vs ${y} estimate ${m0(M.incTotal)}`;
     q("#wiSpD").textContent = `${cfSigned(Math.round(dS)).replace(/\.00$/,"")} vs budget ${m0(M.ysBudget)}`;
     q("#wiTrD").textContent = "On top of funds already added";
-    q("#wiRmD").textContent = "Moves the split only. Year-end cash stays the same.";
-    q("#wiTbI").textContent = m0(w.inc); q("#wiTbS").textContent = m0(w.sp); q("#wiTbT").textContent = w.tr>0 ? m0(w.tr) : "—";
-    setC("#wiEnd", m0(end), end < resW);
-    setC("#wiHeld", m0(held), short>0);
-    q("#wiHeldSub").textContent = `of ${m0(resW)} target` + (short>0 ? ` · ${m0(short)} short` : "");
-    setC("#wiBuf", m0(buf), false);
-    setC("#wiRun", run==null ? "—" : run.toFixed(1) + " mo", run!=null && run < w.rm);
-    const nt = q("#wiNote"); nt.textContent = short>0 ? `Reserve touched: ${m0(short)} below your ${+(+w.rm).toFixed(1)}-month reserve.` : ""; nt.className = "muted" + (short>0 ? " cf-bad" : "");
+    q("#wiRmD").textContent = `${rmTxt} × ${m0(w.sp)} ÷ 12. Moves the split only; year-end cash stays the same.`;
+    const sE = q("#wiSEnd"); sE.textContent = m0(end); sE.className = end < resW ? "cf-bad" : "";
+    q("#wiSBuf").textContent = m0(buf);
+    const sR = q("#wiSRun"); sR.textContent = run==null ? "—" : run.toFixed(1) + " mo"; sR.className = run!=null && run < w.rm ? "cf-bad" : "";
+    const nt = q("#wiNote"); nt.textContent = short>0 ? `Reserve touched: ${m0(short)} below your ${rmTxt}-month reserve.` : ""; nt.className = "muted" + (short>0 ? " cf-bad" : "");
     const offs = M.latest ? 3*M.latest.q : 0;
     const base = M.cash.map((v,i)=> roundCents(v + (M.endEff - M.end) * (i>=offs ? 1 : 0)));
     const delta = end - M.endEff;
@@ -2154,7 +2186,10 @@ function cfWhatIfBody(b, y, M){
         if(done) return; done = true;
         let n = parseFloat(cleanNumStr(ed.value));
         if(!isNaN(n) && n>=0){
-          if(l.months) n = Math.min(120, Math.round(n*10)/10);
+          // Reserve: a plain number up to 120 is months; "$" or anything larger is dollars.
+          const inDollars = l.months && (/\$/.test(ed.value) || n>120) && w.sp>0;
+          if(inDollars) n = n/(w.sp/12);           // keep the exact ratio so the dollars you typed come back
+          if(l.months) n = Math.min(120, inDollars ? n : Math.round(n*10)/10);
           else n = Math.round(n*100)/100;
           if(n < l.floor){ n = l.floor; showToast(`${l.label} can't go below ${m0(l.floor)}.`); }
           w[l.k] = n;
@@ -2165,7 +2200,6 @@ function cfWhatIfBody(b, y, M){
       ed.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); ed.blur(); } });
     };
   });
-  q("#wiReset").onclick = ()=>{ ui.cfWI = null; render(); };
   upd();
 }
 
