@@ -732,7 +732,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v117";
+const APP_BUILD = "v118";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -2147,7 +2147,7 @@ function cfWhatIfBody(b, y, M){
     ${cfLegend([{label:"Reserve", fill:"var(--accent)"}, {label:"Buffer", fill:"var(--good)"}, {label:"Below target", fill:"var(--bad)", op:.6}, {label:"Plan", color:"var(--ink-soft)", dashed:true}])}
     <div style="height:14px"></div>
     ${L.map(slider).join("")}
-    <div class="muted" style="font-size:12px" id="wiNote"></div>`;
+    <div class="row"><span class="muted" style="font-size:12px; flex:1" id="wiNote"></span><button type="button" class="btn small" id="wiReset">Reset</button></div>`;
   const q = s=> b.querySelector(s);
   const setC = (sel, txt, bad)=>{ const e = q(sel); e.textContent = txt; e.className = bad ? "cf-bad" : ""; };
   const upd = ()=>{
@@ -2200,6 +2200,7 @@ function cfWhatIfBody(b, y, M){
       ed.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); ed.blur(); } });
     };
   });
+  q("#wiReset").onclick = ()=>{ ui.cfWI = null; render(); };
   upd();
 }
 
