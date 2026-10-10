@@ -1,6 +1,6 @@
 /* Despensa — offline cache.
-   Bump CACHE when index.html changes so phones pick up the new version. */
-var CACHE = "despensa-v10";
+   Bump CACHE whenever index.html changes so phones pick up the new build. */
+var CACHE = "despensa-2.2.0";
 var ASSETS = ["./", "./index.html"];
 
 self.addEventListener("install", function(e){
@@ -18,8 +18,8 @@ self.addEventListener("activate", function(e){
   );
 });
 
-/* Network first, cache as fallback: you get updates when online,
-   and the app still opens in a dead spot. */
+/* Network first, cache as fallback: updates when online,
+   still opens in a dead spot at the store. */
 self.addEventListener("fetch", function(e){
   if(e.request.method !== "GET") return;
   e.respondWith(
