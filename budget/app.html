@@ -439,6 +439,8 @@
   .cf-legend{display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); margin:2px 0 6px}
   .cf-line{display:inline-block; width:14px; border-top:2.5px solid; vertical-align:middle; margin-right:4px}
   .cf-line.dashed{border-top-style:dashed}
+  .cf-val{background:none; border:none; border-bottom:1px dashed var(--ink-soft); padding:0 0 1px; font-weight:700; font-size:inherit; color:var(--ink); cursor:text}
+  .cf-val-in{width:110px; text-align:right; font-weight:700; font-size:inherit; padding:2px 6px; border:1px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink)}
   .cf-dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--transfer); margin-right:4px}
   .cf-ldot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; background:var(--good)}
   .cf-ldot.warn{background:var(--accent)} .cf-ldot.bad{background:var(--bad)}
@@ -710,7 +712,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v112";
+const APP_BUILD = "v113";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1861,6 +1863,19 @@ function cfSvgChart(pts, opts){
   for(let v=a; v<=b+t.step/1000; v+=t.step){
     s += `<line x1="44" x2="${w-12}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--line)" stroke-dasharray="3 4"/><text x="38" y="${(y(v)+4).toFixed(1)}" text-anchor="end" font-size="10" style="fill:var(--ink-soft)">${lab(v)}</text>`;
   }
+  if(reserve!=null && opts.tint){
+    // Tint between the cash line and the reserve line: green where cash is above, red where below.
+    const P = (i,v)=> x(i).toFixed(1)+","+y(v).toFixed(1), poly = (pp,c)=> `<polygon points="${pp}" fill-opacity=".16" style="fill:var(--${c})"/>`;
+    for(let i=0; i<12; i++){
+      const p0 = pts[i], p1 = pts[i+1], d0 = p0-reserve, d1 = p1-reserve;
+      if(d0>=0 && d1>=0 || d0<=0 && d1<=0){ s += poly(`${P(i,p0)} ${P(i+1,p1)} ${P(i+1,reserve)} ${P(i,reserve)}`, (d0+d1)>=0 ? "good" : "bad"); }
+      else {
+        const t = d0/(d0-d1), xc = x(i) + t*(x(i+1)-x(i));
+        const X = xc.toFixed(1)+","+y(reserve).toFixed(1);
+        s += poly(`${P(i,p0)} ${X} ${P(i,reserve)}`, d0>0 ? "good" : "bad") + poly(`${X} ${P(i+1,p1)} ${P(i+1,reserve)}`, d1>0 ? "good" : "bad");
+      }
+    }
+  }
   if(reserve!=null) s += `<line x1="44" x2="${w-12}" y1="${y(reserve).toFixed(1)}" y2="${y(reserve).toFixed(1)}" stroke-width="2" stroke-dasharray="6 5" style="stroke:var(--accent)"/><text x="50" y="${(y(reserve)-5).toFixed(1)}" font-size="10" style="fill:var(--accent)">Reserve ${escapeHtml(cfMoney0(reserve))}</text>`;
   s += `<polyline fill="none" stroke-width="2.5" style="stroke:var(--primary)" points="${pts.map((v,i)=> x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}"/>`;
   if(rev.length) s += `<polyline fill="none" stroke-width="2.5" stroke-dasharray="6 4" style="stroke:var(--transfer)" points="${rev.map(p=> x(p[0]).toFixed(1)+","+y(p[1]).toFixed(1)).join(" ")}"/>`;
@@ -1873,7 +1888,7 @@ function cfSvgChart(pts, opts){
   if(!opts.noDots){
     for(let i=1; i<=12; i++) s += `<circle class="cf-hit" data-i="${i}" data-cx="${x(i).toFixed(1)}" data-cy="${y(pts[i]).toFixed(1)}" cx="${x(i).toFixed(1)}" cy="${y(pts[i]).toFixed(1)}" r="13" fill="transparent" style="cursor:pointer"/>`;
   }
-  return s + `</svg>`;
+  return s.replace("<svg ", `<svg data-ry="${reserve!=null ? y(reserve).toFixed(1) : ""}" `) + `</svg>`;
 }
 // Income bars vs a cash-out line, one axis, whole year. Lighter bars use the
 // annual / 12 placeholder. Tap a month for its numbers.
@@ -1890,6 +1905,11 @@ function cfBarChart(M){
   M.rows.forEach((r,i)=>{
     const top = y(r.incExact), x0 = x(i)-bw/2, base = y(0);
     s += `<path d="M${x0.toFixed(1)},${base.toFixed(1)} V${(top+4).toFixed(1)} a4,4 0 0 1 4,-4 h${bw-8} a4,4 0 0 1 4,4 V${base.toFixed(1)} Z" style="fill:var(--primary)" fill-opacity="${r.placeholder ? .45 : 1}"/>`;
+    if(r.outExact > r.incExact){
+      // Overspend: red cap from the income bar up to the cash-out level.
+      const ct = y(r.outExact), cb = top - 1.5, rr = Math.max(0, Math.min(4, (cb-ct)/2));
+      if(cb > ct) s += `<path d="M${x0.toFixed(1)},${cb.toFixed(1)} V${(ct+rr).toFixed(1)} a${rr.toFixed(1)},${rr.toFixed(1)} 0 0 1 ${rr.toFixed(1)},-${rr.toFixed(1)} h${(bw-2*rr).toFixed(1)} a${rr.toFixed(1)},${rr.toFixed(1)} 0 0 1 ${rr.toFixed(1)},${rr.toFixed(1)} V${cb.toFixed(1)} Z" style="fill:var(--bad)"/>`;
+    }
     s += `<text x="${x(i).toFixed(1)}" y="${h-8}" font-size="9.5" text-anchor="middle" style="fill:var(--ink-soft)">${MONTHS[i][0]}</text>`;
   });
   s += `<polyline fill="none" stroke-width="2.5" style="stroke:var(--accent)" points="${M.rows.map((r,i)=> x(i).toFixed(1)+","+y(r.out).toFixed(1)).join(" ")}"/>`;
@@ -1907,14 +1927,15 @@ function cfWireBarChart(box, M){
     const cx = 44 + (i+.5)*(W-56)/12, bx = Math.min(Math.max(cx-62, 46), W-12-140);
     const g = document.createElementNS(NS, "g"); g.setAttribute("id","cfTip"); g.setAttribute("pointer-events","none");
     g.innerHTML = `<line x1="${cx.toFixed(1)}" x2="${cx.toFixed(1)}" y1="8" y2="184" stroke-width="1" style="stroke:var(--ink-soft)"/>
-      <rect x="${bx.toFixed(1)}" y="10" width="140" height="52" rx="8" style="fill:var(--surface-2);stroke:var(--line)"/>
-      <text x="${(bx+10).toFixed(1)}" y="26" font-size="10" style="fill:var(--ink-soft)">${MONTHS[i]}</text>
-      <text x="${(bx+10).toFixed(1)}" y="40" font-size="11" font-weight="700" style="fill:var(--ink)">Income ${escapeHtml(cfMoney0(r.inc))}</text>
-      <text x="${(bx+10).toFixed(1)}" y="54" font-size="11" style="fill:var(--ink)">Cash out ${escapeHtml(cfMoney0(r.out))}</text>`;
+      <rect x="${bx.toFixed(1)}" y="8" width="140" height="70" rx="8" style="fill:var(--surface-2);stroke:var(--line)"/>
+      <text x="${(bx+10).toFixed(1)}" y="24" font-size="10" style="fill:var(--ink-soft)">${MONTHS[i]}</text>
+      <text x="${(bx+10).toFixed(1)}" y="40" font-size="11" style="fill:var(--ink)">Income</text><text x="${(bx+130).toFixed(1)}" y="40" font-size="11" font-weight="700" text-anchor="end" style="fill:var(--ink)">${escapeHtml(cfMoney0(Math.round(r.inc)))}</text>
+      <text x="${(bx+10).toFixed(1)}" y="55" font-size="11" style="fill:var(--ink)">Cash out</text><text x="${(bx+130).toFixed(1)}" y="55" font-size="11" text-anchor="end" style="fill:var(--ink)">${escapeHtml(cfMoney0(Math.round(r.out)))}</text>
+      <text x="${(bx+10).toFixed(1)}" y="70" font-size="11" style="fill:var(--ink)">Net</text><text x="${(bx+130).toFixed(1)}" y="70" font-size="11" font-weight="700" text-anchor="end" style="fill:var(--${r.net<0 ? "bad" : "good"})">${escapeHtml(cfSigned(Math.round(r.net)).replace(/\.00$/,""))}</text>`;
     svg.appendChild(g);
   });
 }
-function cfWireChart(box, pts){
+function cfWireChart(box, pts, reserve){
   const svg = box.querySelector("svg"); if(!svg) return;
   const NS = "http://www.w3.org/2000/svg", W = 322;
   svg.addEventListener("click", e=>{
@@ -1922,8 +1943,23 @@ function cfWireChart(box, pts){
     const hit = e.target.closest ? e.target.closest(".cf-hit") : null;
     if(!hit) return;
     const i = parseInt(hit.dataset.i,10), cx = parseFloat(hit.dataset.cx), cy = parseFloat(hit.dataset.cy);
-    const bx = Math.min(Math.max(cx-56, 46), W-12-112), by = cy>76 ? cy-52 : cy+14;
+    const ry = parseFloat(svg.dataset.ry);
     const g = document.createElementNS(NS, "g"); g.setAttribute("id","cfTip"); g.setAttribute("pointer-events","none");
+    if(reserve!=null && !isNaN(ry)){
+      // Three lines: Cash / Reserve / Above reserve, plus a bright band from the reserve line to the cash dot.
+      const d = pts[i]-reserve, c = d>=0 ? "good" : "bad";
+      const bx3 = (cx-8-150 >= 46) ? cx-8-150 : Math.min(cx+12, W-12-150), by3 = Math.min(Math.max(Math.min(cy,ry)+14, 12), 168-70);
+      g.innerHTML = `<line x1="${cx}" x2="${cx}" y1="10" y2="174" stroke-width="1" style="stroke:var(--ink-soft)"/>
+        <rect x="${(cx-8).toFixed(1)}" y="${Math.min(cy,ry).toFixed(1)}" width="16" height="${Math.abs(ry-cy).toFixed(1)}" rx="3" fill-opacity=".5" style="fill:var(--${c})"/>
+        <circle cx="${cx}" cy="${cy}" r="6" stroke-width="2.5" style="fill:var(--primary);stroke:var(--surface)"/>
+        <rect x="${bx3.toFixed(1)}" y="${by3.toFixed(1)}" width="150" height="70" rx="8" style="fill:var(--surface-2);stroke:var(--line)"/>
+        <text x="${(bx3+10).toFixed(1)}" y="${(by3+16).toFixed(1)}" font-size="10" style="fill:var(--ink-soft)">End of ${MONTHS[i-1]}</text>
+        <text x="${(bx3+10).toFixed(1)}" y="${(by3+32).toFixed(1)}" font-size="11" style="fill:var(--ink)">Cash</text><text x="${(bx3+140).toFixed(1)}" y="${(by3+32).toFixed(1)}" font-size="11" font-weight="700" text-anchor="end" style="fill:var(--ink)">${escapeHtml(cfMoney0(Math.round(pts[i])))}</text>
+        <text x="${(bx3+10).toFixed(1)}" y="${(by3+47).toFixed(1)}" font-size="11" style="fill:var(--ink)">Reserve</text><text x="${(bx3+140).toFixed(1)}" y="${(by3+47).toFixed(1)}" font-size="11" text-anchor="end" style="fill:var(--ink)">${escapeHtml(cfMoney0(reserve))}</text>
+        <text x="${(bx3+10).toFixed(1)}" y="${(by3+62).toFixed(1)}" font-size="11" style="fill:var(--ink)">Above reserve</text><text x="${(bx3+140).toFixed(1)}" y="${(by3+62).toFixed(1)}" font-size="11" font-weight="700" text-anchor="end" style="fill:var(--${c})">${escapeHtml(cfMoney0(Math.round(d)))}</text>`;
+      svg.appendChild(g); return;
+    }
+    const bx = Math.min(Math.max(cx-56, 46), W-12-112), by = cy>76 ? cy-52 : cy+14;
     g.innerHTML = `<line x1="${cx}" x2="${cx}" y1="10" y2="174" stroke-width="1" style="stroke:var(--ink-soft)"/>
       <circle cx="${cx}" cy="${cy}" r="6" stroke-width="2.5" style="fill:var(--primary);stroke:var(--surface)"/>
       <rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="112" height="38" rx="8" style="fill:var(--surface-2);stroke:var(--line)"/>
@@ -1935,6 +1971,7 @@ function cfWireChart(box, pts){
 function cfLegend(items){
   return `<div class="cf-legend">${items.map(it=>{
     if(it.dot) return `<span><i class="cf-dot"></i>${escapeHtml(it.label)}</span>`;
+    if(it.fill) return `<span><i class="cf-dot" style="background:${it.fill};opacity:.5;border-radius:2px;width:14px"></i>${escapeHtml(it.label)}</span>`;
     return `<span><i class="cf-line ${it.dashed?"dashed":""}" style="border-top-color:${it.color}"></i>${escapeHtml(it.label)}</span>`;
   }).join("")}</div>`;
 }
@@ -2026,16 +2063,16 @@ function cfCashBody(b, y, M){
   const lg = [{label:"Estimated cash", color:"var(--primary)"}];
   if(dots.length) lg.push({label:"Your balances", dot:true});
   if(rev.length>1) lg.push({label:"Revised", color:"var(--transfer)", dashed:true});
-  if(M.ysBudget>0) lg.push({label:`${M.reserveMonths}-month reserve`, color:"var(--accent)", dashed:true});
+  if(M.ysBudget>0){ lg.push({label:`${M.reserveMonths}-month reserve`, color:"var(--accent)", dashed:true}); lg.push({label:"Above reserve", fill:"var(--good)"}); }
   const abv = M.aboveEff;
   b.innerHTML = `
     <div class="row"><span class="muted">Cash, end of Dec</span><b>${fmtUSD(M.endEff)}</b></div>
     <div class="row"><span class="muted">Above reserve</span><b class="${abv>=0 ? "cf-good" : "cf-bad"}">${M.ysBudget>0 ? fmtUSD(abv) : "—"}</b></div>
     ${M.latest ? `<div class="muted" style="font-size:12px">Plan ${fmtUSD(M.end)} · revised by the Q${M.latest.q} balance (${cfSigned(M.gap)}).</div>` : ""}
-    <div id="cfChartBox">${cfSvgChart(M.cash, { rev: rev.length>1 ? rev : [], dots, reserve: M.ysBudget>0 ? M.reserve : null, label:`Estimated cash for ${y}` })}</div>
+    <div id="cfChartBox">${cfSvgChart(M.cash, { rev: rev.length>1 ? rev : [], dots, reserve: M.ysBudget>0 ? M.reserve : null, tint: true, label:`Estimated cash for ${y}` })}</div>
     ${cfLegend(lg)}
-    <div class="muted" style="font-size:12px">The gap between the lines is Above reserve. A dot marks each month-end; tap one for the month and balance. Large dots are quarter-end balances you entered.</div>`;
-  cfWireChart(b.querySelector("#cfChartBox"), M.cash);
+    <div class="muted" style="font-size:12px">The tint between the lines is Above reserve (red where cash is below the reserve). A dot marks each month-end; tap one for Cash, Reserve and Above reserve. Large dots are quarter-end balances you entered.</div>`;
+  cfWireChart(b.querySelector("#cfChartBox"), M.cash, M.ysBudget>0 ? M.reserve : null);
 }
 
 function cfWhatIfBody(b, y, M){
@@ -2047,14 +2084,15 @@ function cfWhatIfBody(b, y, M){
   const r0 = v=> Math.round(v/500)*500;
   const rng = (v)=> ({ min: Math.max(0, r0(v*0.5)), max: Math.max(500, r0(v*1.5)) });
   const ri = rng(M.incTotal), rs = rng(M.ysBudget);
-  const slider = (id, label, min, max, val, step)=> `<div><div class="row"><span class="nm" style="font-weight:600; font-size:14px">${label}</span><b class="num" id="${id}V"></b></div>
+  const trMax = Math.max(500, r0(Math.max(M.endEff, 0)));
+  const slider = (id, label, min, max, val, step)=> `<div><div class="row"><span class="nm" style="font-weight:600; font-size:14px">${label}</span><button type="button" class="cf-val num" id="${id}V" aria-label="${label}: tap to type an amount"></button></div>
       <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" style="width:100%; accent-color:var(--primary)">
       <div class="muted" style="font-size:12px" id="${id}D"></div></div>`;
   const held0 = Math.min(Math.max(M.endEff,0), M.reserve), abv0 = Math.max(0, roundCents(M.endEff - M.reserve)), from0 = Math.max(0, roundCents(M.reserve - M.endEff));
   b.innerHTML = `
     ${slider("wiInc", "Annual income", ri.min, ri.max, Math.min(Math.max(w.inc, ri.min), ri.max), 500)}
     ${slider("wiSp", "Annual spending", rs.min, rs.max, Math.min(Math.max(w.sp, rs.min), rs.max), 500)}
-    ${slider("wiTr", "Extra travel", 0, 20000, w.tr, 250)}
+    ${slider("wiTr", "Extra travel", 0, trMax, Math.min(w.tr, trMax), 500)}
     <table class="cf-table"><thead><tr><th></th><th>Current</th><th>What-if</th></tr></thead><tbody>
       <tr><td>Year-end cash</td><td>${cfMoney0(M.endEff)}</td><td><b id="wiEnd"></b></td></tr>
       <tr><td>${M.reserveMonths}-month reserve</td><td>${cfMoney0(held0)}</td><td><b id="wiRes"></b></td></tr>
@@ -2087,7 +2125,24 @@ function cfWhatIfBody(b, y, M){
     const line = M.cash.map((v,i)=> roundCents(v + (M.endEff - M.end) * (i>=(M.latest ? 3*M.latest.q : 0) ? 1 : 0) + delta*i/12));
     q("#wiChart").innerHTML = cfSvgChart(M.cash, { wi: line, noDots:true, reserve: M.reserve, label:`Estimate and what-if cash for ${y}` });
   };
-  [["wiInc","inc"],["wiSp","sp"],["wiTr","tr"]].forEach(([id,k])=> q("#"+id).addEventListener("input", ()=>{ w[k] = parseFloat(q("#"+id).value); upd(); }));
+  [["wiInc","inc"],["wiSp","sp"],["wiTr","tr"]].forEach(([id,k])=>{
+    q("#"+id).addEventListener("input", ()=>{ w[k] = parseFloat(q("#"+id).value); upd(); });
+    // Tap the dollar amount to type an exact figure (the slider only moves in steps and stops at its max).
+    q("#"+id+"V").onclick = ()=>{
+      const btn = q("#"+id+"V"), inp = document.createElement("input");
+      inp.type = "text"; inp.inputMode = "decimal"; inp.className = "cf-val-in num"; inp.value = String(Math.round(w[k]));
+      btn.style.display = "none"; btn.after(inp); inp.focus(); inp.select();
+      let done = false;
+      const commit = ()=>{
+        if(done) return; done = true;
+        const n = parseFloat(cleanNumStr(inp.value));
+        if(!isNaN(n) && n>=0) w[k] = Math.round(n*100)/100;
+        inp.remove(); btn.style.display = ""; q("#"+id).value = w[k]; upd();
+      };
+      inp.addEventListener("blur", commit);
+      inp.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); inp.blur(); } });
+    };
+  });
   q("#wiReset").onclick = ()=>{ ui.cfWI = null; render(); };
   upd();
 }
@@ -2104,7 +2159,7 @@ function cfMonthlyBody(b, y, M){
     b.innerHTML = `${toggle}
       <div class="muted" style="font-size:12px">${y} · income vs cash out</div>
       <div id="cfBarBox">${cfBarChart(M)}</div>
-      ${cfLegend([{label:"Income", color:"var(--primary)"}, {label:"Cash out", color:"var(--accent)"}])}
+      ${cfLegend([{label:"Income", color:"var(--primary)"}, {label:"Cash out", color:"var(--accent)"}].concat(M.rows.some(r=> r.outExact>r.incExact) ? [{label:"Overspend", color:"var(--bad)"}] : []))}
       <div class="muted" style="font-size:12px">Lighter bars are placeholders (annual ÷ 12). Tap a month for its numbers.</div>`;
     b.querySelectorAll("[data-view]").forEach(x=> x.onclick = ()=>{ ui.cfView = x.dataset.view; render(); });
     cfWireBarChart(b.querySelector("#cfBarBox"), M);
