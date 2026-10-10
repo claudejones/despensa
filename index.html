@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Despensa">
 <meta name="theme-color" content="#F7F7F4">
 <meta name="color-scheme" content="only light">
-<title>Despensa — Shopping</title>
+<title>Despensa</title>
 <style>
 :root{
   color-scheme:only light;
@@ -18,113 +18,129 @@
   --rule:#E3E3DA;
   --card:#FFFFFF;
   --store:#D6431F;
-  --est:#9A6B00;
+  --good:#1E7A55;
   --danger:#B3261E;
   --pad:16px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0}
 html{background:#F7F7F4}
-body{
-  background:#F7F7F4;color:var(--ink);
+body{margin:0;padding:0;background:#F7F7F4;color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  font-size:16px;line-height:1.4;padding-bottom:240px;
-  -webkit-font-smoothing:antialiased;
-}
+  font-size:16px;line-height:1.4;padding-bottom:200px;-webkit-font-smoothing:antialiased}
 .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
 
+/* header */
 header{position:sticky;top:0;z-index:30;background:var(--paper);
   border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top)}
-.hrow{display:flex;align-items:center;gap:8px;padding:10px var(--pad) 8px}
-.brand{flex:1;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  font-weight:700;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hbtn{background:none;border:1px solid var(--rule);border-radius:8px;color:var(--ink);
-  font-size:13px;font-weight:600;padding:7px 12px;cursor:pointer;font-family:inherit;flex:0 0 auto}
-.hbtn.active{background:var(--store);border-color:var(--store);color:#fff}
-.tabs{display:flex;padding:0 var(--pad)}
-.tab{flex:1;background:none;border:none;border-bottom:3px solid transparent;
-  padding:10px 4px 11px;cursor:pointer;font-size:13px;font-weight:650;color:var(--muted);font-family:inherit}
-.tab .cnt{display:block;font-size:10px;font-weight:600;letter-spacing:.07em;margin-top:3px;opacity:.75}
-.tab[aria-selected="true"]{color:var(--store);border-bottom-color:var(--store)}
-.editbar{background:var(--store);color:#fff;font-size:12px;font-weight:650;
-  padding:8px var(--pad);letter-spacing:.01em;display:none}
-.editbar.on{display:block}
+.hrow{display:flex;align-items:center;gap:10px;padding:11px var(--pad) 12px}
+.htext{flex:1;min-width:0}
+#hTitle{font-size:16px;font-weight:700;letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hSub{font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  font-weight:650;color:var(--muted);margin-top:2px}
+.hbtn{background:none;border:1px solid var(--rule);border-radius:9px;color:var(--ink);
+  padding:10px;cursor:pointer;font-family:inherit;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center}
+.hbtn .ico{width:20px;height:20px}
+.hbtn:active{background:var(--rule)}
 
-main{padding:0 var(--pad);background:var(--paper)}
+main{padding:0 var(--pad)}
 .sec{margin:22px 0 0;background:var(--paper)}
 .sechead{display:flex;align-items:baseline;justify-content:space-between;
   padding:0 2px 7px;border-bottom:1px solid var(--rule)}
-.sectitle{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
-.seccount{font-size:11px;color:var(--muted);font-weight:600}
+/* icons — single weight, inherit colour, never fill */
+.ico{width:17px;height:17px;flex:0 0 auto;display:block;
+  fill:none;stroke:currentColor;stroke-width:1.75;
+  stroke-linecap:round;stroke-linejoin:round}
+.ico.big{width:46px;height:46px;stroke-width:1.4;color:var(--rule);margin:0 auto 18px}
+.sectitle{display:flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
+.sectitle .ico{width:15px;height:15px;color:var(--store);opacity:.85;
+  position:relative;top:-.5px}
+.seccount{font-size:11px;color:var(--muted);font-weight:650}
+.pad{padding:14px 2px 2px}
 
-.row{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--rule);
-  background:var(--paper);position:relative}
+/* rows */
+.row{display:flex;align-items:center;gap:11px;padding:12px 2px;
+  border-bottom:1px solid var(--rule);background:var(--paper);position:relative}
 .box{flex:0 0 26px;height:26px;border:1.5px solid var(--ink);border-radius:6px;
   background:var(--card);cursor:pointer;position:relative;padding:0}
-.row.on .box{background:var(--store);border-color:var(--store)}
-.row.on .box::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:12px;
+.box.fill{background:var(--store);border-color:var(--store)}
+.box.fill::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:12px;
   border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
-/* skipped: a flat inert square, plus a left accent bar down the row */
-.mark{flex:0 0 26px;height:26px;border:1.5px solid var(--rule);border-radius:6px;
-  background:var(--rule);position:relative;padding:0;cursor:pointer}
-.mark::after{content:'';position:absolute;left:6px;top:11px;width:12px;height:2px;
+.box.dash{background:var(--rule);border-color:var(--rule)}
+.box.dash::after{content:'';position:absolute;left:6px;top:11px;width:12px;height:2px;
   background:var(--muted);border-radius:1px}
-.row.sk{background:#F1F1EC}
-.row.sk::before{content:'';position:absolute;left:-16px;top:0;bottom:0;width:3px;background:var(--muted)}
-.pen{flex:0 0 26px;height:26px;border:1.5px solid var(--rule);border-radius:6px;
-  background:var(--card);display:flex;align-items:center;justify-content:center;
-  font-size:13px;color:var(--muted)}
 .namewrap{flex:1;min-width:0;cursor:pointer}
-.nm{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.nm{font-size:15px;font-weight:650;letter-spacing:-.01em}
 .en{font-size:12px;color:var(--muted);margin-top:1px}
-.meta{font-size:11px;color:var(--muted);margin-top:1px;letter-spacing:.02em}
-.metaskip{font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;
-  color:var(--muted);margin-top:3px}
-.row.on .nm{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
-.row.on .en,.row.on .meta{opacity:.45}
-.row.sk .nm,.row.sk .en,.row.sk .meta{opacity:.4}
-.row.sk .amt{opacity:.3}
+.meta{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.015em}
+.tag{font-size:9px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;
+  color:var(--muted);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;margin-left:7px}
+.row.bought .nm{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
+.row.bought .en,.row.bought .meta{opacity:.45}
+.row.skipped{background:#F1F1EC}
+.row.skipped .nm,.row.skipped .en,.row.skipped .meta,.row.skipped .amt{opacity:.42}
+.row.on{background:#FBF6F4}
 
-.amt{flex:0 0 auto;text-align:right;padding:6px 8px;margin:-6px -8px -6px 0;
+.spark{flex:0 0 auto;background:none;border:none;padding:4px 2px;cursor:pointer;
+  opacity:.75;display:flex;align-items:center}
+.amt{flex:0 0 auto;text-align:right;padding:6px 6px;margin:-6px -6px -6px 0;
   border:none;background:none;cursor:pointer;border-radius:7px;font-family:inherit;color:var(--ink)}
 .amt:active{background:var(--rule)}
+.amt.paid .mx{color:var(--good)}
 .mx{display:block;font-size:15px;font-weight:650;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
 .us{display:block;font-size:11px;color:var(--muted);margin-top:1px;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
-.amt.est .mx{color:var(--est)}
-.amt.est .us{color:var(--est);opacity:.7}
-.tagest{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
-  display:block;color:var(--est);margin-bottom:1px}
-.amt.none .mx{color:var(--muted);font-style:italic;font-size:13px;font-weight:600}
 
-.skipsec{margin-top:26px}
-.skiphead{display:flex;width:100%;align-items:baseline;justify-content:space-between;
-  padding:0 2px 7px;border:none;border-bottom:1px solid var(--rule);background:none;
-  font-family:inherit;cursor:pointer;color:var(--muted)}
-.skiphead .sectitle{color:var(--muted)}
 .addbtn{width:100%;margin:12px 0 0;padding:12px;background:none;
   border:1.5px dashed var(--rule);border-radius:10px;color:var(--muted);
   font-size:13px;font-weight:650;cursor:pointer;font-family:inherit}
 
-.tape{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
-  padding:14px var(--pad) calc(14px + env(safe-area-inset-bottom));
+/* history + settings rows */
+.mrow,.srow,.trow{display:flex;align-items:center;gap:10px;
+  padding:13px 2px;border-bottom:1px solid var(--rule)}
+.trow{cursor:pointer}
+.mname{flex:0 0 auto;font-weight:650;font-size:15px}
+.mtrips{flex:1;font-size:12px;color:var(--muted)}
+.mspend{text-align:right;font-size:15px;font-weight:650}
+.mspend small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.srow span:first-child{flex:1;font-size:14px}
+.srow .mono{font-size:14px;color:var(--muted)}
+.xbtn{background:none;border:none;color:var(--danger);font-size:13px;
+  font-weight:650;cursor:pointer;font-family:inherit;padding:4px}
+
+.empty{text-align:center;padding:48px 20px}
+.empty h3{font-size:17px;margin:0 0 8px}
+.empty p{font-size:13.5px;color:var(--muted);margin:0 0 22px;line-height:1.55}
+.big{padding:15px 30px;border:none;border-radius:11px;background:var(--store);
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* bottom bar */
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
+  padding:14px var(--pad) calc(12px + env(safe-area-inset-bottom));
   box-shadow:0 -10px 30px rgba(0,0,0,.07)}
-.tape::before{content:'';position:absolute;top:-9px;left:0;right:0;height:10px;
+#bar::before{content:'';position:absolute;top:-9px;left:0;right:0;height:10px;
   background:radial-gradient(circle at 7px 10px,transparent 6.5px,var(--card) 7px) repeat-x;
   background-size:14px 10px}
-.tline{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px}
-.tlabel{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
-.tval{font-size:13px;font-weight:600}
-.ttotal{display:flex;align-items:baseline;justify-content:space-between;
+.bline{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px}
+.blabel{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.bval{font-size:13px;font-weight:650}
+.btot{display:flex;align-items:baseline;justify-content:space-between;
   border-top:1.5px solid var(--ink);margin-top:8px;padding-top:8px}
-.ttotal .tlabel{color:var(--ink)}
-.tbig{font-size:25px;font-weight:700;letter-spacing:-.02em}
-.tusd{font-size:12px;color:var(--muted);text-align:right;margin-top:-1px}
-.logbtn{display:block;margin:11px auto 0;padding:11px 24px;border:none;border-radius:9px;
-  background:var(--store);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.logbtn:disabled{background:var(--rule);color:var(--muted)}
+.btot .blabel{color:var(--ink)}
+.bright{text-align:right}
+.bbig{font-size:24px;font-weight:700;letter-spacing:-.02em}
+.bsub{font-size:12px;color:var(--muted);margin-top:-1px}
+.brow{display:flex;gap:9px;margin-top:11px}
+.gobtn{flex:1;padding:13px;border:none;border-radius:10px;background:var(--store);
+  color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ghost{flex:0 0 auto;padding:13px 16px;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);color:var(--ink);font-size:14px;font-weight:650;
+  cursor:pointer;font-family:inherit}
 
+/* sheet */
 .scrim{position:fixed;inset:0;background:rgba(15,15,10,.45);z-index:50;display:none}
 .scrim.open{display:block}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--card);
@@ -132,28 +148,68 @@ main{padding:0 var(--pad);background:var(--paper)}
   max-height:90vh;overflow-y:auto;display:none}
 .sheet.open{display:block}
 .grab{width:38px;height:4px;background:var(--rule);border-radius:2px;margin:6px auto 14px}
-.sheet h2{font-size:16px;margin:0 0 4px;letter-spacing:-.01em}
-.hint{font-size:12.5px;color:var(--muted);margin:0 0 16px;line-height:1.45}
+.sheet h2{font-size:17px;margin:0 0 4px;letter-spacing:-.01em}
+.hint{font-size:12.5px;color:var(--muted);margin:0 0 15px;line-height:1.45}
 .lbl{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
   font-weight:700;color:var(--muted);margin:0 0 5px 2px}
 .field{width:100%;padding:13px;font-size:17px;border:1.5px solid var(--rule);
   border-radius:10px;margin-bottom:13px;font-family:inherit;background:var(--paper);color:var(--ink)}
+select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),
+  linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat}
 .two{display:flex;gap:10px}
 .two>div{flex:1}
-.mbtn{display:block;width:100%;text-align:left;padding:15px 14px;margin-bottom:9px;
+.mbtn{display:block;width:100%;text-align:left;padding:14px;margin-bottom:9px;
   background:var(--paper);border:1px solid var(--rule);border-radius:11px;
-  font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit}
+  font-size:15px;font-weight:650;color:var(--ink);cursor:pointer;font-family:inherit}
 .mbtn small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
 .mbtn.primary{background:var(--store);border-color:var(--store);color:#fff;text-align:center}
+.mbtn.primary small{color:rgba(255,255,255,.8)}
 .mbtn.mid{text-align:center}
+.mbtn.nav{display:flex;align-items:center;gap:13px;text-align:left}
+.mbtn.nav .ico{width:20px;height:20px;color:var(--store)}
+.mbtn.nav.primary .ico{color:#fff}
+.mbtn.nav>span{flex:1;min-width:0}
 .mbtn.danger{color:var(--danger)}
 .rcpt{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:14px;
-  font-size:12.5px;max-height:42vh;overflow-y:auto;margin-bottom:14px;
+  font-size:12.5px;max-height:40vh;overflow-y:auto;margin-bottom:14px;
   white-space:pre-wrap;word-break:break-word}
-.empty{text-align:center;color:var(--muted);font-size:13.5px;padding:32px 10px;line-height:1.55}
-.toast{position:fixed;left:50%;bottom:auto;top:calc(env(safe-area-inset-top) + 78px);
+
+/* price history chart — single series, change over time */
+.chartwrap{margin:2px 0 16px}
+.bigchart{width:100%;height:auto;display:block}
+.bigchart .cgrid{stroke:var(--rule);stroke-width:1}
+.bigchart .caxisline{stroke:var(--rule);stroke-width:1}
+.bigchart .cytick{fill:var(--muted);font-size:9.5px;text-anchor:end;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.bigchart .cxtick{fill:var(--muted);font-size:9.5px;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.bigchart .cline{fill:none;stroke:var(--store);stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.bigchart .cdot{fill:var(--store);stroke:var(--card);stroke-width:2}
+.bigchart .cdot.sel{r:5.5;stroke-width:2.5}
+.bigchart .chit{fill:transparent;cursor:pointer}
+.cnote{font-size:11px;color:var(--muted);text-align:center;margin-top:7px;
+  letter-spacing:.04em;min-height:14px}
+.stats{display:flex;gap:8px;margin-bottom:16px}
+.stats>div{flex:1;background:var(--paper);border:1px solid var(--rule);
+  border-radius:9px;padding:9px 8px;text-align:center}
+.slab{display:block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);margin-bottom:3px}
+.sval{display:block;font-size:13px;font-weight:700}
+.sval.up{color:var(--danger)}
+.sval.down{color:var(--good)}
+.hlist{border-top:1px solid var(--rule);margin-bottom:14px}
+.hrow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--rule)}
+.hd{flex:0 0 auto;font-size:13px;color:var(--muted)}
+.hs{flex:1;font-size:11.5px;color:var(--muted)}
+.hp{background:none;border:1px solid var(--rule);border-radius:7px;padding:5px 9px;
+  font-size:13.5px;font-weight:650;color:var(--ink);cursor:pointer;font-family:inherit}
+
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 76px);
   transform:translateX(-50%) translateY(-6px);background:var(--ink);color:var(--paper);
-  padding:10px 17px;border-radius:9px;font-size:13.5px;font-weight:600;z-index:60;
+  padding:10px 17px;border-radius:9px;font-size:13.5px;font-weight:650;z-index:60;
   opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -163,203 +219,330 @@ main{padding:0 var(--pad);background:var(--paper)}
 
 <header>
   <div class="hrow">
-    <span class="brand" id="brand">Despensa · Puerto Aventuras</span>
-    <button class="hbtn" id="editBtn">Edit</button>
-    <button class="hbtn" id="menuBtn">Menu</button>
+    <div class="htext"><div id="hTitle">Despensa</div><div id="hSub">&nbsp;</div></div>
+    <button class="hbtn" id="navBtn" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
   </div>
-  <div class="tabs" role="tablist" id="tabs"></div>
-  <div class="editbar" id="editBar">Tap any item to change it, skip it for this trip, or remove it</div>
 </header>
 
 <main id="main"></main>
-
-<div class="tape" id="tape">
-  <div class="tline"><span class="tlabel">Items checked</span><span class="tval mono" id="tCount">0</span></div>
-  <div class="tline"><span class="tlabel">Skipped</span><span class="tval mono" id="tSkip">0</span></div>
-  <div class="tline"><span class="tlabel">Prices needed</span><span class="tval mono" id="tMissing">0</span></div>
-  <div class="tline"><span class="tlabel">Rate</span><span class="tval mono" id="tFx">16.89</span></div>
-  <div class="ttotal">
-    <span class="tlabel">Total</span>
-    <div style="text-align:right">
-      <div class="tbig mono" id="tTotal">MX$0.00</div>
-      <div class="tusd mono" id="tUsd">US$0.00</div>
-    </div>
-  </div>
-  <button class="logbtn" id="logBtn" disabled>Log this trip</button>
-</div>
+<div id="bar"></div>
 
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-"use strict";
-var KEY = "despensa_v1";
+/* Icon set — single-weight stroked SVG, 24×24, currentColor.
+   No external library: everything ships inside the page and works offline. */
+var ICONS = {
+  /* categories */
+  leaf:["M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z",
+        "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"],
+  fish:["M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z",
+        "M18 12v.5",
+        "M16 17.93a9.77 9.77 0 0 1 0-11.86",
+        "M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33",
+        "M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4",
+        "M16.01 17.93l-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98"],
+  milk:["M8 2h8",
+        "M9 2v2.79a4 4 0 0 1-.67 2.22l-.66.98A4 4 0 0 0 7 10.21V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9.79a4 4 0 0 0-.67-2.22l-.66-.98A4 4 0 0 1 15 4.79V2",
+        "M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"],
+  bread:["M3 15a9 9 0 0 1 18 0v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3Z",
+         "M7.5 14.5v2","M12 14v2.5","M16.5 14.5v2"],
+  box:["m7.5 4.27 9 5.15",
+       "M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z",
+       "m3.3 7 8.7 5 8.7-5","M12 22V12"],
+  cookie:["M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z",
+          "M8.5 8.5h.01","M15 9h.01","M10 14h.01","M15.5 14.5h.01"],
+  glass:["M8 22h8","M7 10h10","M12 15v7",
+         "M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"],
+  spray:["M3 3h.01","M7 5h.01","M11 7h.01","M3 7h.01","M7 9h.01","M3 11h.01",
+         "M15 2v4","M13 2h4",
+         "M9 11h8a2 2 0 0 1 2 2v8a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-8a2 2 0 0 1 2-2Z"],
+  drop:["M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z"],
 
-/* ---------- catalogue ----------
-   lt = expected line total in MXN. est = that total is my estimate, not a receipt figure. */
-var CATALOGUE = 10;   /* bump to push refreshed prices to phones */
-/* u = unit price MXN. q = how many. line total = u x q, computed. */
-var SEED = {
-  chedraui:{label:"Chedraui", full:"Chedraui Puerto Aventuras", color:"#D6431F", groups:[
-    {id:"wk", title:"Weekly", items:[
-      {n:"Pollo Rostizado", e:"Rotisserie chicken", q:1, u:99.90},
-      {n:"Oroweat Multigrano", e:"Multigrain bread", q:1, u:93.00},
-      {n:"Lechuga Italiana Viva", e:"Living lettuce", q:1, u:39.10},
-      {n:"Tortilla Blanca 45 pz", e:"White corn tortillas, 45-pack", q:1, u:38.00},
-      {n:"Huevo Blanco 12 pz", e:"White eggs, 12 ct", q:1, u:32.00},
-      {n:"Garbanzo en Salmuera", e:"Chickpeas in brine", q:1, u:26.00},
-      {n:"Frijoles Refritos Isadora", e:"Refried beans", q:2, u:17.00},
-      {n:"Plátano Chiapas/Tabasco", e:"Banana", q:1, u:18.05, ref:"24.90/kg"},
-      {n:"Tomate Saladette", e:"Roma tomato", q:1, u:7.22, ref:"21.90/kg"},
-      {n:"Limón Eureka", e:"Eureka lemon (yellow)", q:1, u:4.76, ref:"59.50/kg"}
-    ]},
-    {id:"bw", title:"Every 2 weeks", items:[
-      {n:"Salmón Atlántico", e:"Atlantic salmon", q:1, u:329.00},
-      {n:"Crema Almendra Sun Harvest", e:"Almond butter, organic 454 g", q:1, u:198.00},
-      {n:"Avena Orgánica", e:"Organic oats, 300 g", q:2, u:97.50},
-      {n:"Granola Miel de Agave", e:"Agave granola, 310 g", q:1, u:104.00},
-      {n:"Almendra Natural", e:"Natural almonds, 200 g", q:1, u:89.00, ref:"445.00/kg"},
-      {n:"Mix de Nueces", e:"Nut / snack mix, 280 g", q:1, u:86.01},
-      {n:"Pasta Rummo Farfalle", e:"Rummo farfalle pasta", q:1, u:84.00},
-      {n:"Galleta Lotus Biscoff", e:"Lotus Biscoff cookies", q:1, u:83.00},
-      {n:"Ciruela Pasa S/H", e:"Prunes, pitted", q:2, u:61.09, ref:"298.00/kg"},
-      {n:"Papa Chips Jalapeño", e:"Jalapeño crisps", q:1, u:61.00},
-      {n:"Papa Chips Sal", e:"Salted crisps, 160 g", q:1, u:61.00},
-      {n:"Papa Sabritas Crema", e:"Sour-cream crisps, 160 g", q:1, u:61.00},
-      {n:"Chile Chipotle La Chata", e:"Chipotle chillies, 215 g", q:1, u:60.00},
-      {n:"Durazno Rojo", e:"Red peach", q:1, u:60.88, ref:"99.00/kg"},
-      {n:"Cacahuates Mafer", e:"Peanuts \u2014 3-for-2 promo runs often", q:2, u:52.50},
-      {n:"Toallas de Papel", e:"Paper towels", q:1, u:51.00},
-      {n:"Champiñón Granel", e:"Mushrooms, loose", q:1, u:24.61, ref:"114.50/kg"},
-      {n:"Limón s/semilla", e:"Seedless lime (green)", q:2, u:1.24, ref:"16.50/kg"}
-    ]},
-    {id:"mo", title:"Monthly", items:[
-      {n:"Loción Protectora", e:"Sunscreen", q:1, u:287.00},
-      {n:"Jarabe Mister Maple", e:"Maple syrup", q:1, u:172.00},
-      {n:"Crema Sun Harvest", e:"Nut butter", q:1, u:145.00},
-      {n:"Queso Mi Passion", e:"Mi Passion cheese", q:1, u:139.00},
-      {n:"Enjuague Listerine", e:"Listerine mouthwash", q:1, u:98.00},
-      {n:"Mermelada de Frambuesa", e:"Raspberry jam", q:1, u:84.00},
-      {n:"Aceituna Serpis Kalamata", e:"Kalamata olives", q:1, u:78.00},
-      {n:"Quinoa Okko", e:"Okko quinoa mix", q:1, u:74.00},
-      {n:"Bolsas de basura grandes", e:"Trash bags, large", q:1, u:73.00},
-      {n:"Cerveza Barrilito", e:"Barrilito beer, 6-pack", q:1, u:64.00},
-      {n:"Papel Aluminio Rey", e:"Aluminium foil", q:1, u:59.50},
-      {n:"Kleenex Gel 450 ml", e:"Hand gel / wipes", q:1, u:54.00},
-      {n:"Coco Tostado", e:"Toasted coconut", q:1, u:52.50, ref:"500.00/kg"},
-      {n:"Vinagre Chedraui", e:"Vinegar, large", q:1, u:35.00},
-      {n:"Bolsas eco chicas", e:"Trash bags, small", q:1, u:29.50},
-      {n:"Salsa Herdez Roja", e:"Red salsa", q:1, u:27.00},
-      {n:"Salsa Herdez Cacahuate", e:"Peanut salsa", q:1, u:27.00},
-      {n:"Manzana Pink Lady", e:"Pink Lady apple", q:1, u:22.16, ref:"59.90/kg"},
-      {n:"Maíz Palomero", e:"Popcorn kernels", q:1, u:19.00},
-      {n:"Ajo Granel", e:"Loose garlic", q:1, u:8.06, ref:"84.90/kg"}
-    ]},
-    {id:"m2", title:"Every 2 months", items:[
-      {n:"Detergente Tide", e:"Laundry detergent", q:1, u:395.00},
-      {n:"Papel Higiénico Cottonelle", e:"Toilet paper, 24R", q:1, u:205.00},
-      {n:"Dátil Medjool", e:"Medjool dates", q:1, u:175.00},
-      {n:"Lysol Crisp Linen", e:"Disinfectant spray", q:1, u:169.00},
-      {n:"Limpiador de Cocina", e:"Kitchen cleaner", q:1, u:129.00},
-      {n:"Jabón Líquido", e:"Hand soap", q:1, u:78.00},
-      {n:"Fibra Esponja Scotch-Brite", e:"Scouring sponge", q:1, u:73.00},
-      {n:"Harpic", e:"Toilet cleaner", q:1, u:59.00},
-      {n:"Windex", e:"Glass cleaner", q:1, u:55.00},
-      {n:"Fabuloso Lavanda 2L", e:"Multi-surface cleaner", q:1, u:55.00},
-      {n:"Papel Encerado 10 m", e:"Waxed paper", q:1, u:54.00},
-      {n:"Azúcar Zulka", e:"Cane sugar, 500 g", q:1, u:23.50}
-    ]},
-    {id:"m3", title:"Every 3 to 4 months", items:[
-      {n:"Sal Rosa Alta", e:"Pink salt, 400 g", q:1, u:179.00},
-      {n:"Aceite de Coco Aires del Campo", e:"Coconut oil", q:1, u:140.00},
-      {n:"Limpiador de Baños", e:"Bathroom cleaner", q:1, u:59.00},
-      {n:"Sazonador Moe\u2019s", e:"Seasoning blend", q:1, u:44.00},
-      {n:"Axion Limón", e:"Dish soap, 900 ml", q:1, u:34.50}
-    ]},
-    {id:"an", title:"As needed", items:[
-      {n:"Baygon Total", e:"Insecticide", q:1, u:65.00}
-    ]}
-  ]},
-  dac:{label:"DAC", full:"DAC Quality Foods \u00b7 delivery", color:"#1E7A55", groups:[
-    {id:"mo", title:"Monthly \u00b7 prices include IVA", items:[
-      {n:"Hamburguesa de Yaca", e:"Jackfruit burger, 440 g", q:1, u:129.92},
-      {n:"Tofu firme House Foods", e:"Firm tofu, 396 g", q:1, u:109.04},
-      {n:"Carne al Pastor veggie", e:"Veggie al pastor, 450 g", q:1, u:100.92},
-      {n:"Semillas de Chía Campo Vivo", e:"Chia seeds, 250 g", q:1, u:91.64},
-      {n:"Mantequilla Vegana Plant Butter", e:"Vegan butter, 100 g", q:1, u:71.92},
-      {n:"Leche de Soya Güd", e:"Unsweetened soy milk, 1 L", q:2, u:61.48}
-    ]}
-  ]},
-  fm:{label:"Market", full:"Farmers market \u00b7 600 MXN a week", color:"#7A2A63", groups:[
-    {id:"veg", title:"Vegetables \u00b7 weekly", items:[
-      {n:"Brócoli", e:"Broccoli", q:1, u:null},
-      {n:"Col rizada", e:"Kale", q:1, u:null},
-      {n:"Papa", e:"Potato", q:1, u:null},
-      {n:"Calabaza italiana", e:"Zucchini", q:1, u:null},
-      {n:"Tomate saladette", e:"Tomato", q:1, u:null}
-    ]},
-    {id:"fr", title:"Fruit \u00b7 weekly", items:[
-      {n:"Aguacate Hass", e:"Hass avocado", q:1, u:null},
-      {n:"Plátano", e:"Banana", q:1, u:null},
-      {n:"Arándanos", e:"Blueberries", q:1, u:null}
-    ]},
-    {id:"ju", title:"Juice \u00b7 weekly", items:[
-      {n:"Jugo de naranja", e:"Orange juice", q:1, u:null},
-      {n:"Jugo de toronja", e:"Grapefruit juice", q:1, u:null}
-    ]}
-  ]}
+  /* navigation and chrome */
+  cart:["M8 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z","M19 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z",
+        "M2 3h2.2l2.68 12.4a2 2 0 0 0 2 1.6h9.3a2 2 0 0 0 1.95-1.57L21.5 7.5H5.4"],
+  list:["M8 6h13","M8 12h13","M8 18h13","M3 6h.01","M3 12h.01","M3 18h.01"],
+  receipt:["M4 2v20l2-1.3L8 22l2-1.3L12 22l2-1.3L16 22l2-1.3L20 22V2l-2 1.3L16 2l-2 1.3L12 2l-2 1.3L8 2 6 3.3Z",
+           "M8 7h8","M8 11h8","M8 15h5"],
+  sliders:["M4 21v-7","M4 10V3","M12 21v-9","M12 8V3","M20 21v-5","M20 12V3",
+           "M1 14h6","M9 8h6","M17 16h6"],
+  menu:["M4 7h16","M4 12h16","M4 17h16"],
+  chart:["M3 3v16a2 2 0 0 0 2 2h16","m7 14 3-4 3 3 4-6"]
 };
 
-var S, active="chedraui", editing=false;
+function icon(name, cls){
+  var p = ICONS[name];
+  if(!p) return "";
+  return '<svg class="ico'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true">'
+    + p.map(function(d){ return '<path d="'+d+'"/>'; }).join("")
+    + '</svg>';
+}
 
-function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+/* Despensa catalogue — seeded from audited Chedraui receipts, Aug–Oct 2026.
+   p = reference price MXN (latest known). q = usual quantity.
+   hint = shop usually bought at (a sort hint, never a restriction).
+   hist = known price points from receipts. */
+var CATALOGUE_VERSION = 11;
 
-function seedState(){
-  var st={v:4, fx:16.89, cat:CATALOGUE, items:{}, checked:{}, skipped:{}, custom:{}, trips:[]};
-  Object.keys(SEED).forEach(function(sk){
-    SEED[sk].groups.forEach(function(g){
-      g.items.forEach(function(it){
-        st.items[sk+"|"+g.id+"|"+slug(it.n)] = {unit:it.u, qty:it.q, est:!!it.est};
-      });
-    });
+var CATS = [
+  {id:"produce",  name:"Fruit & Veg",         ic:"leaf"},
+  {id:"protein",  name:"Protein",             ic:"fish"},
+  {id:"chilled",  name:"Dairy & Chilled",     ic:"milk"},
+  {id:"bakery",   name:"Bakery & Tortillas",  ic:"bread"},
+  {id:"pantry",   name:"Pantry",              ic:"box"},
+  {id:"snacks",   name:"Snacks",              ic:"cookie"},
+  {id:"drinks",   name:"Drinks",              ic:"glass"},
+  {id:"home",     name:"Household",           ic:"spray"},
+  {id:"care",     name:"Personal Care",       ic:"drop"}
+];
+
+var SHOPS = [
+  {id:"chedraui", name:"Chedraui Puerto Aventuras", active:true},
+  {id:"dac",      name:"DAC Quality Foods", active:true},
+  {id:"market",   name:"Farmers market", active:true}
+];
+
+var ITEMS = [
+/* ---------- Fruit & Veg ---------- */
+{c:"produce", es:"Aguacate Hass", en:"Hass avocado", q:1, p:65.05, ref:"54.90/kg", hint:"chedraui",
+  hist:[["2026-09-20",30.74],["2026-09-30",54.35],["2026-10-08",65.05]]},
+{c:"produce", es:"Plátano Chiapas/Tabasco", en:"Banana", q:1, p:25.88, ref:"25.50/kg", hint:"chedraui",
+  hist:[["2026-09-13",24.61],["2026-09-20",26.81],["2026-09-30",18.48],["2026-10-08",25.88]]},
+{c:"produce", es:"Manzana", en:"Apple — whichever is good", q:1, p:74.87, ref:"59.90/kg", hint:"chedraui",
+  hist:[["2026-08-30",22.16],["2026-09-30",23.96],["2026-10-08",74.87]]},
+{c:"produce", es:"Arándanos", en:"Blueberries", q:1, p:58.50, hint:"chedraui",
+  hist:[["2026-09-20",58.50],["2026-09-30",58.50],["2026-10-08",58.50]]},
+{c:"produce", es:"Durazno Rojo", en:"Red peach — quality permitting", q:1, p:60.88, ref:"99.00/kg", hint:"chedraui",
+  hist:[["2026-08-16",60.88]]},
+{c:"produce", es:"Piña Gota de Miel", en:"Pineapple", q:1, p:41.00, ref:"~41/kg", hint:"chedraui"},
+{c:"produce", es:"Pera Mantequilla/Anjou", en:"Anjou pear", q:1, p:32.80, ref:"72.90/kg", hint:"chedraui"},
+{c:"produce", es:"Tomate Saladette", en:"Roma tomato", q:1, p:21.26, ref:"31.50/kg", hint:"chedraui",
+  hist:[["2026-09-05",5.83],["2026-09-20",20.08],["2026-09-30",24.68],["2026-10-08",21.26]]},
+{c:"produce", es:"Calabaza Italiana", en:"Zucchini", q:1, p:11.08, ref:"24.90/kg", hint:"chedraui",
+  hist:[["2026-09-20",21.59],["2026-09-30",26.02],["2026-10-08",11.08]]},
+{c:"produce", es:"Espinacas", en:"Spinach, bunch", q:1, p:11.90, hint:"chedraui"},
+{c:"produce", es:"Acelgas", en:"Chard, bunch", q:1, p:9.90, hint:"chedraui"},
+{c:"produce", es:"Lechuga Italiana Viva", en:"Living lettuce", q:1, p:39.10, hint:"chedraui",
+  hist:[["2026-09-05",39.10],["2026-09-13",39.10]]},
+{c:"produce", es:"Champiñón Granel", en:"Mushrooms, loose", q:1, p:24.61, ref:"114.50/kg", hint:"chedraui"},
+{c:"produce", es:"Ajo Granel", en:"Loose garlic", q:1, p:11.58, ref:"121.90/kg", hint:"chedraui",
+  hist:[["2026-09-30",8.06],["2026-10-08",11.58]]},
+{c:"produce", es:"Limón Eureka", en:"Eureka lemon (yellow)", q:1, p:4.76, ref:"29.90/kg", hint:"chedraui"},
+{c:"produce", es:"Limón s/semilla", en:"Seedless lime (green)", q:1, p:12.70, ref:"29.90/kg", hint:"chedraui",
+  hist:[["2026-08-16",2.48],["2026-10-08",12.70]]},
+{c:"produce", es:"Coco Tostado", en:"Toasted coconut", q:1, p:54.60, ref:"520.00/kg", hint:"chedraui",
+  hist:[["2026-08-30",52.50],["2026-10-08",54.60]]},
+{c:"produce", es:"Ciruela Pasa S/H", en:"Prunes, pitted", q:1, p:61.09, ref:"298.00/kg", hint:"chedraui",
+  hist:[["2026-08-16",61.09],["2026-08-30",61.09],["2026-10-08",61.09]]},
+{c:"produce", es:"Dátil Medjool", en:"Medjool dates", q:1, p:175.00, hint:"chedraui"},
+
+/* ---------- Protein ---------- */
+{c:"protein", es:"Salmón Atlántico", en:"Atlantic salmon", q:1, p:329.00, hint:"chedraui",
+  hist:[["2026-09-05",329.00],["2026-09-20",329.00],["2026-09-30",329.00],["2026-10-08",329.00]]},
+{c:"protein", es:"Pollo Rostizado", en:"Rotisserie chicken", q:1, p:99.90, hint:"chedraui",
+  hist:[["2026-08-16",99.90],["2026-08-30",99.90],["2026-09-13",99.90],["2026-10-08",99.90]]},
+{c:"protein", es:"Huevo Blanco 12 pz", en:"Eggs, 12 ct — brand varies", q:1, p:32.00, hint:"chedraui",
+  hist:[["2026-09-05",32.00],["2026-09-13",30.00],["2026-10-08",80.90]]},
+{c:"protein", es:"Tofu firme House Foods", en:"Firm tofu, 396 g", q:1, p:109.04, hint:"dac"},
+{c:"protein", es:"Carne al Pastor veggie", en:"Veggie al pastor, 450 g", q:1, p:100.92, hint:"dac"},
+{c:"protein", es:"Hamburguesa de Yaca", en:"Jackfruit burger, 440 g", q:1, p:129.92, hint:"dac"},
+{c:"protein", es:"Garbanzo en Salmuera", en:"Chickpeas in brine", q:1, p:26.00, hint:"chedraui"},
+{c:"protein", es:"Frijoles Refritos Isadora", en:"Refried beans", q:2, p:17.00, hint:"chedraui",
+  hist:[["2026-08-30",17.00],["2026-10-08",17.00]]},
+
+/* ---------- Dairy & Chilled ---------- */
+{c:"chilled", es:"Bionda Manchego", en:"Manchego cheese", q:1, p:125.00, hint:"chedraui"},
+{c:"chilled", es:"Violife Manchego", en:"Vegan manchego", q:1, p:110.00, hint:"chedraui",
+  hist:[["2026-08-08",94.00],["2026-10-08",110.00]]},
+{c:"chilled", es:"Leche de Soya Güd", en:"Unsweetened soy milk, 1 L", q:2, p:61.48, hint:"dac"},
+{c:"chilled", es:"Mantequilla Vegana", en:"Vegan butter, 100 g", q:1, p:71.92, hint:"dac"},
+
+/* ---------- Bakery & Tortillas ---------- */
+{c:"bakery", es:"Oroweat Multigrano", en:"Multigrain bread", q:1, p:93.00, hint:"chedraui",
+  hist:[["2026-08-16",93.00],["2026-09-05",93.00],["2026-09-13",93.00],["2026-09-30",93.00],["2026-10-08",93.00]]},
+{c:"bakery", es:"Tortilla Blanca 45 pz", en:"White corn tortillas, 45-pack", q:1, p:38.00, hint:"chedraui",
+  hist:[["2026-09-05",38.00],["2026-09-30",38.00]]},
+
+/* ---------- Pantry ---------- */
+{c:"pantry", es:"Crema Almendra Sun Harvest", en:"Almond butter, organic 454 g", q:1, p:198.00, hint:"chedraui",
+  hist:[["2026-08-23",198.00],["2026-09-13",198.00],["2026-10-08",198.00]]},
+{c:"pantry", es:"Crema Sun Harvest", en:"Nut butter", q:1, p:145.00, hint:"chedraui",
+  hist:[["2026-08-23",145.00],["2026-09-13",145.00],["2026-10-08",145.00]]},
+{c:"pantry", es:"Avena Orgánica", en:"Organic oats, 300 g", q:2, p:97.50, hint:"chedraui",
+  hist:[["2026-08-16",97.50],["2026-08-30",97.50],["2026-10-08",97.50]]},
+{c:"pantry", es:"Granola Miel de Agave", en:"Agave granola, 310 g", q:1, p:104.00, hint:"chedraui",
+  hist:[["2026-08-16",104.00],["2026-08-30",104.00]]},
+{c:"pantry", es:"Almendra Natural", en:"Natural almonds, 200 g", q:1, p:77.80, ref:"389.00/kg", hint:"chedraui",
+  hist:[["2026-08-08",89.00],["2026-10-08",77.80]]},
+{c:"pantry", es:"Cacahuates Mafer", en:"Peanuts — 3-for-2 promo runs often", q:2, p:52.50, hint:"chedraui",
+  hist:[["2026-08-30",52.50],["2026-09-13",52.50]]},
+{c:"pantry", es:"Cacahuate Garapiñado", en:"Candied peanuts", q:1, p:45.90, ref:"180.00/kg", hint:"chedraui"},
+{c:"pantry", es:"Quinoa", en:"Quinoa — brand varies", q:1, p:74.00, hint:"chedraui",
+  hist:[["2026-09-05",71.00],["2026-09-30",74.00],["2026-10-08",74.00]]},
+{c:"pantry", es:"Semillas de Chía", en:"Chia seeds — brand varies", q:1, p:158.00, hint:"chedraui",
+  hist:[["2026-09-20",100.00],["2026-10-08",158.00]]},
+{c:"pantry", es:"Pasta Rummo", en:"Rummo pasta — shape varies", q:1, p:84.00, hint:"chedraui",
+  hist:[["2026-08-06",59.00],["2026-10-08",84.00]]},
+{c:"pantry", es:"Jarabe Mister Maple", en:"Maple syrup", q:1, p:172.00, hint:"chedraui",
+  hist:[["2026-08-08",172.00],["2026-09-05",172.00]]},
+{c:"pantry", es:"Mermelada", en:"Jam — flavour varies", q:1, p:84.00, hint:"chedraui",
+  hist:[["2026-08-16",84.00],["2026-09-13",75.01]]},
+{c:"pantry", es:"Aceituna Serpis Kalamata", en:"Kalamata olives", q:1, p:78.00, hint:"chedraui"},
+{c:"pantry", es:"Chile Chipotle La Chata", en:"Chipotle chillies, 215 g", q:1, p:60.00, hint:"chedraui"},
+{c:"pantry", es:"Vinagre", en:"Vinegar, large", q:1, p:35.00, hint:"chedraui",
+  hist:[["2026-09-05",13.00],["2026-09-30",35.00],["2026-10-08",35.00]]},
+{c:"pantry", es:"Aceite de Coco Aires del Campo", en:"Coconut oil", q:1, p:140.00, hint:"chedraui"},
+{c:"pantry", es:"Aceite de Oliva", en:"Olive oil", q:1, p:125.00, hint:"chedraui",
+  hist:[["2026-09-13",199.00],["2026-10-08",125.00]]},
+{c:"pantry", es:"Sal Rosa Alta", en:"Pink salt, 400 g", q:1, p:179.00, hint:"chedraui"},
+{c:"pantry", es:"Sazonador Moe’s", en:"Seasoning blend", q:1, p:44.00, hint:"chedraui",
+  hist:[["2026-08-23",44.00],["2026-10-08",44.00]]},
+{c:"pantry", es:"Azúcar Zulka", en:"Cane sugar, 500 g", q:1, p:23.50, hint:"chedraui",
+  hist:[["2026-08-23",25.00],["2026-08-30",23.50]]},
+{c:"pantry", es:"Maíz Palomero", en:"Popcorn kernels", q:1, p:19.00, hint:"chedraui",
+  hist:[["2026-09-05",15.00],["2026-10-08",19.00]]},
+{c:"pantry", es:"Salsa Macha", en:"Salsa macha", q:1, p:133.00, hint:"chedraui"},
+
+/* ---------- Snacks ---------- */
+{c:"snacks", es:"Papa Chips", en:"Crisps — flavour varies", q:1, p:61.00, hint:"chedraui",
+  hist:[["2026-08-16",61.00],["2026-08-30",61.00],["2026-09-13",61.00],["2026-10-08",61.00]]},
+{c:"snacks", es:"Galleta Lotus Biscoff", en:"Biscoff cookies", q:1, p:82.00, hint:"chedraui",
+  hist:[["2026-09-05",83.00],["2026-10-08",82.00]]},
+{c:"snacks", es:"Totopos", en:"Tortilla chips, 500 g", q:1, p:39.00, hint:"chedraui"},
+
+/* ---------- Drinks ---------- */
+{c:"drinks", es:"Prosecco Maschio 750", en:"Prosecco — 258 shelf, discounts vary", q:1, p:258.00, hint:"chedraui",
+  hist:[["2026-09-15",180.60],["2026-09-30",258.00]]},
+{c:"drinks", es:"Tequila Azul 700 ml", en:"Tequila", q:1, p:199.00, hint:"chedraui"},
+{c:"drinks", es:"Cerveza Barrilito", en:"Barrilito beer, 6-pack", q:1, p:64.00, hint:"chedraui",
+  hist:[["2026-08-16",59.00],["2026-08-30",64.00],["2026-10-08",64.00]]},
+{c:"drinks", es:"Jugo de naranja", en:"Orange juice", q:1, p:75.00, hint:"market"},
+{c:"drinks", es:"Jugo de toronja", en:"Grapefruit juice", q:1, p:75.00, hint:"market"},
+
+/* ---------- Household ---------- */
+{c:"home", es:"Detergente Tide", en:"Laundry detergent", q:1, p:450.00, hint:"chedraui",
+  hist:[["2026-08-08",395.00],["2026-10-08",450.00]]},
+{c:"home", es:"Papel Higiénico", en:"Toilet paper", q:1, p:249.00, hint:"chedraui",
+  hist:[["2026-08-08",205.00],["2026-09-30",249.00]]},
+{c:"home", es:"Lysol Crisp Linen", en:"Disinfectant spray", q:1, p:169.00, hint:"chedraui"},
+{c:"home", es:"Limpiador de Cocina", en:"Kitchen cleaner", q:1, p:129.00, hint:"chedraui"},
+{c:"home", es:"Limpiador de Baños", en:"Bathroom cleaner", q:1, p:59.00, hint:"chedraui"},
+{c:"home", es:"Harpic", en:"Toilet cleaner", q:1, p:59.00, hint:"chedraui"},
+{c:"home", es:"Windex", en:"Glass cleaner", q:1, p:55.00, hint:"chedraui"},
+{c:"home", es:"Fabuloso Lavanda 2L", en:"Multi-surface cleaner", q:1, p:55.00, hint:"chedraui"},
+{c:"home", es:"Axion Limón", en:"Dish soap, 900 ml", q:1, p:57.00, hint:"chedraui",
+  hist:[["2026-08-08",34.50],["2026-10-08",57.00]]},
+{c:"home", es:"Toallas de Papel", en:"Paper towels", q:1, p:49.00, hint:"chedraui",
+  hist:[["2026-08-30",51.00],["2026-09-30",49.00]]},
+{c:"home", es:"Papel Aluminio Rey", en:"Aluminium foil", q:1, p:59.50, hint:"chedraui"},
+{c:"home", es:"Papel Encerado 10 m", en:"Waxed paper", q:1, p:54.00, hint:"chedraui"},
+{c:"home", es:"Bolsas de basura", en:"Trash bags, large", q:1, p:48.50, hint:"chedraui",
+  hist:[["2026-09-13",48.50],["2026-09-30",48.50],["2026-10-08",48.50]]},
+{c:"home", es:"Bolsas eco chicas", en:"Trash bags, small", q:1, p:29.50, hint:"chedraui"},
+{c:"home", es:"Fibra Esponja Scotch-Brite", en:"Scouring sponge", q:1, p:73.00, hint:"chedraui"},
+{c:"home", es:"Ziploc Congelación", en:"Freezer bags", q:1, p:68.50, hint:"chedraui"},
+{c:"home", es:"Baygon Total", en:"Insecticide", q:1, p:65.00, hint:"chedraui"},
+
+/* ---------- Personal Care ---------- */
+{c:"care", es:"Loción Protectora", en:"Sunscreen", q:1, p:287.00, hint:"chedraui",
+  hist:[["2026-08-08",287.00],["2026-08-30",287.00]]},
+{c:"care", es:"Jabón Líquido", en:"Hand soap", q:1, p:78.00, hint:"chedraui"},
+{c:"care", es:"Enjuague Listerine", en:"Mouthwash", q:1, p:98.00, hint:"chedraui"},
+{c:"care", es:"Kleenex Gel 450 ml", en:"Hand gel", q:1, p:54.00, hint:"chedraui"},
+{c:"care", es:"Desodorante", en:"Deodorant", q:1, p:101.00, hint:"chedraui"},
+{c:"care", es:"Jabón de Barra", en:"Bar soap", q:1, p:21.00, hint:"chedraui"}
+];
+
+"use strict";
+var APP_VERSION = "2.2.0";
+var KEY = "despensa_v2";
+var LEGACY_KEY = "despensa_v1";
+
+/* ---------------- state ---------------- */
+var S, screen = "trip", drawerItem = null;
+
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+function todayISO(){
+  var d=new Date(), p=function(x){return String(x).padStart(2,"0")};
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());
+}
+function nowLocal(){
+  var d=new Date(), p=function(x){return String(x).padStart(2,"0")};
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());
+}
+
+function seed(){
+  var st = {v:5, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89,
+            shops:SHOPS.slice(), items:{}, trips:[], active:null};
+  ITEMS.forEach(function(it){
+    var id = slug(it.es);
+    st.items[id] = {id:id, cat:it.c, es:it.es, en:it.en, q:it.q, p:it.p,
+      ref:it.ref||null, hint:it.hint||null, active:true,
+      hist:(it.hist||[]).map(function(h){return {d:h[0], p:h[1], shop:it.hint||"chedraui"}})};
   });
   return st;
 }
 
-function load(){
-  try{ var raw=localStorage.getItem(KEY); if(raw) S=JSON.parse(raw); }catch(e){ S=null; }
-  if(!S||!S.items){ S=seedState(); save(); return; }
-  var fresh=seedState();
-  Object.keys(fresh.items).forEach(function(id){ if(!(id in S.items)) S.items[id]=fresh.items[id]; });
-  /* new catalogue: refresh the reference prices, keep every logged trip */
-  if(S.cat!==CATALOGUE){
-    Object.keys(fresh.items).forEach(function(id){
-      var keep=S.items[id]||{};
-      keep.unit=fresh.items[id].unit; keep.qty=fresh.items[id].qty; keep.est=fresh.items[id].est;
-      S.items[id]=keep;
+function migrate(){
+  /* carry forward trips logged in v1 so nothing is lost */
+  try{
+    var raw = localStorage.getItem(LEGACY_KEY);
+    if(!raw) return [];
+    var old = JSON.parse(raw);
+    if(!old || !old.trips || !old.trips.length) return [];
+    return old.trips.map(function(t){
+      return {id:t.id||("legacy-"+Math.random().toString(36).slice(2)),
+        shop:t.storeKey||"chedraui", shopName:t.store||"Chedraui",
+        date:t.datetime||"", fx:t.fxRate||17.30,
+        lines:(t.items||[]).map(function(i){
+          return {id:i.id||slug(i.nameES||"item"), es:i.nameES||"", en:i.nameEN||"",
+                  q:i.qty||1, paid:i.priceMXN, state:"bought"};
+        }),
+        receiptTotal:t.totalMXN||null, listed:t.totalMXN||0, offList:0, legacy:true};
     });
-    S.cat=CATALOGUE;
-    S.fx=16.89;
-  }
-  if(!S.custom) S.custom={};
-  if(!S.checked) S.checked={};
-  if(!S.skipped) S.skipped={};
-  if(!S.trips) S.trips=[];
-  if(typeof S.fx!=="number"||!isFinite(S.fx)||S.fx<=0) S.fx=16.89;
-}
-function save(){
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
-  catch(e){ toast("Could not save — storage is blocked"); }
+  }catch(e){ return []; }
 }
 
-function calc(u,q){
-  if(u===null||u===undefined||isNaN(u)) return null;
-  return u*(q===undefined||q===null||isNaN(q)?1:q);
+function load(){
+  try{ var raw=localStorage.getItem(KEY); if(raw) S=JSON.parse(raw); }catch(e){ S=null; }
+  if(!S || !S.items){
+    S = seed();
+    S.trips = migrate();
+    save(); return;
+  }
+  var fresh = seed();
+  /* add catalogue items that did not exist before */
+  Object.keys(fresh.items).forEach(function(id){
+    if(!(id in S.items)) S.items[id] = fresh.items[id];
+  });
+  /* on a catalogue bump, refresh reference prices and seeded history,
+     but never touch logged trips or items you added yourself */
+  if(S.cat !== CATALOGUE_VERSION){
+    Object.keys(fresh.items).forEach(function(id){
+      var mine = S.items[id];
+      mine.p = fresh.items[id].p;
+      mine.ref = fresh.items[id].ref;
+      mine.cat = fresh.items[id].cat;
+      mine.hint = fresh.items[id].hint;
+      if(fresh.items[id].hist.length >= (mine.hist||[]).length) mine.hist = fresh.items[id].hist;
+    });
+    S.cat = CATALOGUE_VERSION;
+  }
+  S.appVersion = APP_VERSION;
+  if(!S.shops) S.shops = SHOPS.slice();
+  if(!S.trips) S.trips = [];
+  if(typeof S.fx!=="number" || !isFinite(S.fx) || S.fx<=0) S.fx = 16.89;
 }
-function priceOf(id){
-  var ov=S.items[id]; return ov?calc(ov.unit, ov.qty):null;
+
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ toast("Could not save — storage is blocked or full"); }
 }
+
+/* ---------------- helpers ---------------- */
 function mx(n){
   if(n===null||n===undefined||isNaN(n)) return "—";
   return "MX$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -368,136 +551,298 @@ function usd(n){
   if(n===null||n===undefined||isNaN(n)) return "—";
   return "US$"+(Number(n)/S.fx).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
+function esc(s){ return String(s===null||s===undefined?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function catName(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?c.name:"Other"; }
+function catIcon(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?icon(c.ic):""; }
+function shopName(id){ var s=S.shops.filter(function(x){return x.id===id})[0]; return s?s.name:id; }
 function toast(m){
   var t=document.getElementById("toast");
   t.textContent=m; t.classList.add("show");
-  clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("show")},2100);
+  clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("show")},2200);
 }
-
-/* resolve a catalogue entry against any saved edits */
-function resolve(sk,gid,it){
-  var id=sk+"|"+gid+"|"+slug(it.n), ov=S.items[id]||{};
-  return {id:id,
-    n: ov.name!==undefined ? ov.name : it.n,
-    e: ov.english!==undefined ? ov.english : (it.e||""),
-    q: ov.qty!==undefined ? ov.qty : (it.q||1),
-    unit: ov.unit!==undefined ? ov.unit : it.u,
-    ref: it.ref||null,
-    price: calc(ov.unit!==undefined?ov.unit:it.u, ov.qty!==undefined?ov.qty:(it.q||1)),
-    est:!!ov.est, hidden:!!ov.hidden};
-}
-function groups(sk){
-  return SEED[sk].groups.map(function(g){
-    var rows=g.items.map(function(it){return resolve(sk,g.id,it)});
-    (S.custom[sk]||[]).forEach(function(c){
-      if(c.g!==g.id) return;
-      var ov=S.items[c.id]||{};
-      var cq=(ov.qty===undefined?1:ov.qty);
-      rows.push({id:c.id, n:ov.name||"Item", e:ov.english||"", q:cq, unit:ov.unit, ref:null,
-        price:calc(ov.unit,cq), est:!!ov.est, hidden:!!ov.hidden, custom:true});
-    });
-    return {id:g.id, title:g.title, rows:rows.filter(function(r){return !r.hidden})};
+function itemsByCat(){
+  var out={};
+  CATS.forEach(function(c){ out[c.id]=[]; });
+  Object.keys(S.items).forEach(function(id){
+    var it=S.items[id];
+    if(!it.active) return;
+    if(!out[it.cat]) out[it.cat]=[];
+    out[it.cat].push(it);
   });
-}
-function hiddenList(){
-  var out=[];
-  Object.keys(SEED).forEach(function(sk){
-    SEED[sk].groups.forEach(function(g){
-      g.items.forEach(function(it){
-        var r=resolve(sk,g.id,it);
-        if(r.hidden) out.push({id:r.id, n:r.n, store:SEED[sk].label});
-      });
-    });
-    (S.custom[sk]||[]).forEach(function(c){
-      var ov=S.items[c.id]||{};
-      if(ov.hidden) out.push({id:c.id, n:ov.name||"Item", store:SEED[sk].label});
-    });
+  CATS.forEach(function(c){
+    out[c.id].sort(function(a,b){ return a.es.localeCompare(b.es); });
   });
   return out;
 }
-
-/* ---------- render ---------- */
-function renderTabs(){
-  document.getElementById("tabs").innerHTML = Object.keys(SEED).map(function(sk){
-    var n=Object.keys(S.checked).filter(function(id){return S.checked[id]&&id.indexOf(sk+"|")===0}).length;
-    return '<button class="tab" role="tab" data-store="'+sk+'" aria-selected="'+(sk===active)+'">'
-      +SEED[sk].label+'<span class="cnt">'+(n? n+" picked":"—")+'</span></button>';
-  }).join("");
+function lineTotal(it, L){
+  var q = (L && L.q!==undefined) ? L.q : it.q;
+  var p = (L && L.paid!==null && L.paid!==undefined && !isNaN(L.paid)) ? L.paid : it.p;
+  if(p===null||p===undefined||isNaN(p)) return null;
+  return p*q;
 }
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
-
-var skOpen=false;
-function rowHTML(r,checked,skipped){
-  var hasU=!(r.unit===null||r.unit===undefined||isNaN(r.unit));
-  var meta=[(r.q>1&&hasU)?("Qty "+r.q+" \u00d7 "+mx(r.unit)):(r.q>1?"Qty "+r.q:""),
-            r.ref?"ref "+r.ref+" MXN":""].filter(Boolean).join(" \u00b7 ");
-  var has=!(r.price===null||r.price===undefined||isNaN(r.price));
-  var cls="amt"+(has?(r.est?" est":""):" none");
-  var body=has ? (r.est?'<span class="tagest">est</span>':'')
-      +'<span class="mx">'+mx(r.price)+'</span><span class="us">'+usd(r.price)+'</span>'
-    : '<span class="mx">Add price</span>';
-  var ctrl;
-  if(editing) ctrl='<span class="pen">\u270e</span>';
-  else if(skipped) ctrl='<button class="mark" aria-label="Put back in this trip"></button>';
-  else ctrl='<button class="box" aria-label="Bought"></button>';
-  return '<div class="row'+((checked&&!editing?" on":"")+(skipped?" sk":""))+'" data-id="'+r.id+'">'+ctrl
-    +'<div class="namewrap"><div class="nm">'+esc(r.n)+'</div>'
-    +(r.e?'<div class="en">'+esc(r.e)+'</div>':'')
-    +(meta?'<div class="meta">'+esc(meta)+'</div>':'')
-    +'</div><button class="'+cls+'" data-price="'+r.id+'">'+body+'</button></div>';
-}
-function renderList(){
-  document.documentElement.style.setProperty("--store", SEED[active].color);
-  document.getElementById("brand").textContent = SEED[active].full;
-  var html="", parked=[];
-  groups(active).forEach(function(g){
-    var live=g.rows.filter(function(r){ return editing || !S.skipped[r.id]; });
-    if(!editing) g.rows.forEach(function(r){ if(S.skipped[r.id]) parked.push(r); });
-    var on=live.filter(function(r){return S.checked[r.id]}).length;
-    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+g.title+'</span>'
-      +'<span class="seccount">'+on+' / '+live.length+'</span></div>';
-    live.forEach(function(r){ html+=rowHTML(r,!!S.checked[r.id],!!S.skipped[r.id]); });
-    html+='<button class="addbtn" data-add="'+g.id+'">+ Add an item to '+g.title.toLowerCase()+'</button></section>';
+function tripTotals(){
+  var t=S.active, listed=0, bought=0, nb=0, nn=0, ns=0, missing=0;
+  if(!t) return {listed:0,bought:0,nb:0,nn:0,ns:0,missing:0};
+  Object.keys(t.lines).forEach(function(id){
+    var L=t.lines[id], it=S.items[id]; if(!it) return;
+    var v=lineTotal(it,L);
+    if(L.state==="skip"){ ns++; return; }
+    if(L.state==="bought"){ nb++; if(v===null) missing++; else bought+=v; }
+    else { nn++; }
+    if(v!==null) listed+=v;
   });
-  if(parked.length){
-    html+='<section class="sec skipsec"><button class="skiphead" id="skipHead">'
-      +'<span class="sectitle">Skipped this trip</span>'
-      +'<span class="seccount">'+parked.length+(skOpen?' \u25b4':' \u25be')+'</span></button>';
-    if(skOpen) parked.forEach(function(r){ html+=rowHTML(r,false,true); });
+  return {listed:listed,bought:bought,nb:nb,nn:nn,ns:ns,missing:missing};
+}
+
+/* ---------------- render ---------------- */
+function render(){
+  renderHeader();
+  var m=document.getElementById("main");
+  if(screen==="trip")      m.innerHTML=viewTrip();
+  else if(screen==="cat")  m.innerHTML=viewCatalogue();
+  else if(screen==="hist") m.innerHTML=viewHistory();
+  else                     m.innerHTML=viewSettings();
+  renderBar();
+}
+
+function renderHeader(){
+  var t=S.active, title, sub="";
+  if(screen==="trip"){
+    title = t ? shopName(t.shop) : "Despensa";
+    sub = t ? (t.mode==="plan" ? "Planning · "+t.date : "Shopping · "+t.date) : "No trip open";
+  } else if(screen==="cat"){ title="Catalogue"; sub=Object.keys(S.items).length+" items"; }
+  else if(screen==="hist"){ title="Trips"; sub=S.trips.length+" logged"; }
+  else { title="Settings"; sub="v"+APP_VERSION; }
+  document.getElementById("hTitle").textContent=title;
+  document.getElementById("hSub").textContent=sub;
+}
+
+/* ----- trip ----- */
+function viewTrip(){
+  var t=S.active;
+  if(!t){
+    return '<div class="empty">'+icon("cart","big")+'<h3>No trip open</h3>'
+      +'<p>Start a trip, pick the shop, then go through the catalogue and mark what you need.</p>'
+      +'<button class="big" id="startTrip">Start a trip</button></div>';
+  }
+  var byCat=itemsByCat(), html="";
+  var planning = t.mode==="plan";
+
+  CATS.forEach(function(c){
+    var rows = byCat[c.id]||[];
+    if(!planning) rows = rows.filter(function(it){ return t.lines[it.id]; });
+    if(!rows.length) return;
+    /* sort the likely shop first while planning */
+    rows = rows.slice().sort(function(a,b){
+      var ah=(a.hint===t.shop)?0:1, bh=(b.hint===t.shop)?0:1;
+      return ah-bh || a.es.localeCompare(b.es);
+    });
+    var on = rows.filter(function(it){ return t.lines[it.id]; }).length;
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
+      +'<span class="seccount">'+(planning? on+" / "+rows.length : rows.length)+'</span></div>';
+    rows.forEach(function(it){ html+=tripRow(it, t.lines[it.id], planning, t.shop); });
+    html+='</section>';
+  });
+
+  if(!planning){
+    html+='<button class="addbtn" id="addMore">+ Add something from the catalogue</button>';
+  }
+  if(!html) html='<div class="empty"><p>Nothing marked yet.</p></div>';
+  return html;
+}
+
+function tripRow(it, L, planning, shop){
+  var state = L ? L.state : null;
+  var q = L && L.q!==undefined ? L.q : it.q;
+  var paid = L && L.paid!==null && L.paid!==undefined ? L.paid : null;
+  var shown = paid!==null ? paid : it.p;
+  var tot = lineTotal(it, L);
+  var cls = "row";
+  if(state==="bought") cls+=" bought";
+  if(state==="skip") cls+=" skipped";
+  if(planning && state) cls+=" on";
+
+  var ctrl;
+  if(planning){
+    ctrl = '<button class="box'+(state?" fill":"")+'" data-pick="'+it.id+'" aria-label="Need this"></button>';
+  } else if(state==="bought"){
+    ctrl = '<button class="box fill" data-got="'+it.id+'" aria-label="Bought"></button>';
+  } else if(state==="skip"){
+    ctrl = '<button class="box dash" data-got="'+it.id+'" aria-label="Skipped"></button>';
+  } else {
+    ctrl = '<button class="box" data-got="'+it.id+'" aria-label="Mark bought"></button>';
+  }
+
+  var bits=[];
+  if(q>1) bits.push("Qty "+q+" × "+mx(shown));
+  if(it.ref) bits.push("ref "+it.ref);
+  if(it.hint && it.hint!==shop) bits.push("usually "+shopName(it.hint).split(" ")[0]);
+  var meta=bits.join(" · ");
+
+  var chart = (it.hist && it.hist.length>1)
+    ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>' : '';
+
+  return '<div class="'+cls+'" data-id="'+it.id+'">'+ctrl
+    +'<div class="namewrap" data-open="'+it.id+'"><div class="nm">'+esc(it.es)
+    +(state==="skip"?'<span class="tag">skipped</span>':'')+'</div>'
+    +'<div class="en">'+esc(it.en)+'</div>'
+    +(meta?'<div class="meta">'+esc(meta)+'</div>':'')+'</div>'
+    + chart
+    +'<button class="amt'+(paid!==null?" paid":"")+'" data-price="'+it.id+'">'
+    +'<span class="mx">'+mx(tot)+'</span><span class="us">'+usd(tot)+'</span></button></div>';
+}
+
+/* tiny inline price sparkline */
+function sparkSVG(hist){
+  var pts=hist.slice(-8).map(function(h){return h.p});
+  if(pts.length<2) return "";
+  var min=Math.min.apply(null,pts), max=Math.max.apply(null,pts), rng=(max-min)||1;
+  var w=30, h=16;
+  var d=pts.map(function(p,i){
+    var x=(i/(pts.length-1))*w, y=h-((p-min)/rng)*h;
+    return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+  }).join(" ");
+  var up = pts[pts.length-1] > pts[0];
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true">'
+    +'<path d="'+d+'" fill="none" stroke="'+(up?"#B3261E":"#1E7A55")+'" stroke-width="1.6" '
+    +'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+/* ----- catalogue ----- */
+function viewCatalogue(){
+  var byCat=itemsByCat(), html="";
+  CATS.forEach(function(c){
+    var rows=byCat[c.id]||[];
+    if(!rows.length) return;
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
+      +'<span class="seccount">'+rows.length+'</span></div>';
+    rows.forEach(function(it){
+      var chart=(it.hist&&it.hist.length>1)
+        ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>':'';
+      html+='<div class="row" data-id="'+it.id+'">'
+        +'<div class="namewrap" data-open="'+it.id+'"><div class="nm">'+esc(it.es)+'</div>'
+        +'<div class="en">'+esc(it.en)+'</div>'
+        +'<div class="meta">'+(it.q>1?"Qty "+it.q+" · ":"")
+        +(it.hint?shopName(it.hint).split(" ")[0]:"any shop")
+        +(it.ref?" · ref "+esc(it.ref):"")+'</div></div>'
+        + chart
+        +'<button class="amt" data-open="'+it.id+'"><span class="mx">'+mx(it.p)+'</span>'
+        +'<span class="us">'+usd(it.p)+'</span></button></div>';
+    });
+    html+='<button class="addbtn" data-newitem="'+c.id+'">+ Add an item to '+esc(c.name.toLowerCase())+'</button>';
+    html+='</section>';
+  });
+  return html;
+}
+
+/* ----- history ----- */
+function viewHistory(){
+  if(!S.trips.length){
+    return '<div class="empty">'+icon("receipt","big")+'<h3>No trips yet</h3>'
+      +'<p>Close a trip and it is kept here with its receipt total.</p></div>';
+  }
+  var html="";
+  /* month roll-up */
+  var months={};
+  S.trips.forEach(function(t){
+    var m=(t.date||"").slice(0,7); if(!m) return;
+    if(!months[m]) months[m]={n:0, spend:0};
+    months[m].n++;
+    months[m].spend += (t.receiptTotal!==null&&t.receiptTotal!==undefined) ? t.receiptTotal : (t.listed||0);
+  });
+  var keys=Object.keys(months).sort().reverse();
+  if(keys.length){
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'By month</span></div>';
+    keys.forEach(function(m){
+      html+='<div class="mrow"><span class="mname">'+m+'</span>'
+        +'<span class="mtrips">'+months[m].n+' trip'+(months[m].n===1?"":"s")+'</span>'
+        +'<span class="mspend mono">'+mx(months[m].spend)+'<small>'+usd(months[m].spend)+'</small></span></div>';
+    });
     html+='</section>';
   }
-  document.getElementById("main").innerHTML=html;
-}
 
-function renderTape(){
-  var ids=Object.keys(S.checked).filter(function(id){return S.checked[id]&&id.indexOf(active+"|")===0});
-  var total=0, missing=0;
-  ids.forEach(function(id){
-    var p=priceOf(id);
-    if(p===null) missing++; else total+=p;
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("receipt")+'Trips</span>'
+    +'<span class="seccount">'+S.trips.length+'</span></div>';
+  S.trips.slice().reverse().forEach(function(t){
+    var off = t.offList;
+    html+='<div class="trow" data-trip="'+t.id+'">'
+      +'<div class="namewrap"><div class="nm">'+esc(t.shopName||shopName(t.shop))+'</div>'
+      +'<div class="en">'+esc((t.date||"").replace("T"," "))+'</div>'
+      +'<div class="meta">'+(t.lines?t.lines.filter(function(l){return l.state==="bought"}).length:0)+' bought'
+      +(t.legacy?' · imported':'')
+      +((off!==null&&off!==undefined&&off!==0)?' · off-list '+mx(off):'')+'</div></div>'
+      +'<div class="amt"><span class="mx">'+mx(t.receiptTotal!==null&&t.receiptTotal!==undefined?t.receiptTotal:t.listed)+'</span>'
+      +'<span class="us">'+usd(t.receiptTotal!==null&&t.receiptTotal!==undefined?t.receiptTotal:t.listed)+'</span></div></div>';
   });
-  var skips=Object.keys(S.skipped).filter(function(id){return S.skipped[id]&&id.indexOf(active+"|")===0}).length;
-  document.getElementById("tCount").textContent=ids.length;
-  document.getElementById("tSkip").textContent=skips;
-  document.getElementById("tMissing").textContent=missing;
-  document.getElementById("tFx").textContent=S.fx.toFixed(2);
-  document.getElementById("tTotal").textContent=mx(total);
-  document.getElementById("tUsd").textContent=usd(total);
-  var b=document.getElementById("logBtn");
-  b.disabled = ids.length===0 || editing;
-  b.textContent = editing ? "Finish editing to log a trip"
-    : (ids.length===0 ? "Log this trip" : "Log this trip · "+ids.length+" items");
-  fitTape();
+  html+='</section>';
+  return html;
 }
-function fitTape(){
-  var h=document.getElementById("tape").offsetHeight;
-  document.body.style.paddingBottom=(h+30)+"px";
-}
-function render(){ renderTabs(); renderList(); renderTape(); }
-window.addEventListener("resize", fitTape);
-window.addEventListener("orientationchange", function(){ setTimeout(fitTape,250); });
 
-/* ---------- sheet ---------- */
+/* ----- settings ----- */
+function viewSettings(){
+  var html='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("sliders")+'App</span></div>'
+    +'<div class="srow"><span>Version</span><span class="mono">'+APP_VERSION+'</span></div>'
+    +'<div class="srow"><span>Catalogue</span><span class="mono">rev '+CATALOGUE_VERSION+'</span></div>'
+    +'<div class="srow"><span>Items</span><span class="mono">'+Object.keys(S.items).length+'</span></div>'
+    +'<div class="srow"><span>Trips logged</span><span class="mono">'+S.trips.length+'</span></div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Exchange rate</span></div>'
+    +'<div class="pad"><label class="lbl">MXN per USD</label>'
+    +'<input class="field mono" id="setFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +'<p class="hint">Used for the dollar figures on screen. Each trip also stores the rate it was closed at.</p>'
+    +'<button class="mbtn primary" id="saveFx">Save rate</button></div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("cart")+'Shops</span>'
+    +'<span class="seccount">'+S.shops.length+'</span></div>';
+  S.shops.forEach(function(sh){
+    html+='<div class="srow"><span>'+esc(sh.name)+'</span>'
+      +'<button class="xbtn" data-delshop="'+sh.id+'">Remove</button></div>';
+  });
+  html+='<div class="pad"><input class="field" id="newShop" type="text" placeholder="Add a shop — Costco, Walmart…">'
+    +'<button class="mbtn" id="addShop">Add shop</button></div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("box")+'Data</span></div><div class="pad">'
+    +'<button class="mbtn primary" id="expAll">Copy everything for Claude<small>Catalogue, prices and every trip</small></button>'
+    +'<button class="mbtn" id="dlAll">Download as a file</button>'
+    +'<button class="mbtn danger" id="wipe">Erase everything<small>Cannot be undone</small></button>'
+    +'</div></section>';
+  return html;
+}
+
+/* ----- bottom bar ----- */
+function renderBar(){
+  var bar=document.getElementById("bar");
+  if(screen!=="trip" || !S.active){ bar.innerHTML=""; bar.style.display="none"; fit(); return; }
+  bar.style.display="block";
+  var t=S.active, T=tripTotals();
+  if(t.mode==="plan"){
+    bar.innerHTML='<div class="bline"><span class="blabel">On the list</span>'
+      +'<span class="bval mono">'+(T.nn+T.nb+T.ns)+'</span></div>'
+      +'<div class="btot"><span class="blabel">Estimate</span><div class="bright">'
+      +'<div class="bbig mono">'+mx(T.listed)+'</div><div class="bsub mono">'+usd(T.listed)+'</div></div></div>'
+      +'<div class="brow"><button class="gobtn" id="goShop">Start shopping</button>'
+      +'<button class="ghost" id="cancelTrip">Cancel</button></div>';
+  } else {
+    bar.innerHTML='<div class="bline"><span class="blabel">Bought</span>'
+      +'<span class="bval mono">'+T.nb+' of '+(T.nb+T.nn)+'</span></div>'
+      +(T.ns?'<div class="bline"><span class="blabel">Skipped</span><span class="bval mono">'+T.ns+'</span></div>':'')
+      +(T.missing?'<div class="bline"><span class="blabel">Prices needed</span><span class="bval mono">'+T.missing+'</span></div>':'')
+      +'<div class="btot"><span class="blabel">In the basket</span><div class="bright">'
+      +'<div class="bbig mono">'+mx(T.bought)+'</div><div class="bsub mono">'+usd(T.bought)+'</div></div></div>'
+      +'<div class="brow"><button class="gobtn" id="closeTrip">Close trip</button>'
+      +'<button class="ghost" id="backPlan">Edit list</button></div>';
+  }
+  fit();
+}
+function fit(){
+  var h=document.getElementById("bar").offsetHeight||0;
+  document.body.style.paddingBottom=(h+36)+"px";
+}
+window.addEventListener("resize", fit);
+window.addEventListener("orientationchange", function(){ setTimeout(fit,250); });
+
+/* ---------------- sheets ---------------- */
 function openSheet(html){
   document.getElementById("sheetBody").innerHTML=html;
   document.getElementById("sheet").classList.add("open");
@@ -508,338 +853,517 @@ function closeSheet(){
   document.getElementById("scrim").classList.remove("open");
 }
 document.getElementById("scrim").addEventListener("click", closeSheet);
+document.getElementById("navBtn").addEventListener("click", function(){
+  openSheet('<h2>Go to</h2>'
+    +'<button class="mbtn nav'+(screen==="trip"?" primary":"")+'" data-go="trip">'+icon("cart")+'<span>Trip<small>'
+    +(S.active?(S.active.mode==="plan"?"Planning at "+shopName(S.active.shop):"Shopping at "+shopName(S.active.shop)):"Nothing open")+'</small></span></button>'
+    +'<button class="mbtn nav'+(screen==="cat"?" primary":"")+'" data-go="cat">'+icon("list")+'<span>Catalogue<small>Every item, by category</small></span></button>'
+    +'<button class="mbtn nav'+(screen==="hist"?" primary":"")+'" data-go="hist">'+icon("receipt")+'<span>Trips<small>'+S.trips.length+' logged</small></span></button>'
+    +'<button class="mbtn nav'+(screen==="set"?" primary":"")+'" data-go="set">'+icon("sliders")+'<span>Settings<small>Shops, rate, data · v'+APP_VERSION+'</small></span></button>');
+});
 
-/* ---------- interaction ---------- */
-document.getElementById("tabs").addEventListener("click", function(e){
-  var b=e.target.closest(".tab"); if(!b) return;
-  active=b.dataset.store; render(); window.scrollTo({top:0});
+/* ---------------- interactions ---------------- */
+document.getElementById("sheetBody").addEventListener("click", function(e){
+  var g=e.target.closest("[data-go]");
+  if(g){ screen=g.dataset.go; closeSheet(); render(); window.scrollTo({top:0}); return; }
 });
-document.getElementById("editBtn").addEventListener("click", function(){
-  editing=!editing;
-  this.classList.toggle("active", editing);
-  this.textContent = editing ? "Done" : "Edit";
-  document.getElementById("editBar").classList.toggle("on", editing);
-  render();
-});
+
 document.getElementById("main").addEventListener("click", function(e){
-  if(e.target.closest("#skipHead")){ skOpen=!skOpen; renderList(); return; }
-  var pb=e.target.closest("[data-price]");
-  if(pb && !editing){ editPrice(pb.dataset.price); return; }
-  var ab=e.target.closest("[data-add]");
-  if(ab){ itemSheet(null, ab.dataset.add); return; }
-  var row=e.target.closest(".row"); if(!row) return;
-  var id=row.dataset.id;
-  if(editing){ itemSheet(id, null); return; }
-  if(S.skipped[id]){ delete S.skipped[id]; save(); render(); return; }
-  if(S.checked[id]) delete S.checked[id]; else S.checked[id]=true;
-  save(); render();
+  var el;
+  if((el=e.target.closest("#startTrip"))){ newTripSheet(); return; }
+  if((el=e.target.closest("#addMore"))){ addMoreSheet(); return; }
+  if((el=e.target.closest("[data-hist]"))){ histDrawer(el.dataset.hist); return; }
+  if((el=e.target.closest("[data-price]"))){ priceSheet(el.dataset.price); return; }
+  if((el=e.target.closest("[data-pick]"))){ togglePick(el.dataset.pick); return; }
+  if((el=e.target.closest("[data-got]"))){ toggleGot(el.dataset.got); return; }
+  if((el=e.target.closest("[data-newitem]"))){ itemSheet(null, el.dataset.newitem); return; }
+  if((el=e.target.closest("[data-trip]"))){ tripSheet(el.dataset.trip); return; }
+  if((el=e.target.closest("[data-open]"))){
+    if(screen==="cat") itemSheet(el.dataset.open, null);
+    else if(S.active && S.active.mode==="shop") skipSheet(el.dataset.open);
+    else itemSheet(el.dataset.open, null);
+    return;
+  }
+  if((el=e.target.closest("#saveFx"))){
+    var v=parseFloat(document.getElementById("setFx").value);
+    if(isNaN(v)||v<=0){ toast("Enter a valid rate"); return; }
+    S.fx=v; save(); render(); toast("Rate saved"); return;
+  }
+  if((el=e.target.closest("#addShop"))){
+    var n=document.getElementById("newShop").value.trim();
+    if(!n){ toast("Give the shop a name"); return; }
+    S.shops.push({id:slug(n), name:n, active:true}); save(); render(); toast("Shop added"); return;
+  }
+  if((el=e.target.closest("[data-delshop]"))){
+    S.shops=S.shops.filter(function(s){return s.id!==el.dataset.delshop});
+    save(); render(); toast("Shop removed"); return;
+  }
+  if((el=e.target.closest("#expAll"))){ copyExport(); return; }
+  if((el=e.target.closest("#dlAll"))){ downloadExport(); return; }
+  if((el=e.target.closest("#wipe"))){ wipeSheet(); return; }
 });
 
-/* quick price edit — the common in-store action */
-function editPrice(id){
-  var ovp=S.items[id]||{}, cur=ovp.unit, pq=(ovp.qty===undefined?1:ovp.qty);
-  openSheet('<h2>Price in pesos</h2>'
-    +'<p class="hint">Price for one. The line total is this times the quantity.</p>'
-    +'<label class="lbl">Price each · MXN</label>'
-    +'<input class="field mono" id="pIn" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
-    +(cur===null||cur===undefined?"":cur)+'">'
-    +'<div class="hint mono" id="pUsd" style="margin:-6px 0 14px 2px"></div>'
-    +'<button class="mbtn primary" id="pSave">Save price</button>'
-    +'<button class="mbtn mid" id="pClear">Clear price</button>');
-  var inp=document.getElementById("pIn"), out=document.getElementById("pUsd");
-  function sync(){ var v=parseFloat(inp.value);
-    out.textContent = isNaN(v) ? ""
-      : (pq>1 ? pq+" × "+mx(v)+" = "+mx(v*pq)+"  ·  "+usd(v*pq)
-              : "≈ "+usd(v)+" at "+S.fx.toFixed(2)); }
-  inp.addEventListener("input", sync); sync();
-  setTimeout(function(){inp.focus();inp.select()},120);
-  document.getElementById("pSave").onclick=function(){
-    var v=parseFloat(inp.value), ov=S.items[id]||{};
-    ov.unit=isNaN(v)?null:v; ov.est=false; S.items[id]=ov;
-    save(); closeSheet(); render(); toast("Price saved");
-  };
-  document.getElementById("pClear").onclick=function(){
-    var ov=S.items[id]||{}; ov.unit=null; ov.est=false; S.items[id]=ov;
+document.getElementById("bar").addEventListener("click", function(e){
+  if(e.target.closest("#goShop")){
+    var T=tripTotals();
+    if(T.nn+T.nb===0){ toast("Mark at least one item first"); return; }
+    S.active.mode="shop"; save(); render(); window.scrollTo({top:0}); return;
+  }
+  if(e.target.closest("#backPlan")){ S.active.mode="plan"; save(); render(); return; }
+  if(e.target.closest("#closeTrip")){ closeTripSheet(); return; }
+  if(e.target.closest("#cancelTrip")){
+    openSheet('<h2>Cancel this trip?</h2><p class="hint">Everything you marked is discarded. Nothing is logged.</p>'
+      +'<button class="mbtn danger mid" id="ccYes">Discard the trip</button>'
+      +'<button class="mbtn mid" id="ccNo">Keep it</button>');
+    document.getElementById("ccNo").onclick=closeSheet;
+    document.getElementById("ccYes").onclick=function(){
+      S.active=null; save(); closeSheet(); render(); toast("Trip discarded");
+    };
+    return;
+  }
+});
+
+/* ----- trip actions ----- */
+function newTripSheet(){
+  var opts=S.shops.map(function(s){
+    return '<button class="mbtn" data-shop="'+s.id+'">'+esc(s.name)+'</button>';
+  }).join("");
+  openSheet('<h2>Start a trip</h2><p class="hint">Pick the shop. The whole catalogue opens so you can mark what you need.</p>'
+    +'<label class="lbl">Date</label>'
+    +'<input class="field mono" id="ntDate" type="date" value="'+todayISO()+'">'
+    +'<label class="lbl">Shop</label>'+opts);
+  document.getElementById("sheetBody").addEventListener("click", function h(e){
+    var b=e.target.closest("[data-shop]"); if(!b) return;
+    var d=document.getElementById("ntDate").value||todayISO();
+    S.active={id:"trip-"+Date.now(), shop:b.dataset.shop, shopName:shopName(b.dataset.shop),
+      date:d, mode:"plan", lines:{}};
+    save(); closeSheet(); screen="trip"; render(); window.scrollTo({top:0});
+    toast("Trip open — mark what you need");
+  });
+}
+
+function togglePick(id){
+  var t=S.active; if(!t) return;
+  if(t.lines[id]) delete t.lines[id];
+  else t.lines[id]={state:"need", q:S.items[id].q, paid:null};
+  save(); render();
+}
+function toggleGot(id){
+  var t=S.active; if(!t) return;
+  var L=t.lines[id];
+  if(!L){ t.lines[id]={state:"bought", q:S.items[id].q, paid:null}; }
+  else if(L.state==="bought"){ L.state="need"; }
+  else { L.state="bought"; }
+  save(); render();
+}
+function skipSheet(id){
+  var t=S.active, L=t&&t.lines[id]; if(!L) return itemSheet(id,null);
+  var it=S.items[id];
+  openSheet('<h2>'+esc(it.es)+'</h2><p class="hint">'+esc(it.en)+'</p>'
+    +'<button class="mbtn mid" id="skYes">'+(L.state==="skip"?"Put back on the list":"Skip this trip")+'</button>'
+    +'<button class="mbtn mid" id="skQty">Change quantity<small>Now '+L.q+'</small></button>'
+    +'<button class="mbtn mid" id="skOff">Take off this trip</button>'
+    +'<button class="mbtn mid" id="skNo">Cancel</button>');
+  document.getElementById("skNo").onclick=closeSheet;
+  document.getElementById("skYes").onclick=function(){
+    L.state = L.state==="skip" ? "need" : "skip";
     save(); closeSheet(); render();
+  };
+  document.getElementById("skOff").onclick=function(){
+    delete t.lines[id]; save(); closeSheet(); render(); toast("Off this trip");
+  };
+  document.getElementById("skQty").onclick=function(){ qtySheet(id); };
+}
+function qtySheet(id){
+  var L=S.active.lines[id], it=S.items[id];
+  openSheet('<h2>Quantity</h2><p class="hint">'+esc(it.es)+'</p>'
+    +'<input class="field mono" id="qIn" type="number" inputmode="decimal" step="1" min="0" value="'+L.q+'">'
+    +'<button class="mbtn primary" id="qSave">Save</button>');
+  document.getElementById("qSave").onclick=function(){
+    var v=parseFloat(document.getElementById("qIn").value);
+    L.q=(isNaN(v)||v<0)?1:v; save(); closeSheet(); render();
   };
 }
 
-/* full item sheet — add when id is null, edit when it isn't */
-function itemSheet(id, gid){
-  var isNew=!id, ov=id?(S.items[id]||{}):{}, cur=null;
-  if(id){
-    groups(active).forEach(function(g){ g.rows.forEach(function(r){ if(r.id===id) cur=r; }); });
-  }
-  var n=cur?cur.n:"", en=cur?cur.e:"", q=cur?cur.q:1, pr=cur?cur.unit:null;
-  openSheet('<h2>'+(isNew?"Add an item":"Edit item")+'</h2>'
-    +'<p class="hint">'+(isNew
-      ? "For something you bought that isn’t on the list. It stays for next time."
-      : "Changes apply from now on. Trips already logged keep the values they had.")+'</p>'
-    +'<label class="lbl">Name in Spanish</label>'
-    +'<input class="field" id="fEs" type="text" placeholder="Nombre" value="'+esc(n)+'">'
-    +'<label class="lbl">Name in English</label>'
-    +'<input class="field" id="fEn" type="text" placeholder="Name" value="'+esc(en)+'">'
-    +'<div class="two"><div><label class="lbl">Quantity</label>'
-    +'<input class="field mono" id="fQ" type="number" inputmode="decimal" step="1" min="0" placeholder="1" value="'+esc(q)+'"></div>'
-    +'<div><label class="lbl">Price each · MXN</label>'
-    +'<input class="field mono" id="fP" type="number" inputmode="decimal" step="0.01" placeholder="0.00" value="'
-    +(pr===null||pr===undefined?"":pr)+'"></div></div>'
-    +'<button class="mbtn primary" id="fSave">'+(isNew?"Add item":"Save changes")+'</button>'
-    +(isNew?"":(S.skipped[id]
-        ? '<button class="mbtn mid" id="fSkip">Put back in this trip<small>It is set to be skipped</small></button>'
-        : '<button class="mbtn mid" id="fSkip">Skip this trip<small>Stays on the list, out of this trip’s total</small></button>'))
-    +(isNew?"":'<button class="mbtn danger mid" id="fDel">Remove from the list<small>Gone from every trip until you restore it in Settings</small></button>')
-    +'<button class="mbtn mid" id="fCancel">Cancel</button>');
-  setTimeout(function(){document.getElementById("fEs").focus()},120);
+function addMoreSheet(){
+  var t=S.active;
+  var pool=Object.keys(S.items).map(function(id){return S.items[id]})
+    .filter(function(it){ return it.active && !t.lines[it.id]; })
+    .sort(function(a,b){ return a.es.localeCompare(b.es); });
+  openSheet('<h2>Add to this trip</h2>'
+    +'<input class="field" id="addSearch" type="text" placeholder="Search the catalogue">'
+    +'<div id="addList">'+pool.map(function(it){
+      return '<button class="mbtn" data-add="'+it.id+'">'+esc(it.es)+'<small>'+esc(it.en)+' · '+mx(it.p)+'</small></button>';
+    }).join("")+'</div>'
+    +'<button class="mbtn mid" id="addNew">Something not in the catalogue</button>');
+  var inp=document.getElementById("addSearch");
+  inp.addEventListener("input", function(){
+    var q=inp.value.toLowerCase();
+    Array.prototype.forEach.call(document.querySelectorAll("#addList [data-add]"), function(b){
+      b.style.display = b.textContent.toLowerCase().indexOf(q)>=0 ? "" : "none";
+    });
+  });
+  document.getElementById("addNew").onclick=function(){ itemSheet(null, "pantry", true); };
+  document.getElementById("addList").addEventListener("click", function(e){
+    var b=e.target.closest("[data-add]"); if(!b) return;
+    t.lines[b.dataset.add]={state:"bought", q:S.items[b.dataset.add].q, paid:null};
+    save(); closeSheet(); render(); toast("Added to the trip");
+  });
+}
 
+function priceSheet(id){
+  var it=S.items[id], t=S.active, L=t?t.lines[id]:null;
+  var cur = (L && L.paid!==null && L.paid!==undefined) ? L.paid : it.p;
+  var q = L ? L.q : it.q;
+  openSheet('<h2>Price for one</h2><p class="hint">'+esc(it.es)+' — what it cost today. The reference price stays as it is unless you change it in the catalogue.</p>'
+    +'<label class="lbl">Price each · MXN</label>'
+    +'<input class="field mono" id="pIn" type="number" inputmode="decimal" step="0.01" value="'+(cur===null?"":cur)+'">'
+    +'<p class="hint mono" id="pCalc"></p>'
+    +'<button class="mbtn primary" id="pSave">Save</button>'
+    +(it.ref?'<p class="hint">Shelf reference: '+esc(it.ref)+'</p>':''));
+  var inp=document.getElementById("pIn"), out=document.getElementById("pCalc");
+  function sync(){
+    var v=parseFloat(inp.value);
+    out.textContent = isNaN(v) ? "" : (q>1 ? q+" × "+mx(v)+" = "+mx(v*q)+"  ·  "+usd(v*q) : "≈ "+usd(v));
+  }
+  inp.addEventListener("input", sync); sync();
+  setTimeout(function(){ inp.focus(); inp.select(); }, 120);
+  document.getElementById("pSave").onclick=function(){
+    var v=parseFloat(inp.value);
+    if(L){ L.paid=isNaN(v)?null:v; if(L.state==="need") L.state="bought"; }
+    else { it.p=isNaN(v)?it.p:v; }
+    save(); closeSheet(); render(); toast("Price saved");
+  };
+}
+
+/* ----- price history drawer ----- */
+function histDrawer(id){
+  var it=S.items[id], h=(it.hist||[]).slice();
+  if(h.length<2){ toast("Not enough price points yet"); return; }
+  var ps=h.map(function(x){return x.p});
+  var min=Math.min.apply(null,ps), max=Math.max.apply(null,ps);
+  var sorted=ps.slice().sort(function(a,b){return a-b});
+  var med = sorted.length%2 ? sorted[(sorted.length-1)/2]
+          : (sorted[sorted.length/2-1]+sorted[sorted.length/2])/2;
+  var first=ps[0], last=ps[ps.length-1];
+  var pct = first ? ((last-first)/first*100) : 0;
+
+  openSheet('<h2>'+esc(it.es)+'</h2><p class="hint">'+esc(it.en)+'</p>'
+    + bigChart(h)
+    +'<div class="stats">'
+      +'<div><span class="slab">Low</span><span class="sval mono">'+mx(min)+'</span></div>'
+      +'<div><span class="slab">Median</span><span class="sval mono">'+mx(med)+'</span></div>'
+      +'<div><span class="slab">High</span><span class="sval mono">'+mx(max)+'</span></div>'
+      +'<div><span class="slab">Change</span><span class="sval mono '+(pct>0?"up":(pct<0?"down":""))+'">'
+      +(pct>0?"+":"")+pct.toFixed(0)+'%</span></div>'
+    +'</div>'
+    +'<div class="hlist">'+h.slice().reverse().map(function(x){
+      return '<div class="hrow"><span class="hd mono">'+esc(x.d)+'</span>'
+        +'<span class="hs">'+esc(shopName(x.shop||"chedraui").split(" ")[0])+'</span>'
+        +'<button class="hp mono" data-setref="'+id+'|'+x.p+'">'+mx(x.p)+'</button></div>';
+    }).join("")+'</div>'
+    + (it.ref ? '<p class="hint"><strong>These are line totals, not unit prices.</strong> '
+        + esc(it.es) + ' is sold by weight ('+esc(it.ref)+'), so the figures move with how much you bought as well as the price.</p>' : '')
+    +'<p class="hint">Reference price is '+mx(it.p)+'. Tap any figure above to make it the reference.</p>');
+  document.getElementById("sheetBody").addEventListener("click", function(e){
+    var pt=e.target.closest("[data-pt]");
+    if(pt){
+      var x=h[parseInt(pt.dataset.pt,10)];
+      document.getElementById("cNote").textContent =
+        shortDate(x.d)+" · "+mx(x.p)+" · "+shopName(x.shop||"chedraui").split(" ")[0];
+      Array.prototype.forEach.call(document.querySelectorAll(".cdot"),function(c,i){
+        c.classList.toggle("sel", i===parseInt(pt.dataset.pt,10));
+      });
+      return;
+    }
+    var b=e.target.closest("[data-setref]"); if(!b) return;
+    var parts=b.dataset.setref.split("|");
+    S.items[parts[0]].p=parseFloat(parts[1]);
+    save(); closeSheet(); render(); toast("Reference price updated");
+  });
+}
+
+function niceAxis(lo, hi){
+  if(hi===lo){ var b=Math.abs(hi)||1; lo=hi-b*0.1; hi=hi+b*0.1; }
+  var pad=(hi-lo)*0.15; lo-=pad; hi+=pad;
+  if(lo<0 && (hi-lo)>hi*1.5) lo=0;
+  var raw=(hi-lo)/3, mag=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)), n=raw/mag;
+  var step=(n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*mag;
+  var alo=Math.floor(lo/step)*step, ahi=Math.ceil(hi/step)*step, ticks=[];
+  for(var v=alo; v<=ahi+step*0.001; v+=step) ticks.push(Math.round(v*100)/100);
+  return {lo:alo, hi:ahi, ticks:ticks};
+}
+function shortDate(iso){
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var p=String(iso).slice(0,10).split("-");
+  if(p.length<3) return iso;
+  return parseInt(p[2],10)+" "+M[parseInt(p[1],10)-1];
+}
+function bigChart(h){
+  /* one series, change over time: line + dots, no area fill.
+     The baseline is not zero, so a fill would imply magnitude it does not have. */
+  var W=320, H=172, mL=48, mR=10, mT=14, mB=30;
+  var pw=W-mL-mR, ph=H-mT-mB;
+  var ps=h.map(function(x){return x.p});
+  var ax=niceAxis(Math.min.apply(null,ps), Math.max.apply(null,ps));
+  var X=function(i){ return mL + (h.length<2?pw/2:(i/(h.length-1))*pw); };
+  var Y=function(v){ return mT + (1-(v-ax.lo)/(ax.hi-ax.lo))*ph; };
+
+  var grid="", ylab="";
+  ax.ticks.forEach(function(t){
+    var y=Y(t).toFixed(1);
+    grid+='<line class="cgrid" x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'"/>';
+    ylab+='<text class="cytick" x="'+(mL-8)+'" y="'+y+'" dy="3.5">'+Math.round(t)+'</text>';
+  });
+
+  var pts=h.map(function(x,i){ return {x:X(i), y:Y(x.p), p:x.p, d:x.d}; });
+  var line=pts.map(function(p,i){ return (i?"L":"M")+p.x.toFixed(1)+" "+p.y.toFixed(1); }).join(" ");
+
+  /* label the ends only; the full table sits below the chart */
+  var xlab="";
+  var show = h.length<=4 ? pts.map(function(_,i){return i}) : [0, pts.length-1];
+  show.forEach(function(i){
+    var anc = i===0 ? "start" : (i===pts.length-1 ? "end" : "middle");
+    var x = i===0 ? mL : (i===pts.length-1 ? W-mR : pts[i].x);
+    xlab+='<text class="cxtick" x="'+x+'" y="'+(H-10)+'" text-anchor="'+anc+'">'+esc(shortDate(pts[i].d))+'</text>';
+  });
+
+  var dots=pts.map(function(p,i){
+    return '<circle class="cdot" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4"/>'
+         + '<circle class="chit" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="15" data-pt="'+i+'"/>';
+  }).join("");
+
+  return '<div class="chartwrap">'
+    +'<svg class="bigchart" viewBox="0 0 '+W+' '+H+'" role="img" '
+    +'aria-label="Price history, '+h.length+' points from '+esc(shortDate(h[0].d))+' to '+esc(shortDate(h[h.length-1].d))+'">'
+    +'<g class="caxis">'+grid
+    +'<line class="caxisline" x1="'+mL+'" y1="'+mT+'" x2="'+mL+'" y2="'+(mT+ph)+'"/></g>'
+    +'<g class="cylabs">'+ylab+'</g>'
+    +'<path class="cline" d="'+line+'"/>'
+    +'<g class="cdots">'+dots+'</g>'
+    +'<g class="cxlabs">'+xlab+'</g></svg>'
+    +'<div class="cnote" id="cNote">MXN · tap a point</div></div>';
+}
+
+/* ----- catalogue item editing ----- */
+function itemSheet(id, catId, addToTrip){
+  var isNew=!id, it=id?S.items[id]:null;
+  var cats=CATS.map(function(c){
+    var sel=(it? it.cat===c.id : c.id===catId);
+    return '<option value="'+c.id+'"'+(sel?' selected':'')+'>'+esc(c.name)+'</option>';
+  }).join("");
+  var shops='<option value="">Any shop</option>'+S.shops.map(function(s){
+    return '<option value="'+s.id+'"'+((it&&it.hint===s.id)?' selected':'')+'>'+esc(s.name)+'</option>';
+  }).join("");
+  openSheet('<h2>'+(isNew?"Add an item":"Edit item")+'</h2>'
+    +'<p class="hint">'+(isNew?"It joins the catalogue and is available on every future trip."
+      :"Changes apply from now on. Trips already closed keep what they recorded.")+'</p>'
+    +'<label class="lbl">Name in Spanish</label>'
+    +'<input class="field" id="fEs" type="text" value="'+esc(it?it.es:"")+'">'
+    +'<label class="lbl">Name in English</label>'
+    +'<input class="field" id="fEn" type="text" value="'+esc(it?it.en:"")+'">'
+    +'<div class="two"><div><label class="lbl">Usual quantity</label>'
+    +'<input class="field mono" id="fQ" type="number" inputmode="decimal" step="1" min="0" value="'+(it?it.q:1)+'"></div>'
+    +'<div><label class="lbl">Reference price · MXN</label>'
+    +'<input class="field mono" id="fP" type="number" inputmode="decimal" step="0.01" value="'+(it&&it.p!==null?it.p:"")+'"></div></div>'
+    +'<label class="lbl">Category</label><select class="field" id="fC">'+cats+'</select>'
+    +'<label class="lbl">Usually bought at</label><select class="field" id="fH">'+shops+'</select>'
+    +'<button class="mbtn primary" id="fSave">'+(isNew?"Add to the catalogue":"Save changes")+'</button>'
+    +(isNew?"":'<button class="mbtn danger mid" id="fDel">Remove from the catalogue<small>Hidden everywhere; its history is kept</small></button>')
+    +'<button class="mbtn mid" id="fCancel">Cancel</button>');
   document.getElementById("fCancel").onclick=closeSheet;
   document.getElementById("fSave").onclick=function(){
     var es=document.getElementById("fEs").value.trim();
-    var eng=document.getElementById("fEn").value.trim();
-    var qq=parseFloat(document.getElementById("fQ").value);
-    if(isNaN(qq)||qq<0) qq=1;
-    var pv=parseFloat(document.getElementById("fP").value);
-    if(!es && !eng){ toast("Give it a name first"); return; }
-    if(!es) es=eng;
+    var en=document.getElementById("fEn").value.trim();
+    var q=parseFloat(document.getElementById("fQ").value); if(isNaN(q)||q<0) q=1;
+    var p=parseFloat(document.getElementById("fP").value);
+    var c=document.getElementById("fC").value, hint=document.getElementById("fH").value||null;
+    if(!es && !en){ toast("Give it a name first"); return; }
+    if(!es) es=en;
     var tid=id;
     if(isNew){
-      tid=active+"|"+gid+"|custom-"+Date.now();
-      if(!S.custom[active]) S.custom[active]=[];
-      S.custom[active].push({id:tid, g:gid});
-      S.checked[tid]=true;
+      tid=slug(es)+"-"+Date.now().toString(36).slice(-4);
+      S.items[tid]={id:tid, cat:c, es:es, en:en, q:q, p:isNaN(p)?null:p,
+        ref:null, hint:hint, active:true, hist:[], custom:true};
+      if(addToTrip && S.active) S.active.lines[tid]={state:"bought", q:q, paid:isNaN(p)?null:p};
+    } else {
+      var o=S.items[tid];
+      o.es=es; o.en=en; o.q=q; o.cat=c; o.hint=hint;
+      if(!isNaN(p)) o.p=p;
     }
-    var rec=S.items[tid]||{};
-    rec.name=es; rec.english=eng; rec.qty=qq;
-    rec.unit=isNaN(pv)?null:pv; rec.est=false;
-    S.items[tid]=rec;
     save(); closeSheet(); render(); toast(isNew?"Added":"Saved");
   };
   if(!isNew){
-    document.getElementById("fSkip").onclick=function(){
-      if(S.skipped[id]){ delete S.skipped[id]; toast("Back in this trip"); }
-      else { S.skipped[id]=true; delete S.checked[id]; toast("Skipped this trip"); }
-      save(); closeSheet(); render();
-    };
     document.getElementById("fDel").onclick=function(){
-      var rec=S.items[id]||{}; rec.hidden=true; S.items[id]=rec;
-      delete S.checked[id];
-      save(); closeSheet(); render(); toast("Removed — restore it in Settings");
+      S.items[id].active=false;
+      if(S.active && S.active.lines[id]) delete S.active.lines[id];
+      save(); closeSheet(); render(); toast("Removed from the catalogue");
     };
   }
 }
 
-/* ---------- log a trip ---------- */
-document.getElementById("logBtn").addEventListener("click", function(){
-  var now=new Date(), pad=function(x){return String(x).padStart(2,"0")};
-  var dt=now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate())
-    +"T"+pad(now.getHours())+":"+pad(now.getMinutes());
-  openSheet('<h2>Log this trip</h2>'
-    +'<p class="hint">Use the date, time and rate from the receipt so the trip matches the paperwork.</p>'
+/* ----- closing a trip ----- */
+function closeTripSheet(){
+  var T=tripTotals();
+  openSheet('<h2>Close this trip</h2>'
+    +'<p class="hint">Enter the receipt total. The gap against what you checked off is your off-list spend.</p>'
     +'<label class="lbl">Date and time</label>'
-    +'<input class="field mono" id="tDT" type="datetime-local" value="'+dt+'">'
+    +'<input class="field mono" id="cDT" type="datetime-local" value="'+(S.active.date+"T12:00")+'">'
+    +'<label class="lbl">Receipt total · MXN</label>'
+    +'<input class="field mono" id="cTot" type="number" inputmode="decimal" step="0.01" placeholder="'+T.bought.toFixed(2)+'">'
     +'<label class="lbl">Exchange rate · MXN per USD</label>'
-    +'<input class="field mono" id="tRate" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
-    +'<p class="hint" style="margin-top:-6px">Saved with this trip. Changing it later won’t alter trips already logged.</p>'
-    +'<button class="mbtn primary" id="tSave">Save trip</button>'
-    +'<button class="mbtn mid" id="tCancel">Cancel</button>');
-  document.getElementById("tCancel").onclick=closeSheet;
-  document.getElementById("tSave").onclick=function(){
-    var r=parseFloat(document.getElementById("tRate").value);
-    if(isNaN(r)||r<=0){ toast("Enter a valid rate"); return; }
-    S.fx=r;
-    saveTrip(document.getElementById("tDT").value||dt, r);
+    +'<input class="field mono" id="cFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +'<p class="hint mono" id="cCalc">Checked off '+mx(T.bought)+'</p>'
+    +'<button class="mbtn primary" id="cSave">Save the trip</button>'
+    +'<button class="mbtn mid" id="cCancel">Not yet</button>');
+  var inp=document.getElementById("cTot"), out=document.getElementById("cCalc");
+  inp.addEventListener("input", function(){
+    var v=parseFloat(inp.value);
+    if(isNaN(v)){ out.textContent="Checked off "+mx(T.bought); return; }
+    var off=v-T.bought, pct=v?(off/v*100):0;
+    out.textContent="Checked off "+mx(T.bought)+"  ·  off-list "+mx(off)+" ("+pct.toFixed(0)+"%)";
+  });
+  document.getElementById("cCancel").onclick=closeSheet;
+  document.getElementById("cSave").onclick=function(){
+    var fx=parseFloat(document.getElementById("cFx").value);
+    if(isNaN(fx)||fx<=0){ toast("Enter a valid rate"); return; }
+    var rt=parseFloat(document.getElementById("cTot").value);
+    saveTrip(document.getElementById("cDT").value, fx, isNaN(rt)?null:rt);
   };
-});
+}
 
-function saveTrip(dt, rate){
-  var lines=[], skips=[], total=0, missing=0;
-  groups(active).forEach(function(g){
-    g.rows.forEach(function(r){
-      if(S.skipped[r.id]){
-        skips.push({id:r.id, nameES:r.n, nameEN:r.e||"", qty:r.q||"", group:g.title,
-          listPriceMXN:(r.price===null||r.price===undefined||isNaN(r.price))?null:Number(r.price)});
-        return;
-      }
-      if(!S.checked[r.id]) return;
-      var p=r.price;
-      if(p===null||p===undefined||isNaN(p)) missing++; else total+=Number(p);
-      lines.push({id:r.id, nameES:r.n, nameEN:r.e||"", qty:r.q, unitMXN:r.unit, group:g.title,
-        priceMXN:(p===null||p===undefined||isNaN(p))?null:Number(p)});
-    });
+function saveTrip(dt, fx, receiptTotal){
+  var t=S.active, T=tripTotals(), lines=[], date=(dt||"").slice(0,10)||todayISO();
+  Object.keys(t.lines).forEach(function(id){
+    var L=t.lines[id], it=S.items[id]; if(!it) return;
+    var unit = (L.paid!==null&&L.paid!==undefined&&!isNaN(L.paid)) ? L.paid : it.p;
+    lines.push({id:id, es:it.es, en:it.en, cat:it.cat, q:L.q,
+      unitMXN:(unit===null||unit===undefined||isNaN(unit))?null:unit,
+      lineMXN:lineTotal(it,L), state:L.state});
+    /* a bought line with a real price becomes a price point */
+    if(L.state==="bought" && unit!==null && unit!==undefined && !isNaN(unit)){
+      if(!it.hist) it.hist=[];
+      it.hist.push({d:date, p:unit, shop:t.shop});
+      if(it.hist.length>40) it.hist=it.hist.slice(-40);
+    }
   });
-  var t={id:"trip-"+Date.now(), store:SEED[active].full, storeKey:active, datetime:dt,
-    items:lines, itemCount:lines.length, missingPrices:missing,
-    skipped:skips, skippedCount:skips.length,
-    totalMXN:Math.round(total*100)/100, fxRate:rate,
-    totalUSD:Math.round(total/rate*100)/100};
-  t.restoreChecked=lines.map(function(i){return i.id});
-  t.restoreSkipped=skips.map(function(i){return i.id});
-  S.trips.push(t);
-  Object.keys(S.checked).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.checked[id]; });
-  Object.keys(S.skipped).forEach(function(id){ if(id.indexOf(active+"|")===0) delete S.skipped[id]; });
-  save(); render(); showReceipt(t);
+  var trip={id:t.id, shop:t.shop, shopName:shopName(t.shop), date:dt||date, fx:fx,
+    lines:lines, listed:Math.round(T.bought*100)/100,
+    receiptTotal:receiptTotal,
+    offList:(receiptTotal===null?null:Math.round((receiptTotal-T.bought)*100)/100),
+    bought:T.nb, skipped:T.ns, planned:T.nb+T.nn+T.ns,
+    totalUSD:receiptTotal===null?null:Math.round(receiptTotal/fx*100)/100};
+  S.trips.push(trip);
+  S.fx=fx;
+  S.active=null;
+  save(); screen="hist"; render();
+  tripSheet(trip.id);
 }
 
-function undoLastTrip(){
-  if(!S.trips.length){ toast("No trip to undo"); return; }
-  var t=S.trips.pop();
-  active=t.storeKey||active;
-  (t.restoreChecked||[]).forEach(function(id){ S.checked[id]=true; });
-  (t.restoreSkipped||[]).forEach(function(id){ S.skipped[id]=true; });
-  save(); closeSheet(); render(); toast("Trip undone \u2014 marks restored");
+/* ----- a saved trip ----- */
+function tripSheet(id){
+  var t=S.trips.filter(function(x){return x.id===id})[0];
+  if(!t){ toast("Trip not found"); return; }
+  openSheet('<h2>'+esc(t.shopName||shopName(t.shop))+'</h2>'
+    +'<p class="hint">'+esc((t.date||"").replace("T"," "))+'</p>'
+    +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
+    +'<button class="mbtn primary" data-tripexp="'+t.id+'">Copy this trip for Claude</button>'
+    +'<button class="mbtn mid" data-tripdl="'+t.id+'">Download this trip</button>'
+    +'<button class="mbtn danger mid" data-tripdel="'+t.id+'">Delete this trip</button>'
+    +'<button class="mbtn mid" id="tDone">Done</button>');
+  document.getElementById("tDone").onclick=closeSheet;
+  document.getElementById("sheetBody").addEventListener("click", function(e){
+    var b;
+    if((b=e.target.closest("[data-tripexp]"))){ copyText(JSON.stringify(tripPayload(t),null,2)); return; }
+    if((b=e.target.closest("[data-tripdl]"))){
+      download(JSON.stringify(tripPayload(t),null,2), "trip-"+(t.date||"").slice(0,10)+".json"); return;
+    }
+    if((b=e.target.closest("[data-tripdel]"))){
+      S.trips=S.trips.filter(function(x){return x.id!==t.id});
+      save(); closeSheet(); render(); toast("Trip deleted"); return;
+    }
+  });
 }
+
 function receiptText(t){
-  var W=36, s=t.store+"\n"+t.datetime.replace("T"," ")+"\n"+"-".repeat(W)+"\n";
-  t.items.forEach(function(i){
-    var nm=(i.nameES+(i.qty?" x"+i.qty:"")).slice(0,25);
-    s+=nm.padEnd(26)+(i.priceMXN===null?"—":i.priceMXN.toFixed(2)).padStart(10)+"\n";
+  var W=36, s=(t.shopName||"")+"\n"+(t.date||"").replace("T"," ")+"\n"+"-".repeat(W)+"\n";
+  (t.lines||[]).filter(function(l){return l.state==="bought"}).forEach(function(l){
+    var nm=(l.es+(l.q>1?" x"+l.q:"")).slice(0,25);
+    s+=nm.padEnd(26)+((l.lineMXN===null||l.lineMXN===undefined)?"—":l.lineMXN.toFixed(2)).padStart(10)+"\n";
   });
-  if(t.skipped && t.skipped.length){
-    s+="-".repeat(W)+"\nSKIPPED THIS TRIP\n";
-    t.skipped.forEach(function(i){
-      s+=("  "+i.nameES).slice(0,26).padEnd(26)+"\n";
-    });
+  var sk=(t.lines||[]).filter(function(l){return l.state==="skip"});
+  if(sk.length){
+    s+="-".repeat(W)+"\nSKIPPED\n";
+    sk.forEach(function(l){ s+=("  "+l.es).slice(0,26)+"\n"; });
   }
-  s+="-".repeat(W)+"\n"+"ITEMS BOUGHT".padEnd(26)+String(t.itemCount).padStart(10)+"\n";
-  if(t.skippedCount) s+="SKIPPED".padEnd(26)+String(t.skippedCount).padStart(10)+"\n";
-  if(t.missingPrices) s+="NO PRICE".padEnd(26)+String(t.missingPrices).padStart(10)+"\n";
-  s+="TOTAL MXN".padEnd(26)+t.totalMXN.toFixed(2).padStart(10)+"\n"
-   +("RATE "+t.fxRate.toFixed(2)).padEnd(26)+"".padStart(10)+"\n"
-   +"TOTAL USD".padEnd(26)+t.totalUSD.toFixed(2).padStart(10)+"\n";
+  s+="-".repeat(W)+"\n";
+  s+="CHECKED OFF".padEnd(26)+(t.listed||0).toFixed(2).padStart(10)+"\n";
+  if(t.receiptTotal!==null&&t.receiptTotal!==undefined){
+    s+="RECEIPT TOTAL".padEnd(26)+t.receiptTotal.toFixed(2).padStart(10)+"\n";
+    s+="OFF-LIST".padEnd(26)+(t.offList||0).toFixed(2).padStart(10)+"\n";
+  }
+  s+=("RATE "+(t.fx||S.fx).toFixed(2)).padEnd(26)+"\n";
+  if(t.totalUSD) s+="TOTAL USD".padEnd(26)+t.totalUSD.toFixed(2).padStart(10)+"\n";
   return s;
 }
-function showReceipt(t){
-  openSheet('<h2>Trip saved</h2>'
-    +'<p class="hint">Bought and skipped marks are cleared. The trip stays in history until you erase it.</p>'
-    +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
-    +'<button class="mbtn primary" id="rExp">Copy data for Claude</button>'
-    +'<button class="mbtn mid" id="rUndo">Undo this trip<small>Puts every mark back and deletes the trip</small></button>'
-    +'<button class="mbtn mid" id="rDone">Done</button>');
-  document.getElementById("rExp").onclick=copyExport;
-  document.getElementById("rUndo").onclick=undoLastTrip;
-  document.getElementById("rDone").onclick=closeSheet;
-}
 
-/* ---------- export ---------- */
-function exportPayload(){
-  var prices=[];
-  Object.keys(SEED).forEach(function(sk){
-    groups(sk).forEach(function(g){
-      g.rows.forEach(function(r){
-        prices.push({store:SEED[sk].label, group:g.title, nameES:r.n, nameEN:r.e,
-          qty:r.q, unitMXN:(r.unit===undefined?null:r.unit),
-          lineTotalMXN:(r.price===undefined?null:r.price), isEstimate:r.est});
-      });
-    });
-  });
-  return JSON.stringify({exportedAt:new Date().toISOString(), currentRate:S.fx,
-    trips:S.trips, currentList:prices}, null, 2);
+/* ----- export ----- */
+function tripPayload(t){
+  return {appVersion:APP_VERSION, catalogueRev:CATALOGUE_VERSION, exportedAt:new Date().toISOString(), trip:t};
 }
-function copyExport(){
-  var txt=exportPayload();
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(
-      function(){toast("Copied — paste it into Claude")},
-      function(){fallbackCopy(txt)});
-  } else fallbackCopy(txt);
+function fullPayload(){
+  return {appVersion:APP_VERSION, catalogueRev:CATALOGUE_VERSION,
+    exportedAt:new Date().toISOString(), currentRate:S.fx,
+    shops:S.shops, trips:S.trips,
+    catalogue:Object.keys(S.items).map(function(id){
+      var it=S.items[id];
+      return {id:id, category:catName(it.cat), es:it.es, en:it.en, qty:it.q,
+        refPriceMXN:it.p, shelfRef:it.ref, usualShop:it.hint, active:it.active,
+        priceHistory:it.hist};
+    })};
 }
-function fallbackCopy(txt){
+function copyText(txt){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast("Copied — paste it into Claude"); },
+      function(){ fallback(txt); });
+  } else fallback(txt);
+}
+function fallback(txt){
   openSheet('<h2>Copy this</h2><p class="hint">Tap and hold in the box, Select All, then Copy.</p>'
     +'<textarea class="field mono" style="height:44vh" readonly>'+esc(txt)+'</textarea>'
     +'<button class="mbtn mid" id="fbDone">Done</button>');
   document.getElementById("fbDone").onclick=closeSheet;
 }
-function downloadExport(){
-  var b=new Blob([exportPayload()],{type:"application/json"}), a=document.createElement("a");
-  a.href=URL.createObjectURL(b);
-  a.download="despensa-"+new Date().toISOString().slice(0,10)+".json";
+function copyExport(){ copyText(JSON.stringify(fullPayload(),null,2)); }
+function download(txt, name){
+  var b=new Blob([txt],{type:"application/json"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b); a.download=name;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
 }
-
-/* ---------- menu & settings ---------- */
-document.getElementById("menuBtn").addEventListener("click", function(){
-  var n=S.trips.length;
-  openSheet('<h2>Menu</h2><p class="hint">'+SEED[active].full+'</p>'
-    +'<button class="mbtn" id="mCopy">Copy data for Claude<small>'+n+' saved trip'+(n===1?"":"s")+' plus the current list</small></button>'
-    +'<button class="mbtn" id="mDl">Download as a file<small>The same data as .json</small></button>'
-    +'<button class="mbtn" id="mHist">Trip history<small>Review what you have logged</small></button>'
-    +(n?'<button class="mbtn" id="mUndo">Undo the last trip<small>Restores its marks and deletes it</small></button>':'')
-    +'<button class="mbtn" id="mSet">Settings<small>Exchange rate and removed items</small></button>'
-    +'<button class="mbtn" id="mUnc">Clear the marks<small>Reset bought and skipped without saving a trip</small></button>');
-  document.getElementById("mCopy").onclick=copyExport;
-  document.getElementById("mDl").onclick=function(){downloadExport();toast("Downloaded")};
-  document.getElementById("mHist").onclick=showHistory;
-  if(n) document.getElementById("mUndo").onclick=undoLastTrip;
-  document.getElementById("mSet").onclick=showSettings;
-  document.getElementById("mUnc").onclick=function(){
-    Object.keys(S.checked).forEach(function(id){if(id.indexOf(active+"|")===0) delete S.checked[id]});
-    Object.keys(S.skipped).forEach(function(id){if(id.indexOf(active+"|")===0) delete S.skipped[id]});
-    save(); render(); closeSheet(); toast("Marks cleared");
-  };
-});
-
-function showSettings(){
-  var hid=hiddenList();
-  openSheet('<h2>Settings</h2>'
-    +'<label class="lbl">Exchange rate · MXN per USD</label>'
-    +'<input class="field mono" id="sFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
-    +'<p class="hint" style="margin-top:-6px">Used for the dollar figures on screen. Each trip also stores the rate it was logged at.</p>'
-    +'<button class="mbtn primary" id="sSave">Save rate</button>'
-    +'<div style="height:14px"></div>'
-    +'<label class="lbl">Removed items · '+hid.length+'</label>'
-    +(hid.length
-      ? hid.map(function(h){return '<button class="mbtn" data-restore="'+h.id+'">'+esc(h.n)
-          +'<small>'+esc(h.store)+' · tap to put it back</small></button>'}).join("")
-      : '<p class="hint">Nothing removed.</p>')
-    +'<div style="height:14px"></div>'
-    +'<button class="mbtn danger" id="sWipe">Erase everything<small>Trips, prices, added items — all of it</small></button>');
-  document.getElementById("sSave").onclick=function(){
-    var v=parseFloat(document.getElementById("sFx").value);
-    if(isNaN(v)||v<=0){ toast("Enter a valid rate"); return; }
-    S.fx=v; save(); render(); toast("Rate saved");
-  };
-  document.getElementById("sheetBody").addEventListener("click", function(e){
-    var b=e.target.closest("[data-restore]"); if(!b) return;
-    var rec=S.items[b.dataset.restore]||{}; rec.hidden=false; S.items[b.dataset.restore]=rec;
-    save(); render(); showSettings(); toast("Restored");
-  });
-  document.getElementById("sWipe").onclick=function(){
-    openSheet('<h2>Erase everything?</h2>'
-      +'<p class="hint">Every logged trip, every price you edited and every item you added will be gone. Copy the data first if you want to keep any of it.</p>'
-      +'<button class="mbtn" id="wCopy">Copy the data first</button>'
-      +'<button class="mbtn danger mid" id="wYes">Yes, erase everything</button>'
-      +'<button class="mbtn mid" id="wNo">Keep it</button>');
-    document.getElementById("wCopy").onclick=copyExport;
-    document.getElementById("wNo").onclick=closeSheet;
-    document.getElementById("wYes").onclick=function(){
-      S=seedState(); save(); render(); closeSheet(); toast("Erased");
-    };
+function downloadExport(){
+  download(JSON.stringify(fullPayload(),null,2), "despensa-"+todayISO()+".json");
+  toast("Downloaded");
+}
+function wipeSheet(){
+  openSheet('<h2>Erase everything?</h2>'
+    +'<p class="hint">Every trip, every price you edited and every item you added. Copy the data first if you want to keep any of it.</p>'
+    +'<button class="mbtn" id="wCopy">Copy the data first</button>'
+    +'<button class="mbtn danger mid" id="wYes">Yes, erase everything</button>'
+    +'<button class="mbtn mid" id="wNo">Keep it</button>');
+  document.getElementById("wCopy").onclick=copyExport;
+  document.getElementById("wNo").onclick=closeSheet;
+  document.getElementById("wYes").onclick=function(){
+    S=seed(); save(); closeSheet(); render(); toast("Erased");
   };
 }
 
-function showHistory(){
-  if(!S.trips.length){
-    openSheet('<h2>Trip history</h2><div class="empty">Nothing logged yet.<br>Check items off as you shop, then tap <strong>Log this trip</strong>.</div>'
-      +'<button class="mbtn mid" id="hDone">Done</button>');
-    document.getElementById("hDone").onclick=closeSheet; return;
-  }
-  var html='<h2>Trip history</h2><p class="hint">'+S.trips.length+' trip'+(S.trips.length===1?"":"s")+' logged</p>';
-  S.trips.slice().reverse().forEach(function(t){
-    html+='<div class="rcpt mono" style="max-height:none">'+esc(receiptText(t))+'</div>';
-  });
-  html+='<button class="mbtn primary" id="hCopy">Copy data for Claude</button>'
-    +'<button class="mbtn mid" id="hDone2">Done</button>';
-  openSheet(html);
-  document.getElementById("hCopy").onclick=copyExport;
-  document.getElementById("hDone2").onclick=closeSheet;
-}
-
-/* ---------- go ---------- */
-load(); render(); setTimeout(fitTape,60);
+/* ---------------- go ---------------- */
+load(); render(); setTimeout(fit,60);
 if("serviceWorker" in navigator){
   window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
 }
+
 </script>
 </body>
 </html>
