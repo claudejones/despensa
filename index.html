@@ -145,9 +145,31 @@ main{padding:0 var(--pad);
 .big{padding:15px 30px;border:none;border-radius:11px;background:var(--store);
   color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
 
-/* bottom bar */
+/* ---------- bottom navigation ----------
+   Five destinations, all visible. The trip's own action bar stacks on top
+   of this rather than replacing it, so you can leave a half-planned trip
+   and come back without losing it. */
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:45;display:flex;
+  background:var(--card);border-top:1px solid var(--rule);
+  padding-bottom:env(safe-area-inset-bottom)}
+#tabs button{flex:1 1 0;min-width:0;background:none;border:none;padding:8px 2px 7px;
+  font-family:inherit;color:var(--muted);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  position:relative;-webkit-tap-highlight-color:transparent}
+#tabs .ico{width:21px;height:21px;stroke-width:1.7}
+#tabs .tlab{font-size:9.5px;font-weight:700;letter-spacing:.02em;line-height:1.1;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tabs button.on{color:var(--store)}
+#tabs button.on .ico{stroke-width:2}
+#tabs button:active{background:var(--paper)}
+/* a dot on the Trip tab while one is open, so it is visible from anywhere */
+#tabs .dot{position:absolute;top:7px;left:50%;margin-left:7px;
+  width:6px;height:6px;border-radius:50%;background:var(--store);
+  border:1.5px solid var(--card)}
+
+/* trip action bar — sits directly above the tabs */
 #bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
-  padding:14px var(--pad) calc(12px + env(safe-area-inset-bottom));
+  padding:14px var(--pad) 12px;
   box-shadow:0 -10px 30px rgba(0,0,0,.07)}
 #bar::before{content:'';position:absolute;top:-9px;left:0;right:0;height:10px;
   background:radial-gradient(circle at 7px 10px,transparent 6.5px,var(--card) 7px) repeat-x;
@@ -387,15 +409,14 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 
 <header>
   <div class="hbar">
-    <button class="hbtn" id="homeBtn" aria-label="Back to the dashboard" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
     <div class="htext"><div id="hTitle">Despensa</div><div id="hSub">&nbsp;</div></div>
     <button class="hbtn" id="tripSet" aria-label="Trip settings" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg></button>
-    <button class="hbtn" id="navBtn" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
   </div>
 </header>
 
 <main id="main"></main>
 <div id="bar"></div>
+<nav id="tabs" aria-label="Sections"></nav>
 
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true">
@@ -822,7 +843,7 @@ var SEED_TRIPS = [
 ];
 
 "use strict";
-var APP_VERSION = "4.4.1";
+var APP_VERSION = "4.5.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1290,6 +1311,7 @@ function render(){
   else if(screen==="cat")  m.innerHTML=viewCatalogue();
   else if(screen==="hist") m.innerHTML=viewHistory();
   else                     m.innerHTML=viewSettings();
+  renderTabs();
   renderBar();
 }
 
@@ -1305,9 +1327,6 @@ function renderHeader(){
   else { title="Settings"; sub="v"+APP_VERSION; }
   document.getElementById("hTitle").textContent=title;
   document.getElementById("hSub").textContent=sub;
-  /* The dashboard is home. Every other screen carries a back chevron to it,
-     so there is always one way out that does not need the menu. */
-  document.getElementById("homeBtn").hidden = (screen==="dash");
   /* Settings that belong to this trip, not to the catalogue or the app. */
   document.getElementById("tripSet").hidden = !(screen==="trip" && S.active);
 }
@@ -1882,9 +1901,31 @@ function renderBar(){
   }
   fit();
 }
+var TABS=[
+  {go:"dash", ic:"chart",   label:"Home"},
+  {go:"trip", ic:"cart",    label:"Trip"},
+  {go:"cat",  ic:"list",    label:"Catalogue"},
+  {go:"hist", ic:"receipt", label:"History"},
+  {go:"set",  ic:"sliders", label:"Settings"}
+];
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = TABS.map(function(t){
+    return '<button data-go="'+t.go+'" class="'+(screen===t.go?"on":"")+'"'
+      +(screen===t.go?' aria-current="page"':'')+'>'
+      +icon(t.ic)
+      +((t.go==="trip" && S.active)?'<span class="dot"></span>':'')
+      +'<span class="tlab">'+t.label+'</span></button>';
+  }).join("");
+}
+/* Keep the page clear of both fixed bars: the trip bar rides on top of the
+   tab bar, so content has to clear the pair of them. */
 function fit(){
-  var h=document.getElementById("bar").offsetHeight||0;
-  document.body.style.paddingBottom=(h+36)+"px";
+  var tabs=document.getElementById("tabs");
+  var th=tabs?tabs.offsetHeight:0;
+  var bar=document.getElementById("bar");
+  var bh=(bar && bar.style.display!=="none") ? bar.offsetHeight : 0;
+  if(bar) bar.style.bottom = th+"px";
+  document.body.style.paddingBottom=(th+bh+28)+"px";
   var hd=document.querySelector("header");
   if(hd) document.documentElement.style.setProperty("--hdr", hd.offsetHeight+"px");
 }
@@ -1930,20 +1971,14 @@ document.getElementById("grabClose").addEventListener("click", closeSheet);
 document.addEventListener("keydown", function(e){
   if(e.key==="Escape") closeSheet();
 });
-document.getElementById("homeBtn").addEventListener("click", function(){
-  screen="dash"; render(); window.scrollTo(0,0);
-});
 document.getElementById("tripSet").addEventListener("click", function(){
   if(S.active) tripSettingsSheet();
 });
-document.getElementById("navBtn").addEventListener("click", function(){
-  openSheet('<h2>Go to</h2>'
-    +'<button class="mbtn nav'+(screen==="dash"?" primary":"")+'" data-go="dash">'+icon("chart")+'<span>Dashboard<small>Spend, categories and price moves</small></span></button>'
-    +'<button class="mbtn nav'+(screen==="trip"?" primary":"")+'" data-go="trip">'+icon("cart")+'<span>Trip<small>'
-    +(S.active?(S.active.mode==="plan"?"Planning at "+shopName(S.active.shop):"Shopping at "+shopName(S.active.shop)):"Nothing open")+'</small></span></button>'
-    +'<button class="mbtn nav'+(screen==="cat"?" primary":"")+'" data-go="cat">'+icon("list")+'<span>Catalogue<small>Every item, by category</small></span></button>'
-    +'<button class="mbtn nav'+(screen==="hist"?" primary":"")+'" data-go="hist">'+icon("receipt")+'<span>Trips<small>'+S.trips.length+' logged</small></span></button>'
-    +'<button class="mbtn nav'+(screen==="set"?" primary":"")+'" data-go="set">'+icon("sliders")+'<span>Settings<small>Shops, rate, data · v'+APP_VERSION+'</small></span></button>');
+/* Navigation is the tab bar now — exposed, not hidden behind a menu. */
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b=e.target.closest("[data-go]"); if(!b) return;
+  if(screen===b.dataset.go){ window.scrollTo({top:0, behavior:"smooth"}); return; }
+  screen=b.dataset.go; render(); window.scrollTo(0,0);
 });
 
 /* ---------------- interactions ---------------- */
@@ -2150,8 +2185,23 @@ function tripSettingsSheet(){
     +'<input class="field" id="tsNote" type="text" placeholder="Party run, stock-up…" '
     +'value="'+esc(t.note||"")+'">'
     +'<button class="mbtn primary" id="tsSave">Save</button>'
-    +'<button class="mbtn mid" id="tsCancel">Cancel</button>');
+    +'<button class="mbtn mid" id="tsCancel">Cancel</button>'
+    /* reachable from either mode — the action bar only offers this while
+       planning, and a trip can need abandoning mid-aisle too */
+    +'<button class="mbtn danger mid" id="tsDrop">Discard this trip'
+    +'<small>Nothing is logged</small></button>');
   document.getElementById("tsCancel").onclick=closeSheet;
+  document.getElementById("tsDrop").onclick=function(){
+    openSheet('<h2>Discard this trip?</h2>'
+      +'<p class="hint">Everything marked is lost. Nothing is logged.</p>'
+      +'<button class="mbtn danger mid" id="ccYes">Discard the trip</button>'
+      +'<button class="mbtn mid" id="ccNo">Keep it</button>');
+    document.getElementById("ccNo").onclick=closeSheet;
+    document.getElementById("ccYes").onclick=function(){
+      S.active=null; save(); closeSheet();
+      screen="dash"; render(); window.scrollTo(0,0); toast("Trip discarded");
+    };
+  };
   document.getElementById("tsSave").onclick=function(){
     var fxv=parseFloat(document.getElementById("tsFx").value);
     if(isNaN(fxv)||fxv<=0){ toast("Enter a valid rate"); return; }
