@@ -865,7 +865,7 @@ var CAT_FP  = "c0c0e5a6";
 var SEED_FP = "d8ade43a";
 
 "use strict";
-var APP_VERSION = "4.8.0";
+var APP_VERSION = "4.8.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1049,6 +1049,7 @@ function load(){
 }
 
 function save(){
+  clearResolve();   /* the catalogue may have changed under the index */
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }
   catch(e){ toast("Could not save — storage is blocked or full"); }
 }
@@ -1245,6 +1246,55 @@ function rateHistory(){
     .sort(function(a,b){ return Math.abs(b.pct)-Math.abs(a.pct); });
 }
 
+/* ---- resolving a receipt line to the thing you actually buy ----
+   A receipt says "Manzana Pink Lady"; the catalogue says "Manzana — apple,
+   whichever is good". The catalogue is the list of things; the receipt is
+   what happened to be on the shelf. For anything about habit — how often
+   you buy it, whether you are due more — the catalogue entry is the unit,
+   not the brand. Match on the longest catalogue name the receipt line
+   begins with, so "Papa Chips Jalapeño" lands on "Papa Chips" and not on
+   something shorter it happens to share a word with. */
+function normName(s){
+  return String(s||"").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g,"")
+    .replace(/\s*[x×]\s*\d+\s*$/,"")          /* ×2 */
+    .replace(/\([^)]*\)/g," ")                      /* (3-for-2) */
+    .replace(/\b\d+(\.\d+)?\s?(g|gr|kg|ml|l|lt|pz|pzs|r)\b/g," ")   /* 300 g, 750 ml */
+    .replace(/[^a-z0-9]+/g," ").trim();
+}
+var _resolveCache=null;
+function resolveItem(name){
+  if(!_resolveCache){
+    _resolveCache={index:[], hit:{}};
+    Object.keys(S.items).forEach(function(id){
+      var it=S.items[id];
+      _resolveCache.index.push({id:id, n:normName(it.es)});
+    });
+    _resolveCache.index.sort(function(a,b){ return b.n.length-a.n.length; });
+  }
+  if(name in _resolveCache.hit) return _resolveCache.hit[name];
+  var n=normName(name), found=null;
+  /* forward: the receipt name begins with a catalogue name, longest first
+     — "manzana pink lady" lands on "manzana" */
+  for(var i=0;i<_resolveCache.index.length;i++){
+    var c=_resolveCache.index[i];
+    if(c.n && (n===c.n || n.indexOf(c.n+" ")===0)){ found=c.id; break; }
+  }
+  /* reverse: the catalogue name is the longer one — a receipt that just
+     says "Plátano" against a catalogue "Plátano Chiapas/Tabasco". Only
+     when exactly one catalogue item starts that way, so a bare "Crema"
+     against two kinds of cream resolves to neither. */
+  if(!found && n){
+    var cands=_resolveCache.index.filter(function(c){
+      return c.n.indexOf(n+" ")===0;
+    });
+    if(cands.length===1) found=cands[0].id;
+  }
+  _resolveCache.hit[name]=found;
+  return found;
+}
+/* the catalogue changes under us on an edit, so the index must not persist */
+function clearResolve(){ _resolveCache=null; }
+
 /* ---- what you buy every time ----
    The recurring baseline the budget is actually made of. Frequency is
    emergent: how often an item turns up, not a cadence anyone set. */
@@ -1252,21 +1302,22 @@ function staples(minShare){
   var trips=S.trips.filter(function(t){ return (t.lines||[]).some(function(l){
     return l.state==="bought" && !(l.lineMXN<0); }); });
   if(trips.length<3) return [];
+  /* grouped by the catalogue entry, same as restock — you buy apples, not
+     Pink Ladies, and a brand swap is not a gap in the habit */
   var by={};
   trips.forEach(function(t){
     var seen={};
     (t.lines||[]).forEach(function(l){
       if(l.state!=="bought" || l.lineMXN<0) return;
-      var k=l.es||l.id;
-      if(seen[k]) return;              /* two bags is still one occasion */
-      seen[k]=1;
-      if(!by[k]) by[k]={name:k, cat:l.cat, trips:0, total:0};
-      by[k].trips++;
-    });
-    (t.lines||[]).forEach(function(l){
-      if(l.state!=="bought" || l.lineMXN<0) return;
-      var k=l.es||l.id;
-      if(by[k]) by[k].total += (l.lineMXN||0);
+      var id=resolveItem(l.es||l.id);
+      if(!id) return;
+      var it=S.items[id];
+      if(!it || it.active===false) return;
+      if(!by[id]) by[id]={id:id, name:it.es, en:it.en, cat:it.cat, trips:0, total:0};
+      by[id].total += (l.lineMXN||0);
+      if(seen[id]) return;             /* two bags is still one occasion */
+      seen[id]=1;
+      by[id].trips++;
     });
   });
   var span=monthSpan();
@@ -1296,13 +1347,21 @@ function restock(n){
     var d=String(t.date||"").slice(0,10); if(!d) return;
     (t.lines||[]).forEach(function(l){
       if(l.state!=="bought" || l.lineMXN<0) return;
-      var k=l.es||l.id;
-      (by[k]=by[k]||{}) [d]=1;
+      /* Only things on the master list. A line that resolves to nothing is
+         a one-off or a brand since dropped — you cannot be "due" more of
+         something you no longer keep on the list. */
+      var id=resolveItem(l.es||l.id);
+      if(!id) return;
+      var it=S.items[id];
+      if(!it || it.active===false) return;
+      if(!by[id]) by[id]={days:{}, bought:{}};
+      by[id].days[d]=1;
+      by[id].bought[l.es||l.id]=d;     /* what was actually picked up */
     });
   });
   var today=todayISO(), out=[];
-  Object.keys(by).forEach(function(k){
-    var ds=Object.keys(by[k]).sort();
+  Object.keys(by).forEach(function(id){
+    var ds=Object.keys(by[id].days).sort();
     if(ds.length<3) return;
     var gaps=[];
     for(var i=1;i<ds.length;i++){
@@ -1312,9 +1371,19 @@ function restock(n){
     if(gaps.length<2) return;
     gaps.sort(function(a,b){ return a-b; });
     var med=gaps[Math.floor(gaps.length/2)];
-    var since=Math.round((new Date(today)-new Date(ds[ds.length-1]))/86400000);
-    out.push({name:k, every:Math.round(med), since:since, n:ds.length,
-      over:since-med, last:ds[ds.length-1]});
+    var last=ds[ds.length-1];
+    var since=Math.round((new Date(today)-new Date(last))/86400000);
+    var it=S.items[id];
+    /* name the variety that was last picked up, if it differs from the
+       catalogue's own name — "Manzana · last was Sugar Bee" */
+    var lastPick=null;
+    Object.keys(by[id].bought).forEach(function(nm){
+      if(by[id].bought[nm]===last && nm!==it.es) lastPick=nm;
+    });
+    out.push({id:id, name:it.es, en:it.en, cat:it.cat, lastPick:lastPick,
+      every:Math.round(med), since:since, n:ds.length,
+      over:since-med, last:last,
+      varieties:Object.keys(by[id].bought).length});
   });
   /* Past three cycles it was not forgotten, it was dropped from the list. */
   return out.filter(function(x){ return x.since <= x.every*3; })
@@ -1785,13 +1854,16 @@ function viewDash(){
     rs.forEach(function(x){
       var due=x.over>=0;
       html+='<div class="lrow"><div class="lhead">'
-        +'<span class="lname">'+esc(x.name)+'</span>'
+        +'<span class="lname">'+(x.cat?icon(catIconName(x.cat)):'')+esc(x.name)+'</span>'
         +'<span class="pill '+(due?"bad":"neutral")+'">'
         +(due? (x.over===0?'due now':x.over+'d over') : 'in '+(-x.over)+'d')+'</span></div>'
         +'<div class="lmeta">every '+x.every+' days · last bought '
-        +x.since+' day'+(x.since===1?"":"s")+' ago · '+x.n+' purchases</div></div>';
+        +x.since+' day'+(x.since===1?"":"s")+' ago · '+x.n+' purchases'
+        +(x.lastPick?' · last was '+esc(x.lastPick):'')+'</div></div>';
     });
-    html+='</div>';
+    html+='<div class="lmeta dfoot">Counted by what is on your catalogue, not by '
+      +'brand — a different apple is still apples. Anything no longer on the '
+      +'list is left out.</div></div>';
   }
 
   /* ---- biggest lines ---- */
