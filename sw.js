@@ -1,6 +1,6 @@
 /* Despensa — offline cache.
    Bump CACHE whenever index.html changes so phones pick up the new build. */
-var CACHE = "despensa-4.8.0-91c4132c";
+var CACHE = "despensa-4.8.1-5a0ba8f9";
 var ASSETS = ["./", "./index.html"];
 
 self.addEventListener("install", function(e){
