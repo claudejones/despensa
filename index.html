@@ -12,42 +12,66 @@
 <style>
 :root{
   color-scheme:only light;
+  /* Despensa's own palette — no webfonts, no CDN: this has to paint
+     instantly in a store with no signal. */
   --paper:#F7F7F4;
+  --card:#FFFFFF;
+  --well:#EFEFE9;          /* inset wells and empty bar track */
   --ink:#15150F;
   --muted:#8B8B80;
   --rule:#E3E3DA;
-  --card:#FFFFFF;
   --store:#D6431F;
   --good:#1E7A55;
+  --good-bg:#E7F2EC;
   --danger:#B3261E;
+  --bad-bg:#FBEAE8;
+  --shadow:0 1px 2px rgba(21,21,15,.05), 0 4px 14px rgba(21,21,15,.05);
   --pad:16px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --num:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:#F7F7F4}
 body{margin:0;padding:0;background:#F7F7F4;color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-family:var(--sans);
   font-size:16px;line-height:1.4;padding-bottom:200px;-webkit-font-smoothing:antialiased}
-.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3{font-weight:700;margin:0;letter-spacing:-.015em}
+.mono{font-family:var(--num);font-variant-numeric:tabular-nums}
 
 /* header */
 header{position:sticky;top:0;z-index:30;background:var(--paper);
   border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top)}
-.hrow{display:flex;align-items:center;gap:10px;padding:11px var(--pad) 12px}
+/* .hbar, not .hrow — .hrow is the price-history row further down and the
+   later rule was winning, which is what stripped the header's padding. */
+.hbar{display:flex;align-items:center;gap:12px;
+  padding:12px var(--pad) 13px;
+  padding-left:max(var(--pad), env(safe-area-inset-left));
+  padding-right:max(var(--pad), env(safe-area-inset-right))}
 .htext{flex:1;min-width:0}
-#hTitle{font-size:16px;font-weight:700;letter-spacing:-.01em;
+#hTitle{font-size:17px;font-weight:700;letter-spacing:-.02em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#hSub{font-size:11px;letter-spacing:.09em;text-transform:uppercase;
-  font-weight:650;color:var(--muted);margin-top:2px}
+#hSub{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);margin-top:3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hbtn{background:none;border:1px solid var(--rule);border-radius:9px;color:var(--ink);
   padding:10px;cursor:pointer;font-family:inherit;flex:0 0 auto;
   display:flex;align-items:center;justify-content:center}
 .hbtn .ico{width:20px;height:20px}
 .hbtn:active{background:var(--rule)}
 
-main{padding:0 var(--pad)}
+main{padding:0 var(--pad);
+  padding-left:max(var(--pad), env(safe-area-inset-left));
+  padding-right:max(var(--pad), env(safe-area-inset-right))}
 .sec{margin:22px 0 0;background:var(--paper)}
-.sechead{display:flex;align-items:baseline;justify-content:space-between;
-  padding:0 2px 7px;border-bottom:1px solid var(--rule)}
+.sechead{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 2px 7px;border-bottom:1px solid var(--rule);
+  position:sticky;top:var(--hdr,64px);z-index:12;background:var(--paper)}
+.secright{display:flex;align-items:center;gap:10px}
+.plus{width:28px;height:28px;border:1px solid var(--rule);border-radius:8px;
+  background:var(--card);color:var(--store);font-size:19px;font-weight:600;
+  line-height:1;cursor:pointer;font-family:inherit;padding:0;
+  display:flex;align-items:center;justify-content:center}
+.plus:active{background:var(--rule)}
 /* icons — single weight, inherit colour, never fill */
 .ico{width:17px;height:17px;flex:0 0 auto;display:block;
   fill:none;stroke:currentColor;stroke-width:1.75;
@@ -159,7 +183,7 @@ body.locked{position:fixed;width:100%;overflow:hidden}
 .grab::after{content:'';position:absolute;left:50%;top:13px;transform:translateX(-50%);
   width:40px;height:4px;background:var(--rule);border-radius:2px}
 .grab:active::after{background:var(--muted)}
-.xclose{flex:0 0 34px;height:34px;border:1px solid var(--rule);border-radius:50%;
+.xclose{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--rule);border-radius:50%;
   background:var(--paper);color:var(--ink);cursor:pointer;padding:0;
   display:flex;align-items:center;justify-content:center;position:absolute;right:0;top:2px}
 .xclose:active{background:var(--rule)}
@@ -218,48 +242,134 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .sval.down{color:var(--good)}
 .hlist{border-top:1px solid var(--rule);margin-bottom:14px}
 .hrow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--rule)}
+.hrow:last-child{border-bottom:none}
 .hd{flex:0 0 auto;font-size:13px;color:var(--muted)}
 .hs{flex:1;font-size:11.5px;color:var(--muted)}
 .hp{background:none;border:1px solid var(--rule);border-radius:7px;padding:5px 9px;
   font-size:13.5px;font-weight:650;color:var(--ink);cursor:pointer;font-family:inherit}
 
-/* ---------- dashboard ---------- */
-.dashhead .hero{padding:16px 2px 2px}
-.heronum{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1}
-.herosub{font-size:12.5px;color:var(--muted);margin-top:5px}
-.meter{height:8px;background:var(--rule);border-radius:4px;overflow:hidden;margin:14px 0 7px}
-.meterfill{height:100%;background:var(--store);border-radius:4px;transition:width .3s}
-.meterfill.over{background:var(--danger)}
-.meterrow{display:flex;justify-content:space-between;font-size:11.5px;
-  color:var(--muted);font-weight:600}
-.meterrow .up{color:var(--danger)}
-.meterrow .down{color:var(--good)}
+/* ---------- dashboard ----------
+   Card structure borrowed from the budget app; the colours are Despensa's. */
+.dcard{background:var(--card);border:1px solid var(--rule);border-radius:14px;
+  padding:18px 17px;box-shadow:var(--shadow);margin-top:14px}
+.filters + .dcard{margin-top:14px}
+.eyebrow{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--store);font-weight:700;display:flex;align-items:center;gap:7px;min-width:0}
+.eyebrow .ico{width:14px;height:14px;color:var(--store);flex:none}
+.dhead{display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:14px}
+.dnote{font-size:11.5px;color:var(--muted);white-space:nowrap;flex:none}
 
-.mchart{width:100%;height:auto;display:block;margin-top:10px}
-.mchart .mbar{fill:var(--store)}
+/* proportional figures on the hero — tabular digits read loose at this size */
+.bignum{font-size:34px;font-weight:700;letter-spacing:-.03em;line-height:1.05;
+  font-family:var(--sans);font-variant-numeric:proportional-nums}
+.bigsub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+  border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)}
+.pill.bad{background:var(--bad-bg);color:var(--danger)}
+.pill.neutral{background:var(--well);color:var(--muted)}
+
+.catbar{height:7px;border-radius:999px;background:var(--well);overflow:hidden;margin-top:10px}
+.catbar>div{height:100%;border-radius:999px;background:var(--store)}
+.catbar>div.over{background:var(--danger)}
+.catbar>div.quiet{background:var(--muted)}
+
+.metrow{display:flex;align-items:flex-start;gap:14px;
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--rule)}
+.metcell{flex:1;min-width:0}
+.metcell.r{text-align:right;flex:0 0 auto}
+.metlab{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metval{font-size:15px;font-weight:700;letter-spacing:-.01em;
+  font-family:var(--num);font-variant-numeric:tabular-nums}
+.metval.plain{font-family:var(--sans);letter-spacing:0}
+
+.lrow{display:flex;flex-direction:column;gap:5px;padding:12px 0;
+  border-bottom:1px solid var(--rule)}
+.dcard>.lrow:last-child{border-bottom:none;padding-bottom:0}
+.lrow:first-of-type{padding-top:0}
+/* a footnote under a list: the last row's own rule separates them */
+.dfoot{margin-top:13px}
+.lhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lname{font-weight:650;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;display:flex;align-items:center;gap:8px;font-size:14.5px}
+.lname .ico{width:14px;height:14px;color:var(--store);flex:none}
+.lamt{font-size:14px;font-weight:700;white-space:nowrap;
+  font-family:var(--num);font-variant-numeric:tabular-nums}
+.lmeta{font-size:11.5px;color:var(--muted);line-height:1.45}
+.lrow.dim .lname{color:var(--muted)}
+.lrow.dim .lname .ico{color:var(--muted)}
+.lrow.tap{cursor:pointer}
+
+.mchart{width:100%;height:auto;display:block;margin-top:4px}
+.mchart .mbar{fill:#D7D7CD}
+.mchart .mbar.cur{fill:var(--store)}
+/* knocked out of the card so a value never sits on the budget line */
 .mchart .mval{fill:var(--ink);font-size:9px;font-weight:700;text-anchor:middle;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-.mchart .mlab{fill:var(--muted);font-size:10px;text-anchor:middle;font-weight:600;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-.mchart .msub{fill:var(--rule);font-size:9px;text-anchor:middle;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  font-family:var(--num);stroke:var(--card);stroke-width:3;
+  paint-order:stroke fill;stroke-linejoin:round}
+.mchart .mlab{fill:var(--muted);font-size:9.5px;text-anchor:middle;font-weight:700}
+.mchart .msub{fill:var(--muted);font-size:8.5px;text-anchor:middle;opacity:.7;
+  font-family:var(--num)}
 .mchart .cgrid{stroke:var(--rule);stroke-width:1}
+/* budget reference — dashed so it never reads as data */
+.mchart .mbudget{stroke:var(--store);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
+.mchart .mbtxt{fill:var(--store);font-size:8.5px;font-weight:700;opacity:.85;
+  font-family:var(--num)}
 
-.crow{padding:11px 2px;border-bottom:1px solid var(--rule)}
-.chead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px}
-.cname{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:650}
-.cname .ico{width:14px;height:14px;color:var(--store);opacity:.8}
-.camt{font-size:13.5px;font-weight:650}
-.camt small{color:var(--muted);font-weight:500;margin-left:6px;font-size:11px}
-.cbar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden}
-.cfill{height:100%;background:var(--store);border-radius:3px}
+/* one filter row, above everything it scopes */
+.filters{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  position:sticky;top:var(--hdr,64px);z-index:14;
+  background:var(--paper);padding:12px 0 11px;
+  border-bottom:1px solid var(--rule);margin-bottom:2px}
+.mnav{display:flex;align-items:center;gap:2px;min-width:0;flex:1}
+.marrow{width:34px;height:34px;flex:0 0 34px;padding:0;border-radius:9px;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  cursor:pointer;display:flex;align-items:center;justify-content:center}
+.marrow .ico{width:17px;height:17px;stroke-width:2}
+.marrow:active{background:var(--rule)}
+.marrow[disabled]{opacity:.3;cursor:default;background:var(--paper)}
+.mlabel{flex:1;min-width:0;background:none;border:none;padding:0 8px;
+  font-family:inherit;color:var(--ink);cursor:pointer;text-align:center;
+  font-size:14.5px;font-weight:700;letter-spacing:-.01em;line-height:1.15;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mlabel small{display:block;font-size:10.5px;font-weight:650;color:var(--muted);
+  letter-spacing:.04em;margin-top:2px}
 
-.pctbox{flex:0 0 auto;font-size:15px;font-weight:700;padding:5px 9px;border-radius:7px;
-  background:var(--paper);border:1px solid var(--rule)}
-.pctbox.up{color:var(--danger)}
-.pctbox.down{color:var(--good)}
-.minibar{height:4px;background:var(--rule);border-radius:2px;overflow:hidden;margin-top:6px;max-width:180px}
-.minifill{height:100%;background:var(--store);opacity:.65;border-radius:2px}
+/* budget bar: fill is what's spent, the tick is how far into the month */
+.budgetbar{position:relative;height:9px;border-radius:999px;
+  background:var(--well);margin-top:14px}
+.bbfill{height:100%;border-radius:999px;background:var(--store);
+  max-width:100%}
+.bbfill.ahead{background:#E0803F}
+.bbfill.over{background:var(--danger)}
+.bbtick{position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:1px;
+  background:var(--ink);opacity:.5;transform:translateX(-1px)}
+.bblegend{display:flex;justify-content:space-between;gap:10px;
+  font-size:11px;color:var(--muted);margin-top:7px}
+
+/* ranked rows: the amount carries its share beside it */
+.lpc{font-size:11px;color:var(--muted);font-weight:650;margin-left:8px;
+  font-family:var(--num);font-variant-numeric:tabular-nums}
+
+.ccy{display:flex;gap:0;border:1px solid var(--rule);border-radius:999px;
+  overflow:hidden;background:var(--card);flex:0 0 auto}
+.ccy button{border:none;background:none;padding:6px 12px;font-size:11.5px;font-weight:700;
+  color:var(--muted);cursor:pointer;font-family:inherit;letter-spacing:.04em}
+.ccy button.on{background:var(--store);color:#fff}
+
+.dbtn{display:block;width:100%;margin-top:16px;padding:14px;border:none;border-radius:11px;
+  background:var(--store);color:#fff;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:inherit}
+.dbtn.quiet{background:var(--paper);color:var(--ink);border:1px solid var(--rule)}
+
+/* a flag headline wraps — it is a sentence, not a list row */
+.flagtitle{font-weight:700;font-size:14.5px;line-height:1.35;margin-bottom:6px}
+.flagbox{display:flex;gap:11px;align-items:flex-start}
+.flagbox .ico{width:18px;height:18px;color:var(--store);flex:none;margin-top:1px}
 
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 76px);
   transform:translateX(-50%) translateY(-6px);background:var(--ink);color:var(--paper);
@@ -272,7 +382,7 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 <body>
 
 <header>
-  <div class="hrow">
+  <div class="hbar">
     <div class="htext"><div id="hTitle">Despensa</div><div id="hSub">&nbsp;</div></div>
     <button class="hbtn" id="navBtn" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
   </div>
@@ -330,7 +440,10 @@ var ICONS = {
   sliders:["M4 21v-7","M4 10V3","M12 21v-9","M12 8V3","M20 21v-5","M20 12V3",
            "M1 14h6","M9 8h6","M17 16h6"],
   menu:["M4 7h16","M4 12h16","M4 17h16"],
-  chart:["M3 3v16a2 2 0 0 0 2 2h16","m7 14 3-4 3 3 4-6"]
+  chart:["M3 3v16a2 2 0 0 0 2 2h16","m7 14 3-4 3 3 4-6"],
+  pie:["M21.21 15.89A10 10 0 1 1 8 2.83","M22 12A10 10 0 0 0 12 2v10Z"],
+  alert:["M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z",
+         "M12 9v4","M12 17h.01"]
 };
 
 function icon(name, cls){
@@ -345,7 +458,7 @@ function icon(name, cls){
    p = reference price MXN (latest known). q = usual quantity.
    hint = shop usually bought at (a sort hint, never a restriction).
    hist = known price points from receipts. */
-var CATALOGUE_VERSION = 11;
+var CATALOGUE_VERSION = 12;
 
 var CATS = [
   {id:"produce",  name:"Fruit & Veg",         ic:"leaf"},
@@ -404,8 +517,12 @@ var ITEMS = [
   hist:[["2026-09-05",329.00],["2026-09-20",329.00],["2026-09-30",329.00],["2026-10-08",329.00]]},
 {c:"protein", es:"Pollo Rostizado", en:"Rotisserie chicken", q:1, p:99.90, hint:"chedraui",
   hist:[["2026-08-16",99.90],["2026-08-30",99.90],["2026-09-13",99.90],["2026-10-08",99.90]]},
+/* The 80.90 that used to sit here was "Huevo Webito 12 pz" on the 8 Oct
+   receipt — a different brand that got name-matched into this entry and
+   then read as a 161% price rise. The receipts carry four egg products
+   (Criollo 18, Blanco 18, Blanco 12, Webito 12); only like goes with like. */
 {c:"protein", es:"Huevo Blanco 12 pz", en:"Eggs, 12 ct — brand varies", q:1, p:32.00, hint:"chedraui",
-  hist:[["2026-09-05",32.00],["2026-09-13",30.00],["2026-10-08",80.90]]},
+  hist:[["2026-09-05",32.00],["2026-09-13",30.00],["2026-10-08",32.00]]},
 {c:"protein", es:"Tofu firme House Foods", en:"Firm tofu, 396 g", q:1, p:109.04, hint:"dac"},
 {c:"protein", es:"Carne al Pastor veggie", en:"Veggie al pastor, 450 g", q:1, p:100.92, hint:"dac"},
 {c:"protein", es:"Hamburguesa de Yaca", en:"Jackfruit burger, 440 g", q:1, p:129.92, hint:"dac"},
@@ -632,7 +749,7 @@ var SEED_TRIPS = [
 ];
 
 "use strict";
-var APP_VERSION = "3.0.0";
+var APP_VERSION = "4.2.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -666,7 +783,7 @@ function importSeedTrips(){
   });
 }
 function seed(){
-  var st = {v:6, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89, budget:12000,
+  var st = {v:6, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89, budgetUSD:700, ccy:"mxn", seeded:false,
             shops:SHOPS.slice(), items:{}, trips:[], active:null};
   ITEMS.forEach(function(it){
     var id = slug(it.es);
@@ -677,8 +794,24 @@ function seed(){
   return st;
 }
 
+/* old ids looked like "chedraui|wk|pollo-rostizado"; the catalogue now uses the bare slug */
+function bareId(id){
+  var p=String(id||"").split("|");
+  return p[p.length-1];
+}
+/* In every migrated trip, sum(paid) ties exactly to the receipt total —
+   so paid is a LINE total, not a price each. Repair accordingly. */
+function repairLine(l, items){
+  var q=parseFloat(l.q); if(isNaN(q)||q<=0) q=1;
+  var line=(l.lineMXN!==undefined && l.lineMXN!==null) ? Number(l.lineMXN)
+         : (l.paid===null||l.paid===undefined||isNaN(l.paid) ? null : Number(l.paid));
+  var id=bareId(l.id), it=items[id];
+  return {id:id, es:l.es||l.nameES||"", en:l.en||l.nameEN||"",
+    cat:(l.cat || (it?it.cat:null) || "other"),
+    q:q, unitMXN:(line===null?null:Math.round(line/q*100)/100),
+    lineMXN:line, state:l.state||"bought"};
+}
 function migrate(){
-  /* carry forward trips logged in v1 so nothing is lost */
   try{
     var raw = localStorage.getItem(LEGACY_KEY);
     if(!raw) return [];
@@ -689,12 +822,32 @@ function migrate(){
         shop:t.storeKey||"chedraui", shopName:t.store||"Chedraui",
         date:t.datetime||"", fx:t.fxRate||17.30,
         lines:(t.items||[]).map(function(i){
-          return {id:i.id||slug(i.nameES||"item"), es:i.nameES||"", en:i.nameEN||"",
+          return {id:i.id, es:i.nameES||"", en:i.nameEN||"",
                   q:i.qty||1, paid:i.priceMXN, state:"bought"};
         }),
         receiptTotal:t.totalMXN||null, listed:t.totalMXN||0, offList:0, legacy:true};
     });
   }catch(e){ return []; }
+}
+/* run once over whatever is already stored, old format or not */
+function repairTrips(){
+  var fixed=0;
+  S.trips.forEach(function(t){
+    var needs=(t.lines||[]).some(function(l){
+      return l.cat===undefined || l.lineMXN===undefined || typeof l.q==="string" || String(l.id).indexOf("|")>=0;
+    });
+    if(!needs) return;
+    t.lines=(t.lines||[]).map(function(l){ return repairLine(l, S.items); });
+    var sum=t.lines.reduce(function(s,l){ return s+(l.lineMXN||0); },0);
+    t.listed=Math.round(sum*100)/100;
+    if(t.receiptTotal!==null && t.receiptTotal!==undefined){
+      t.offList=Math.round((t.receiptTotal-t.listed)*100)/100;
+    }
+    t.bought=t.lines.filter(function(l){return l.state==="bought"}).length;
+    t.skipped=t.lines.filter(function(l){return l.state==="skip"}).length;
+    fixed++;
+  });
+  return fixed;
 }
 
 function load(){
@@ -702,6 +855,8 @@ function load(){
   if(!S || !S.items){
     S = seed();
     S.trips = importSeedTrips().concat(migrate());
+    S.seeded = true;
+    repairTrips();
     save(); return;
   }
   var fresh = seed();
@@ -721,16 +876,24 @@ function load(){
       if(fresh.items[id].hist.length >= (mine.hist||[]).length) mine.hist = fresh.items[id].hist;
     });
     S.cat = CATALOGUE_VERSION;
-    /* bring in any historical trip not already present */
+  }
+  /* seeding has its own flag — it must not ride on a catalogue bump */
+  if(!S.seeded){
     var have={}; S.trips.forEach(function(t){ have[t.id]=1; });
     importSeedTrips().forEach(function(t){ if(!have[t.id]) S.trips.push(t); });
     S.trips.sort(function(x,y){ return (x.date||"").localeCompare(y.date||""); });
+    S.seeded = true;
   }
+  repairTrips();
   S.appVersion = APP_VERSION;
   if(!S.shops) S.shops = SHOPS.slice();
   if(!S.trips) S.trips = [];
   if(typeof S.fx!=="number" || !isFinite(S.fx) || S.fx<=0) S.fx = 16.89;
-  if(typeof S.budget!=="number" || !isFinite(S.budget) || S.budget<=0) S.budget = 12000;
+  if(typeof S.budgetUSD!=="number" || !isFinite(S.budgetUSD) || S.budgetUSD<=0) S.budgetUSD = 700;
+  if(S.ccy!=="usd" && S.ccy!=="mxn") S.ccy="mxn";
+  delete S.budget;
+  /* seeding and repair happen here — persist them or they are redone every launch */
+  save();
 }
 
 function save(){
@@ -743,13 +906,26 @@ function mx(n){
   if(n===null||n===undefined||isNaN(n)) return "—";
   return "MX$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
+/* Money is shown in ONE currency at a time. Mixing them line by line is
+   what made the old dashboard unreadable. */
+function m(n, dp){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  var v=(S.ccy==="usd") ? Number(n)/S.fx : Number(n);
+  var d=(dp===undefined) ? 2 : dp;
+  return (S.ccy==="usd"?"$":"MX$")+v.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+function ccyLabel(){ return S.ccy==="usd" ? "USD" : "MXN"; }
+function budgetInView(){ return S.ccy==="usd" ? S.budgetUSD : S.budgetUSD*S.fx; }
 function usd(n){
   if(n===null||n===undefined||isNaN(n)) return "—";
   return "US$"+(Number(n)/S.fx).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function esc(s){ return String(s===null||s===undefined?"":s)
   .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function catName(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?c.name:"Other"; }
+function catName(id){
+  var c=CATS.filter(function(x){return x.id===id})[0];
+  return c ? c.name : "Uncategorised";
+}
 function catIcon(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?icon(c.ic):""; }
 function shopName(id){ var s=S.shops.filter(function(x){return x.id===id})[0]; return s?s.name:id; }
 function toast(m){
@@ -835,37 +1011,155 @@ function topItems(n, months){
   return Object.keys(it).map(function(k){return it[k]})
     .sort(function(x,y){ return y.total-x.total; }).slice(0,n||8);
 }
-function priceMovers(n){
-  var out=[];
+/* Items sold by weight record the line total for whatever weight went in
+   the bag, not a rate. 1.25 kg of apples against one loose apple is a
+   +225% "price rise" that never happened. Until a trip records kg, those
+   items cannot be compared at all, so they are excluded outright. */
+function byWeight(it){
+  return /\/\s*(kg|g|l|ml|lt|litro)\b/i.test(String(it.ref||""));
+}
+/* "more than usual" beats "more than last time" — one odd purchase
+   should not look like a trend. Latest against the median of the rest.
+   Guarded twice over, because every absurd percentage this card has ever
+   shown came from comparing two different things under one name. */
+function priceWatch(n){
+  var out=[], skipped={weight:0, noisy:0};
   Object.keys(S.items).forEach(function(id){
-    var it=S.items[id], h=it.hist||[];
-    if(h.length<2 || !it.active) return;
-    var last=h[h.length-1].p, prev=h[h.length-2].p;
-    if(!prev) return;
-    var pct=(last-prev)/prev*100;
-    if(Math.abs(pct)<1) return;
-    out.push({es:it.es, en:it.en, id:id, last:last, prev:prev, pct:pct, weighed:!!it.ref});
+    var it=S.items[id], h=(it.hist||[]);
+    if(!it.active || h.length<3) return;
+    var ps=h.map(function(x){return x.p}).filter(function(p){return p>0});
+    if(ps.length<3) return;
+    if(byWeight(it)){ skipped.weight++; return; }
+
+    var last=ps[ps.length-1], prior=ps.slice(0,-1).sort(function(a,b){return a-b});
+    var med = prior.length%2 ? prior[(prior.length-1)/2]
+            : (prior[prior.length/2-1]+prior[prior.length/2])/2;
+    if(!med) return;
+
+    /* If the earlier prices do not agree with each other, the history is
+       mixing products — a different brand, a bigger bottle, two packs on
+       one line. There is no "usual price" to be above or below. */
+    if((prior[prior.length-1]-prior[0])/med > 0.35){ skipped.noisy++; return; }
+
+    var pct=(last-med)/med*100;
+    /* a few pesos on a cheap item is noise, not a price move */
+    if(Math.abs(pct)<8 || Math.abs(last-med)<5) return;
+    out.push({id:id, es:it.es, en:it.en, last:last, usual:med,
+      gap:last-med, pct:pct, n:ps.length});
   });
-  out.sort(function(x,y){ return Math.abs(y.pct)-Math.abs(x.pct); });
-  return out.slice(0, n||6);
+  out.sort(function(x,y){ return Math.abs(y.gap)-Math.abs(x.gap); });
+  return {rows:out.slice(0, n||5), skipped:skipped};
 }
-/* comparing a part-month against a whole one overstates the drop,
-   so match the previous month over the same number of days */
-function sameWindowSpend(key, throughDay){
-  var s=0;
+/* items with enough purchases to have been looked at at all */
+function priceTracked(){
+  var n=0;
+  Object.keys(S.items).forEach(function(id){
+    var it=S.items[id];
+    if(it.active && (it.hist||[]).length>=3) n++;
+  });
+  return n;
+}
+/* per-shop: trips, total and the average basket the research kept naming */
+function shopStats(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var s={};
   S.trips.forEach(function(t){
-    if(monthKey(t.date)!==key) return;
-    var day=parseInt(String(t.date).slice(8,10),10);
-    if(day<=throughDay) s+=spendOf(t);
+    if(months && !keep[monthKey(t.date)]) return;
+    var k=t.shop||"other";
+    if(!s[k]) s[k]={shop:k, name:t.shopName||shopName(k), total:0, trips:0};
+    s[k].total+=spendOf(t); s[k].trips++;
   });
-  return s;
+  return Object.keys(s).map(function(k){
+    s[k].basket=s[k].trips? s[k].total/s[k].trips : 0; return s[k];
+  }).sort(function(x,y){ return y.total-x.total; });
 }
+/* Removed on purpose: month-over-month category percentages, and the
+   same-window spend comparison they leaned on. With one or two trips a
+   month, whether a single big shop lands before or after today's date
+   swings a category by hundreds of percent. The number moved; the
+   habit did not. The ranked bars show the shape of a month and the
+   month chart shows months side by side, which is what those were
+   reaching for without the false precision. */
 function monthProgress(curKey){
   var now=new Date(), nowKey=monthKey(todayISO());
   if(curKey!==nowKey) return null;           /* a finished month compares whole to whole */
   var y=parseInt(curKey.slice(0,4),10), m=parseInt(curKey.slice(5,7),10);
   var days=new Date(y, m, 0).getDate();
   return {day:now.getDate(), days:days, partial:now.getDate()<days};
+}
+function byStore(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var s={};
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    var k=t.shop||"other";
+    if(!s[k]) s[k]={shop:k, name:t.shopName||shopName(k), total:0, trips:0};
+    s[k].total+=spendOf(t); s[k].trips++;
+  });
+  return Object.keys(s).map(function(k){return s[k]})
+    .sort(function(x,y){ return y.total-x.total; });
+}
+/* Two trips to one shop on one day may be one receipt entered twice —
+   once by hand in the app, once from the seeded receipt history. But
+   people do shop twice in a day, so the date alone proves nothing.
+   Compare the actual lines: how much of the smaller basket appears in
+   the larger one at the same price. Only a real overlap gets flagged. */
+function tripKey(s){
+  return String(s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"")
+    .toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+function overlap(a, b){
+  var big=(a.lines||[]).length>=(b.lines||[]).length?a:b;
+  var small=(big===a)?b:a;
+  var sl=(small.lines||[]).filter(function(l){ return l.state==="bought" && l.lineMXN!=null; });
+  var idx={};
+  (big.lines||[]).forEach(function(l){
+    if(l.state!=="bought" || l.lineMXN==null) return;
+    (idx[tripKey(l.es||l.id)] = idx[tripKey(l.es||l.id)] || []).push(+l.lineMXN);
+  });
+  if(!sl.length || !Object.keys(idx).length) return null;   /* nothing to compare */
+  var hit=sl.filter(function(l){
+    var k=idx[tripKey(l.es||l.id)];
+    return k && k.indexOf(+l.lineMXN)>=0;
+  }).length;
+  return {hit:hit, of:sl.length, pct:hit/sl.length*100};
+}
+function sameDayPairs(){
+  var by={}, out=[];
+  S.trips.forEach(function(t){
+    var k=(t.shop||"other")+"|"+String(t.date||"").slice(0,10);
+    (by[k]=by[k]||[]).push(t);
+  });
+  Object.keys(by).forEach(function(k){
+    var g=by[k];
+    if(g.length<2) return;
+    g=g.slice().sort(function(a,b){ return spendOf(b)-spendOf(a); });
+    /* the strongest overlap found between any pair that day */
+    var best=null;
+    for(var i=0;i<g.length;i++) for(var j=i+1;j<g.length;j++){
+      var o=overlap(g[i], g[j]);
+      if(o && (!best || o.pct>best.pct)) best=o;
+    }
+    /* under 40% the two baskets are mostly different things — a real
+       second trip, not a copy. Say nothing. */
+    if(best && best.pct<40) return;
+    out.push({ date:k.split("|")[1], shop:shopName(k.split("|")[0]), trips:g,
+      ov:best, total:g.reduce(function(s,t){ return s+spendOf(t); },0),
+      dup:g.reduce(function(s,t){ return s+spendOf(t); },0)-spendOf(g[0]) });
+  });
+  return out.sort(function(a,b){ return a.date<b.date?1:-1; });
+}
+function missingPrices(){
+  var out=[], seen={};
+  S.trips.forEach(function(t){
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought") return;
+      if(l.lineMXN!==null && l.lineMXN!==undefined && !isNaN(l.lineMXN)) return;
+      var k=l.es||l.id;
+      if(!seen[k]){ seen[k]=1; out.push(k); }
+    });
+  });
+  return out;
 }
 function tripCadence(){
   var ds=S.trips.map(function(t){return String(t.date||"").slice(0,10)})
@@ -908,6 +1202,46 @@ function renderHeader(){
 }
 
 /* ----- dashboard ----- */
+/* Which month the whole screen is showing. null means "the latest one",
+   so a new trip in a new month moves the dashboard forward on its own. */
+var dashMonth = null;
+function dashIndex(ms){
+  if(dashMonth){
+    for(var i=0;i<ms.length;i++) if(ms[i].key===dashMonth) return i;
+  }
+  return ms.length-1;
+}
+/* One filter row above everything it scopes — month and currency together,
+   not a control buried inside the first card. Every card below reads from it. */
+function filterBar(ms, i){
+  var mo=ms[i];
+  return '<div class="filters">'
+    +'<div class="mnav">'
+      +'<button class="marrow" data-mstep="-1"'+(i<=0?' disabled':'')
+        +' aria-label="Previous month">'
+        +'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>'
+      +'<button class="mlabel" id="mJump">'+esc(monthLabel(mo.key))
+        +'<small>'+mo.trips+' trip'+(mo.trips===1?"":"s")+'</small></button>'
+      +'<button class="marrow" data-mstep="1"'+(i>=ms.length-1?' disabled':'')
+        +' aria-label="Next month">'
+        +'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>'
+    +'</div>'
+    +'<span class="ccy"><button data-ccy="mxn" class="'+(S.ccy==="mxn"?"on":"")+'">MXN</button>'
+    +'<button data-ccy="usd" class="'+(S.ccy==="usd"?"on":"")+'">USD</button></span>'
+    +'</div>';
+}
+/* the jump list: every month that has trips, newest first */
+function monthJumpSheet(){
+  var ms=byMonth().slice().reverse(), cur=byMonth()[dashIndex(byMonth())].key;
+  var h='<h2>Jump to a month</h2><p class="hint">'+ms.length
+    +' month'+(ms.length===1?"":"s")+' with trips logged.</p>';
+  ms.forEach(function(mo){
+    h+='<button class="mbtn'+(mo.key===cur?" primary":"")+'" data-mgo="'+mo.key+'">'
+      +esc(monthLabel(mo.key))
+      +'<small>'+mo.trips+' trip'+(mo.trips===1?"":"s")+' · '+m(mo.spend,0)+'</small></button>';
+  });
+  openSheet(h);
+}
 function viewDash(){
   var ms=byMonth();
   if(!ms.length){
@@ -915,122 +1249,264 @@ function viewDash(){
       +'<p>Close a trip and this fills with your spend, categories and price moves.</p>'
       +'<button class="big" id="startTrip">Start a trip</button></div>';
   }
-  var cur=ms[ms.length-1], prev=ms.length>1?ms[ms.length-2]:null;
+  var mi=dashIndex(ms), cur=ms[mi];
   var prog=monthProgress(cur.key);
-  var pct=Math.min(100, Math.round(cur.spend/S.budget*100));
-  var vs=null, vsLabel="";
-  if(prev){
-    if(prog && prog.partial){
-      /* like for like: the same stretch of the previous month */
-      var base=sameWindowSpend(prev.key, prog.day);
-      if(base>0){ vs=(cur.spend-base)/base*100;
-        vsLabel="vs "+shortMonth(prev.key)+" to the "+prog.day+ordinal(prog.day); }
-    } else if(prev.spend>0){
-      vs=(cur.spend-prev.spend)/prev.spend*100;
-      vsLabel="vs "+esc(monthLabel(prev.key));
-    }
+  var budget=S.budgetUSD*S.fx;
+  var pct=Math.round(cur.spend/budget*100);
+  var left=budget-cur.spend;
+
+  /* No projection. Extrapolating a month from its first fortnight turns
+     one stock-up shop into "on pace for MX$18,000", which is arithmetic
+     rather than information. What the budget is actually for is the
+     question "how much can I spend from here", and that is division of
+     two numbers already known. */
+  var daysLeft = (prog && prog.partial) ? (prog.days-prog.day) : 0;
+  var perWeek = (daysLeft>0 && left>0) ? left/(daysLeft/7) : null;
+
+  var html=filterBar(ms, mi);
+
+  /* ---- the month ---- */
+  html+='<div class="dcard">'
+    +'<div class="eyebrow" style="margin-bottom:12px">'+icon("chart")
+    +(prog&&prog.partial?"Month to date":"Closed month")+'</div>'
+    +'<div class="bignum">'+m(cur.spend,0)+'</div>'
+    +'<div class="bigsub">of '+m(budget,0)+' budgeted · '+cur.trips+' trip'+(cur.trips===1?"":"s")+'</div>'
+    +budgetBar(pct, prog)
+    /* one word per label, so none of them wrap and the three figures
+       sit on the same baseline */
+    +'<div class="metrow">'
+      +'<div class="metcell"><div class="metlab">Used</div>'
+      +'<div class="metval">'+pct+'%</div></div>'
+      +'<div class="metcell"><div class="metlab">'+(left<0?"Over by":"Left")+'</div>'
+      +'<div class="metval">'+m(Math.abs(left),0)+'</div></div>'
+      +'<div class="metcell r"><div class="metlab">'
+      +(perWeek!==null ? 'A week' : (prog&&prog.partial ? 'Days left' : 'Trips'))+'</div>'
+      +'<div class="metval">'
+      +(perWeek!==null ? m(perWeek,0)
+        : (prog&&prog.partial ? daysLeft : cur.trips))+'</div></div>'
+    +'</div>'
+    +(prog&&prog.partial
+       ? '<div class="lmeta" style="margin-top:12px">Day '+prog.day+' of '+prog.days
+         +(left<0 ? ' · already past the budget with '+daysLeft+' to go'
+                  : (perWeek!==null ? ' · '+m(perWeek,0)+' a week keeps you inside it' : ''))
+         +'</div>'
+       : '')
+    +'<button class="dbtn'+(S.active?" quiet":"")+'" id="startTrip">'
+    +(S.active?"Resume the open trip":"Start a trip")+'</button></div>';
+
+  /* ---- same shop, same day: almost certainly one receipt twice ---- */
+  var dup=sameDayPairs();
+  if(dup.length){
+    /* the overlap that lands inside the month shown above, kept separate
+       from the all-time figure so neither sentence overstates the other */
+    var dupCur=dup.filter(function(d){ return monthKey(d.date)===cur.key; })
+                  .reduce(function(s,d){ return s+d.dup; },0);
+    html+='<div class="dcard"><div class="flagbox">'+icon("alert")
+      +'<div style="flex:1;min-width:0"><div class="flagtitle">'
+      +dup.length+' day'+(dup.length===1?"":"s")+' that may be one receipt logged twice</div>'
+      +'<div class="lmeta">Two trips to the same shop, with most of the smaller '
+      +'basket appearing in the larger one at the same prices.'
+      +(dupCur>0 ? ' If they are copies, '+esc(monthLabel(cur.key))+' is high by '
+                   +m(dupCur,0)+'.' : '')
+      +'</div></div></div>';
+    dup.forEach(function(d){
+      html+='<div class="lrow"><div class="lhead">'
+        +'<span class="lname">'+esc(d.date)+'</span>'
+        +'<span class="lamt">'+m(d.total,0)+'</span></div>'
+        +'<div class="lmeta">'+esc(d.shop)+' · '
+        +d.trips.map(function(t){ return m(spendOf(t),0); }).join(' + ')
+        +(d.ov ? ' · '+d.ov.hit+' of '+d.ov.of+' lines identical'
+               : ' · no itemised lines to compare')
+        +'</div></div>';
+    });
+    html+='<div class="lmeta dfoot">Open <b>Trips</b> to compare them and delete '
+      +'whichever is the copy.</div></div>';
   }
-  var cad=tripCadence();
 
-  var html='<section class="sec dashhead">'
-    +'<div class="sechead"><span class="sectitle">'+icon("chart")+esc(monthLabel(cur.key))+'</span>'
-    +'<span class="seccount">'+cur.trips+' trip'+(cur.trips===1?"":"s")+'</span></div>'
-    +'<div class="hero"><div class="heronum mono">'+mx(cur.spend)+'</div>'
-    +'<div class="herosub mono">'+usd(cur.spend)+' · budget '+mx(S.budget)+'</div>'
-    +'<div class="meter"><div class="meterfill'+(pct>=100?" over":"")+'" style="width:'+pct+'%"></div></div>'
-    +'<div class="meterrow"><span>'+pct+'% of budget'
-    +(prog&&prog.partial? ' · day '+prog.day+' of '+prog.days : '')+'</span>'
-    +(vs===null?'<span></span>':'<span class="'+(vs>0?"up":"down")+'">'
-      +(vs>0?"+":"")+vs.toFixed(0)+'% '+esc(vsLabel)+'</span>')+'</div>'
-    +'<button class="big" id="startTrip" style="margin-top:16px;width:100%">'
-    +(S.active?"Resume the open trip":"Start a trip")+'</button></section>';
+  /* ---- unpriced lines understate everything above ---- */
+  var mp=missingPrices();
+  if(mp.length){
+    html+='<div class="dcard"><div class="flagbox">'+icon("alert")
+      +'<div><div class="lname" style="margin-bottom:4px">'+mp.length+' item'+(mp.length===1?"":"s")+' logged with no price</div>'
+      +'<div class="lmeta">'+esc(mp.slice(0,5).join(" · "))+(mp.length>5?" and "+(mp.length-5)+" more":"")+'</div>'
+      +'<div class="lmeta" style="margin-top:5px">Every figure here is short by whatever they cost.</div>'
+      +'</div></div></div>';
+  }
 
-  /* month by month */
-  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("receipt")+'Month by month</span>'
-    +'<span class="seccount">'+ms.length+'</span></div>'+monthBars(ms)+'</section>';
+  /* ---- trend ---- */
+  html+='<div class="dcard"><div class="dhead">'
+    +'<span class="eyebrow">'+icon("receipt")+'Month by month</span>'
+    +'<span class="dnote">'+ccyLabel()+'</span></div>'+monthBars(ms, cur.key)+'</div>';
 
-  /* where it goes — this month, falling back to everything */
-  var cats=byCategory([cur.key]);
-  var scope=esc(monthLabel(cur.key));
-  if(!cats.length){ cats=byCategory(null); scope="all trips"; }
+  /* ---- where it goes: nine fixed categories, so part-to-whole ---- */
+  var catScope=cur.key, cats=byCategory([catScope]).filter(function(c){return c.total>0});
+  if(!cats.length){ catScope=null; cats=byCategory(null).filter(function(c){return c.total>0}); }
   if(cats.length){
-    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("box")+'Where it goes</span>'
-      +'<span class="seccount">'+scope+'</span></div>'+catBars(cats)+'</section>';
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("pie")+'Where it goes</span>'
+      +'<span class="dnote">'+(catScope?esc(monthLabel(catScope)):"all trips")+'</span></div>'
+      +catRanked(cats)+'</div>';
   }
 
-  /* price movers */
-  var mv=priceMovers(6);
-  if(mv.length){
-    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Price moves</span>'
-      +'<span class="seccount">last vs previous</span></div>';
-    mv.forEach(function(m){
-      html+='<div class="row" data-hist="'+m.id+'"><div class="namewrap"><div class="nm">'+esc(m.es)+'</div>'
-        +'<div class="en">'+esc(m.en)+'</div>'
-        +'<div class="meta">'+mx(m.prev)+' → '+mx(m.last)
-        +(m.weighed?' · sold by weight':'')+'</div></div>'
-        +'<div class="pctbox '+(m.pct>0?"up":"down")+' mono">'+(m.pct>0?"+":"")+m.pct.toFixed(0)+'%</div></div>';
+  /* ---- per shop ---- */
+  var sh=shopStats([cur.key]);
+  if(sh.length>1){
+    var smax=sh[0].total||1;
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("cart")+'By shop</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
+    sh.forEach(function(x){
+      html+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(x.name)+'</span>'
+        +'<span class="lamt">'+m(x.total)+'</span></div>'
+        +'<div class="lhead"><span class="lmeta">'+x.trips+' trip'+(x.trips===1?"":"s")
+        +' · '+m(x.basket)+' a basket</span></div>'
+        +'<div class="catbar"><div style="width:'+(x.total/smax*100).toFixed(1)+'%"></div></div></div>';
     });
-    html+='</section>';
+    html+='</div>';
+  } else if(sh.length===1){
+    /* one shop is not a comparison — a bar at 100% of itself says nothing */
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("cart")+esc(sh[0].name)+'</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>'
+      +'<div class="metrow" style="border-top:none;margin-top:0;padding-top:0">'
+      +'<div class="metcell"><div class="metlab">Trips</div>'
+      +'<div class="metval">'+sh[0].trips+'</div></div>'
+      +'<div class="metcell"><div class="metlab">A basket</div>'
+      +'<div class="metval">'+m(sh[0].basket,0)+'</div></div>'
+      +'<div class="metcell r"><div class="metlab">This month</div>'
+      +'<div class="metval">'+m(sh[0].total,0)+'</div></div></div></div>';
   }
 
-  /* top items */
-  var ti=topItems(8, null);
+  /* ---- paying more than usual ---- */
+  var pw=priceWatch(5), tracked=priceTracked();
+  if(tracked){
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("chart")+'Against the usual price</span>'
+      +'<span class="dnote">'+tracked+' tracked</span></div>';
+    if(pw.rows.length){
+      pw.rows.forEach(function(x){
+        html+='<div class="lrow tap" data-hist="'+x.id+'"><div class="lhead">'
+          +'<span class="lname">'+esc(x.es)+'</span>'
+          +'<span class="lamt">'+(x.gap>0?"+":"−")
+          +m(Math.abs(x.gap))+'</span></div>'
+          +'<div class="lmeta">usually '+m(x.usual)+', last '+m(x.last)
+          +' · '+x.n+' purchases</div></div>';
+      });
+    } else {
+      html+='<div class="lmeta">Nothing is far enough off its usual price to '
+        +'be worth your attention.</div>';
+    }
+    var notes=[];
+    if(pw.skipped.weight) notes.push(pw.skipped.weight+' sold by weight \u2014 a trip '
+      +'records what the bag cost, not the rate per kilo');
+    if(pw.skipped.noisy) notes.push(pw.skipped.noisy+' whose past prices disagree too '
+      +'much to have a usual one \u2014 usually a second brand or size under one name');
+    if(notes.length) html+='<div class="lmeta dfoot">Left out: '+notes.join('; ')+'.</div>';
+    html+='</div>';
+  }
+
+  /* ---- biggest lines ---- */
+  var ti=topItems(6, [cur.key]);
   if(ti.length){
-    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("list")+'Biggest spend</span>'
-      +'<span class="seccount">all trips</span></div>';
-    var max=ti[0].total;
+    var tmax=ti[0].total||1;
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("list")+'Biggest lines</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
     ti.forEach(function(x){
-      html+='<div class="trow"><div class="namewrap"><div class="nm">'+esc(x.name)+'</div>'
-        +'<div class="meta">'+esc(catName(x.cat))+' · bought '+x.times+'×</div>'
-        +'<div class="minibar"><div class="minifill" style="width:'+(x.total/max*100).toFixed(1)+'%"></div></div></div>'
-        +'<div class="amt"><span class="mx">'+mx(x.total)+'</span>'
-        +'<span class="us">'+usd(x.total)+'</span></div></div>';
+      html+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(x.name)+'</span>'
+        +'<span class="lamt">'+m(x.total,0)+'</span></div>'
+        +'<div class="lmeta">'+esc(catName(x.cat))+' · '+x.times+' purchase'+(x.times===1?"":"s")
+        +' · '+m(x.total/x.times)+' each time</div>'
+        +'<div class="catbar"><div style="width:'+(x.total/tmax*100).toFixed(1)+'%"></div></div></div>';
     });
-    html+='</section>';
+    html+='</div>';
   }
 
-  /* how often */
+  /* ---- rhythm ---- */
+  var cad=tripCadence();
   if(cad){
-    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("cart")+'Shopping rhythm</span></div>'
-      +'<div class="srow"><span>Typical gap between trips</span><span class="mono">'+Math.round(cad)+' days</span></div>'
-      +'<div class="srow"><span>Average trip</span><span class="mono">'
-      +mx(S.trips.reduce(function(s,t){return s+spendOf(t)},0)/S.trips.length)+'</span></div>'
-      +'<div class="srow"><span>Logged in total</span><span class="mono">'
-      +mx(S.trips.reduce(function(s,t){return s+spendOf(t)},0))+'</span></div></section>';
+    var all=S.trips.reduce(function(s,t){return s+spendOf(t)},0);
+    html+='<div class="dcard"><div class="dhead"><span class="eyebrow">'+icon("cart")+'Rhythm</span></div>'
+      +'<div class="metrow" style="border-top:none;margin-top:0;padding-top:0">'
+      +'<div class="metcell"><div class="metlab">Between trips</div><div class="metval">'+Math.round(cad)+' days</div></div>'
+      +'<div class="metcell"><div class="metlab">Average basket</div><div class="metval">'+m(all/S.trips.length,0)+'</div></div>'
+      +'<div class="metcell"><div class="metlab">Logged in all</div><div class="metval">'+m(all,0)+'</div></div>'
+      +'</div></div>';
   }
   return html;
 }
 
-function ordinal(d){
-  if(d>3&&d<21) return "th";
-  return ["th","st","nd","rd"][d%10] || "th";
-}
 function monthLabel(k){
   var M=["January","February","March","April","May","June","July","August","September","October","November","December"];
   var p=String(k).split("-");
   return M[parseInt(p[1],10)-1]+" "+p[0];
 }
 
-/* vertical bars — magnitude from a zero baseline */
-function monthBars(ms){
-  var show=ms.slice(-6), max=Math.max.apply(null, show.map(function(m){return m.spend}));
-  var W=320, H=150, mL=4, mR=4, mT=16, mB=34;
+/* vertical bars — magnitude from a zero baseline, budget as a reference */
+function monthBars(ms, selKey){
+  var show=ms.slice(-6);
+  var vals=show.map(function(mo){ return S.ccy==="usd" ? mo.spend/S.fx : mo.spend; });
+  var bud = S.ccy==="usd" ? S.budgetUSD : S.budgetUSD*S.fx;
+  var max=Math.max(Math.max.apply(null, vals), bud)||1;
+  var W=320, H=158, mL=4, mR=34, mT=18, mB=32;
   var pw=W-mL-mR, ph=H-mT-mB;
-  var n=show.length, slot=pw/n, bw=Math.min(24, slot-10);
+  var n=show.length, slot=pw/n, bw=Math.min(28, slot-14);
   var bars="", labs="";
-  show.forEach(function(m,i){
-    var h=max? (m.spend/max)*ph : 0;
+  show.forEach(function(mo,i){
+    var v=vals[i], h=(v/max)*ph;
     var x=mL+slot*i+(slot-bw)/2, y=mT+ph-h;
-    bars+='<rect class="mbar" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)
-      +'" height="'+Math.max(h,2).toFixed(1)+'" rx="4"/>';
+    var isCur=(selKey ? mo.key===selKey : i===show.length-1);
+    bars+='<rect class="mbar'+(isCur?" cur":"")+'" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)
+      +'" width="'+bw.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+'" rx="3"/>';
     bars+='<text class="mval" x="'+(x+bw/2).toFixed(1)+'" y="'+(y-5).toFixed(1)+'">'
-      +Math.round(m.spend/1000*10)/10+'k</text>';
-    labs+='<text class="mlab" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-16)+'">'+esc(shortMonth(m.key))+'</text>';
-    labs+='<text class="msub" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-4)+'">'+m.trips+'</text>';
+      + (S.ccy==="usd" ? Math.round(v) : (Math.round(v/100)/10)+"k") +'</text>';
+    labs+='<text class="mlab" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-14)+'">'+esc(shortMonth(mo.key))+'</text>';
+    labs+='<text class="msub" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-3)+'">'
+      +mo.trips+(mo.trips===1?" trip":" trips")+'</text>';
   });
-  return '<svg class="mchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Spend by month">'
+  var by=mT+ph-(bud/max)*ph;
+  return '<svg class="mchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Spend by month against budget">'
     +'<line class="cgrid" x1="'+mL+'" y1="'+(mT+ph)+'" x2="'+(W-mR)+'" y2="'+(mT+ph)+'"/>'
-    +bars+labs+'</svg><div class="cnote">MXN per month · trips below each bar</div>';
+    +'<line class="mbudget" x1="'+mL+'" y1="'+by.toFixed(1)+'" x2="'+(W-mR)+'" y2="'+by.toFixed(1)+'"/>'
+    +'<text class="mbtxt" x="'+(W-mR+4)+'" y="'+(by+3).toFixed(1)+'">budget</text>'
+    +bars+labs+'</svg>';
+}
+
+/* The budget bar, with a tick showing where the month has got to.
+   Borrowed from Copilot's ideal-pace line: the bar alone says how much
+   is gone, the tick says whether that is early or late. */
+function budgetBar(pct, prog){
+  var fill=Math.min(100,Math.max(0,pct));
+  var tick=(prog&&prog.partial) ? (prog.day/prog.days*100) : null;
+  var over=pct>=100, ahead=(tick!==null && pct>tick+4);
+  return '<div class="budgetbar">'
+    +'<div class="bbfill'+(over?" over":(ahead?" ahead":""))+'" style="width:'+fill+'%"></div>'
+    +(tick===null?'':'<div class="bbtick" style="left:'+tick.toFixed(1)+'%"></div>')
+    +'</div>'
+    +(tick===null?'':'<div class="bblegend"><span>'+pct+'% spent</span>'
+      +'<span>'+Math.round(tick)+'% elapsed</span></div>');
+}
+
+/* Where it goes — ranked horizontal bars, biggest first.
+   Not a donut: the guidance caps pie and donut at five or six segments and
+   there are ten categories here, and colouring each bar darker-where-bigger
+   would encode the bar's own length a second time. One series, one colour;
+   the category names carry identity, the bar lengths carry size. */
+function catRanked(cats){
+  var tot=cats.reduce(function(s,c){return s+c.total},0);
+  if(!tot) return '<p class="lmeta">No priced lines in this period yet.</p>';
+  var max=cats[0].total||1;
+  return cats.map(function(c){
+    var un=(c.cat==="other");
+    return '<div class="lrow'+(un?" dim":"")+'">'
+      +'<div class="lhead"><span class="lname">'
+        +(un?"":icon(catIconName(c.cat)))+esc(c.name)+'</span>'
+      +'<span class="lamt">'+m(c.total,0)
+        +'<span class="lpc">'+Math.round(c.total/tot*100)+'%</span></span></div>'
+      +'<div class="catbar"><div style="width:'
+        +Math.max(c.total/max*100,1.5).toFixed(1)+'%"></div></div></div>';
+  }).join("")
+  +'<div class="lmeta dfoot">'+m(tot,0)+' across '+cats.length+' categories.</div>';
 }
 function shortMonth(k){
   var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -1039,9 +1515,13 @@ function shortMonth(k){
 
 /* horizontal bars — one series, ordered by size */
 function catBars(cats){
-  var max=cats[0].total, tot=cats.reduce(function(s,c){return s+c.total},0);
+  cats=cats.filter(function(c){ return c.total>0; });
+  if(!cats.length) return '<p class="hint" style="padding:14px 2px">No priced lines in this period yet.</p>';
+  var max=cats[0].total||1, tot=cats.reduce(function(s,c){return s+c.total},0)||1;
   return cats.map(function(c){
-    return '<div class="crow"><div class="chead"><span class="cname">'+icon(catIconName(c.cat))+esc(c.name)+'</span>'
+    var un=(c.cat==="other");
+    return '<div class="crow'+(un?" uncat":"")+'"><div class="chead"><span class="cname">'
+      +(un?'':icon(catIconName(c.cat)))+esc(c.name)+'</span>'
       +'<span class="camt mono">'+mx(c.total)+'<small>'+Math.round(c.total/tot*100)+'%</small></span></div>'
       +'<div class="cbar"><div class="cfill" style="width:'+(c.total/max*100).toFixed(1)+'%"></div></div></div>';
   }).join("");
@@ -1070,7 +1550,8 @@ function viewTrip(){
     });
     var on = rows.filter(function(it){ return t.lines[it.id]; }).length;
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
-      +'<span class="seccount">'+(planning? on+" / "+rows.length : rows.length)+'</span></div>';
+      +'<span class="secright"><span class="seccount">'+(planning? on+" / "+rows.length : rows.length)+'</span>'
+      +'<button class="plus" data-newitem="'+c.id+'" aria-label="Add an item">+</button></span></div>';
     rows.forEach(function(it){ html+=tripRow(it, t.lines[it.id], planning, t.shop); });
     html+='</section>';
   });
@@ -1146,7 +1627,8 @@ function viewCatalogue(){
     var rows=byCat[c.id]||[];
     if(!rows.length) return;
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
-      +'<span class="seccount">'+rows.length+'</span></div>';
+      +'<span class="secright"><span class="seccount">'+rows.length+'</span>'
+      +'<button class="plus" data-newitem="'+c.id+'" aria-label="Add an item">+</button></span></div>';
     rows.forEach(function(it){
       var chart=(it.hist&&it.hist.length>1)
         ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>':'';
@@ -1160,7 +1642,6 @@ function viewCatalogue(){
         +'<button class="amt" data-open="'+it.id+'"><span class="mx">'+mx(it.p)+'</span>'
         +'<span class="us">'+usd(it.p)+'</span></button></div>';
     });
-    html+='<button class="addbtn" data-newitem="'+c.id+'">+ Add an item to '+esc(c.name.toLowerCase())+'</button>';
     html+='</section>';
   });
   return html;
@@ -1224,9 +1705,10 @@ function viewSettings(){
     +'<button class="mbtn primary" id="saveFx">Save rate</button></div></section>';
 
   html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Monthly budget</span></div>'
-    +'<div class="pad"><label class="lbl">Target · MXN per month</label>'
-    +'<input class="field mono" id="setBudget" type="number" inputmode="decimal" step="100" value="'+S.budget+'">'
-    +'<p class="hint">Drives the progress bar on the dashboard. '+usd(S.budget)+' at the current rate.</p>'
+    +'<div class="pad"><label class="lbl">Target · USD per month</label>'
+    +'<input class="field mono" id="setBudget" type="number" inputmode="decimal" step="10" value="'+S.budgetUSD+'">'
+    +'<p class="hint">Across every shop. At '+S.fx.toFixed(2)+' that is '+mx(S.budgetUSD*S.fx)+' a month — '
+    +'the peso figure moves with the rate, the dollar target does not.</p>'
     +'<button class="mbtn primary" id="saveBudget">Save budget</button></div></section>';
 
   html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("cart")+'Shops</span>'
@@ -1274,6 +1756,8 @@ function renderBar(){
 function fit(){
   var h=document.getElementById("bar").offsetHeight||0;
   document.body.style.paddingBottom=(h+36)+"px";
+  var hd=document.querySelector("header");
+  if(hd) document.documentElement.style.setProperty("--hdr", hd.offsetHeight+"px");
 }
 window.addEventListener("resize", fit);
 window.addEventListener("orientationchange", function(){ setTimeout(fit,250); });
@@ -1328,23 +1812,44 @@ document.getElementById("navBtn").addEventListener("click", function(){
 });
 
 /* ---------------- interactions ---------------- */
+/* Permanent, on #sheet rather than #sheetBody — openSheet() replaces the
+   body node each time, so anything bound there would be dropped. */
 document.getElementById("sheet").addEventListener("click", function(e){
   var g=e.target.closest("[data-go]");
   if(g){ screen=g.dataset.go; closeSheet(); render(); lockedY=0; window.scrollTo(0,0); return; }
+  var j=e.target.closest("[data-mgo]");
+  if(j){
+    var all=byMonth();
+    dashMonth = (j.dataset.mgo===all[all.length-1].key) ? null : j.dataset.mgo;
+    closeSheet(); render(); lockedY=0; window.scrollTo(0,0); return;
+  }
 });
 
 document.getElementById("main").addEventListener("click", function(e){
   var el;
+  if((el=e.target.closest("[data-ccy]"))){
+    S.ccy=el.dataset.ccy; save(); render(); return;
+  }
   if((el=e.target.closest("#startTrip"))){
     if(S.active){ screen="trip"; render(); window.scrollTo(0,0); return; }
     newTripSheet(); return;
   }
+  if((el=e.target.closest("[data-mstep]"))){
+    if(el.disabled) return;
+    var all=byMonth(), at=dashIndex(all)+parseInt(el.dataset.mstep,10);
+    if(at<0 || at>=all.length) return;              /* stop at the ends, never wrap */
+    dashMonth = (at===all.length-1) ? null : all[at].key;
+    render(); window.scrollTo(0,0); return;
+  }
+  if((el=e.target.closest("#mJump"))){ monthJumpSheet(); return; }
   if((el=e.target.closest("#addMore"))){ addMoreSheet(); return; }
   if((el=e.target.closest("[data-hist]"))){ histDrawer(el.dataset.hist); return; }
   if((el=e.target.closest("[data-price]"))){ priceSheet(el.dataset.price); return; }
   if((el=e.target.closest("[data-pick]"))){ togglePick(el.dataset.pick); return; }
   if((el=e.target.closest("[data-got]"))){ toggleGot(el.dataset.got); return; }
-  if((el=e.target.closest("[data-newitem]"))){ itemSheet(null, el.dataset.newitem); return; }
+  if((el=e.target.closest("[data-newitem]"))){
+    itemSheet(null, el.dataset.newitem, screen==="trip" && !!S.active); return;
+  }
   if((el=e.target.closest("[data-trip]"))){ tripSheet(el.dataset.trip); return; }
   if((el=e.target.closest("[data-open]"))){
     if(screen==="trip" && S.active) tripItemSheet(el.dataset.open);
@@ -1359,7 +1864,7 @@ document.getElementById("main").addEventListener("click", function(e){
   if((el=e.target.closest("#saveBudget"))){
     var bv=parseFloat(document.getElementById("setBudget").value);
     if(isNaN(bv)||bv<=0){ toast("Enter a valid budget"); return; }
-    S.budget=bv; save(); render(); toast("Budget saved"); return;
+    S.budgetUSD=bv; save(); render(); toast("Budget saved"); return;
   }
   if((el=e.target.closest("#addShop"))){
     var n=document.getElementById("newShop").value.trim();
@@ -1403,10 +1908,14 @@ function newTripSheet(){
   openSheet('<h2>Start a trip</h2><p class="hint">Pick the shop. The whole catalogue opens so you can mark what you need.</p>'
     +'<label class="lbl">Date</label>'
     +'<input class="field mono" id="ntDate" type="date" value="'+todayISO()+'">'
+    +'<label class="lbl">Exchange rate · MXN per USD</label>'
+    +'<input class="field mono" id="ntFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
     +'<label class="lbl">Shop</label>'+opts);
   document.getElementById("sheetBody").addEventListener("click", function h(e){
     var b=e.target.closest("[data-shop]"); if(!b) return;
     var d=document.getElementById("ntDate").value||todayISO();
+    var fxv=parseFloat(document.getElementById("ntFx").value);
+    if(!isNaN(fxv) && fxv>0) S.fx=fxv;
     S.active={id:"trip-"+Date.now(), shop:b.dataset.shop, shopName:shopName(b.dataset.shop),
       date:d, mode:"plan", lines:{}};
     save(); closeSheet(); screen="trip"; render(); window.scrollTo({top:0});
