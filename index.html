@@ -223,6 +223,44 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .hp{background:none;border:1px solid var(--rule);border-radius:7px;padding:5px 9px;
   font-size:13.5px;font-weight:650;color:var(--ink);cursor:pointer;font-family:inherit}
 
+/* ---------- dashboard ---------- */
+.dashhead .hero{padding:16px 2px 2px}
+.heronum{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.herosub{font-size:12.5px;color:var(--muted);margin-top:5px}
+.meter{height:8px;background:var(--rule);border-radius:4px;overflow:hidden;margin:14px 0 7px}
+.meterfill{height:100%;background:var(--store);border-radius:4px;transition:width .3s}
+.meterfill.over{background:var(--danger)}
+.meterrow{display:flex;justify-content:space-between;font-size:11.5px;
+  color:var(--muted);font-weight:600}
+.meterrow .up{color:var(--danger)}
+.meterrow .down{color:var(--good)}
+
+.mchart{width:100%;height:auto;display:block;margin-top:10px}
+.mchart .mbar{fill:var(--store)}
+.mchart .mval{fill:var(--ink);font-size:9px;font-weight:700;text-anchor:middle;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mchart .mlab{fill:var(--muted);font-size:10px;text-anchor:middle;font-weight:600;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.mchart .msub{fill:var(--rule);font-size:9px;text-anchor:middle;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mchart .cgrid{stroke:var(--rule);stroke-width:1}
+
+.crow{padding:11px 2px;border-bottom:1px solid var(--rule)}
+.chead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px}
+.cname{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:650}
+.cname .ico{width:14px;height:14px;color:var(--store);opacity:.8}
+.camt{font-size:13.5px;font-weight:650}
+.camt small{color:var(--muted);font-weight:500;margin-left:6px;font-size:11px}
+.cbar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden}
+.cfill{height:100%;background:var(--store);border-radius:3px}
+
+.pctbox{flex:0 0 auto;font-size:15px;font-weight:700;padding:5px 9px;border-radius:7px;
+  background:var(--paper);border:1px solid var(--rule)}
+.pctbox.up{color:var(--danger)}
+.pctbox.down{color:var(--good)}
+.minibar{height:4px;background:var(--rule);border-radius:2px;overflow:hidden;margin-top:6px;max-width:180px}
+.minifill{height:100%;background:var(--store);opacity:.65;border-radius:2px}
+
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 76px);
   transform:translateX(-50%) translateY(-6px);background:var(--ink);color:var(--paper);
   padding:10px 17px;border-radius:9px;font-size:13.5px;font-weight:650;z-index:60;
@@ -478,13 +516,128 @@ var ITEMS = [
 {c:"care", es:"Jabón de Barra", en:"Bar soap", q:1, p:21.00, hint:"chedraui"}
 ];
 
+/* Historical Chedraui trips, transcribed from audited receipts.
+   Every line-itemised trip below sums exactly to its printed total.
+   l = [name, category, lineTotalMXN]. Trips with no lines carry a verified total only. */
+var SEED_TRIPS = [
+{d:"2026-08-08", t:2484.46, note:"", l:[
+ ["Salmón Atlántico","protein",329],["Porciones Mahi-Mahi","protein",239],
+ ["Queso Mi Passion","chilled",139],["Pollo Rostizado","protein",99.90],
+ ["Tortilla Del Barrio","bakery",23.60],["Cristal Agua","drinks",8.50],
+ ["Coco Tostado","produce",52.50],["Manzana Pink Lady","produce",26.35],
+ ["Plátano","produce",15.15],["Tomate Saladette","produce",7.28],
+ ["Ciruela Pasa S/H","produce",61.09],["Ciruela Pasa S/H","produce",61.09],
+ ["Almendra Natural","pantry",89],["Papa Chips Jalapeño","snacks",61],
+ ["Papa Sabritas Sal","snacks",61],["Papa Sabritas Sal","snacks",61],
+ ["Frijoles Refritos Isadora","protein",18],["Riccadonna Asti","drinks",310],
+ ["Cerveza Barrilito","drinks",59],["Baygon Total","home",65],
+ ["Termo Okko ×2","home",698]]},
+
+{d:"2026-08-16", t:2418.32, note:"", l:[
+ ["Oroweat Multigrano","bakery",93],["Quinoa BSD Foods","pantry",71],
+ ["Avena Orgánica ×2","pantry",195],["Pasta Rummo Farfalle","pantry",84],
+ ["Granola Miel de Agave","pantry",104],["Jarabe Mister Maple","pantry",172],
+ ["Mermelada de Frambuesa","pantry",84],["Crema Almendra Sun Harvest","pantry",198],
+ ["Salsa Herdez Chipotle","pantry",27.50],["Papa Chips Jalapeño ×2","snacks",122],
+ ["Papa Chips Sal","snacks",61],["Frijoles Refritos Isadora","protein",17],
+ ["Mango Come Verde","produce",210],["Papel Aluminio Rey","home",59.50],
+ ["Toallas de Papel","home",52],["Vino Rosado Jean C","drinks",132.30],
+ ["Cerveza Barrilito","drinks",64],["Huevo Criollo Blanco 18 pz","protein",46],
+ ["Durazno Rojo","produce",60.88],["Limón Eureka","produce",10.03],
+ ["Dátil Medjool","produce",175],["Calabaza Italiana","produce",12.48],
+ ["Lechuga Italiana Viva","produce",39.10],["Ciruela Pasa S/H","produce",61.09],
+ ["Ciruela Pasa S/H","produce",61.09],["Plátano","produce",12.95],
+ ["Tomate Saladette","produce",3.50],["DontWorry Quiche","chilled",90],
+ ["Pollo Rostizado","protein",99.90]]},
+
+{d:"2026-08-23", t:2771.30, note:"Wrong chicken bought; coffee was a mistake purchase", l:[
+ ["Oroweat Multigrano","bakery",93],["Maíz Palomero","pantry",19],
+ ["Tortilla Del Barrio","bakery",23.60],["Café Don Justo Orgánico","pantry",410],
+ ["Crema Almendra Sun Harvest","pantry",198],["Crema Sun Harvest","pantry",145],
+ ["Aceite de Coco Aires del Campo","pantry",140],["Vinagre Chedraui","pantry",13],
+ ["Sazonador Moe’s","pantry",44],["Sal Rosa Alta","pantry",179],
+ ["Papa Chips Sal","snacks",61],["Papa Chips Jalapeño","snacks",61],
+ ["Cacahuates Mafer Tostado","pantry",52.50],["Cacahuates Mafer Limón","pantry",52.50],
+ ["VR Danjou 750","drinks",351],["Salmón Atlántico","protein",329],
+ ["Tomate Saladette","produce",5.83],["Ciruela Pasa S/H","produce",61.09],
+ ["Manzana Pink Lady","produce",23.96],["Lechuga Hidropónica","produce",38.90],
+ ["Plátano","produce",22.28],["Ajo Granel","produce",8.06],
+ ["Queso Mi Passion","chilled",139],["DontWorry Quiche","chilled",90],
+ ["Pierna y Muslo","protein",133.58],["Cuaderno E. Plus","home",29],
+ ["Cuaderno E. Plus","home",29],["Bolígrafo Bic","home",19]]},
+
+{d:"2026-08-30", t:2278.87, note:"Power-outage restock — milks, eggs and food storage", l:[
+ ["Avena Orgánica ×2","pantry",195],["Granola Miel de Agave","pantry",104],
+ ["Tortilla Del Barrio","bakery",23.60],["BebiSilk Soya ×2","chilled",85],
+ ["Azúcar Zulka","pantry",23.50],["Mix de Nueces","pantry",86.01],
+ ["Frijoles Refritos Isadora ×2","protein",34],["Papa Sabritas Limón","snacks",61],
+ ["Aceituna Serpis Kalamata","pantry",78],["Cacahuates Mafer ×3 (3-for-2)","pantry",105],
+ ["Toallas de Papel","home",51],["Papel Encerado 10 m","home",54],
+ ["Enjuague Listerine","care",98],["Loción Protectora","care",287],
+ ["Huevo Blanco 18 pz","protein",43],["Manzana Pink Lady","produce",22.16],
+ ["Coco Tostado","produce",52.50],["Tomate Saladette","produce",7.22],
+ ["Ciruela Pasa S/H","produce",61.09],["Ciruela Pasa S/H","produce",61.09],
+ ["Limón Eureka","produce",4.76],["Plátano","produce",18.05],
+ ["AL Califia Farms Vainilla","chilled",155],["Tortillas Blancas granel","bakery",2.98],
+ ["Pollo Rostizado","protein",99.90],["Fibra Esponja Scotch-Brite","home",73],
+ ["Hermético Cubasa ×2","home",90],["Hermético Cubasa ×2","home",58],
+ ["Refresquero Guatepeor","home",18.01],["Refripractic Cubasa ×2","home",198],
+ ["Refresquero Jip Gu","home",29]]},
+
+{d:"2026-09-05", t:1741.37, note:"", l:[
+ ["Tortilla Blanca 45 pz","bakery",38],["Quinoa Okko","pantry",74],
+ ["Maíz Palomero","pantry",15],["Oroweat Multigrano","bakery",93],
+ ["Galleta Lotus Biscoff","snacks",83],["Jarabe Mister Maple","pantry",172],
+ ["Vinagre Chedraui","pantry",35],["Salsa Herdez Cacahuate","pantry",27],
+ ["Salsa Herdez Roja","pantry",27],["Papa Sabritas Sal","snacks",61],
+ ["Papa Sabritas Crema","snacks",61],["Chile Chipotle La Chata","pantry",60],
+ ["Garbanzo en Salmuera","protein",26],["Kleenex Gel 450 ml","care",54],
+ ["Huevo Blanco 12 pz","protein",32],["Salmón Atlántico","protein",329],
+ ["Lechuga Italiana Viva","produce",39.10],["Champiñón Granel","produce",24.61],
+ ["Aguacate Hass","produce",45.56],["Queso Mi Passion","chilled",139],
+ ["Pollo Rostizado","protein",99.90],["Filtro ecológico","home",95],
+ ["Hermético Rectangular","home",111.20]]},
+
+{d:"2026-09-13", t:3064.56, note:"Totals only — line detail not transcribed", l:[]},
+{d:"2026-09-15", t:684.70,  note:"Wine and soap run. Totals only", l:[]},
+{d:"2026-09-20", t:1657.29, note:"Totals only — line detail not transcribed", l:[]},
+{d:"2026-09-30", t:2946.65, note:"Totals only — line detail not transcribed", l:[]},
+
+{d:"2026-10-08", t:4331.75, note:"Parents visiting — cereal, cider vinegar, mustard, almond milk, agave", l:[
+ ["Cereal Chee HN","pantry",108],["Quinoa Okko","pantry",74],
+ ["Oroweat Multigrano","bakery",93],["Maíz Palomero","pantry",19],
+ ["Pasta Rummo Penne","pantry",84],["Avena ADC Orgánica","pantry",86],
+ ["Avena Orgánica 300 g","pantry",97.50],["Chía Okko Semillas","pantry",158],
+ ["Galleta Lotus Biscoff","snacks",82],["Crema Sun Harvest","pantry",145],
+ ["Crema Almendra Sun Harvest","pantry",198],["Jarabe de Agave 330 g","pantry",74],
+ ["Mostaza First Street","pantry",25],["Vinagre de Manzana Sun Harvest","pantry",124],
+ ["Tajín Bajo Sodio","pantry",72.50],["Aceite de Oliva EV 500 ml","pantry",125],
+ ["Sazonador Moe’s","pantry",44],["Gouter Vinagreta 60 g","pantry",95],
+ ["Catar Curry 55 g","pantry",36.01],["Vinagre Chedraui","pantry",35],
+ ["Frijoles Refritos Isadora ×2","protein",34],["Detergente Tide","home",450],
+ ["Bolsas de basura La Casera","home",48.50],["Protector de mesa","home",38],
+ ["Tequila Azul 700 ml","drinks",199],["Cerveza Barrilito","drinks",64],
+ ["Huevo Webito 12 pz","protein",80.90],["Salmón Atlántico","protein",329],
+ ["Manzana Sugar Bee","produce",74.87],["Pera Anjou","produce",32.80],
+ ["Almendra Natural","pantry",77.80],["Cacahuate Garapiñado","pantry",45.90],
+ ["Limón s/semilla","produce",12.70],["Plátano","produce",25.88],
+ ["Arándanos","produce",58.50],["Tomate Saladette","produce",21.26],
+ ["Calabaza Italiana","produce",11.08],["Espinacas Rollo","produce",11.90],
+ ["Jugo Manzana y Naranja 1 L","drinks",56],["Coco Tostado","produce",54.60],
+ ["Ciruela Pasa S/H","produce",61.09],["Aguacate Hass","produce",65.05],
+ ["Violife Manchego","chilled",110],["AL Califia Farms Vainilla","chilled",145],
+ ["Sanissimo Salmas","snacks",37],["Kellogg’s Casero","chilled",94],
+ ["Totopo Chile Limón","snacks",39],["Totopo Botanero SB","snacks",39],
+ ["Pollo Rostizado","protein",99.90],["Carro Mandado","home",140.01]]}
+];
+
 "use strict";
-var APP_VERSION = "2.2.1";
+var APP_VERSION = "3.0.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
 /* ---------------- state ---------------- */
-var S, screen = "trip", drawerItem = null;
+var S, screen = "dash", drawerItem = null;
 
 function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
 function todayISO(){
@@ -496,8 +649,24 @@ function nowLocal(){
   return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());
 }
 
+function importSeedTrips(){
+  return SEED_TRIPS.map(function(t){
+    var lines=t.l.map(function(x){
+      return {id:slug(x[0]), es:x[0], en:"", cat:x[1], q:1,
+              unitMXN:x[2], lineMXN:x[2], state:"bought"};
+    });
+    var listed=lines.reduce(function(s,l){return s+l.lineMXN},0);
+    return {id:"seed-"+t.d, shop:"chedraui", shopName:"Chedraui Puerto Aventuras",
+      date:t.d, fx:17.30, lines:lines, note:t.note||"",
+      listed:Math.round(listed*100)/100, receiptTotal:t.t,
+      offList:Math.round((t.t-listed)*100)/100,
+      bought:lines.length, skipped:0, planned:lines.length,
+      totalUSD:Math.round(t.t/17.30*100)/100,
+      imported:true, totalsOnly:!t.l.length};
+  });
+}
 function seed(){
-  var st = {v:5, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89,
+  var st = {v:6, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89, budget:12000,
             shops:SHOPS.slice(), items:{}, trips:[], active:null};
   ITEMS.forEach(function(it){
     var id = slug(it.es);
@@ -532,7 +701,7 @@ function load(){
   try{ var raw=localStorage.getItem(KEY); if(raw) S=JSON.parse(raw); }catch(e){ S=null; }
   if(!S || !S.items){
     S = seed();
-    S.trips = migrate();
+    S.trips = importSeedTrips().concat(migrate());
     save(); return;
   }
   var fresh = seed();
@@ -552,11 +721,16 @@ function load(){
       if(fresh.items[id].hist.length >= (mine.hist||[]).length) mine.hist = fresh.items[id].hist;
     });
     S.cat = CATALOGUE_VERSION;
+    /* bring in any historical trip not already present */
+    var have={}; S.trips.forEach(function(t){ have[t.id]=1; });
+    importSeedTrips().forEach(function(t){ if(!have[t.id]) S.trips.push(t); });
+    S.trips.sort(function(x,y){ return (x.date||"").localeCompare(y.date||""); });
   }
   S.appVersion = APP_VERSION;
   if(!S.shops) S.shops = SHOPS.slice();
   if(!S.trips) S.trips = [];
   if(typeof S.fx!=="number" || !isFinite(S.fx) || S.fx<=0) S.fx = 16.89;
+  if(typeof S.budget!=="number" || !isFinite(S.budget) || S.budget<=0) S.budget = 12000;
 }
 
 function save(){
@@ -617,11 +791,102 @@ function tripTotals(){
   return {listed:listed,bought:bought,nb:nb,nn:nn,ns:ns,missing:missing};
 }
 
+/* ---------------- analytics ---------------- */
+function monthKey(d){ return String(d||"").slice(0,7); }
+function spendOf(t){
+  return (t.receiptTotal!==null && t.receiptTotal!==undefined) ? t.receiptTotal : (t.listed||0);
+}
+function byMonth(){
+  var m={};
+  S.trips.forEach(function(t){
+    var k=monthKey(t.date); if(!k) return;
+    if(!m[k]) m[k]={key:k, spend:0, trips:0, off:0, hasReceipt:0};
+    m[k].spend+=spendOf(t); m[k].trips++;
+    if(t.receiptTotal!==null && t.receiptTotal!==undefined){ m[k].hasReceipt++; m[k].off+=(t.offList||0); }
+  });
+  return Object.keys(m).sort().map(function(k){ return m[k]; });
+}
+function byCategory(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var c={};
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought") return;
+      var k=l.cat||"pantry";
+      c[k]=(c[k]||0)+(l.lineMXN||0);
+    });
+  });
+  return Object.keys(c).map(function(k){ return {cat:k, name:catName(k), total:c[k]}; })
+    .sort(function(x,y){ return y.total-x.total; });
+}
+function topItems(n, months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var it={};
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought") return;
+      var k=l.es||l.id;
+      if(!it[k]) it[k]={name:k, total:0, times:0, cat:l.cat};
+      it[k].total+=(l.lineMXN||0); it[k].times++;
+    });
+  });
+  return Object.keys(it).map(function(k){return it[k]})
+    .sort(function(x,y){ return y.total-x.total; }).slice(0,n||8);
+}
+function priceMovers(n){
+  var out=[];
+  Object.keys(S.items).forEach(function(id){
+    var it=S.items[id], h=it.hist||[];
+    if(h.length<2 || !it.active) return;
+    var last=h[h.length-1].p, prev=h[h.length-2].p;
+    if(!prev) return;
+    var pct=(last-prev)/prev*100;
+    if(Math.abs(pct)<1) return;
+    out.push({es:it.es, en:it.en, id:id, last:last, prev:prev, pct:pct, weighed:!!it.ref});
+  });
+  out.sort(function(x,y){ return Math.abs(y.pct)-Math.abs(x.pct); });
+  return out.slice(0, n||6);
+}
+/* comparing a part-month against a whole one overstates the drop,
+   so match the previous month over the same number of days */
+function sameWindowSpend(key, throughDay){
+  var s=0;
+  S.trips.forEach(function(t){
+    if(monthKey(t.date)!==key) return;
+    var day=parseInt(String(t.date).slice(8,10),10);
+    if(day<=throughDay) s+=spendOf(t);
+  });
+  return s;
+}
+function monthProgress(curKey){
+  var now=new Date(), nowKey=monthKey(todayISO());
+  if(curKey!==nowKey) return null;           /* a finished month compares whole to whole */
+  var y=parseInt(curKey.slice(0,4),10), m=parseInt(curKey.slice(5,7),10);
+  var days=new Date(y, m, 0).getDate();
+  return {day:now.getDate(), days:days, partial:now.getDate()<days};
+}
+function tripCadence(){
+  var ds=S.trips.map(function(t){return String(t.date||"").slice(0,10)})
+    .filter(Boolean).sort();
+  if(ds.length<2) return null;
+  var gaps=[];
+  for(var i=1;i<ds.length;i++){
+    var g=(new Date(ds[i])-new Date(ds[i-1]))/86400000;
+    if(g>0 && g<60) gaps.push(g);
+  }
+  if(!gaps.length) return null;
+  gaps.sort(function(a,b){return a-b});
+  return gaps[Math.floor(gaps.length/2)];
+}
+
 /* ---------------- render ---------------- */
 function render(){
   renderHeader();
   var m=document.getElementById("main");
-  if(screen==="trip")      m.innerHTML=viewTrip();
+  if(screen==="dash")      m.innerHTML=viewDash();
+  else if(screen==="trip") m.innerHTML=viewTrip();
   else if(screen==="cat")  m.innerHTML=viewCatalogue();
   else if(screen==="hist") m.innerHTML=viewHistory();
   else                     m.innerHTML=viewSettings();
@@ -630,7 +895,9 @@ function render(){
 
 function renderHeader(){
   var t=S.active, title, sub="";
-  if(screen==="trip"){
+  if(screen==="dash"){
+    title="Despensa"; sub=S.trips.length+" trips · "+shopName("chedraui").split(" ")[0];
+  } else if(screen==="trip"){
     title = t ? shopName(t.shop) : "Despensa";
     sub = t ? (t.mode==="plan" ? "Planning · "+t.date : "Shopping · "+t.date) : "No trip open";
   } else if(screen==="cat"){ title="Catalogue"; sub=Object.keys(S.items).length+" items"; }
@@ -639,6 +906,147 @@ function renderHeader(){
   document.getElementById("hTitle").textContent=title;
   document.getElementById("hSub").textContent=sub;
 }
+
+/* ----- dashboard ----- */
+function viewDash(){
+  var ms=byMonth();
+  if(!ms.length){
+    return '<div class="empty">'+icon("chart","big")+'<h3>Nothing logged yet</h3>'
+      +'<p>Close a trip and this fills with your spend, categories and price moves.</p>'
+      +'<button class="big" id="startTrip">Start a trip</button></div>';
+  }
+  var cur=ms[ms.length-1], prev=ms.length>1?ms[ms.length-2]:null;
+  var prog=monthProgress(cur.key);
+  var pct=Math.min(100, Math.round(cur.spend/S.budget*100));
+  var vs=null, vsLabel="";
+  if(prev){
+    if(prog && prog.partial){
+      /* like for like: the same stretch of the previous month */
+      var base=sameWindowSpend(prev.key, prog.day);
+      if(base>0){ vs=(cur.spend-base)/base*100;
+        vsLabel="vs "+shortMonth(prev.key)+" to the "+prog.day+ordinal(prog.day); }
+    } else if(prev.spend>0){
+      vs=(cur.spend-prev.spend)/prev.spend*100;
+      vsLabel="vs "+esc(monthLabel(prev.key));
+    }
+  }
+  var cad=tripCadence();
+
+  var html='<section class="sec dashhead">'
+    +'<div class="sechead"><span class="sectitle">'+icon("chart")+esc(monthLabel(cur.key))+'</span>'
+    +'<span class="seccount">'+cur.trips+' trip'+(cur.trips===1?"":"s")+'</span></div>'
+    +'<div class="hero"><div class="heronum mono">'+mx(cur.spend)+'</div>'
+    +'<div class="herosub mono">'+usd(cur.spend)+' · budget '+mx(S.budget)+'</div>'
+    +'<div class="meter"><div class="meterfill'+(pct>=100?" over":"")+'" style="width:'+pct+'%"></div></div>'
+    +'<div class="meterrow"><span>'+pct+'% of budget'
+    +(prog&&prog.partial? ' · day '+prog.day+' of '+prog.days : '')+'</span>'
+    +(vs===null?'<span></span>':'<span class="'+(vs>0?"up":"down")+'">'
+      +(vs>0?"+":"")+vs.toFixed(0)+'% '+esc(vsLabel)+'</span>')+'</div>'
+    +'<button class="big" id="startTrip" style="margin-top:16px;width:100%">'
+    +(S.active?"Resume the open trip":"Start a trip")+'</button></section>';
+
+  /* month by month */
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("receipt")+'Month by month</span>'
+    +'<span class="seccount">'+ms.length+'</span></div>'+monthBars(ms)+'</section>';
+
+  /* where it goes — this month, falling back to everything */
+  var cats=byCategory([cur.key]);
+  var scope=esc(monthLabel(cur.key));
+  if(!cats.length){ cats=byCategory(null); scope="all trips"; }
+  if(cats.length){
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("box")+'Where it goes</span>'
+      +'<span class="seccount">'+scope+'</span></div>'+catBars(cats)+'</section>';
+  }
+
+  /* price movers */
+  var mv=priceMovers(6);
+  if(mv.length){
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Price moves</span>'
+      +'<span class="seccount">last vs previous</span></div>';
+    mv.forEach(function(m){
+      html+='<div class="row" data-hist="'+m.id+'"><div class="namewrap"><div class="nm">'+esc(m.es)+'</div>'
+        +'<div class="en">'+esc(m.en)+'</div>'
+        +'<div class="meta">'+mx(m.prev)+' → '+mx(m.last)
+        +(m.weighed?' · sold by weight':'')+'</div></div>'
+        +'<div class="pctbox '+(m.pct>0?"up":"down")+' mono">'+(m.pct>0?"+":"")+m.pct.toFixed(0)+'%</div></div>';
+    });
+    html+='</section>';
+  }
+
+  /* top items */
+  var ti=topItems(8, null);
+  if(ti.length){
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("list")+'Biggest spend</span>'
+      +'<span class="seccount">all trips</span></div>';
+    var max=ti[0].total;
+    ti.forEach(function(x){
+      html+='<div class="trow"><div class="namewrap"><div class="nm">'+esc(x.name)+'</div>'
+        +'<div class="meta">'+esc(catName(x.cat))+' · bought '+x.times+'×</div>'
+        +'<div class="minibar"><div class="minifill" style="width:'+(x.total/max*100).toFixed(1)+'%"></div></div></div>'
+        +'<div class="amt"><span class="mx">'+mx(x.total)+'</span>'
+        +'<span class="us">'+usd(x.total)+'</span></div></div>';
+    });
+    html+='</section>';
+  }
+
+  /* how often */
+  if(cad){
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("cart")+'Shopping rhythm</span></div>'
+      +'<div class="srow"><span>Typical gap between trips</span><span class="mono">'+Math.round(cad)+' days</span></div>'
+      +'<div class="srow"><span>Average trip</span><span class="mono">'
+      +mx(S.trips.reduce(function(s,t){return s+spendOf(t)},0)/S.trips.length)+'</span></div>'
+      +'<div class="srow"><span>Logged in total</span><span class="mono">'
+      +mx(S.trips.reduce(function(s,t){return s+spendOf(t)},0))+'</span></div></section>';
+  }
+  return html;
+}
+
+function ordinal(d){
+  if(d>3&&d<21) return "th";
+  return ["th","st","nd","rd"][d%10] || "th";
+}
+function monthLabel(k){
+  var M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var p=String(k).split("-");
+  return M[parseInt(p[1],10)-1]+" "+p[0];
+}
+
+/* vertical bars — magnitude from a zero baseline */
+function monthBars(ms){
+  var show=ms.slice(-6), max=Math.max.apply(null, show.map(function(m){return m.spend}));
+  var W=320, H=150, mL=4, mR=4, mT=16, mB=34;
+  var pw=W-mL-mR, ph=H-mT-mB;
+  var n=show.length, slot=pw/n, bw=Math.min(24, slot-10);
+  var bars="", labs="";
+  show.forEach(function(m,i){
+    var h=max? (m.spend/max)*ph : 0;
+    var x=mL+slot*i+(slot-bw)/2, y=mT+ph-h;
+    bars+='<rect class="mbar" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)
+      +'" height="'+Math.max(h,2).toFixed(1)+'" rx="4"/>';
+    bars+='<text class="mval" x="'+(x+bw/2).toFixed(1)+'" y="'+(y-5).toFixed(1)+'">'
+      +Math.round(m.spend/1000*10)/10+'k</text>';
+    labs+='<text class="mlab" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-16)+'">'+esc(shortMonth(m.key))+'</text>';
+    labs+='<text class="msub" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-4)+'">'+m.trips+'</text>';
+  });
+  return '<svg class="mchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Spend by month">'
+    +'<line class="cgrid" x1="'+mL+'" y1="'+(mT+ph)+'" x2="'+(W-mR)+'" y2="'+(mT+ph)+'"/>'
+    +bars+labs+'</svg><div class="cnote">MXN per month · trips below each bar</div>';
+}
+function shortMonth(k){
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return M[parseInt(String(k).split("-")[1],10)-1];
+}
+
+/* horizontal bars — one series, ordered by size */
+function catBars(cats){
+  var max=cats[0].total, tot=cats.reduce(function(s,c){return s+c.total},0);
+  return cats.map(function(c){
+    return '<div class="crow"><div class="chead"><span class="cname">'+icon(catIconName(c.cat))+esc(c.name)+'</span>'
+      +'<span class="camt mono">'+mx(c.total)+'<small>'+Math.round(c.total/tot*100)+'%</small></span></div>'
+      +'<div class="cbar"><div class="cfill" style="width:'+(c.total/max*100).toFixed(1)+'%"></div></div></div>';
+  }).join("");
+}
+function catIconName(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?c.ic:"box"; }
 
 /* ----- trip ----- */
 function viewTrip(){
@@ -815,6 +1223,12 @@ function viewSettings(){
     +'<p class="hint">Used for the dollar figures on screen. Each trip also stores the rate it was closed at.</p>'
     +'<button class="mbtn primary" id="saveFx">Save rate</button></div></section>';
 
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Monthly budget</span></div>'
+    +'<div class="pad"><label class="lbl">Target · MXN per month</label>'
+    +'<input class="field mono" id="setBudget" type="number" inputmode="decimal" step="100" value="'+S.budget+'">'
+    +'<p class="hint">Drives the progress bar on the dashboard. '+usd(S.budget)+' at the current rate.</p>'
+    +'<button class="mbtn primary" id="saveBudget">Save budget</button></div></section>';
+
   html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("cart")+'Shops</span>'
     +'<span class="seccount">'+S.shops.length+'</span></div>';
   S.shops.forEach(function(sh){
@@ -905,6 +1319,7 @@ document.addEventListener("keydown", function(e){
 });
 document.getElementById("navBtn").addEventListener("click", function(){
   openSheet('<h2>Go to</h2>'
+    +'<button class="mbtn nav'+(screen==="dash"?" primary":"")+'" data-go="dash">'+icon("chart")+'<span>Dashboard<small>Spend, categories and price moves</small></span></button>'
     +'<button class="mbtn nav'+(screen==="trip"?" primary":"")+'" data-go="trip">'+icon("cart")+'<span>Trip<small>'
     +(S.active?(S.active.mode==="plan"?"Planning at "+shopName(S.active.shop):"Shopping at "+shopName(S.active.shop)):"Nothing open")+'</small></span></button>'
     +'<button class="mbtn nav'+(screen==="cat"?" primary":"")+'" data-go="cat">'+icon("list")+'<span>Catalogue<small>Every item, by category</small></span></button>'
@@ -920,7 +1335,10 @@ document.getElementById("sheet").addEventListener("click", function(e){
 
 document.getElementById("main").addEventListener("click", function(e){
   var el;
-  if((el=e.target.closest("#startTrip"))){ newTripSheet(); return; }
+  if((el=e.target.closest("#startTrip"))){
+    if(S.active){ screen="trip"; render(); window.scrollTo(0,0); return; }
+    newTripSheet(); return;
+  }
   if((el=e.target.closest("#addMore"))){ addMoreSheet(); return; }
   if((el=e.target.closest("[data-hist]"))){ histDrawer(el.dataset.hist); return; }
   if((el=e.target.closest("[data-price]"))){ priceSheet(el.dataset.price); return; }
@@ -929,8 +1347,7 @@ document.getElementById("main").addEventListener("click", function(e){
   if((el=e.target.closest("[data-newitem]"))){ itemSheet(null, el.dataset.newitem); return; }
   if((el=e.target.closest("[data-trip]"))){ tripSheet(el.dataset.trip); return; }
   if((el=e.target.closest("[data-open]"))){
-    if(screen==="cat") itemSheet(el.dataset.open, null);
-    else if(S.active && S.active.mode==="shop") skipSheet(el.dataset.open);
+    if(screen==="trip" && S.active) tripItemSheet(el.dataset.open);
     else itemSheet(el.dataset.open, null);
     return;
   }
@@ -938,6 +1355,11 @@ document.getElementById("main").addEventListener("click", function(e){
     var v=parseFloat(document.getElementById("setFx").value);
     if(isNaN(v)||v<=0){ toast("Enter a valid rate"); return; }
     S.fx=v; save(); render(); toast("Rate saved"); return;
+  }
+  if((el=e.target.closest("#saveBudget"))){
+    var bv=parseFloat(document.getElementById("setBudget").value);
+    if(isNaN(bv)||bv<=0){ toast("Enter a valid budget"); return; }
+    S.budget=bv; save(); render(); toast("Budget saved"); return;
   }
   if((el=e.target.closest("#addShop"))){
     var n=document.getElementById("newShop").value.trim();
@@ -1006,23 +1428,50 @@ function toggleGot(id){
   else { L.state="bought"; }
   save(); render();
 }
-function skipSheet(id){
-  var t=S.active, L=t&&t.lines[id]; if(!L) return itemSheet(id,null);
-  var it=S.items[id];
-  openSheet('<h2>'+esc(it.es)+'</h2><p class="hint">'+esc(it.en)+'</p>'
-    +'<button class="mbtn mid" id="skYes">'+(L.state==="skip"?"Put back on the list":"Skip this trip")+'</button>'
-    +'<button class="mbtn mid" id="skQty">Change quantity<small>Now '+L.q+'</small></button>'
-    +'<button class="mbtn mid" id="skOff">Take off this trip</button>'
-    +'<button class="mbtn mid" id="skNo">Cancel</button>');
-  document.getElementById("skNo").onclick=closeSheet;
-  document.getElementById("skYes").onclick=function(){
-    L.state = L.state==="skip" ? "need" : "skip";
+function tripItemSheet(id){
+  var t=S.active, it=S.items[id];
+  if(!t || !it) return itemSheet(id,null);
+  var L=t.lines[id];
+  var shopping = t.mode==="shop";
+  if(!L){
+    /* not on this trip yet — planning view offers to add it */
+    openSheet('<h2>'+esc(it.es)+'</h2><p class="hint">'+esc(it.en)+' · not on this trip</p>'
+      +'<button class="mbtn primary" id="tiAdd">Add to this trip</button>'
+      +'<button class="mbtn mid" id="tiCancel">Cancel</button>');
+    document.getElementById("tiCancel").onclick=closeSheet;
+    document.getElementById("tiAdd").onclick=function(){
+      t.lines[id]={state:"need", q:it.q, paid:null};
+      save(); closeSheet(); render();
+    };
+    return;
+  }
+  openSheet('<h2>'+esc(it.es)+'</h2>'
+    +'<p class="hint">'+esc(it.en)+' · this trip only. The catalogue is not touched.</p>'
+    +'<label class="lbl">Quantity for this trip</label>'
+    +'<input class="field mono" id="tiQ" type="number" inputmode="decimal" step="1" min="0" value="'+L.q+'">'
+    +'<button class="mbtn primary" id="tiSave">Save</button>'
+    + (shopping
+        ? '<button class="mbtn mid" id="tiSkip">'
+          +(L.state==="skip"?"Put back on the list":"Skip this trip")
+          +'<small>'+(L.state==="skip"?"It is set to be skipped":"Planned, but not buying it today")+'</small></button>'
+        : '')
+    +'<button class="mbtn mid" id="tiOff">Take off this trip<small>Stays in the catalogue</small></button>'
+    +'<button class="mbtn mid" id="tiCancel">Cancel</button>');
+  document.getElementById("tiCancel").onclick=closeSheet;
+  document.getElementById("tiSave").onclick=function(){
+    var v=parseFloat(document.getElementById("tiQ").value);
+    L.q=(isNaN(v)||v<0)?1:v;
     save(); closeSheet(); render();
   };
-  document.getElementById("skOff").onclick=function(){
+  document.getElementById("tiOff").onclick=function(){
     delete t.lines[id]; save(); closeSheet(); render(); toast("Off this trip");
   };
-  document.getElementById("skQty").onclick=function(){ qtySheet(id); };
+  if(shopping){
+    document.getElementById("tiSkip").onclick=function(){
+      L.state = L.state==="skip" ? "need" : "skip";
+      save(); closeSheet(); render();
+    };
+  }
 }
 function qtySheet(id){
   var L=S.active.lines[id], it=S.items[id];
