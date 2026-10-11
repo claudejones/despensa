@@ -58,6 +58,9 @@ header{position:sticky;top:0;z-index:30;background:var(--paper);
   display:flex;align-items:center;justify-content:center}
 .hbtn .ico{width:20px;height:20px}
 .hbtn:active{background:var(--rule)}
+/* .hbtn sets display:flex, which beats the browser's [hidden]{display:none} —
+   without this the back chevron shows on the dashboard it goes back to. */
+.hbtn[hidden]{display:none}
 
 main{padding:0 var(--pad);
   padding-left:max(var(--pad), env(safe-area-inset-left));
@@ -99,6 +102,7 @@ main{padding:0 var(--pad);
 .nm{font-size:15px;font-weight:650;letter-spacing:-.01em}
 .en{font-size:12px;color:var(--muted);margin-top:1px}
 .meta{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.015em}
+.meta.flag{color:var(--store)}
 .tag{font-size:9px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;
   color:var(--muted);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;margin-left:7px}
 .row.bought .nm{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
@@ -383,7 +387,9 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 
 <header>
   <div class="hbar">
+    <button class="hbtn" id="homeBtn" aria-label="Back to the dashboard" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
     <div class="htext"><div id="hTitle">Despensa</div><div id="hSub">&nbsp;</div></div>
+    <button class="hbtn" id="tripSet" aria-label="Trip settings" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg></button>
     <button class="hbtn" id="navBtn" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
   </div>
 </header>
@@ -715,10 +721,77 @@ var SEED_TRIPS = [
  ["Pollo Rostizado","protein",99.90],["Filtro ecológico","home",95],
  ["Hermético Rectangular","home",111.20]]},
 
-{d:"2026-09-13", t:3064.56, note:"Totals only — line detail not transcribed", l:[]},
-{d:"2026-09-15", t:684.70,  note:"Wine and soap run. Totals only", l:[]},
-{d:"2026-09-20", t:1657.29, note:"Totals only — line detail not transcribed", l:[]},
-{d:"2026-09-30", t:2946.65, note:"Totals only — line detail not transcribed", l:[]},
+/* 13 Sep — subtotal 3,125.56 less a 61.00 "3x2 En Botanas" promotion on the
+   crisps = 3,064.56. The crisps keep their 61.00 shelf price and the
+   promotion is its own line, the same as the wine discount on 15 Sep. */
+{d:"2026-09-13", t:3064.56, note:"3x2 on crisps", l:[
+ ["Oroweat Multigrano","bakery",93],["Granola Miel de Agave 310 g","pantry",104],
+ ["Avena Orgánica 300 g","pantry",97.50],["Pasta Rummo Fusilli","pantry",84],
+ ["Quinoa Okko Mix","pantry",74],["Chía Natural Dream","pantry",100],
+ ["Galleta Lotus Biscoff","snacks",83],
+ ["Crema Almendra Sun Harvest 454 g","pantry",198],
+ ["Mermelada de Fresa","pantry",75.01],["Aceite de Oliva","pantry",199],
+ ["Papa Chips Sal 150 g","snacks",61],
+ ["3x2 en botanas","snacks",-61],
+ ["Papa Chips Jalapeño","snacks",61],["Papa Chips Fuego","snacks",61],
+ ["Lavatrastes Axion Limón 900 ml","home",57],
+ ["Papel Higiénico Kleenex Cottonelle 32R","home",249],
+ ["Toallas de Papel","home",49],["Loción Protectora ×2","care",574],
+ ["Curitas Aquaprotect","care",60],["Curitas Resistente","care",123],
+ ["Huevo Blanco 12 pz","protein",32],["Salmón Atlántico","protein",329],
+ ["Almendra Natural","pantry",77.80],["Manzana Cosmic Crisp","produce",38.63],
+ ["Limón S/Semilla","produce",3.64],["Ajo Granel","produce",7.47],
+ ["Plátano Chiapas/Tabasco","produce",24.61],
+ ["Margarina I Can't Believe 425 g","chilled",110],
+ ["Pollo Rostizado","protein",99.90]]},
+/* 15 Sep — subtotal 839.50 less a 30% wine promotion (154.80) = 684.70.
+   The Prosecco is kept at its shelf price of 258 a bottle and the
+   discount sits on its own line, so the promotion does not masquerade
+   as a price drop the next time the wine is bought. */
+{d:"2026-09-15", t:684.70, note:"Wine and soap run", l:[
+ ["Papa Chips Fuego","snacks",61],
+ ["Maschio Prosecco 750 ml ×2","drinks",516],
+ ["30% de descuento en vinos","drinks",-154.80],
+ ["Jabón de Tocador Zest ×5","care",105],
+ ["Jabón Zest Aqua 135 ×3","care",63],
+ ["Jabón Líquido Dove","care",94.50]]},
+{d:"2026-09-20", t:1657.29, note:"", l:[
+ ["Granola Tía Ofilia","pantry",135],["Avena Orgánica 300 g ×2","pantry",195],
+ ["Oroweat Multigrano","bakery",93],["Tortilla Blanca 45 pz","bakery",38],
+ ["Maíz Palomero Buenas","pantry",19],["Azúcar Metco Mascabado","pantry",75],
+ ["Crema Sun Harvest","pantry",145],
+ ["Crema Almendra Sun Harvest 454 g","pantry",198],
+ ["Garbanzo en Salmuera","pantry",26],["Aceituna Serpis","pantry",78],
+ ["Harpic Líquido","home",60],["Limpiador Baños Trusgo Platino","home",60],
+ ["Limpiador Fabuloso Lavanda 2 L","home",59],
+ ["Bolsas de Basura La Casera","home",48.50],
+ ["Piña Gota de Miel","produce",23.67],["Blue Berry","produce",58.50],
+ ["Manzana Sugar Bee","produce",73.67],["Acelgas Rollo","produce",9.90],
+ ["Limón Eureka","produce",6.37],["Calabaza Italiana","produce",21.59],
+ ["Tomate Saladette","produce",20.08],["Aguacate Hass","produce",30.74],
+ ["Plátano Chiapas/Tabasco","produce",26.81],
+ ["Limón S/Semilla","produce",2.46],
+ ["Pollo Rostizado Jumbo Mexicano","protein",154]]},
+{d:"2026-09-30", t:2946.65, note:"", l:[
+ ["Oroweat Multigrano","bakery",93],["Granola Granvita","pantry",65],
+ ["Maíz Palomero Buenas","pantry",19],["Tortilla Blanca 45 pz","bakery",38],
+ ["Mermelada Bonne Maman Fresa 370 g","pantry",195],
+ ["Jarabe Mister Maple","pantry",172],["Aceite de Coco Aires del Campo","pantry",140],
+ ["Macha ESDO 250 g","pantry",133],["Frijoles Refritos Isadora","protein",17],
+ ["Toallas de Papel","home",49],["Bolsa Ziploc Congelador G 15","home",68.50],
+ ["Papel Aluminio Rey","home",60],["Maschio Prosecco 750 ml","drinks",258],
+ ["Desodorante Arm & Hammer","care",101],["Loción Protectora","care",287],
+ ["Huevo Blanco Kaki 12 pz","protein",30],["Salmón Atlántico","protein",329],
+ ["Cacahuate Garapiñado","snacks",45],["Limón Eureka","produce",5.23],
+ ["Semilla de Girasol","pantry",43.05],["Coco Tostado","produce",50],
+ ["Limón S/Semilla","produce",4.71],["Ajo Granel","produce",14.62],
+ ["Lechuga Hidropónica","produce",38.90],["Aguacate Hass","produce",54.35],
+ ["Tomate Saladette","produce",24.68],["Acelgas Rollo","produce",9.90],
+ ["Calabaza Italiana","produce",26.02],["Piña Gota de Miel","produce",35.37],
+ ["Manzana Sugar Bee","produce",75.77],["Plátano Chiapas/Tabasco","produce",18.48],
+ ["Ciruela Pasa S/H","produce",61.09],["Ciruela Pasa S/H","produce",62.58],
+ ["Blue Berry","produce",58.50],["Queso Bionda Manchego","chilled",125],
+ ["Galleta Salmas Ancestral","snacks",39],["Pollo Rostizado","protein",99.90]]},
 
 {d:"2026-10-08", t:4331.75, note:"Parents visiting — cereal, cider vinegar, mustard, almond milk, agave", l:[
  ["Cereal Chee HN","pantry",108],["Quinoa Okko","pantry",74],
@@ -749,7 +822,7 @@ var SEED_TRIPS = [
 ];
 
 "use strict";
-var APP_VERSION = "4.2.0";
+var APP_VERSION = "4.4.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -766,24 +839,42 @@ function nowLocal(){
   return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());
 }
 
+/* A negative amount on a seed line is a promotion, not a product: Chedraui
+   prints "3x2 en botanas" and "30% dsc en Vinos" as their own negative
+   lines, and that is how they are kept. The item above keeps its shelf
+   price, so a promotion never reads as a price cut next time. */
 function importSeedTrips(){
   return SEED_TRIPS.map(function(t){
     var lines=t.l.map(function(x){
+      var disc = x[2] < 0;
       return {id:slug(x[0]), es:x[0], en:"", cat:x[1], q:1,
-              unitMXN:x[2], lineMXN:x[2], state:"bought"};
+              unitMXN:x[2], lineMXN:x[2], state:"bought", disc:disc};
     });
     var listed=lines.reduce(function(s,l){return s+l.lineMXN},0);
+    var items=lines.filter(function(l){ return !l.disc; }).length;
     return {id:"seed-"+t.d, shop:"chedraui", shopName:"Chedraui Puerto Aventuras",
       date:t.d, fx:17.30, lines:lines, note:t.note||"",
       listed:Math.round(listed*100)/100, receiptTotal:t.t,
       offList:Math.round((t.t-listed)*100)/100,
-      bought:lines.length, skipped:0, planned:lines.length,
+      bought:items, skipped:0, planned:items,
       totalUSD:Math.round(t.t/17.30*100)/100,
       imported:true, totalsOnly:!t.l.length};
   });
 }
+/* total promotions in a window, as a positive number */
+function savedIn(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var s=0;
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    (t.lines||[]).forEach(function(l){
+      if(l.state==="bought" && l.lineMXN<0) s += -l.lineMXN;
+    });
+  });
+  return s;
+}
 function seed(){
-  var st = {v:6, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89, budgetUSD:700, ccy:"mxn", seeded:false,
+  var st = {v:6, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89, budgetUSD:700, ccy:"usd", seeded:false,
             shops:SHOPS.slice(), items:{}, trips:[], active:null};
   ITEMS.forEach(function(it){
     var id = slug(it.es);
@@ -890,7 +981,7 @@ function load(){
   if(!S.trips) S.trips = [];
   if(typeof S.fx!=="number" || !isFinite(S.fx) || S.fx<=0) S.fx = 16.89;
   if(typeof S.budgetUSD!=="number" || !isFinite(S.budgetUSD) || S.budgetUSD<=0) S.budgetUSD = 700;
-  if(S.ccy!=="usd" && S.ccy!=="mxn") S.ccy="mxn";
+  if(S.ccy!=="usd" && S.ccy!=="mxn") S.ccy="usd";
   delete S.budget;
   /* seeding and repair happen here — persist them or they are redone every launch */
   save();
@@ -914,11 +1005,25 @@ function m(n, dp){
   var d=(dp===undefined) ? 2 : dp;
   return (S.ccy==="usd"?"$":"MX$")+v.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
 }
+/* Same as m(), but converts a saved trip at the rate that trip was charged
+   at rather than today's. A trip at 17.90 and one at 16.89 are different
+   amounts of money and the history should not pretend otherwise. */
+function m2(n, trip){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  if(S.ccy!=="usd") return "MX$"+Number(n).toLocaleString("en-US",
+    {minimumFractionDigits:2,maximumFractionDigits:2});
+  var r=(trip && trip.fx>0) ? trip.fx : S.fx;
+  return "$"+(Number(n)/r).toLocaleString("en-US",
+    {minimumFractionDigits:2,maximumFractionDigits:2});
+}
 function ccyLabel(){ return S.ccy==="usd" ? "USD" : "MXN"; }
 function budgetInView(){ return S.ccy==="usd" ? S.budgetUSD : S.budgetUSD*S.fx; }
+/* While a trip is open, convert at THAT trip's rate — it is the rate the
+   card was actually charged at, and it is what the saved trip will record. */
 function usd(n){
   if(n===null||n===undefined||isNaN(n)) return "—";
-  return "US$"+(Number(n)/S.fx).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  var r=(S.active && S.active.fx>0) ? S.active.fx : S.fx;
+  return "US$"+(Number(n)/r).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function esc(s){ return String(s===null||s===undefined?"":s)
   .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -1002,7 +1107,7 @@ function topItems(n, months){
   S.trips.forEach(function(t){
     if(months && !keep[monthKey(t.date)]) return;
     (t.lines||[]).forEach(function(l){
-      if(l.state!=="bought") return;
+      if(l.state!=="bought" || l.lineMXN<0) return;
       var k=l.es||l.id;
       if(!it[k]) it[k]={name:k, total:0, times:0, cat:l.cat};
       it[k].total+=(l.lineMXN||0); it[k].times++;
@@ -1111,10 +1216,11 @@ function tripKey(s){
 function overlap(a, b){
   var big=(a.lines||[]).length>=(b.lines||[]).length?a:b;
   var small=(big===a)?b:a;
-  var sl=(small.lines||[]).filter(function(l){ return l.state==="bought" && l.lineMXN!=null; });
+  var sl=(small.lines||[]).filter(function(l){
+    return l.state==="bought" && l.lineMXN!=null && l.lineMXN>=0; });
   var idx={};
   (big.lines||[]).forEach(function(l){
-    if(l.state!=="bought" || l.lineMXN==null) return;
+    if(l.state!=="bought" || l.lineMXN==null || l.lineMXN<0) return;
     (idx[tripKey(l.es||l.id)] = idx[tripKey(l.es||l.id)] || []).push(+l.lineMXN);
   });
   if(!sl.length || !Object.keys(idx).length) return null;   /* nothing to compare */
@@ -1153,7 +1259,7 @@ function missingPrices(){
   var out=[], seen={};
   S.trips.forEach(function(t){
     (t.lines||[]).forEach(function(l){
-      if(l.state!=="bought") return;
+      if(l.state!=="bought" || l.disc) return;
       if(l.lineMXN!==null && l.lineMXN!==undefined && !isNaN(l.lineMXN)) return;
       var k=l.es||l.id;
       if(!seen[k]){ seen[k]=1; out.push(k); }
@@ -1199,6 +1305,11 @@ function renderHeader(){
   else { title="Settings"; sub="v"+APP_VERSION; }
   document.getElementById("hTitle").textContent=title;
   document.getElementById("hSub").textContent=sub;
+  /* The dashboard is home. Every other screen carries a back chevron to it,
+     so there is always one way out that does not need the menu. */
+  document.getElementById("homeBtn").hidden = (screen==="dash");
+  /* Settings that belong to this trip, not to the catalogue or the app. */
+  document.getElementById("tripSet").hidden = !(screen==="trip" && S.active);
 }
 
 /* ----- dashboard ----- */
@@ -1226,8 +1337,9 @@ function filterBar(ms, i){
         +' aria-label="Next month">'
         +'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>'
     +'</div>'
-    +'<span class="ccy"><button data-ccy="mxn" class="'+(S.ccy==="mxn"?"on":"")+'">MXN</button>'
-    +'<button data-ccy="usd" class="'+(S.ccy==="usd"?"on":"")+'">USD</button></span>'
+    /* USD first — it is the default view, so it reads left to right */
+    +'<span class="ccy"><button data-ccy="usd" class="'+(S.ccy==="usd"?"on":"")+'">USD</button>'
+    +'<button data-ccy="mxn" class="'+(S.ccy==="mxn"?"on":"")+'">MXN</button></span>'
     +'</div>';
 }
 /* the jump list: every month that has trips, newest first */
@@ -1285,6 +1397,10 @@ function viewDash(){
       +(perWeek!==null ? m(perWeek,0)
         : (prog&&prog.partial ? daysLeft : cur.trips))+'</div></div>'
     +'</div>'
+    +(savedIn([cur.key])>0
+       ? '<div class="lmeta" style="margin-top:12px">'
+         +'Promotions took '+m(savedIn([cur.key]),0)+' off this month’s receipts.</div>'
+       : '')
     +(prog&&prog.partial
        ? '<div class="lmeta" style="margin-top:12px">Day '+prog.day+' of '+prog.days
          +(left<0 ? ' · already past the budget with '+daysLeft+' to go'
@@ -1666,9 +1782,9 @@ function viewHistory(){
   if(keys.length){
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'By month</span></div>';
     keys.forEach(function(m){
-      html+='<div class="mrow"><span class="mname">'+m+'</span>'
+      html+='<div class="mrow"><span class="mname">'+esc(monthLabel(m))+'</span>'
         +'<span class="mtrips">'+months[m].n+' trip'+(months[m].n===1?"":"s")+'</span>'
-        +'<span class="mspend mono">'+mx(months[m].spend)+'<small>'+usd(months[m].spend)+'</small></span></div>';
+        +'<span class="mspend mono">'+m2(months[m].spend)+'</span></div>';
     });
     html+='</section>';
   }
@@ -1677,14 +1793,27 @@ function viewHistory(){
     +'<span class="seccount">'+S.trips.length+'</span></div>';
   S.trips.slice().reverse().forEach(function(t){
     var off = t.offList;
+    var nb = t.lines ? t.lines.filter(function(l){
+      return l.state==="bought" && !(l.lineMXN<0); }).length : 0;
+    var sv = t.lines ? t.lines.reduce(function(s,l){
+      return s + (l.state==="bought" && l.lineMXN<0 ? -l.lineMXN : 0); },0) : 0;
+    /* A trip with a receipt total and no lines is a receipt nobody itemised.
+       Saying "0 bought · off-list MX$2,946" claims every peso went on
+       something unplanned, which is not what happened — nothing was
+       recorded at all. Say that instead. */
+    var meta = nb ? (nb+' item'+(nb===1?"":"s")
+                     +(sv?' · saved '+m2(sv,t):'')
+                     +(t.legacy?' · imported':'')
+                     +((off!==null&&off!==undefined&&off!==0)?' · off-list '+m2(off,t):''))
+                  : 'Receipt total only — items not recorded';
     html+='<div class="trow" data-trip="'+t.id+'">'
       +'<div class="namewrap"><div class="nm">'+esc(t.shopName||shopName(t.shop))+'</div>'
-      +'<div class="en">'+esc((t.date||"").replace("T"," "))+'</div>'
-      +'<div class="meta">'+(t.lines?t.lines.filter(function(l){return l.state==="bought"}).length:0)+' bought'
-      +(t.legacy?' · imported':'')
-      +((off!==null&&off!==undefined&&off!==0)?' · off-list '+mx(off):'')+'</div></div>'
-      +'<div class="amt"><span class="mx">'+mx(t.receiptTotal!==null&&t.receiptTotal!==undefined?t.receiptTotal:t.listed)+'</span>'
-      +'<span class="us">'+usd(t.receiptTotal!==null&&t.receiptTotal!==undefined?t.receiptTotal:t.listed)+'</span></div></div>';
+      +'<div class="en">'+esc((t.date||"").replace("T"," "))
+      +(t.note?' · '+esc(t.note):'')+'</div>'
+      +'<div class="meta'+(nb?'':' flag')+'">'+meta+'</div></div>'
+      +'<div class="amt"><span class="mx">'
+      +m2(t.receiptTotal!==null&&t.receiptTotal!==undefined?t.receiptTotal:t.listed, t)
+      +'</span></div></div>';
   });
   html+='</section>';
   return html;
@@ -1801,6 +1930,12 @@ document.getElementById("grabClose").addEventListener("click", closeSheet);
 document.addEventListener("keydown", function(e){
   if(e.key==="Escape") closeSheet();
 });
+document.getElementById("homeBtn").addEventListener("click", function(){
+  screen="dash"; render(); window.scrollTo(0,0);
+});
+document.getElementById("tripSet").addEventListener("click", function(){
+  if(S.active) tripSettingsSheet();
+});
 document.getElementById("navBtn").addEventListener("click", function(){
   openSheet('<h2>Go to</h2>'
     +'<button class="mbtn nav'+(screen==="dash"?" primary":"")+'" data-go="dash">'+icon("chart")+'<span>Dashboard<small>Spend, categories and price moves</small></span></button>'
@@ -1894,7 +2029,8 @@ document.getElementById("bar").addEventListener("click", function(e){
       +'<button class="mbtn mid" id="ccNo">Keep it</button>');
     document.getElementById("ccNo").onclick=closeSheet;
     document.getElementById("ccYes").onclick=function(){
-      S.active=null; save(); closeSheet(); render(); toast("Trip discarded");
+      S.active=null; save(); closeSheet();
+      screen="dash"; render(); window.scrollTo(0,0); toast("Trip discarded");
     };
     return;
   }
@@ -1915,9 +2051,11 @@ function newTripSheet(){
     var b=e.target.closest("[data-shop]"); if(!b) return;
     var d=document.getElementById("ntDate").value||todayISO();
     var fxv=parseFloat(document.getElementById("ntFx").value);
-    if(!isNaN(fxv) && fxv>0) S.fx=fxv;
+    if(isNaN(fxv) || fxv<=0) fxv=S.fx;
+    /* the rate lives on the trip, not only on the app — two trips a month
+       apart were charged different rates and the history should say so */
     S.active={id:"trip-"+Date.now(), shop:b.dataset.shop, shopName:shopName(b.dataset.shop),
-      date:d, mode:"plan", lines:{}};
+      date:d, mode:"plan", fx:fxv, budgetUSD:null, note:"", lines:{}};
     save(); closeSheet(); screen="trip"; render(); window.scrollTo({top:0});
     toast("Trip open — mark what you need");
   });
@@ -1981,6 +2119,51 @@ function tripItemSheet(id){
       save(); closeSheet(); render();
     };
   }
+}
+/* Settings that belong to THIS trip — the shop it is at, the day it happened,
+   the rate the card was charged at, a budget just for this run. None of it
+   touches the master catalogue or the app's own defaults. */
+function tripFx(){ var t=S.active; return (t && t.fx>0) ? t.fx : S.fx; }
+function tripSettingsSheet(){
+  var t=S.active; if(!t) return;
+  var opts=S.shops.map(function(s){
+    return '<option value="'+s.id+'"'+(s.id===t.shop?' selected':'')+'>'+esc(s.name)+'</option>';
+  }).join("");
+  openSheet('<h2>This trip</h2>'
+    +'<p class="hint">Only this trip. The catalogue and the app defaults are left alone.</p>'
+    +'<label class="lbl">Shop</label>'
+    +'<select class="field" id="tsShop">'+opts+'</select>'
+    +'<label class="lbl">Date</label>'
+    +'<input class="field mono" id="tsDate" type="date" value="'+esc((t.date||"").slice(0,10))+'">'
+    +'<div class="two">'
+      +'<div><label class="lbl">Rate · MXN per USD</label>'
+      +'<input class="field mono" id="tsFx" type="number" inputmode="decimal" step="0.01" '
+      +'value="'+tripFx().toFixed(2)+'"></div>'
+      +'<div><label class="lbl">Budget · USD</label>'
+      +'<input class="field mono" id="tsBud" type="number" inputmode="decimal" step="1" '
+      +'placeholder="'+S.budgetUSD+'" value="'+(t.budgetUSD||"")+'"></div>'
+    +'</div>'
+    +'<p class="hint" style="margin-top:-6px">Leave the budget blank to use the monthly one '
+    +'('+'$'+S.budgetUSD+' a month). The rate here is what this trip is converted at — '
+    +'the app default stays '+S.fx.toFixed(2)+'.</p>'
+    +'<label class="lbl">Note</label>'
+    +'<input class="field" id="tsNote" type="text" placeholder="Party run, stock-up…" '
+    +'value="'+esc(t.note||"")+'">'
+    +'<button class="mbtn primary" id="tsSave">Save</button>'
+    +'<button class="mbtn mid" id="tsCancel">Cancel</button>');
+  document.getElementById("tsCancel").onclick=closeSheet;
+  document.getElementById("tsSave").onclick=function(){
+    var fxv=parseFloat(document.getElementById("tsFx").value);
+    if(isNaN(fxv)||fxv<=0){ toast("Enter a valid rate"); return; }
+    var bud=parseFloat(document.getElementById("tsBud").value);
+    var sh=document.getElementById("tsShop").value;
+    t.shop=sh; t.shopName=shopName(sh);
+    t.date=document.getElementById("tsDate").value||t.date;
+    t.fx=fxv;
+    t.budgetUSD=(isNaN(bud)||bud<=0)?null:bud;
+    t.note=document.getElementById("tsNote").value||"";
+    save(); closeSheet(); render(); toast("Trip updated");
+  };
 }
 function qtySheet(id){
   var L=S.active.lines[id], it=S.items[id];
@@ -2220,7 +2403,7 @@ function closeTripSheet(){
     +'<label class="lbl">Receipt total · MXN</label>'
     +'<input class="field mono" id="cTot" type="number" inputmode="decimal" step="0.01" placeholder="'+T.bought.toFixed(2)+'">'
     +'<label class="lbl">Exchange rate · MXN per USD</label>'
-    +'<input class="field mono" id="cFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +'<input class="field mono" id="cFx" type="number" inputmode="decimal" step="0.01" value="'+tripFx().toFixed(2)+'">'
     +'<p class="hint mono" id="cCalc">Checked off '+mx(T.bought)+'</p>'
     +'<button class="mbtn primary" id="cSave">Save the trip</button>'
     +'<button class="mbtn mid" id="cCancel">Not yet</button>');
@@ -2256,15 +2439,17 @@ function saveTrip(dt, fx, receiptTotal){
     }
   });
   var trip={id:t.id, shop:t.shop, shopName:shopName(t.shop), date:dt||date, fx:fx,
+    note:t.note||"", budgetUSD:t.budgetUSD||null,
     lines:lines, listed:Math.round(T.bought*100)/100,
     receiptTotal:receiptTotal,
     offList:(receiptTotal===null?null:Math.round((receiptTotal-T.bought)*100)/100),
     bought:T.nb, skipped:T.ns, planned:T.nb+T.nn+T.ns,
     totalUSD:receiptTotal===null?null:Math.round(receiptTotal/fx*100)/100};
   S.trips.push(trip);
-  S.fx=fx;
+  /* S.fx is the app default and stays put — a rate entered for one trip
+     is that trip's rate, not a new default. Change the default in Settings. */
   S.active=null;
-  save(); screen="hist"; render();
+  save(); screen="dash"; dashMonth=null; render();
   tripSheet(trip.id);
 }
 
