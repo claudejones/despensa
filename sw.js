@@ -1,6 +1,7 @@
 /* Despensa — offline cache.
 
-   This file has no version in it and never needs to change. Upload it once.
+   This file has no version in it. It changes only when the caching strategy
+   itself changes, which has happened once: sync/ was carved out in 4.12.0.
 
    Why that is safe: the strategy below is network-first. Every time the phone
    loads the app with a signal, the fresh index.html is fetched and written
@@ -34,6 +35,14 @@ self.addEventListener("activate", function(e){
    a signal, and the last good one still opens in a dead spot at the store. */
 self.addEventListener("fetch", function(e){
   if(e.request.method !== "GET") return;
+  /* The reconciliation patch under sync/ is never cached and never faked.
+     Without this carve-out two things go wrong: an applied patch lingers in
+     the cache for ever, and — worse — the offline fallback below answers a
+     missing sync file with index.html, handing the app a page of HTML where
+     it expects JSON. Let it fail honestly instead. The app treats every
+     failure as "no sync" and carries on, so an older service worker still
+     registered on a phone cannot break anything either. */
+  if(e.request.url.indexOf("/sync/") >= 0) return;
   e.respondWith(
     fetch(e.request).then(function(res){
       var copy = res.clone();

@@ -1,0 +1,8 @@
+{
+  "syncId": 0,
+  "producedAt": null,
+  "note": "Baseline. Despensa fetches this on launch and applies it only when syncId is higher than the one the phone has already applied. It is never deleted — each reconciliation raises syncId and replaces the body, so there is no 404 to tell apart from being offline, and nothing to remember to clean up. Keys under trips are the trip's own id, taken from the app's export; a corrected trip replaces itself in place. Ids beginning seed- are refused: those belong to seed-trips.js and its fingerprint.",
+  "trips": {},
+  "removeTrips": [],
+  "catalogue": {}
+}

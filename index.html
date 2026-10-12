@@ -902,7 +902,7 @@ var CAT_FP  = "ac9271a7";
 var SEED_FP = "d8ade43a";
 
 "use strict";
-var APP_VERSION = "4.11.0";
+var APP_VERSION = "4.12.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2304,6 +2304,21 @@ function viewSettings(){
   html+='<div class="pad"><input class="field" id="newShop" type="text" placeholder="Add a shop — Costco, Walmart…">'
     +'<button class="mbtn" id="addShop">Add shop</button></div></section>';
 
+  /* The sync state is shown rather than assumed. If a reconciliation has
+     not landed, the number here is the evidence — the same reasoning as the
+     fingerprint rows above. */
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("receipt")+'Reconciliation</span></div>'
+    +'<div class="srow"><span>Last sync applied</span><span class="mono">'
+    +(S.syncId ? '#'+S.syncId : 'none')+'</span></div>'
+    +(S.syncedAt?'<div class="srow"><span>When</span><span class="mono">'
+      +esc(String(S.syncedAt).slice(0,10))+'</span></div>':'')
+    +'<div class="pad"><p class="hint">After a shop, send the receipt and this '
+    +'trip\'s export. The corrected trip comes back here on its own — it '
+    +'replaces itself in place, so nothing is counted twice and there is '
+    +'nothing to delete by hand.</p>'
+    +'<button class="mbtn" id="syncNow">Check for a reconciliation</button>'
+    +'</div></section>';
+
   html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("box")+'Data</span></div><div class="pad">'
     +'<button class="mbtn primary" id="expAll">Copy everything for Claude<small>Catalogue, prices and every trip</small></button>'
     +'<button class="mbtn" id="dlAll">Download as a file</button>'
@@ -2520,6 +2535,7 @@ document.getElementById("main").addEventListener("click", function(e){
     S.shops=S.shops.filter(function(s){return s.id!==el.dataset.delshop});
     save(); render(); toast("Shop removed"); return;
   }
+  if((el=e.target.closest("#syncNow"))){ syncCheck(true); return; }
   if((el=e.target.closest("#expAll"))){ copyExport(); return; }
   if((el=e.target.closest("#dlAll"))){ downloadExport(); return; }
   if((el=e.target.closest("#wipe"))){ wipeSheet(); return; }
@@ -3251,6 +3267,140 @@ function receiptText(t){
   return s;
 }
 
+/* ---------------- reconciliation sync ----------------
+
+   The app exports; until 4.12.0 nothing could come back. That meant a
+   reconciled receipt had to be published as a "seed-" trip and the app copy
+   deleted by hand, and until that happened the day was counted twice.
+
+   Now a reconciliation is published as a patch at sync/latest.json, keyed by
+   the trip's OWN id — the same id that came out in the export. The corrected
+   trip replaces itself in place. Nothing is deleted by hand, nothing is
+   counted twice, and seed-trips.js goes back to being what it should be: the
+   ten historical receipts, frozen.
+
+   Rules this holds to:
+   - syncId only ever moves forward. Re-publishing the same patch does
+     nothing; an older one does nothing. There is no file to remember to
+     delete.
+   - A patch names what it touches. It never replaces the whole store, so a
+     trip logged after the export survives.
+   - A patch may not touch a "seed-" trip. Those are owned by seed-trips.js
+     and its fingerprint; two owners for one record is how data drifts.
+   - Every failure is silent and total. No signal, no file, a 404, HTML from
+     a stale service worker, malformed JSON — all mean "no sync", and the app
+     is left exactly as it was. */
+
+var SYNC_URL = "sync/latest.json";
+var SYNC_MAX_TRIPS = 200;        /* a sane patch is a handful; 200 is a bug */
+
+function syncCheck(manual){
+  /* Opened straight off the disk there is no origin to fetch from, and the
+     browser logs a CORS failure the page cannot catch. A sync cannot work
+     there anyway, so do not go looking. */
+  if(location.protocol === "file:"){ if(manual) toast("Sync needs the hosted app"); return; }
+  if(!manual && navigator.onLine === false) return;
+  var done=function(msg){ if(manual) toast(msg); };
+  fetch(SYNC_URL, {cache:"no-store"}).then(function(res){
+    if(!res.ok) return null;
+    /* A service worker from before 4.12.0 answers an uncached path with
+       index.html. A 200 that is not JSON is that fallback, not a patch. */
+    var ct=String(res.headers.get("content-type")||"");
+    if(ct.indexOf("json")<0) return null;
+    return res.json();
+  }).then(function(p){
+    if(!p || typeof p.syncId!=="number" || !isFinite(p.syncId)){ done("Nothing to sync"); return; }
+    if(p.syncId <= (S.syncId||0)){ done("Already up to date"); return; }
+    var plan=syncPlan(p);
+    if(!plan.total){ done("Nothing to sync"); return; }
+    syncSheet(p, plan);
+  }).catch(function(){ done("Could not reach the sync file"); });
+}
+
+/* What a patch would actually do, worked out before anything is written, so
+   the sheet can say it and the apply step cannot surprise anyone. */
+function syncPlan(p){
+  var mine={}; (S.trips||[]).forEach(function(t){ mine[t.id]=t; });
+  var fixed=[], added=[], removed=[], priced=[], refused=0;
+  Object.keys(p.trips||{}).forEach(function(id){
+    if(String(id).indexOf("seed-")===0){ refused++; return; }
+    (mine[id] ? fixed : added).push(id);
+  });
+  (p.removeTrips||[]).forEach(function(id){
+    if(String(id).indexOf("seed-")===0){ refused++; return; }
+    if(mine[id]) removed.push(id);
+  });
+  Object.keys(p.catalogue||{}).forEach(function(id){
+    var it=S.items[id], u=p.catalogue[id];
+    if(!it || !u) return;
+    if(typeof u.p==="number" && u.p!==it.p) priced.push({id:id, from:it.p, to:u.p});
+  });
+  return {fixed:fixed, added:added, removed:removed, priced:priced, refused:refused,
+          total:fixed.length+added.length+removed.length+priced.length};
+}
+
+function syncSheet(p, plan){
+  var bits=[];
+  if(plan.fixed.length)   bits.push(plan.fixed.length+' trip'+(plan.fixed.length===1?"":"s")+' corrected');
+  if(plan.added.length)   bits.push(plan.added.length+' trip'+(plan.added.length===1?"":"s")+' added');
+  if(plan.removed.length) bits.push(plan.removed.length+' removed');
+  if(plan.priced.length)  bits.push(plan.priced.length+' price'+(plan.priced.length===1?"":"s")+' updated');
+  var moves=plan.priced.slice(0,6).map(function(x){
+    var it=S.items[x.id];
+    return '<div class="lrow"><div class="lhead"><span class="lname">'+esc(it.es)+'</span>'
+      +'<span class="lamt">'+m(x.to)+'</span></div>'
+      +'<div class="lmeta">was '+m(x.from)+'</div></div>';
+  }).join("");
+  openSheet('<h2>Reconciliation ready</h2>'
+    +'<p class="hint">Built from the receipt you sent. '+esc(bits.join(" · "))+'.'
+    +(plan.refused?' '+plan.refused+' change'+(plan.refused===1?"":"s")+' to the seeded '
+      +'receipts were ignored — those come from the build, not from here.':'')+'</p>'
+    +(moves?'<div class="rcpt" style="padding:0;background:none;border:none">'+moves+'</div>':'')
+    +(plan.priced.length>6?'<p class="hint">…and '+(plan.priced.length-6)+' more.</p>':'')
+    +'<button class="mbtn primary" id="syYes">Apply it</button>'
+    +'<button class="mbtn mid" id="syNo">Not now</button>');
+  document.getElementById("syNo").onclick=function(){
+    /* syncId is deliberately NOT stored — declining defers, it does not
+       dismiss. The same patch is offered again on the next load. */
+    closeSheet(); toast("Left alone");
+  };
+  document.getElementById("syYes").onclick=function(){ syncApply(p, plan); };
+}
+
+function syncApply(p, plan){
+  if(Object.keys(p.trips||{}).length > SYNC_MAX_TRIPS){
+    closeSheet(); toast("That sync looks wrong — nothing applied"); return;
+  }
+  var idx={}; (S.trips||[]).forEach(function(t,i){ idx[t.id]=i; });
+  Object.keys(p.trips||{}).forEach(function(id){
+    if(String(id).indexOf("seed-")===0) return;
+    var t=p.trips[id];
+    if(!t || typeof t!=="object") return;
+    t.id=id;                       /* the key is the id, not what the body claims */
+    if(idx[id]!==undefined) S.trips[idx[id]]=t; else S.trips.push(t);
+  });
+  var kill={};
+  (p.removeTrips||[]).forEach(function(id){
+    if(String(id).indexOf("seed-")!==0) kill[id]=1;
+  });
+  S.trips=(S.trips||[]).filter(function(t){ return !kill[t.id]; });
+  S.trips.sort(function(x,y){ return String(x.date||"").localeCompare(String(y.date||"")); });
+
+  Object.keys(p.catalogue||{}).forEach(function(id){
+    var it=S.items[id], u=p.catalogue[id];
+    if(!it || !u) return;
+    if(typeof u.p==="number" && isFinite(u.p)) it.p=u.p;
+    if(Array.isArray(u.hist)) it.hist=u.hist.slice(-40);
+  });
+
+  repairTrips();
+  clearResolve();
+  S.syncId=p.syncId;
+  S.syncedAt=new Date().toISOString();
+  save(); closeSheet(); render();
+  toast("Synced — "+(plan?plan.total:0)+" change"+((plan&&plan.total===1)?"":"s"));
+}
+
 /* ----- export ----- */
 function tripPayload(t){
   return {appVersion:APP_VERSION, catalogueRev:CATALOGUE_VERSION, exportedAt:new Date().toISOString(), trip:t};
@@ -3304,6 +3454,9 @@ function wipeSheet(){
 
 /* ---------------- go ---------------- */
 load(); render(); setTimeout(fit,60);
+/* after the first paint, never before it: a sync is never worth a blank
+   screen, and this one is allowed to find nothing at all */
+setTimeout(function(){ try{ syncCheck(); }catch(e){} }, 1200);
 if("serviceWorker" in navigator){
   window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
 }
