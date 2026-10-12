@@ -167,10 +167,35 @@ main{padding:0 var(--pad);
 #tabs button.on{color:var(--store)}
 #tabs button.on .ico{stroke-width:2}
 #tabs button:active{background:var(--paper)}
-/* a dot on the Trip tab while one is open, so it is visible from anywhere */
+/* a dot while a trip is open but empty; a count once anything is on it */
 #tabs .dot{position:absolute;top:7px;left:50%;margin-left:7px;
   width:6px;height:6px;border-radius:50%;background:var(--store);
   border:1.5px solid var(--card)}
+#tabs .cbadge{position:absolute;top:3px;left:50%;margin-left:4px;
+  min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+  background:var(--store);color:#fff;border:2px solid var(--card);
+  font-family:var(--num);font-size:10px;font-weight:700;line-height:13px;
+  text-align:center;font-variant-numeric:tabular-nums}
+/* One shot, on change only. Nothing animates while it sits there: a loop
+   in the corner of your eye stops carrying information within a minute
+   and is a problem for anyone sensitive to motion. */
+@keyframes cbump{0%{transform:scale(1)}38%{transform:scale(1.42)}100%{transform:scale(1)}}
+@keyframes cdrop{0%{transform:scale(1)}38%{transform:scale(.72)}100%{transform:scale(1)}}
+#tabs .cbadge.bump{animation:cbump .28s cubic-bezier(.34,1.56,.64,1)}
+#tabs .cbadge.drop{animation:cdrop .22s ease-out}
+@media (prefers-reduced-motion:reduce){
+  #tabs .cbadge.bump,#tabs .cbadge.drop{animation:none}
+}
+
+/* segmented choice — start a trip from the regulars, or from nothing */
+.seg{display:flex;gap:8px;margin-bottom:13px}
+.seg button{flex:1;min-width:0;padding:11px 10px;border-radius:11px;
+  border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);
+  font-family:inherit;font-size:14px;font-weight:650;cursor:pointer;text-align:left}
+.seg button small{display:block;font-size:11px;font-weight:500;color:var(--muted);
+  margin-top:3px;line-height:1.3}
+.seg button.on{border-color:var(--store);background:#FBF1EE}
+.seg button.on small{color:var(--store);opacity:.85}
 
 /* trip action bar — sits directly above the tabs */
 #bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
@@ -865,7 +890,7 @@ var CAT_FP  = "c0c0e5a6";
 var SEED_FP = "d8ade43a";
 
 "use strict";
-var APP_VERSION = "4.8.1";
+var APP_VERSION = "4.9.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1338,56 +1363,11 @@ function monthSpan(){
   return Math.max(days/30.44, 0.5);
 }
 
-/* ---- due a restock ----
-   Median gap between buying something, against how long it has been.
-   Needs three purchases before a gap means anything. */
-function restock(n){
-  var by={};
-  S.trips.forEach(function(t){
-    var d=String(t.date||"").slice(0,10); if(!d) return;
-    (t.lines||[]).forEach(function(l){
-      if(l.state!=="bought" || l.lineMXN<0) return;
-      /* Only things on the master list. A line that resolves to nothing is
-         a one-off or a brand since dropped — you cannot be "due" more of
-         something you no longer keep on the list. */
-      var id=resolveItem(l.es||l.id);
-      if(!id) return;
-      var it=S.items[id];
-      if(!it || it.active===false) return;
-      if(!by[id]) by[id]={days:{}, bought:{}};
-      by[id].days[d]=1;
-      by[id].bought[l.es||l.id]=d;     /* what was actually picked up */
-    });
-  });
-  var today=todayISO(), out=[];
-  Object.keys(by).forEach(function(id){
-    var ds=Object.keys(by[id].days).sort();
-    if(ds.length<3) return;
-    var gaps=[];
-    for(var i=1;i<ds.length;i++){
-      var g=(new Date(ds[i])-new Date(ds[i-1]))/86400000;
-      if(g>0 && g<120) gaps.push(g);
-    }
-    if(gaps.length<2) return;
-    gaps.sort(function(a,b){ return a-b; });
-    var med=gaps[Math.floor(gaps.length/2)];
-    var last=ds[ds.length-1];
-    var since=Math.round((new Date(today)-new Date(last))/86400000);
-    var it=S.items[id];
-    /* name the variety that was last picked up, if it differs from the
-       catalogue's own name — "Manzana · last was Sugar Bee" */
-    var lastPick=null;
-    Object.keys(by[id].bought).forEach(function(nm){
-      if(by[id].bought[nm]===last && nm!==it.es) lastPick=nm;
-    });
-    out.push({id:id, name:it.es, en:it.en, cat:it.cat, lastPick:lastPick,
-      every:Math.round(med), since:since, n:ds.length,
-      over:since-med, last:last,
-      varieties:Object.keys(by[id].bought).length});
-  });
-  /* Past three cycles it was not forgotten, it was dropped from the list. */
-  return out.filter(function(x){ return x.since <= x.every*3; })
-    .sort(function(a,b){ return b.over-a.over; }).slice(0, n||6);
+/* ---- what to start a trip from ----
+   The regulars, by share of trips. No prediction of when anything runs out
+   — you decide that standing in the kitchen. This only saves the typing. */
+function recommended(){
+  return staples(40).map(function(x){ return x.id; });
 }
 
 /* items with enough purchases to have been looked at at all */
@@ -1845,26 +1825,15 @@ function viewDash(){
       +m(stMonth,0)+' a month before anything else goes in the trolley.</div></div>';
   }
 
-  /* ---- due a restock ---- */
-  var rs=restock(6).filter(function(x){ return x.over>-x.every*0.5; });
-  if(rs.length){
-    html+='<div class="dcard"><div class="dhead">'
-      +'<span class="eyebrow">'+icon("list")+'Due a restock</span>'
-      +'<span class="dnote">all trips</span></div>';
-    rs.forEach(function(x){
-      var due=x.over>=0;
-      html+='<div class="lrow"><div class="lhead">'
-        +'<span class="lname">'+(x.cat?icon(catIconName(x.cat)):'')+esc(x.name)+'</span>'
-        +'<span class="pill '+(due?"bad":"neutral")+'">'
-        +(due? (x.over===0?'due now':x.over+'d over') : 'in '+(-x.over)+'d')+'</span></div>'
-        +'<div class="lmeta">every '+x.every+' days · last bought '
-        +x.since+' day'+(x.since===1?"":"s")+' ago · '+x.n+' purchases'
-        +(x.lastPick?' · last was '+esc(x.lastPick):'')+'</div></div>';
-    });
-    html+='<div class="lmeta dfoot">Counted by what is on your catalogue, not by '
-      +'brand — a different apple is still apples. Anything no longer on the '
-      +'list is left out.</div></div>';
-  }
+  /* "Due a restock" lived here and was removed in 4.9.0.
+     Its premise was that purchase cadence predicts running out. It does not:
+     the median gap between any two trips is 7 days and almost every item
+     came back as "every 8 days" — the card was measuring how often the shop
+     happens, relabelled as how fast things are consumed. With ~5 trips a
+     month at one store that is baked in, and no amount of better name
+     matching fixes it. What survives is the share of trips an item appears
+     on, which is a fact rather than a prediction, and that now seeds a trip
+     instead of nagging about one. */
 
   /* ---- biggest lines ---- */
   var ti=topItems(6, [cur.key]);
@@ -2252,9 +2221,11 @@ function renderBar(){
   bar.style.display="block";
   var t=S.active, T=tripTotals();
   if(t.mode==="plan"){
-    bar.innerHTML='<div class="bline"><span class="blabel">On the list</span>'
-      +'<span class="bval mono">'+(T.nn+T.nb+T.ns)+'</span></div>'
-      +'<div class="btot"><span class="blabel">Estimate</span><div class="bright">'
+    /* "On the list" lived here and is now the badge on the Trip tab, a few
+       pixels below. The estimate is what this bar is for. In shopping mode
+       the lines below stay, because "2 of 4 bought, 1 skipped" says more
+       than a single count can. */
+    bar.innerHTML='<div class="btot"><span class="blabel">Estimate</span><div class="bright">'
       +'<div class="bbig mono">'+mx(T.listed)+'</div><div class="bsub mono">'+usd(T.listed)+'</div></div></div>'
       +'<div class="brow"><button class="gobtn" id="goShop">Start shopping</button>'
       +'<button class="ghost" id="cancelTrip">Cancel</button></div>';
@@ -2277,14 +2248,45 @@ var TABS=[
   {go:"hist", ic:"receipt", label:"History"},
   {go:"set",  ic:"sliders", label:"Settings"}
 ];
+/* While planning, the badge counts what is on the list. While shopping, the
+   number that matters is what is still to get, so it counts down as you
+   tick things off and reads 0 when the trolley is done. */
+function cartCount(){
+  var t=S.active; if(!t) return null;
+  var n=0;
+  Object.keys(t.lines||{}).forEach(function(id){
+    var L=t.lines[id];
+    if(t.mode==="plan") n++;
+    else if(L.state!=="bought" && L.state!=="skipped") n++;
+  });
+  return n;
+}
+var _lastCart=null;
 function renderTabs(){
+  var c=cartCount();
   document.getElementById("tabs").innerHTML = TABS.map(function(t){
+    var badge="";
+    if(t.go==="trip" && S.active){
+      badge = (c>0)
+        ? '<span class="cbadge">'+(c>99?"99+":c)+'</span>'
+        : '<span class="dot"></span>';   /* open but nothing on it yet */
+    }
     return '<button data-go="'+t.go+'" class="'+(screen===t.go?"on":"")+'"'
       +(screen===t.go?' aria-current="page"':'')+'>'
-      +icon(t.ic)
-      +((t.go==="trip" && S.active)?'<span class="dot"></span>':'')
+      +icon(t.ic)+badge
       +'<span class="tlab">'+t.label+'</span></button>';
   }).join("");
+  /* one-shot pulse when the number moves — confirmation that the tap
+     landed. Nothing animates while it is merely sitting there. */
+  if(c!==null && _lastCart!==null && c!==_lastCart){
+    var el=document.querySelector("#tabs .cbadge");
+    if(el){
+      el.classList.remove("bump","drop");
+      void el.offsetWidth;                       /* restart the animation */
+      el.classList.add(c>_lastCart ? "bump" : "drop");
+    }
+  }
+  _lastCart=c;
 }
 /* Keep the page clear of both fixed bars: the trip bar rides on top of the
    tab bar, so content has to clear the pair of them. */
@@ -2448,23 +2450,52 @@ function newTripSheet(){
   var opts=S.shops.map(function(s){
     return '<button class="mbtn" data-shop="'+s.id+'">'+esc(s.name)+'</button>';
   }).join("");
-  openSheet('<h2>Start a trip</h2><p class="hint">Pick the shop. The whole catalogue opens so you can mark what you need.</p>'
+  var rec=recommended();
+  openSheet('<h2>Start a trip</h2><p class="hint">Pick the shop, then start from your '
+    +'regulars or from nothing.</p>'
     +'<label class="lbl">Date</label>'
     +'<input class="field mono" id="ntDate" type="date" value="'+todayISO()+'">'
     +'<label class="lbl">Exchange rate · MXN per USD</label>'
     +'<input class="field mono" id="ntFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +(rec.length
+      ? '<label class="lbl">Start from</label>'
+        +'<div class="seg" id="ntSeed">'
+        +'<button data-seed="rec" class="on">Recommended items'
+        +'<small>'+rec.length+' you buy most trips</small></button>'
+        +'<button data-seed="none">Empty list<small>Mark everything yourself</small></button>'
+        +'</div>'
+      : '')
     +'<label class="lbl">Shop</label>'+opts);
+  var seedMode = rec.length ? "rec" : "none";
   document.getElementById("sheetBody").addEventListener("click", function h(e){
+    var sg=e.target.closest("[data-seed]");
+    if(sg){
+      seedMode=sg.dataset.seed;
+      [].forEach.call(document.querySelectorAll("#ntSeed button"), function(x){
+        x.classList.toggle("on", x===sg);
+      });
+      return;
+    }
     var b=e.target.closest("[data-shop]"); if(!b) return;
     var d=document.getElementById("ntDate").value||todayISO();
     var fxv=parseFloat(document.getElementById("ntFx").value);
     if(isNaN(fxv) || fxv<=0) fxv=S.fx;
+    var lines={};
+    if(seedMode==="rec"){
+      rec.forEach(function(id){
+        var it=S.items[id];
+        if(it && it.active!==false)
+          lines[id]={q:it.q||1, state:"need", paid:null};
+      });
+    }
     /* the rate lives on the trip, not only on the app — two trips a month
        apart were charged different rates and the history should say so */
     S.active={id:"trip-"+Date.now(), shop:b.dataset.shop, shopName:shopName(b.dataset.shop),
-      date:d, mode:"plan", fx:fxv, budgetUSD:null, note:"", lines:{}};
+      date:d, mode:"plan", fx:fxv, budgetUSD:null, note:"", lines:lines};
     save(); closeSheet(); screen="trip"; render(); window.scrollTo({top:0});
-    toast("Trip open — mark what you need");
+    var n=Object.keys(lines).length;
+    toast(n ? n+" regulars on the list — untick what you have"
+            : "Trip open — mark what you need");
   });
 }
 
@@ -2956,25 +2987,67 @@ function tripSheet(id){
   });
 }
 
-function receiptText(t){
-  var W=36, s=(t.shopName||"")+"\n"+(t.date||"").replace("T"," ")+"\n"+"-".repeat(W)+"\n";
-  (t.lines||[]).filter(function(l){return l.state==="bought"}).forEach(function(l){
-    var nm=(l.es+(l.q>1?" x"+l.q:"")).slice(0,25);
-    s+=nm.padEnd(26)+((l.lineMXN===null||l.lineMXN===undefined)?"—":l.lineMXN.toFixed(2)).padStart(10)+"\n";
+/* keep a free-text note inside the receipt's column width */
+function wrapTo(text, w){
+  var out=[], line="";
+  String(text||"").split(/\s+/).forEach(function(word){
+    if(!line){ line=word; return; }
+    if((line+" "+word).length<=w){ line+=" "+word; }
+    else { out.push(line); line=word; }
   });
+  if(line) out.push(line);
+  return out.join("\n");
+}
+/* Grouped the way the trip and catalogue screens are, so a receipt reads
+   the same way you shopped it. Lines migrated from v1 carry "other" rather
+   than a real category — they get their own section at the end instead of
+   being dropped or silently filed under Pantry. */
+function receiptText(t){
+  var W=38, NW=28, s=(t.shopName||"")+"\n"+(t.date||"").replace("T"," ")+"\n";
+  if(t.note) s+=wrapTo(t.note, W)+"\n";
+  s+="-".repeat(W)+"\n";
+  var bought=(t.lines||[]).filter(function(l){ return l.state==="bought"; });
+  var items=bought.filter(function(l){ return !(l.lineMXN<0); });
+  var promos=bought.filter(function(l){ return l.lineMXN<0; });
+
+  var order=CATS.map(function(c){ return c.id; }).concat(["other"]);
+  var byCat={};
+  items.forEach(function(l){
+    var k=(l.cat && CATS.some(function(c){return c.id===l.cat;})) ? l.cat : "other";
+    (byCat[k]=byCat[k]||[]).push(l);
+  });
+  order.forEach(function(k){
+    var g=byCat[k]; if(!g || !g.length) return;
+    var sub=g.reduce(function(a,l){ return a+(l.lineMXN||0); },0);
+    var title=(k==="other") ? "UNCATEGORISED" : catName(k).toUpperCase();
+    s+=title.padEnd(NW)+(g.length+(g.length===1?" item":" items")).padStart(W-NW)+"\n";
+    g.forEach(function(l){
+      var nm="  "+l.es+(l.q>1?" x"+l.q:"");
+      s+=nm.slice(0,NW).padEnd(NW)
+        +((l.lineMXN===null||l.lineMXN===undefined)?"—":l.lineMXN.toFixed(2)).padStart(W-NW)+"\n";
+    });
+    s+="".padEnd(NW)+sub.toFixed(2).padStart(W-NW)+"\n";
+  });
+  if(promos.length){
+    s+="PROMOTIONS".padEnd(NW)+(promos.length+"").padStart(W-NW)+"\n";
+    promos.forEach(function(l){
+      s+=("  "+l.es).slice(0,NW).padEnd(NW)+l.lineMXN.toFixed(2).padStart(W-NW)+"\n";
+    });
+  }
   var sk=(t.lines||[]).filter(function(l){return l.state==="skip"});
   if(sk.length){
     s+="-".repeat(W)+"\nSKIPPED\n";
-    sk.forEach(function(l){ s+=("  "+l.es).slice(0,26)+"\n"; });
+    sk.forEach(function(l){ s+=("  "+l.es).slice(0,NW)+"\n"; });
   }
   s+="-".repeat(W)+"\n";
-  s+="CHECKED OFF".padEnd(26)+(t.listed||0).toFixed(2).padStart(10)+"\n";
+  s+=(items.length+(items.length===1?" ITEM":" ITEMS")).padEnd(NW)
+    +(t.listed||0).toFixed(2).padStart(W-NW)+"\n";
   if(t.receiptTotal!==null&&t.receiptTotal!==undefined){
-    s+="RECEIPT TOTAL".padEnd(26)+t.receiptTotal.toFixed(2).padStart(10)+"\n";
-    s+="OFF-LIST".padEnd(26)+(t.offList||0).toFixed(2).padStart(10)+"\n";
+    s+="RECEIPT TOTAL".padEnd(NW)+t.receiptTotal.toFixed(2).padStart(W-NW)+"\n";
+    s+="OFF-LIST".padEnd(NW)+(t.offList||0).toFixed(2).padStart(W-NW)+"\n";
   }
-  s+=("RATE "+(t.fx||S.fx).toFixed(2)).padEnd(26)+"\n";
-  if(t.totalUSD) s+="TOTAL USD".padEnd(26)+t.totalUSD.toFixed(2).padStart(10)+"\n";
+  s+=("RATE "+(t.fx||S.fx).toFixed(2))+"\n";
+  if(t.totalUSD) s+="TOTAL USD".padEnd(NW)+t.totalUSD.toFixed(2).padStart(W-NW)+"\n";
   return s;
 }
 
