@@ -414,6 +414,21 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 
 /* the table's own total row: same two columns as the rows, a heavier rule
    above it, and no bar — it is the 100% the bars are shares of */
+/* a row you can open: a chevron-free affordance — the whole row is the
+   target, and it dims on press so a tap is acknowledged on a slow phone */
+.lrow.tap{cursor:pointer;-webkit-tap-highlight-color:transparent;
+  margin:0 -4px;padding-left:4px;padding-right:4px;border-radius:8px}
+.lrow.tap:active{background:var(--paper)}
+
+/* a repeat count beside an item name in the category drill-down */
+.xn{font-size:11.5px;color:var(--muted);font-weight:650;
+  font-family:var(--num);flex:none}
+
+/* filing an uncategorised line, inline on its row */
+.minisel{font:inherit;font-size:12px;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule);border-radius:7px;padding:3px 6px;
+  max-width:52%;flex:none}
+
 /* the last row's own hairline would sit 2px above the total's rule and read
    as a double line, so it gives way to it */
 .lrow.last{border-bottom:none;padding-bottom:4px}
@@ -931,7 +946,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.15.1";
+var APP_VERSION = "4.16.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1826,7 +1841,7 @@ function viewDash(){
     html+='<div class="dcard"><div class="dhead">'
       +'<span class="eyebrow">'+icon("pie")+'Where it goes</span>'
       +'<span class="dnote">'+(catScope?esc(monthLabel(catScope)):"all trips")+'</span></div>'
-      +catRanked(cats)
+      +catRanked(cats, catScope)
       +'</div>';
   }
 
@@ -2054,13 +2069,14 @@ function budgetBar(pct, prog){
    part-to-whole, the number is the answer, and the bar's job is to show
    that answer rather than a different one. Rank order is unchanged, so the
    largest is still obvious at a glance. */
-function catRanked(cats){
+function catRanked(cats, scopeKey){
   var tot=cats.reduce(function(s,c){return s+c.total},0);
   if(!tot) return '<p class="lmeta">No priced lines in this period yet.</p>';
   return '<div class="colhead"><span>% of spend</span></div>'
   +cats.map(function(c,i){
     var un=(c.cat==="other"), last=(i===cats.length-1);
-    return '<div class="lrow'+(un?" dim":"")+(last?" last":"")+'">'
+    return '<div class="lrow tap'+(un?" dim":"")+(last?" last":"")
+      +'" data-catdrill="'+c.cat+'" data-catmon="'+(scopeKey||"")+'">'
       +'<div class="lhead"><span class="lname">'
         +(un?"":icon(catIconName(c.cat)))+esc(c.name)+'</span>'
       +'<span class="lamt">'+m(c.total,0)
@@ -2555,6 +2571,8 @@ document.getElementById("main").addEventListener("click", function(e){
   if((el=e.target.closest("[data-newitem]"))){
     itemSheet(null, el.dataset.newitem, screen==="trip" && !!S.active); return;
   }
+  if((el=e.target.closest("[data-catdrill]"))){
+    catSheet(el.dataset.catdrill, el.dataset.catmon||null); return; }
   if((el=e.target.closest("[data-trip]"))){ tripSheet(el.dataset.trip); return; }
   if((el=e.target.closest("[data-open]"))){
     if(screen==="trip" && S.active) tripItemSheet(el.dataset.open);
@@ -3205,6 +3223,116 @@ function saveTrip(dt, fx, receiptTotal){
   S.active=null;
   save(); screen="dash"; dashMonth=null; render();
   tripSheet(trip.id);
+}
+
+/* ----- what is behind a category ------------------------------------------
+
+   A row in "Where it goes" is a number with no way to ask what it is made
+   of. Tapping one answers that: every bought line in the category, grouped
+   by item so three jars of the same jam read as "×3" on one row rather than
+   three rows that have to be added up by eye.
+
+   Quick trips carry no lines but do carry a category, so each one appears as
+   a row of its own — otherwise Mixed opens empty and any category a quick
+   trip was tagged with under-reports what the card above it claims. */
+function catLines(catId, months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var g={}, order=[];
+  function add(key, name, amt, date, isQuickRow, lineRef){
+    if(!g[key]){ g[key]={key:key, name:name, n:0, total:0, first:date, last:date,
+                         quick:!!isQuickRow, refs:[]}; order.push(key); }
+    var x=g[key];
+    x.n++; x.total+=amt;
+    if(date<x.first) x.first=date;
+    if(date>x.last)  x.last=date;
+    if(lineRef) x.refs.push(lineRef);
+  }
+  S.trips.forEach(function(t){
+    var mk=monthKey(t.date); if(months && !keep[mk]) return;
+    var d=String(t.date||"").slice(0,10);
+    if(isQuick(t)){
+      if((t.cat||"mixed")!==catId) return;
+      add("q|"+t.id, (t.note||"Quick trip")+" · "+(t.shopName||shopName(t.shop)),
+          spendOf(t), d, true, null);
+      return;
+    }
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought") return;
+      var k=l.cat||"pantry";
+      /* the card groups unknown categories under "other"; match that */
+      if(!CATS.some(function(c){return c.id===k;})) k="other";
+      if(k!==catId) return;
+      add("i|"+(l.es||l.id), l.es||l.en||"(unnamed)", (l.lineMXN||0), d, false,
+          {trip:t.id, id:l.id, es:l.es});
+    });
+  });
+  return order.map(function(k){ return g[k]; })
+    .sort(function(a,b){ return b.total-a.total; });
+}
+
+function catSheet(catId, monthK){
+  var months = monthK ? [monthK] : null;
+  var rows   = catLines(catId, months);
+  var tot    = rows.reduce(function(s,r){ return s+r.total; },0);
+  var un     = (catId==="other");
+  var title  = un ? "Uncategorised" : catName(catId);
+
+  var body = rows.map(function(r){
+    var when = (r.first===r.last) ? r.first : (r.first+" – "+r.last);
+    return '<div class="lrow">'
+      +'<div class="lhead"><span class="lname">'+esc(r.name)
+        +(r.n>1?' <span class="xn">×'+r.n+'</span>':'')+'</span>'
+      +'<span class="lamt">'+m(r.total)+'</span></div>'
+      +'<div class="lhead"><span class="lmeta">'+esc(when)
+        +(r.quick?' · quick trip':'')+'</span>'
+      +(un && !r.quick
+         ? '<select class="minisel" data-file="'+esc(r.key)+'">'
+           +'<option value="">File it under…</option>'
+           +itemCats().map(function(c){
+               return '<option value="'+c.id+'">'+esc(c.name)+'</option>'; }).join("")
+           +'</select>'
+         : '')
+      +'</div></div>';
+  }).join("");
+
+  openSheet('<h2>'+esc(title)+'</h2>'
+    +'<p class="hint">'+(monthK?esc(monthLabel(monthK)):"Every trip")+' · '
+    +rows.length+(rows.length===1?" item":" items")
+    +(un ? ' with no category. These are lines whose item is not in the '
+          +'catalogue — added mid-trip, or since removed. File one and it '
+          +'joins that category everywhere.'
+         : '')+'</p>'
+    +(rows.length ? body : '<p class="hint">Nothing in this category yet.</p>')
+    +'<div class="sumrow"><div class="lhead">'
+      +'<span class="lname">Total</span>'
+      +'<span class="lamt">'+m(tot)+'</span></div></div>'
+    +'<button class="mbtn mid" id="clDone">Done</button>');
+
+  document.getElementById("clDone").onclick=closeSheet;
+  document.getElementById("sheetBody").addEventListener("change", function(e){
+    var sel=e.target.closest("[data-file]"); if(!sel || !sel.value) return;
+    var grp=rows.filter(function(r){ return r.key===sel.dataset.file; })[0];
+    if(!grp) return;
+    var cat=sel.value, n=0;
+    grp.refs.forEach(function(ref){
+      var t=S.trips.filter(function(x){ return x.id===ref.trip; })[0];
+      if(!t) return;
+      (t.lines||[]).forEach(function(l){
+        /* match on the name, not the id: an uncategorised line's id is
+           exactly what failed to resolve, so it is not a reliable key */
+        if(l.es===ref.es && (l.cat===undefined || l.cat===null || l.cat==="other")){
+          l.cat=cat; n++;
+        }
+      });
+    });
+    /* A line inside a seeded receipt would be rebuilt from the build on the
+       next data change. None of the ten carry an uncategorised line today;
+       if one ever does, the fix belongs in seed-trips.js, not here. */
+    save();
+    toast(n+" line"+(n===1?"":"s")+" filed under "+catName(cat));
+    catSheet(catId, monthK);     /* redraw: the row has left this category */
+    render();
+  });
 }
 
 /* ----- a saved trip ----- */
