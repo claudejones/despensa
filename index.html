@@ -451,6 +451,18 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .xn{font-size:11.5px;color:var(--muted);font-weight:650;
   font-family:var(--num);flex:none}
 
+/* the category picker, revealed under a row when you tap it */
+/* An author display rule beats the hidden attribute's UA style, so without
+   this every picker renders open and `hidden` is a lie the DOM tells. The
+   same trap already caught .hbtn once in this project. */
+.movebox[hidden]{display:none}
+.movebox{display:flex;align-items:center;gap:9px;margin-top:9px;
+  padding:9px 10px;background:var(--paper);border:1px solid var(--rule);
+  border-radius:9px}
+.movebox .lmeta{flex:none}
+.movebox select{flex:1;max-width:none}
+.lrow.open .lname{color:var(--store)}
+
 /* filing an uncategorised line, inline on its row */
 .minisel{font:inherit;font-size:12px;color:var(--ink);background:var(--paper);
   border:1px solid var(--rule);border-radius:7px;padding:3px 6px;
@@ -979,7 +991,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "23e96f8c";
 
 "use strict";
-var APP_VERSION = "4.17.2";
+var APP_VERSION = "4.18.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1156,6 +1168,9 @@ function load(){
      line, so the breakdown is whole for anyone who logged one in that
      window. */
   (S.trips||[]).forEach(function(t){ if(isQuick(t) && !t.cat) t.cat="mixed"; });
+  /* after repair and after any seed rebuild, so a correction made on the
+     phone is not quietly undone by the next data push */
+  applyCatFix();
   S.appVersion = APP_VERSION;
   if(!S.shops) S.shops = SHOPS.slice();
   if(!S.trips) S.trips = [];
@@ -3276,6 +3291,68 @@ function saveTrip(dt, fx, receiptTotal){
   tripSheet(trip.id);
 }
 
+/* ----- changing an item's category ---------------------------------------
+
+   A Kellogg's cereal sat in Dairy & Chilled until it was spotted by eye in a
+   drill-down. Nothing in the app could have known it was wrong, so the fix
+   has to be something you can do yourself, where you notice it.
+
+   Two rules, both of which the old Uncategorised picker got wrong:
+
+   1. It applies to EVERY trip, not the month on screen. A category is a fact
+      about the thing. Filing one month and leaving another is how an item
+      ends up counted in two categories at once — the exact split v417 fails
+      the build over.
+   2. It is remembered. Lines inside the ten seeded receipts are rebuilt from
+      the build whenever the receipt data changes, which would silently undo
+      the fix on the next push. S.catFix survives that and is reapplied after
+      every rebuild. It rides along in the export, so a reconciliation folds
+      it into seed-trips.js for good and the sync can then clear it. */
+
+/* accent-, case- and quantity-insensitive, so "Limón S/Semilla" and
+   "Limón s/semilla ×2" are one item for this purpose */
+function catKey(s){
+  return String(s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"")
+    .replace(/\s*[×x]\s*\d+.*$/,"").replace(/\s*\(\d-for-\d\)\s*$/,"")
+    .toLowerCase().replace(/[^a-z0-9 ]/g,"").trim();
+}
+
+function recategorise(name, cat){
+  var k=catKey(name);
+  if(!k || !CATS.some(function(c){ return c.id===cat && !c.quickOnly; })) return 0;
+  if(!S.catFix) S.catFix={};
+  S.catFix[k]=cat;
+  var n=applyCatFix(k);
+  save();
+  return n;
+}
+
+/* Apply the remembered fixes. Called after every seed rebuild, and again
+   whenever one is made. Pass a key to apply just that one. */
+function applyCatFix(only){
+  if(!S.catFix) return 0;
+  var n=0;
+  S.trips.forEach(function(t){
+    if(isQuick(t)) return;              /* a quick trip's category is its own */
+    (t.lines||[]).forEach(function(l){
+      var k=catKey(l.es||l.id);
+      if(only && k!==only) return;
+      var c=S.catFix[k];
+      if(c && l.cat!==c){ l.cat=c; n++; }
+    });
+  });
+  /* and the catalogue, so the next trip gets it right rather than needing
+     the same correction again */
+  Object.keys(S.items).forEach(function(id){
+    var k=catKey(S.items[id].es);
+    if(only && k!==only) return;
+    var c=S.catFix[k];
+    if(c) S.items[id].cat=c;
+  });
+  clearResolve();
+  return n;
+}
+
 /* ----- what is behind a category ------------------------------------------
 
    A row in "Where it goes" is a number with no way to ask what it is made
@@ -3330,20 +3407,28 @@ function catSheet(catId, monthK){
 
   var body = rows.map(function(r,i){
     var when = (r.first===r.last) ? r.first : (r.first+" – "+r.last);
-    return '<div class="lrow'+((i===rows.length-1)?" last":"")+'">'
+    /* A quick trip's category belongs to the trip, not to an item, so it is
+       changed in the quick-trip sheet rather than here. */
+    var canMove = !r.quick;
+    return '<div class="lrow'+((i===rows.length-1)?" last":"")
+      +(canMove?' rowtap':'')+'"'
+      +(canMove?' data-recat="'+esc(r.name)+'"':'')+'>'
       +'<div class="lhead"><span class="lname">'+esc(r.name)
         +(r.n>1?' <span class="xn">×'+r.n+'</span>':'')+'</span>'
       +'<span class="lamt">'+m(r.total)+'</span></div>'
       +'<div class="lhead"><span class="lmeta">'+esc(when)
-        +(r.quick?' · quick trip':'')+'</span>'
-      +(un && !r.quick
-         ? '<select class="minisel" data-file="'+esc(r.key)+'">'
-           +'<option value="">File it under…</option>'
+        +(r.quick?' · quick trip':'')+'</span></div>'
+      +(canMove
+         ? '<div class="movebox" hidden>'
+           +'<span class="lmeta">Move to</span>'
+           +'<select class="minisel">'
+           +'<option value="">'+(un?'File it under…':'Choose a category…')+'</option>'
            +itemCats().map(function(c){
-               return '<option value="'+c.id+'">'+esc(c.name)+'</option>'; }).join("")
-           +'</select>'
+               return '<option value="'+c.id+'"'+(c.id===catId?' disabled':'')+'>'
+                 +esc(c.name)+'</option>'; }).join("")
+           +'</select></div>'
          : '')
-      +'</div></div>';
+      +'</div>';
   }).join("");
 
   openSheet('<h2>'+(un?'':icon(catIconName(catId)))+esc(title)+'</h2>'
@@ -3353,9 +3438,11 @@ function catSheet(catId, monthK){
     +rows.length+(rows.length===1?" item":" items")
     +(un?" with no category":"")+'</p>'
     +(un ? '<p class="hint" style="margin-top:-2px">These are lines whose item '
-          +'is not in the catalogue — added mid-trip, or since removed. File '
-          +'one and it joins that category everywhere.</p>'
+          +'is not in the catalogue — added mid-trip, or since removed.</p>'
          : '')
+    +(rows.length ? '<p class="hint" style="margin-top:-2px">Tap a row to move '
+      +'it to another category. It moves on every trip, not just this month, '
+      +'and sticks for next time.</p>' : '')
     +(rows.length ? body : '<p class="hint">Nothing in this category yet.</p>')
     +'<div class="sumrow"><div class="lhead">'
       +'<span class="lname">Total</span>'
@@ -3363,27 +3450,29 @@ function catSheet(catId, monthK){
     +'<button class="mbtn mid" id="clDone">Done</button>');
 
   document.getElementById("clDone").onclick=closeSheet;
-  document.getElementById("sheetBody").addEventListener("change", function(e){
-    var sel=e.target.closest("[data-file]"); if(!sel || !sel.value) return;
-    var grp=rows.filter(function(r){ return r.key===sel.dataset.file; })[0];
-    if(!grp) return;
-    var cat=sel.value, n=0;
-    grp.refs.forEach(function(ref){
-      var t=S.trips.filter(function(x){ return x.id===ref.trip; })[0];
-      if(!t) return;
-      (t.lines||[]).forEach(function(l){
-        /* match on the name, not the id: an uncategorised line's id is
-           exactly what failed to resolve, so it is not a reliable key */
-        if(l.es===ref.es && (l.cat===undefined || l.cat===null || l.cat==="other")){
-          l.cat=cat; n++;
-        }
-      });
-    });
-    /* A line inside a seeded receipt would be rebuilt from the build on the
-       next data change. None of the ten carry an uncategorised line today;
-       if one ever does, the fix belongs in seed-trips.js, not here. */
-    save();
-    toast(n+" line"+(n===1?"":"s")+" filed under "+catName(cat));
+  var sb=document.getElementById("sheetBody");
+
+  /* tap to reveal, rather than a picker sitting live on every row: these are
+     long lists scrolled with a thumb, and a stray tap that silently refiles
+     something is worse than one extra tap */
+  sb.addEventListener("click", function(e){
+    if(e.target.closest(".movebox")) return;        /* the picker itself */
+    var row=e.target.closest("[data-recat]"); if(!row) return;
+    var box=row.querySelector(".movebox"); if(!box) return;
+    var opening=box.hidden;
+    sb.querySelectorAll(".movebox").forEach(function(b){ b.hidden=true; });
+    row.classList.remove("open");
+    sb.querySelectorAll(".lrow.open").forEach(function(r){ r.classList.remove("open"); });
+    if(opening){ box.hidden=false; row.classList.add("open"); }
+  });
+
+  sb.addEventListener("change", function(e){
+    var sel=e.target.closest(".movebox select"); if(!sel || !sel.value) return;
+    var row=sel.closest("[data-recat]"); if(!row) return;
+    var name=row.dataset.recat, cat=sel.value;
+    var n=recategorise(name, cat);
+    toast(n ? (n+" line"+(n===1?"":"s")+" moved to "+catName(cat))
+            : "Nothing to move");
     catSheet(catId, monthK);     /* redraw: the row has left this category */
     render();
   });
@@ -3635,6 +3724,7 @@ function tripPayload(t){
 function fullPayload(){
   return {appVersion:APP_VERSION, catalogueRev:CATALOGUE_VERSION,
     exportedAt:new Date().toISOString(), currentRate:S.fx,
+    categoryFixes:S.catFix||{},
     shops:S.shops, trips:S.trips,
     catalogue:Object.keys(S.items).map(function(id){
       var it=S.items[id];
