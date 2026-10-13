@@ -485,6 +485,9 @@ var ICONS = {
         "M7 15a6.47 6.47 0 0 1 5 0 6.47 6.47 0 0 0 5 0"],
   bread:["M3 15a9 9 0 0 1 18 0v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3Z",
          "M7.5 14.5v2","M12 14v2.5","M16.5 14.5v2"],
+  /* one-offs: a price tag — a thing bought, not a supply replenished */
+  tag:["M12.59 2.59A2 2 0 0 0 11.17 2H4a2 2 0 0 0-2 2v7.17a2 2 0 0 0 .59 1.42l8.82 8.82a2 2 0 0 0 2.83 0l7.17-7.17a2 2 0 0 0 0-2.83Z",
+       "M7 7h.01"],
   box:["m7.5 4.27 9 5.15",
        "M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z",
        "m3.3 7 8.7 5 8.7-5","M12 22V12"],
@@ -524,7 +527,7 @@ function icon(name, cls){
    p = reference price MXN (latest known). q = usual quantity.
    hint = shop usually bought at (a sort hint, never a restriction).
    hist = known price points from receipts. */
-var CATALOGUE_VERSION = 13;
+var CATALOGUE_VERSION = 14;
 
 var CATS = [
   {id:"produce",  name:"Fruit & Veg",         ic:"leaf"},
@@ -536,6 +539,14 @@ var CATS = [
   {id:"drinks",   name:"Drinks",              ic:"glass"},
   {id:"home",     name:"Household",           ic:"spray"},
   {id:"care",     name:"Personal Care",       ic:"drop"},
+  /* Bought once, not replenished: a thermos, a storage box, a trolley, a
+     notebook. Household is the recurring supply — detergent, paper, bin
+     bags — and mixing the two made MX$1,465 of one-time purchases read as
+     ongoing cost. The test is frequency, not whether it is food: would you
+     buy this again within a couple of months? No, and it belongs here.
+     It stays inside the monthly budget; it is simply visible on its own,
+     so an expensive month can be told apart from an expensive shop. */
+  {id:"oneoff",   name:"One-offs",            ic:"tag"},
   /* Quick trips only. A quick run is a real basket nobody itemised, so
      "Mixed" is what it was, not an admission that data is missing — and
      it ranks by size like any other category, because a Mixed bar sitting
@@ -715,7 +726,7 @@ var ITEMS = [
    correction reach an installed phone is SEED_FP — a hash of this whole
    file, computed by build.py. Edit anything below and it changes by
    itself; there is no number anyone has to remember to bump. */
-var SEED_VERSION = 4;
+var SEED_VERSION = 5;
 
 var SEED_TRIPS = [
 {d:"2026-08-08", t:2484.46, note:"", l:[
@@ -729,7 +740,7 @@ var SEED_TRIPS = [
  ["Papa Sabritas Sal","snacks",61],["Papa Sabritas Sal","snacks",61],
  ["Frijoles Refritos Isadora","protein",18],["Riccadonna Asti","drinks",310],
  ["Cerveza Barrilito","drinks",59],["Baygon Total","home",65],
- ["Termo Okko ×2","home",698]]},
+ ["Termo Okko ×2","oneoff",698]]},
 
 {d:"2026-08-16", t:2418.32, note:"", l:[
  ["Oroweat Multigrano","bakery",93],["Quinoa BSD Foods","pantry",71],
@@ -761,8 +772,8 @@ var SEED_TRIPS = [
  ["Manzana Pink Lady","produce",23.96],["Lechuga Hidropónica","produce",38.90],
  ["Plátano","produce",22.28],["Ajo Granel","produce",8.06],
  ["Queso Mi Passion","chilled",139],["DontWorry Quiche","chilled",90],
- ["Pierna y Muslo","protein",133.58],["Cuaderno E. Plus","home",29],
- ["Cuaderno E. Plus","home",29],["Bolígrafo Bic","home",19]]},
+ ["Pierna y Muslo","protein",133.58],["Cuaderno E. Plus","oneoff",29],
+ ["Cuaderno E. Plus","oneoff",29],["Bolígrafo Bic","oneoff",19]]},
 
 {d:"2026-08-30", t:2278.87, note:"Power-outage restock — milks, eggs and food storage", l:[
  ["Avena Orgánica ×2","pantry",195],["Granola Miel de Agave","pantry",104],
@@ -778,9 +789,9 @@ var SEED_TRIPS = [
  ["Limón Eureka","produce",4.76],["Plátano","produce",18.05],
  ["AL Califia Farms Vainilla","chilled",155],["Tortillas Blancas granel","bakery",2.98],
  ["Pollo Rostizado","protein",99.90],["Fibra Esponja Scotch-Brite","home",73],
- ["Hermético Cubasa ×2","home",90],["Hermético Cubasa ×2","home",58],
- ["Refresquero Guatepeor","home",18.01],["Refripractic Cubasa ×2","home",198],
- ["Refresquero Jip Gu","home",29]]},
+ ["Hermético Cubasa ×2","oneoff",90],["Hermético Cubasa ×2","oneoff",58],
+ ["Refresquero Guatepeor","oneoff",18.01],["Refripractic Cubasa ×2","oneoff",198],
+ ["Refresquero Jip Gu","oneoff",29]]},
 
 {d:"2026-09-05", t:1741.37, note:"", l:[
  ["Tortilla Blanca 45 pz","bakery",38],["Quinoa Okko","pantry",74],
@@ -793,8 +804,8 @@ var SEED_TRIPS = [
  ["Huevo Blanco 12 pz","protein",32],["Salmón Atlántico","protein",329],
  ["Lechuga Italiana Viva","produce",39.10],["Champiñón Granel","produce",24.61],
  ["Aguacate Hass","produce",45.56],["Queso Mi Passion","chilled",139],
- ["Pollo Rostizado","protein",99.90],["Filtro ecológico","home",95],
- ["Hermético Rectangular","home",111.20]]},
+ ["Pollo Rostizado","protein",99.90],["Filtro ecológico","oneoff",95],
+ ["Hermético Rectangular","oneoff",111.20]]},
 
 /* 13 Sep — subtotal 3,125.56 less a 61.00 "3x2 En Botanas" promotion on the
    crisps = 3,064.56. The crisps keep their 61.00 shelf price and the
@@ -880,7 +891,7 @@ var SEED_TRIPS = [
  ["Sazonador Moe’s","pantry",44],["Gouter Vinagreta 60 g","pantry",95],
  ["Catar Curry 55 g","pantry",36.01],["Vinagre Chedraui","pantry",35],
  ["Frijoles Refritos Isadora ×2","protein",34],["Detergente Tide","home",450],
- ["Bolsas de basura La Casera","home",48.50],["Protector de mesa","home",38],
+ ["Bolsas de basura La Casera","home",48.50],["Protector de mesa","oneoff",38],
  ["Tequila Azul 700 ml","drinks",199],["Cerveza Barrilito","drinks",64],
  ["Huevo Webito 12 pz","protein",80.90],["Salmón Atlántico","protein",329],
  ["Manzana Sugar Bee","produce",74.87],["Pera Anjou","produce",32.80],
@@ -893,16 +904,16 @@ var SEED_TRIPS = [
  ["Violife Manchego","chilled",110],["AL Califia Farms Vainilla","chilled",145],
  ["Sanissimo Salmas","snacks",37],["Kellogg’s Casero","chilled",94],
  ["Totopo Chile Limón","snacks",39],["Totopo Botanero SB","snacks",39],
- ["Pollo Rostizado","protein",99.90],["Carro Mandado","home",140.01]]}
+ ["Pollo Rostizado","protein",99.90],["Carro Mandado","oneoff",140.01]]}
 ];
 
 /* Generated by build.py — do not edit. Fingerprints are hashes of
    catalogue.js and seed-trips.js, so they cannot drift from the data. */
-var CAT_FP  = "ac9271a7";
-var SEED_FP = "d8ade43a";
+var CAT_FP  = "d62ed61e";
+var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.12.0";
+var APP_VERSION = "4.13.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
