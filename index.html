@@ -414,7 +414,10 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 
 /* the table's own total row: same two columns as the rows, a heavier rule
    above it, and no bar — it is the 100% the bars are shares of */
-.sumrow{padding-top:12px;margin-top:2px;border-top:1.5px solid var(--ink)}
+/* the last row's own hairline would sit 2px above the total's rule and read
+   as a double line, so it gives way to it */
+.lrow.last{border-bottom:none;padding-bottom:4px}
+.sumrow{padding-top:12px;border-top:1.5px solid var(--ink)}
 .sumrow .lname{font-weight:750}
 .sumrow .lname small{display:block;font-size:11px;font-weight:500;
   color:var(--muted);margin-top:2px;letter-spacing:0}
@@ -928,7 +931,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.15.0";
+var APP_VERSION = "4.15.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2055,9 +2058,9 @@ function catRanked(cats){
   var tot=cats.reduce(function(s,c){return s+c.total},0);
   if(!tot) return '<p class="lmeta">No priced lines in this period yet.</p>';
   return '<div class="colhead"><span>% of spend</span></div>'
-  +cats.map(function(c){
-    var un=(c.cat==="other");
-    return '<div class="lrow'+(un?" dim":"")+'">'
+  +cats.map(function(c,i){
+    var un=(c.cat==="other"), last=(i===cats.length-1);
+    return '<div class="lrow'+(un?" dim":"")+(last?" last":"")+'">'
       +'<div class="lhead"><span class="lname">'
         +(un?"":icon(catIconName(c.cat)))+esc(c.name)+'</span>'
       +'<span class="lamt">'+m(c.total,0)
