@@ -227,13 +227,28 @@ main{padding:0 var(--pad);
 /* while a sheet is open the page behind must not scroll */
 body.locked{position:fixed;width:100%;overflow:hidden}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--card);
-  border-radius:18px 18px 0 0;padding:8px var(--pad) calc(20px + env(safe-area-inset-bottom));
+  border-radius:18px 18px 0 0;padding:0 var(--pad) calc(20px + env(safe-area-inset-bottom));
   max-height:86vh;overflow-y:auto;overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;display:none}
 .sheet.open{display:block}
 /* sticky close bar — a tap target that is always reachable */
+/* The bar owns the space above it and spans the sheet edge to edge. The
+   sheet used to carry 8px of its own padding above a top:0 sticky bar, and
+   rows scrolled up through that band and showed over the grab handle; the
+   bar also stopped short of the sheet's side padding, leaving two more
+   strips for content to pass behind. Nothing above it, nothing beside it. */
 .sheetbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;
-  background:var(--card);padding:4px 0 10px;margin:0 0 4px}
+  background:var(--card);margin:0 calc(-1 * var(--pad)) 4px;
+  padding:12px var(--pad) 10px;border-radius:18px 18px 0 0}
+/* a short fade under the bar, so a row passing beneath it dissolves instead
+   of being cut in half at a hard edge. Purely decorative, so it must never
+   swallow a tap meant for the row underneath it. */
+.sheetbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px;
+  pointer-events:none;
+  /* the end stop is --card at zero alpha written out: a bare "transparent"
+     fades through black in some engines and smears the card grey. If --card
+     ever stops being white, this value moves with it. */
+  background:linear-gradient(var(--card),rgba(255,255,255,0))}
 .grab{flex:1;height:30px;background:none;border:none;padding:0;cursor:pointer;
   position:relative;font:inherit}
 .grab::after{content:'';position:absolute;left:50%;top:13px;transform:translateX(-50%);
@@ -438,6 +453,8 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
   color:var(--muted);margin-top:2px;letter-spacing:0}
 .sumrow .lamt{font-size:15px}
 .sumrow .lpc{color:var(--ink)}
+/* a total row immediately followed by a button read as one block */
+.sumrow + .mbtn{margin-top:20px}
 
 /* names the column the percentages are in, so the bar and the number are
    visibly answering one question */
@@ -946,7 +963,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.16.0";
+var APP_VERSION = "4.16.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
