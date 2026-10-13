@@ -248,6 +248,10 @@ body.locked{position:fixed;width:100%;overflow:hidden}
 /* the title sits under the handle row, with room for an icon beside it */
 .sheetbar h2{display:flex;align-items:center;gap:9px;margin:6px 0 0;min-width:0}
 .sheetbar h2 .ico{width:17px;height:17px;color:var(--store);flex:none}
+/* the subtitle rides with the title: which month, how many. Anything longer
+   than a label stays in the body — see catSheet, where the explanation of
+   what "uncategorised" means is a second paragraph for exactly that reason. */
+.sheetbar .hint{margin:3px 0 0}
 /* a short fade under the bar, so a row passing beneath it dissolves instead
    of being cut in half at a hard edge. Purely decorative, so it must never
    swallow a tap meant for the row underneath it. */
@@ -975,7 +979,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.17.0";
+var APP_VERSION = "4.17.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2521,10 +2525,18 @@ function openSheet(html){
      h2, so every sheet gets a title that holds its place while the body
      scrolls, and none of them can drift out of the pattern later. */
   var bar=document.querySelector(".sheetbar");
-  var oldTitle=bar.querySelector("h2");
-  if(oldTitle) bar.removeChild(oldTitle);
+  var stale=bar.querySelectorAll("h2, .hint");
+  for(var i=0;i<stale.length;i++) bar.removeChild(stale[i]);
   var h2=fresh.querySelector(":scope > h2");
-  if(h2) bar.appendChild(h2);
+  if(h2){
+    bar.appendChild(h2);
+    /* and the line under it, which says WHICH month and how many — the part
+       you keep needing while you read the list. Only the first one: a sheet
+       may carry further hints further down, and those are prose that belongs
+       in the body. */
+    var sub=fresh.querySelector(":scope > .hint");
+    if(sub && sub===fresh.firstElementChild) bar.appendChild(sub);
+  }
 
   var sh=document.getElementById("sheet");
   if(!sh.classList.contains("open")){
@@ -3335,12 +3347,15 @@ function catSheet(catId, monthK){
   }).join("");
 
   openSheet('<h2>'+(un?'':icon(catIconName(catId)))+esc(title)+'</h2>'
+    /* the first hint is the sticky label and stays a single line; the
+       explanation is a second paragraph, which scrolls with the list */
     +'<p class="hint">'+(monthK?esc(monthLabel(monthK)):"Every trip")+' · '
     +rows.length+(rows.length===1?" item":" items")
-    +(un ? ' with no category. These are lines whose item is not in the '
-          +'catalogue — added mid-trip, or since removed. File one and it '
-          +'joins that category everywhere.'
-         : '')+'</p>'
+    +(un?" with no category":"")+'</p>'
+    +(un ? '<p class="hint" style="margin-top:-2px">These are lines whose item '
+          +'is not in the catalogue — added mid-trip, or since removed. File '
+          +'one and it joins that category everywhere.</p>'
+         : '')
     +(rows.length ? body : '<p class="hint">Nothing in this category yet.</p>')
     +'<div class="sumrow"><div class="lhead">'
       +'<span class="lname">Total</span>'
