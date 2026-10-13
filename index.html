@@ -991,7 +991,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "23e96f8c";
 
 "use strict";
-var APP_VERSION = "4.18.1";
+var APP_VERSION = "4.18.2";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -3374,14 +3374,18 @@ function catLines(catId, months){
     if(date<x.first) x.first=date;
     if(date>x.last)  x.last=date;
     if(lineRef) x.refs.push(lineRef);
+    return x;
   }
   S.trips.forEach(function(t){
     var mk=monthKey(t.date); if(months && !keep[mk]) return;
     var d=String(t.date||"").slice(0,10);
     if(isQuick(t)){
       if((t.cat||"mixed")!==catId) return;
-      add("q|"+t.id, (t.note||"Quick trip")+" · "+(t.shopName||shopName(t.shop)),
-          spendOf(t), d, true, null);
+      /* the shop goes on the meta line with the date: a note and a shop name
+         together overflow one row and get cut off mid-word */
+      var g=add("q|"+t.id, t.note||"Quick trip", spendOf(t), d, true, null);
+      g.shop=t.shopName||shopName(t.shop);
+      g.tripId=t.id;
       return;
     }
     (t.lines||[]).forEach(function(l){
@@ -3407,16 +3411,19 @@ function catSheet(catId, monthK){
 
   var body = rows.map(function(r,i){
     var when = (r.first===r.last) ? r.first : (r.first+" – "+r.last);
-    /* A quick trip's category belongs to the trip, not to an item, so it is
-       changed in the quick-trip sheet rather than here. */
+    /* A quick trip's category belongs to the trip, not to an item, so it
+       cannot be moved from here — but the row is still tappable and opens
+       the trip, where the category is one field. Otherwise the instruction
+       above would be a lie on any sheet holding one. */
     var canMove = !r.quick;
-    return '<div class="lrow'+((i===rows.length-1)?" last":"")
-      +(canMove?' rowtap':'')+'"'
-      +(canMove?' data-recat="'+esc(r.name)+'"':'')+'>'
+    return '<div class="lrow'+((i===rows.length-1)?" last":"")+' rowtap"'
+      +(canMove ? ' data-recat="'+esc(r.name)+'"'
+                : ' data-opentrip="'+esc(r.tripId||"")+'"')+'>'
       +'<div class="lhead"><span class="lname">'+esc(r.name)
         +(r.n>1?' <span class="xn">×'+r.n+'</span>':'')+'</span>'
       +'<span class="lamt">'+m(r.total)+'</span></div>'
       +'<div class="lhead"><span class="lmeta">'+esc(when)
+        +(r.shop?' · '+esc(r.shop):'')
         +(r.quick?' · quick trip':'')+'</span></div>'
       +(canMove
          ? '<div class="movebox" hidden>'
@@ -3440,9 +3447,14 @@ function catSheet(catId, monthK){
     +(un ? '<p class="hint" style="margin-top:-2px">These are lines whose item '
           +'is not in the catalogue — added mid-trip, or since removed.</p>'
          : '')
-    +(rows.length ? '<p class="hint" style="margin-top:-2px">Tap a row to move '
-      +'it to another category. It moves on every trip, not just this month, '
-      +'and sticks for next time.</p>' : '')
+    +(rows.length
+       ? '<p class="hint" style="margin-top:-2px">Tap a row to move it to '
+         +'another category. It moves on every trip, not just this month, and '
+         +'sticks for next time.'
+         +(rows.some(function(r){ return r.quick; })
+            ? ' A quick trip opens instead — its category belongs to the trip.'
+            : '')+'</p>'
+       : '')
     +(rows.length ? body : '<p class="hint">Nothing in this category yet.</p>')
     +'<div class="sumrow"><div class="lhead">'
       +'<span class="lname">Total</span>'
@@ -3457,6 +3469,8 @@ function catSheet(catId, monthK){
      something is worse than one extra tap */
   sb.addEventListener("click", function(e){
     if(e.target.closest(".movebox")) return;        /* the picker itself */
+    var qt=e.target.closest("[data-opentrip]");
+    if(qt && qt.dataset.opentrip){ quickTripSheet(qt.dataset.opentrip); return; }
     var row=e.target.closest("[data-recat]"); if(!row) return;
     var box=row.querySelector(".movebox"); if(!box) return;
     var opening=box.hidden;
