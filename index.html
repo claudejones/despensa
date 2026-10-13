@@ -256,7 +256,7 @@ body.locked{position:fixed;width:100%;overflow:hidden}
 .grab:active::after{background:var(--muted)}
 .xclose{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--rule);border-radius:50%;
   background:var(--paper);color:var(--ink);cursor:pointer;padding:0;
-  display:flex;align-items:center;justify-content:center;position:absolute;right:0;top:2px}
+  display:flex;align-items:center;justify-content:center}
 .xclose:active{background:var(--rule)}
 .xclose .ico{width:17px;height:17px;stroke-width:2}
 .sheet h2{font-size:17px;margin:0 0 4px;letter-spacing:-.01em}
@@ -446,8 +446,10 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 
 /* the last row's own hairline would sit 2px above the total's rule and read
    as a double line, so it gives way to it */
-.lrow.last{border-bottom:none;padding-bottom:4px}
-.sumrow{padding-top:12px;border-top:1.5px solid var(--ink)}
+/* the total's rule is heavier than a row hairline, so it needs more room
+   than one — matching the 12px row rhythm left it looking crowded */
+.lrow.last{border-bottom:none;padding-bottom:19px}
+.sumrow{padding-top:14px;border-top:1.5px solid var(--ink)}
 .sumrow .lname{font-weight:750}
 .sumrow .lname small{display:block;font-size:11px;font-weight:500;
   color:var(--muted);margin-top:2px;letter-spacing:0}
@@ -963,7 +965,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.16.1";
+var APP_VERSION = "4.16.2";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -3294,9 +3296,9 @@ function catSheet(catId, monthK){
   var un     = (catId==="other");
   var title  = un ? "Uncategorised" : catName(catId);
 
-  var body = rows.map(function(r){
+  var body = rows.map(function(r,i){
     var when = (r.first===r.last) ? r.first : (r.first+" – "+r.last);
-    return '<div class="lrow">'
+    return '<div class="lrow'+((i===rows.length-1)?" last":"")+'">'
       +'<div class="lhead"><span class="lname">'+esc(r.name)
         +(r.n>1?' <span class="xn">×'+r.n+'</span>':'')+'</span>'
       +'<span class="lamt">'+m(r.total)+'</span></div>'
