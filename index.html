@@ -237,9 +237,17 @@ body.locked{position:fixed;width:100%;overflow:hidden}
    rows scrolled up through that band and showed over the grab handle; the
    bar also stopped short of the sheet's side padding, leaving two more
    strips for content to pass behind. Nothing above it, nothing beside it. */
-.sheetbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;
+/* The title lives up here, not in the body, so it stays put while a long
+   list scrolls under it — you never lose track of which category you opened.
+   openSheet() lifts the first h2 out of the body into this bar, so all
+   eighteen sheets get it without any of them having to remember. */
+.sheetbar{position:sticky;top:0;z-index:2;display:flex;flex-direction:column;
   background:var(--card);margin:0 calc(-1 * var(--pad)) 4px;
   padding:12px var(--pad) 10px;border-radius:18px 18px 0 0}
+.sbtop{display:flex;align-items:center}
+/* the title sits under the handle row, with room for an icon beside it */
+.sheetbar h2{display:flex;align-items:center;gap:9px;margin:6px 0 0;min-width:0}
+.sheetbar h2 .ico{width:17px;height:17px;color:var(--store);flex:none}
 /* a short fade under the bar, so a row passing beneath it dissolves instead
    of being cut in half at a hard edge. Purely decorative, so it must never
    swallow a tap meant for the row underneath it. */
@@ -512,8 +520,10 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true">
   <div class="sheetbar">
-    <button class="grab" id="grabClose" aria-label="Close"></button>
-    <button class="xclose" id="xClose" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    <div class="sbtop">
+      <button class="grab" id="grabClose" aria-label="Close"></button>
+      <button class="xclose" id="xClose" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
   </div>
   <div id="sheetBody"></div>
 </div>
@@ -965,7 +975,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.16.2";
+var APP_VERSION = "4.17.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2506,6 +2516,16 @@ function openSheet(html){
   fresh.innerHTML = html;
   old.parentNode.replaceChild(fresh, old);
 
+  /* Lift the sheet's own title into the sticky bar. Doing it here rather
+     than at each call site is the point: every sheet already opens with an
+     h2, so every sheet gets a title that holds its place while the body
+     scrolls, and none of them can drift out of the pattern later. */
+  var bar=document.querySelector(".sheetbar");
+  var oldTitle=bar.querySelector("h2");
+  if(oldTitle) bar.removeChild(oldTitle);
+  var h2=fresh.querySelector(":scope > h2");
+  if(h2) bar.appendChild(h2);
+
   var sh=document.getElementById("sheet");
   if(!sh.classList.contains("open")){
     lockedY = window.scrollY || window.pageYOffset || 0;
@@ -2774,7 +2794,7 @@ function quickTripSheet(editId){
     return '<option value="'+c.id+'"'+((c.id===pick)?' selected':'')+'>'
       +esc(c.name)+'</option>';
   }).join("");
-  openSheet('<h2>'+(ex?'Edit quick trip':'Log a quick trip')+'</h2>'
+  openSheet('<h2>'+icon("cart")+(ex?'Edit quick trip':'Log a quick trip')+'</h2>'
     +'<p class="hint">A run with no itemised receipt — the total is all you '
     +'need. It counts towards the month like any other spend.</p>'
     +'<label class="lbl">Shop</label>'
@@ -3314,7 +3334,7 @@ function catSheet(catId, monthK){
       +'</div></div>';
   }).join("");
 
-  openSheet('<h2>'+esc(title)+'</h2>'
+  openSheet('<h2>'+(un?'':icon(catIconName(catId)))+esc(title)+'</h2>'
     +'<p class="hint">'+(monthK?esc(monthLabel(monthK)):"Every trip")+' · '
     +rows.length+(rows.length===1?" item":" items")
     +(un ? ' with no category. These are lines whose item is not in the '
@@ -3362,7 +3382,7 @@ function tripSheet(id){
      Opening it opens the thing you would actually want: the three fields it
      was entered with, ready to correct. */
   if(isQuick(t)){ quickTripSheet(id); return; }
-  openSheet('<h2>'+esc(t.shopName||shopName(t.shop))+'</h2>'
+  openSheet('<h2>'+icon("receipt")+esc(t.shopName||shopName(t.shop))+'</h2>'
     +'<p class="hint">'+esc((t.date||"").replace("T"," "))+'</p>'
     +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
     +'<button class="mbtn primary" data-tripexp="'+t.id+'">Copy this trip for Claude</button>'
