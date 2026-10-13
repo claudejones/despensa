@@ -412,6 +412,12 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .bblegend{display:flex;justify-content:space-between;gap:10px;
   font-size:11px;color:var(--muted);margin-top:7px}
 
+/* names the column the percentages are in, so the bar and the number are
+   visibly answering one question */
+.colhead{display:flex;justify-content:flex-end;padding-bottom:9px;
+  font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);font-weight:650}
+
 /* ranked rows: the amount carries its share beside it */
 .lpc{font-size:11px;color:var(--muted);font-weight:650;margin-left:8px;
   font-family:var(--num);font-variant-numeric:tabular-nums}
@@ -913,7 +919,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.13.0";
+var APP_VERSION = "4.14.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2022,21 +2028,39 @@ function budgetBar(pct, prog){
    there are ten categories here, and colouring each bar darker-where-bigger
    would encode the bar's own length a second time. One series, one colour;
    the category names carry identity, the bar lengths carry size. */
+/* One denominator, stated on the card.
+
+   This used to draw the bar against the largest category while printing a
+   percentage of the month beside it: Pantry filled the row end to end next
+   to the number "29%". Two scales in one line, neither labelled, and the
+   bar looked broken because nothing said it was measuring something else.
+
+   Both are now the share of the month's spend, and the column says so. The
+   cost is real and accepted: against the total, the small categories are
+   short and 6% is harder to tell from 9% than it was. Comparing categories
+   to each other was never this card's question — "Where it goes" is a
+   part-to-whole, the number is the answer, and the bar's job is to show
+   that answer rather than a different one. Rank order is unchanged, so the
+   largest is still obvious at a glance. */
 function catRanked(cats){
   var tot=cats.reduce(function(s,c){return s+c.total},0);
   if(!tot) return '<p class="lmeta">No priced lines in this period yet.</p>';
-  var max=cats[0].total||1;
-  return cats.map(function(c){
+  return '<div class="colhead"><span>% of spend</span></div>'
+  +cats.map(function(c){
     var un=(c.cat==="other");
     return '<div class="lrow'+(un?" dim":"")+'">'
       +'<div class="lhead"><span class="lname">'
         +(un?"":icon(catIconName(c.cat)))+esc(c.name)+'</span>'
       +'<span class="lamt">'+m(c.total,0)
         +'<span class="lpc">'+Math.round(c.total/tot*100)+'%</span></span></div>'
+      /* the track is the month; the fill is this category's share of it.
+         The floor keeps a 1% category visible as a mark rather than
+         nothing at all — it is a presence indicator, not a reading. */
       +'<div class="catbar"><div style="width:'
-        +Math.max(c.total/max*100,1.5).toFixed(1)+'%"></div></div></div>';
+        +Math.max(c.total/tot*100,1.5).toFixed(1)+'%"></div></div></div>';
   }).join("")
-  +'<div class="lmeta dfoot">'+m(tot,0)+' across '+cats.length+' categories.</div>';
+  +'<div class="lmeta dfoot">'+m(tot,0)+' across '+cats.length+' categories. '
+  +'Each bar is that share of the '+m(tot,0)+'.</div>';
 }
 function shortMonth(k){
   var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -2044,18 +2068,10 @@ function shortMonth(k){
 }
 
 /* horizontal bars — one series, ordered by size */
-function catBars(cats){
-  cats=cats.filter(function(c){ return c.total>0; });
-  if(!cats.length) return '<p class="hint" style="padding:14px 2px">No priced lines in this period yet.</p>';
-  var max=cats[0].total||1, tot=cats.reduce(function(s,c){return s+c.total},0)||1;
-  return cats.map(function(c){
-    var un=(c.cat==="other");
-    return '<div class="crow'+(un?" uncat":"")+'"><div class="chead"><span class="cname">'
-      +(un?'':icon(catIconName(c.cat)))+esc(c.name)+'</span>'
-      +'<span class="camt mono">'+mx(c.total)+'<small>'+Math.round(c.total/tot*100)+'%</small></span></div>'
-      +'<div class="cbar"><div class="cfill" style="width:'+(c.total/max*100).toFixed(1)+'%"></div></div></div>';
-  }).join("");
-}
+/* catBars() lived here: a second ranked-bar renderer, called from nowhere
+   since the dashboard was rebuilt, and carrying the same mixed-denominator
+   bug this change fixes. Dead code with a live bug in it is a trap for
+   whoever revives it, so it is gone rather than fixed. */
 function catIconName(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?c.ic:"box"; }
 
 /* A rate over time, as bars from a zero baseline. Two or three readings is
