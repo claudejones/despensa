@@ -412,6 +412,15 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .bblegend{display:flex;justify-content:space-between;gap:10px;
   font-size:11px;color:var(--muted);margin-top:7px}
 
+/* the table's own total row: same two columns as the rows, a heavier rule
+   above it, and no bar — it is the 100% the bars are shares of */
+.sumrow{padding-top:12px;margin-top:2px;border-top:1.5px solid var(--ink)}
+.sumrow .lname{font-weight:750}
+.sumrow .lname small{display:block;font-size:11px;font-weight:500;
+  color:var(--muted);margin-top:2px;letter-spacing:0}
+.sumrow .lamt{font-size:15px}
+.sumrow .lpc{color:var(--ink)}
+
 /* names the column the percentages are in, so the bar and the number are
    visibly answering one question */
 .colhead{display:flex;justify-content:flex-end;padding-bottom:9px;
@@ -919,7 +928,7 @@ var CAT_FP  = "d62ed61e";
 var SEED_FP = "d6e4828e";
 
 "use strict";
-var APP_VERSION = "4.14.0";
+var APP_VERSION = "4.15.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2059,8 +2068,14 @@ function catRanked(cats){
       +'<div class="catbar"><div style="width:'
         +Math.max(c.total/tot*100,1.5).toFixed(1)+'%"></div></div></div>';
   }).join("")
-  +'<div class="lmeta dfoot">'+m(tot,0)+' across '+cats.length+' categories. '
-  +'Each bar is that share of the '+m(tot,0)+'.</div>';
+  /* The total belongs in the table, in the same two columns the rows use,
+     rather than in a sentence underneath restating them. It also anchors
+     the scale: every bar above is a share of this figure, and this row is
+     the 100% they are shares of. */
+  +'<div class="sumrow"><div class="lhead">'
+    +'<span class="lname">Total<small>'+cats.length+' categories</small></span>'
+    +'<span class="lamt">'+m(tot,0)+'<span class="lpc">100%</span></span>'
+  +'</div></div>';
 }
 function shortMonth(k){
   var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
