@@ -1015,7 +1015,7 @@ var CAT_FP  = "c3370113";
 var SEED_FP = "49f6f833";
 
 "use strict";
-var APP_VERSION = "4.21.0";
+var APP_VERSION = "4.22.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1071,7 +1071,7 @@ function savedIn(months){
   S.trips.forEach(function(t){
     if(months && !keep[monthKey(t.date)]) return;
     (t.lines||[]).forEach(function(l){
-      if(l.state==="bought" && l.lineMXN<0) s += -l.lineMXN;
+      if(l.state==="bought" && l.lineMXN<0) s += conv(-l.lineMXN, t);
     });
   });
   return s;
@@ -1251,6 +1251,31 @@ function m2(n, trip){
   return "$"+(Number(n)/r).toLocaleString("en-US",
     {minimumFractionDigits:2,maximumFractionDigits:2});
 }
+/* A figure in the currency on screen. Pesos pass through; dollars are what
+   THAT trip's card was charged, not the month's pesos run through a setting.
+
+   This is the whole fix. Every aggregate used to divide a peso total by
+   S.fx — a number in Settings, not a rate anyone was ever charged — so a
+   month of five trips at five rates came out at none of them. October read
+   $464 against $429 actually paid, 8% high on a $700 budget, and changing
+   that one setting silently rewrote every historical dollar figure in the
+   app. Trips carry the rate they were charged at; aggregates add those up. */
+function conv(n, trip){
+  if(n===null||n===undefined||isNaN(n)) return n;
+  if(S.ccy!=="usd") return Number(n);
+  var r=(trip && trip.fx>0) ? trip.fx : S.fx;
+  return Number(n)/r;
+}
+/* the money the trip cost, already in the currency on screen */
+function spendView(t){ return conv(spendOf(t), t); }
+/* Format a figure that is ALREADY in the currency on screen. m() converts;
+   this one must not, or an aggregate gets divided by the rate twice. */
+function mv(n, dp){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  var d=(dp===undefined) ? 2 : dp;
+  return (S.ccy==="usd"?"$":"MX$")
+    +Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+}
 function ccyLabel(){ return S.ccy==="usd" ? "USD" : "MXN"; }
 function budgetInView(){ return S.ccy==="usd" ? S.budgetUSD : S.budgetUSD*S.fx; }
 /* While a trip is open, convert at THAT trip's rate — it is the rate the
@@ -1329,7 +1354,7 @@ function quickSpend(months){
   var s=0;
   S.trips.forEach(function(t){
     if(months && !keep[monthKey(t.date)]) return;
-    if(isQuick(t)) s+=spendOf(t);
+    if(isQuick(t)) s+=spendView(t);
   });
   return s;
 }
@@ -1343,10 +1368,10 @@ function byMonth(){
   S.trips.forEach(function(t){
     var k=monthKey(t.date); if(!k) return;
     if(!m[k]) m[k]={key:k, spend:0, trips:0, off:0, hasReceipt:0, quick:0};
-    m[k].spend+=spendOf(t); m[k].trips++;
+    m[k].spend+=spendView(t); m[k].trips++;
     if(isQuick(t)) m[k].quick++;
     else if(t.receiptTotal!==null && t.receiptTotal!==undefined){
-      m[k].hasReceipt++; m[k].off+=(t.offList||0);
+      m[k].hasReceipt++; m[k].off+=conv(t.offList||0, t);
     }
   });
   return Object.keys(m).sort().map(function(k){ return m[k]; });
@@ -1360,13 +1385,13 @@ function byCategory(months){
        Mixed when nothing more specific was chosen */
     if(isQuick(t)){
       var qk=t.cat||"mixed";
-      c[qk]=(c[qk]||0)+spendOf(t);
+      c[qk]=(c[qk]||0)+spendView(t);
       return;
     }
     (t.lines||[]).forEach(function(l){
       if(l.state!=="bought") return;
       var k=l.cat||"pantry";
-      c[k]=(c[k]||0)+(l.lineMXN||0);
+      c[k]=(c[k]||0)+conv(l.lineMXN||0, t);
     });
   });
   return Object.keys(c).map(function(k){ return {cat:k, name:catName(k), total:c[k]}; })
@@ -1381,7 +1406,7 @@ function topItems(n, months){
       if(l.state!=="bought" || l.lineMXN<0) return;
       var k=l.es||l.id;
       if(!it[k]) it[k]={name:k, total:0, times:0, cat:l.cat};
-      it[k].total+=(l.lineMXN||0); it[k].times++;
+      it[k].total+=conv(l.lineMXN||0, t); it[k].times++;
     });
   });
   return Object.keys(it).map(function(k){return it[k]})
@@ -1572,11 +1597,11 @@ function shopStats(months){
     var k=t.shop||"other";
     if(!s[k]) s[k]={shop:k, name:t.shopName||shopName(k), total:0, trips:0,
                     shops:0, shopTotal:0, quick:0};
-    s[k].total+=spendOf(t); s[k].trips++;
+    s[k].total+=spendView(t); s[k].trips++;
     /* A baguette run averaged with a stock-up makes "a basket" meaningless,
        so the average is built from real shops only. The money still counts. */
     if(isQuick(t)) s[k].quick++;
-    else { s[k].shops++; s[k].shopTotal+=spendOf(t); }
+    else { s[k].shops++; s[k].shopTotal+=spendView(t); }
   });
   return Object.keys(s).map(function(k){
     s[k].basket = s[k].shops ? s[k].shopTotal/s[k].shops : null;
@@ -1664,10 +1689,10 @@ function sameDayPairs(){
     });
     out.push({ date:k.split("|")[1], shop:shopName(k.split("|")[0]), trips:g,
       receipt:receipt, sessions:sessions, ov:best,
-      total:g.reduce(function(s,t){ return s+spendOf(t); },0),
+      total:g.reduce(function(s,t){ return s+spendView(t); },0),
       /* what drops out if the non-receipt records go */
       dup:g.reduce(function(s,t){
-        return s + (String(t.id||"").indexOf("seed-")===0 ? 0 : spendOf(t)); },0) });
+        return s + (String(t.id||"").indexOf("seed-")===0 ? 0 : spendView(t)); },0) });
   });
   return out.sort(function(a,b){ return a.date<b.date?1:-1; });
 }
@@ -1793,7 +1818,7 @@ function monthJumpSheet(){
   ms.forEach(function(mo){
     h+='<button class="mbtn'+(mo.key===cur?" primary":"")+'" data-mgo="'+mo.key+'">'
       +esc(monthLabel(mo.key))
-      +'<small>'+mo.trips+' trip'+(mo.trips===1?"":"s")+' · '+m(mo.spend,0)+'</small></button>';
+      +'<small>'+mo.trips+' trip'+(mo.trips===1?"":"s")+' · '+mv(mo.spend,0)+'</small></button>';
   });
   openSheet(h);
 }
@@ -1808,7 +1833,11 @@ function viewDash(){
   }
   var mi=dashIndex(ms), cur=ms[mi];
   var prog=monthProgress(cur.key);
-  var budget=S.budgetUSD*S.fx;
+  /* The budget must be in the same currency as the spend above it. That
+     spend is now the sum of what each card charge actually came to, so
+     comparing it against pesos-at-the-default-rate would reintroduce the
+     bug in the denominator. */
+  var budget=budgetInView();
   var pct=Math.round(cur.spend/budget*100);
   var left=budget-cur.spend;
 
@@ -1826,11 +1855,11 @@ function viewDash(){
   html+='<div class="dcard">'
     +'<div class="eyebrow" style="margin-bottom:12px">'+icon("chart")
     +(prog&&prog.partial?"Month to date":"Closed month")+'</div>'
-    +'<div class="bignum">'+m(cur.spend,0)+'</div>'
+    +'<div class="bignum">'+mv(cur.spend,0)+'</div>'
     /* The count splits when there is something to split: a month of
        "4 trips" that is one stock-up and three bakery runs reads as four
        shops. The money is one figure because it is one figure. */
-    +'<div class="bigsub">of '+m(budget,0)+' budgeted · '
+    +'<div class="bigsub">of '+mv(budget,0)+' budgeted · '
     +(cur.quick
        ? ((cur.trips-cur.quick)+' shop'+(cur.trips-cur.quick===1?"":"s")
           +' · '+cur.quick+' quick')
@@ -1842,21 +1871,21 @@ function viewDash(){
       +'<div class="metcell"><div class="metlab">Used</div>'
       +'<div class="metval">'+pct+'%</div></div>'
       +'<div class="metcell"><div class="metlab">'+(left<0?"Over by":"Left")+'</div>'
-      +'<div class="metval">'+m(Math.abs(left),0)+'</div></div>'
+      +'<div class="metval">'+mv(Math.abs(left),0)+'</div></div>'
       +'<div class="metcell r"><div class="metlab">'
       +(perWeek!==null ? 'A week' : (prog&&prog.partial ? 'Days left' : 'Trips'))+'</div>'
       +'<div class="metval">'
-      +(perWeek!==null ? m(perWeek,0)
+      +(perWeek!==null ? mv(perWeek,0)
         : (prog&&prog.partial ? daysLeft : cur.trips))+'</div></div>'
     +'</div>'
     +(savedIn([cur.key])>0
        ? '<div class="lmeta" style="margin-top:12px">'
-         +'Promotions took '+m(savedIn([cur.key]),0)+' off this month’s receipts.</div>'
+         +'Promotions took '+mv(savedIn([cur.key]),0)+' off this month’s receipts.</div>'
        : '')
     +(prog&&prog.partial
        ? '<div class="lmeta" style="margin-top:12px">Day '+prog.day+' of '+prog.days
          +(left<0 ? ' · already past the budget with '+daysLeft+' to go'
-                  : (perWeek!==null ? ' · '+m(perWeek,0)+' a week keeps you inside it' : ''))
+                  : (perWeek!==null ? ' · '+mv(perWeek,0)+' a week keeps you inside it' : ''))
          +'</div>'
        : '')
     +'<button class="dbtn'+(S.active?" quiet":"")+'" id="startTrip">'
@@ -1875,20 +1904,20 @@ function viewDash(){
       +dup.length+' day'+(dup.length===1?"":"s")+' counted twice</div>'
       +'<div class="lmeta">A transcribed receipt and a record you built in the app, '
       +'for the same shop on the same day. Both are being added up.'
-      +(dupCur>0 ? ' '+esc(monthLabel(cur.key))+' is high by '+m(dupCur,0)
-                   +(dupAll>dupCur ? ', and every month together by '+m(dupAll,0) : '')+'.'
-                 : (dupAll>0 ? ' Every month together is high by '+m(dupAll,0)+'.' : ''))
+      +(dupCur>0 ? ' '+esc(monthLabel(cur.key))+' is high by '+mv(dupCur,0)
+                   +(dupAll>dupCur ? ', and every month together by '+mv(dupAll,0) : '')+'.'
+                 : (dupAll>0 ? ' Every month together is high by '+mv(dupAll,0)+'.' : ''))
       +'</div></div></div>';
     var unp=unpricedByTrip();
     dup.forEach(function(d){
       html+='<div class="lrow"><div class="lhead">'
         +'<span class="lname">'+esc(d.date)+'</span>'
-        +'<span class="lamt">'+m(d.total,0)+'</span></div>'
+        +'<span class="lamt">'+mv(d.total,0)+'</span></div>'
         +'<div class="lmeta">'+esc(d.shop)
-        +(d.receipt ? ' · receipt '+m(spendOf(d.receipt),0) : '')
+        +(d.receipt ? ' · receipt '+m2(spendOf(d.receipt),d.receipt) : '')
         +(d.sessions.length ? ' · app record'+(d.sessions.length>1?'s':'')+' '
             +d.sessions.map(function(t){
-                return m(spendOf(t),0)+(unp[t.id]?' ('+unp[t.id]+' unpriced)':''); }).join(' + ') : '')
+                return m2(spendOf(t),t)+(unp[t.id]?' ('+unp[t.id]+' unpriced)':''); }).join(' + ') : '')
         +(d.ov ? ' · '+d.ov.hit+' of '+d.ov.of+' lines identical' : '')
         +'</div></div>';
     });
@@ -1951,16 +1980,11 @@ function viewDash(){
        hero figure at the top of the dashboard still does the latter and so
        reads high; that is a separate defect, and a total that disagrees
        with the rows printed directly above it is indefensible either way. */
-    var mSum = S.ccy==="usd"
-      ? mTrips.reduce(function(s,t){
-          return s + spendOf(t)/((t.fx>0)?t.fx:S.fx); },0)
-      : mTrips.reduce(function(s,t){ return s+spendOf(t); },0);
+    var mSum = mTrips.reduce(function(s,t){ return s+spendView(t); },0);
     html+='<div class="sumrow"><div class="lhead">'
       +'<span class="lname">Total<small>'+mTrips.length
       +(mTrips.length===1?' trip':' trips')+'</small></span>'
-      +'<span class="lamt">'+(S.ccy==="usd"?"$":"MX$")
-      +mSum.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})
-      +'</span></div></div>'
+      +'<span class="lamt">'+mv(mSum)+'</span></div></div>'
       +'<div class="lmeta dfoot">Dated by the day you shopped. A card charge '
       +'can post in the next month, so a bank statement may put a trip near a '
       +'month end on the other side of the line.</div>'
@@ -1987,10 +2011,10 @@ function viewDash(){
       +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
     sh.forEach(function(x){
       html+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(x.name)+'</span>'
-        +'<span class="lamt">'+m(x.total)+'</span></div>'
+        +'<span class="lamt">'+mv(x.total)+'</span></div>'
         +'<div class="lhead"><span class="lmeta">'+x.trips+' trip'+(x.trips===1?"":"s")
         +(x.quick?' ('+x.quick+' quick)':'')
-        +(x.basket!==null?' · '+m(x.basket)+' a basket':'')+'</span></div>'
+        +(x.basket!==null?' · '+mv(x.basket)+' a basket':'')+'</span></div>'
         +'<div class="catbar"><div style="width:'+(x.total/smax*100).toFixed(1)+'%"></div></div></div>';
     });
     html+='</div>';
@@ -2004,9 +2028,9 @@ function viewDash(){
       +'<div class="metval">'+sh[0].shops
       +(sh[0].quick?'<span class="lpc">+'+sh[0].quick+' quick</span>':'')+'</div></div>'
       +'<div class="metcell"><div class="metlab">A basket</div>'
-      +'<div class="metval">'+(sh[0].basket===null?"—":m(sh[0].basket,0))+'</div></div>'
+      +'<div class="metval">'+(sh[0].basket===null?"—":mv(sh[0].basket,0))+'</div></div>'
       +'<div class="metcell r"><div class="metlab">This month</div>'
-      +'<div class="metval">'+m(sh[0].total,0)+'</div></div></div></div>';
+      +'<div class="metval">'+mv(sh[0].total,0)+'</div></div></div></div>';
   }
 
   /* ---- paying more than usual ---- */
@@ -2071,15 +2095,15 @@ function viewDash(){
     st.slice(0,8).forEach(function(x){
       html+='<div class="lrow"><div class="lhead">'
         +'<span class="lname">'+(x.cat?icon(catIconName(x.cat)):'')+esc(x.name)+'</span>'
-        +'<span class="lamt">'+m(x.perMonth,0)
+        +'<span class="lamt">'+mv(x.perMonth,0)
         +'<span class="lpc">'+Math.round(x.share)+'%</span></span></div>'
         +'<div class="lmeta">'+x.trips+' of the last '
         +S.trips.filter(function(t){ return (t.lines||[]).some(function(l){
             return l.state==="bought" && !(l.lineMXN<0); }); }).length
-        +' trips · '+m(x.total,0)+' in all</div></div>';
+        +' trips · '+mv(x.total,0)+' in all</div></div>';
     });
     html+='<div class="lmeta dfoot">What the budget is really made of — '
-      +m(stMonth,0)+' a month before anything else goes in the trolley.</div></div>';
+      +mv(stMonth,0)+' a month before anything else goes in the trolley.</div></div>';
   }
 
   /* "Due a restock" lived here and was removed in 4.9.0.
@@ -2101,9 +2125,9 @@ function viewDash(){
       +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
     ti.forEach(function(x){
       html+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(x.name)+'</span>'
-        +'<span class="lamt">'+m(x.total,0)+'</span></div>'
+        +'<span class="lamt">'+mv(x.total,0)+'</span></div>'
         +'<div class="lmeta">'+esc(catName(x.cat))+' · '+x.times+' purchase'+(x.times===1?"":"s")
-        +' · '+m(x.total/x.times)+' each time</div>'
+        +' · '+mv(x.total/x.times)+' each time</div>'
         +'<div class="catbar"><div style="width:'+(x.total/tmax*100).toFixed(1)+'%"></div></div></div>';
     });
     html+='</div>';
@@ -2120,8 +2144,8 @@ function viewDash(){
       +'<div class="metrow" style="border-top:none;margin-top:0;padding-top:0">'
       +'<div class="metcell"><div class="metlab">Between trips</div><div class="metval">'+Math.round(cad)+' days</div></div>'
       +'<div class="metcell"><div class="metlab">Average basket</div><div class="metval">'
-      +(shopsOnly.length? m(shopSpend/shopsOnly.length,0) : "—")+'</div></div>'
-      +'<div class="metcell"><div class="metlab">Logged in all</div><div class="metval">'+m(all,0)+'</div></div>'
+      +(shopsOnly.length? mv(shopSpend/shopsOnly.length,0) : "—")+'</div></div>'
+      +'<div class="metcell"><div class="metlab">Logged in all</div><div class="metval">'+mv(all,0)+'</div></div>'
       +'</div>'
       +(nQuick?'<div class="lmeta dfoot">The basket average is from the '
         +shopsOnly.length+' full shop'+(shopsOnly.length===1?"":"s")+' only — '
@@ -2212,7 +2236,7 @@ function catRanked(cats, scopeKey){
       +'" data-catdrill="'+c.cat+'" data-catmon="'+(scopeKey||"")+'">'
       +'<div class="lhead"><span class="lname">'
         +(un?"":icon(catIconName(c.cat)))+esc(c.name)+'</span>'
-      +'<span class="lamt">'+m(c.total,0)
+      +'<span class="lamt">'+mv(c.total,0)
         +'<span class="lpc">'+Math.round(c.total/tot*100)+'%</span></span></div>'
       /* the track is the month; the fill is this category's share of it.
          The floor keeps a 1% category visible as a mark rather than
@@ -2226,7 +2250,7 @@ function catRanked(cats, scopeKey){
      the 100% they are shares of. */
   +'<div class="sumrow"><div class="lhead">'
     +'<span class="lname">Total<small>'+cats.length+' categories</small></span>'
-    +'<span class="lamt">'+m(tot,0)+'<span class="lpc">100%</span></span>'
+    +'<span class="lamt">'+mv(tot,0)+'<span class="lpc">100%</span></span>'
   +'</div></div>';
 }
 function shortMonth(k){
@@ -2968,7 +2992,7 @@ function quickTripSheet(editId){
     else S.trips.push(trip);
     S.trips.sort(function(x,y){ return (x.date||"").localeCompare(y.date||""); });
     save(); closeSheet(); render();
-    toast(editId ? "Quick trip updated" : "Logged "+m(trip.receiptTotal,0));
+    toast(editId ? "Quick trip updated" : "Logged "+m2(trip.receiptTotal,trip));
   };
 }
 
@@ -3052,14 +3076,14 @@ function fixDupesSheet(){
     var drop=d.sessions.reduce(function(s,t){ return s+spendOf(t); },0);
     h+='<div class="lrow"><div class="lhead">'
       +'<span class="lname">'+esc(d.date)+'</span>'
-      +'<span class="lamt">−'+m(drop,0)+'</span></div>'
-      +'<div class="lmeta">keep the receipt '+(d.receipt?m(spendOf(d.receipt),0):'—')
+      +'<span class="lamt">−'+mv(drop,0)+'</span></div>'
+      +'<div class="lmeta">keep the receipt '+(d.receipt?m2(spendOf(d.receipt),d.receipt):'—')
       +', drop '+d.sessions.length+' app record'+(d.sessions.length===1?'':'s')
-      +' totalling '+m(drop,0)
+      +' totalling '+mv(drop,0)
       +(d.ov?' · '+d.ov.hit+' of '+d.ov.of+' lines matched':'')+'</div>';
     d.sessions.forEach(function(t){
       h+='<button class="mbtn mid" data-dropsession="'+esc(t.id)+'">'
-        +'Drop '+m(spendOf(t),0)+' · '+esc(String(t.date||"").replace("T"," "))
+        +'Drop '+m2(spendOf(t),t)+' · '+esc(String(t.date||"").replace("T"," "))
         +(unp[t.id]?'<small>'+unp[t.id]+' unpriced lines</small>':'')+'</button>';
     });
     h+='</div>';
@@ -3468,7 +3492,7 @@ function catLines(catId, months){
       if((t.cat||"mixed")!==catId) return;
       /* the shop goes on the meta line with the date: a note and a shop name
          together overflow one row and get cut off mid-word */
-      var g=add("q|"+t.id, t.note||"Quick trip", spendOf(t), d, true, null);
+      var g=add("q|"+t.id, t.note||"Quick trip", spendView(t), d, true, null);
       g.shop=t.shopName||shopName(t.shop);
       g.tripId=t.id;
       return;
@@ -3479,7 +3503,7 @@ function catLines(catId, months){
       /* the card groups unknown categories under "other"; match that */
       if(!CATS.some(function(c){return c.id===k;})) k="other";
       if(k!==catId) return;
-      var gi=add("i|"+(l.es||l.id), l.es||l.en||"(unnamed)", (l.lineMXN||0), d, false,
+      var gi=add("i|"+(l.es||l.id), l.es||l.en||"(unnamed)", conv(l.lineMXN||0, t), d, false,
           {trip:t.id, id:l.id, es:l.es});
       if(l.note) gi.note=l.note;
     });
@@ -3507,7 +3531,7 @@ function catSheet(catId, monthK){
                 : ' data-opentrip="'+esc(r.tripId||"")+'"')+'>'
       +'<div class="lhead"><span class="lname">'+esc(r.name)
         +(r.n>1?' <span class="xn">×'+r.n+'</span>':'')+'</span>'
-      +'<span class="lamt">'+m(r.total)+'</span></div>'
+      +'<span class="lamt">'+mv(r.total)+'</span></div>'
       +'<div class="lhead"><span class="lmeta">'+esc(when)
         +(r.shop?' · '+esc(r.shop):'')
         +(r.quick?' · quick trip':'')+'</span></div>'
@@ -3546,7 +3570,7 @@ function catSheet(catId, monthK){
     +(rows.length ? body : '<p class="hint">Nothing in this category yet.</p>')
     +'<div class="sumrow"><div class="lhead">'
       +'<span class="lname">Total</span>'
-      +'<span class="lamt">'+m(tot)+'</span></div></div>'
+      +'<span class="lamt">'+mv(tot)+'</span></div></div>'
     +'<button class="mbtn mid" id="clDone">Done</button>');
 
   document.getElementById("clDone").onclick=closeSheet;
