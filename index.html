@@ -1015,7 +1015,7 @@ var CAT_FP  = "c3370113";
 var SEED_FP = "49f6f833";
 
 "use strict";
-var APP_VERSION = "4.22.1";
+var APP_VERSION = "4.22.2";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1548,7 +1548,10 @@ function staples(minShare){
       var it=S.items[id];
       if(!it || it.active===false) return;
       if(!by[id]) by[id]={id:id, name:it.es, en:it.en, cat:it.cat, trips:0, total:0};
-      by[id].total += (l.lineMXN||0);
+      /* through conv(), like every other aggregate: this card's figures are
+         printed with mv(), which does not convert, so raw pesos would reach
+         the screen with a dollar sign on them */
+      by[id].total += conv(l.lineMXN||0, t);
       if(seen[id]) return;             /* two bags is still one occasion */
       seen[id]=1;
       by[id].trips++;
@@ -1622,18 +1625,10 @@ function monthProgress(curKey){
   var days=new Date(y, m, 0).getDate();
   return {day:now.getDate(), days:days, partial:now.getDate()<days};
 }
-function byStore(months){
-  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
-  var s={};
-  S.trips.forEach(function(t){
-    if(months && !keep[monthKey(t.date)]) return;
-    var k=t.shop||"other";
-    if(!s[k]) s[k]={shop:k, name:t.shopName||shopName(k), total:0, trips:0};
-    s[k].total+=spendOf(t); s[k].trips++;
-  });
-  return Object.keys(s).map(function(k){return s[k]})
-    .sort(function(x,y){ return y.total-x.total; });
-}
+/* byStore() lived here: a second by-shop aggregator, called from nowhere,
+   still summing raw pesos after shopStats moved to the view currency. Dead
+   code with a live bug in it is a trap for whoever revives it — the same
+   reason catBars() went in 4.14.0. */
 /* Two trips to one shop on one day may be one receipt entered twice —
    once by hand in the app, once from the seeded receipt history. But
    people do shop twice in a day, so the date alone proves nothing.
@@ -2136,9 +2131,12 @@ function viewDash(){
   /* ---- rhythm ---- */
   var cad=tripCadence();
   if(cad){
-    var all=S.trips.reduce(function(s,t){return s+spendOf(t)},0);
+    /* spendView, not spendOf: these are formatted with mv(), which does
+       not convert, so a peso sum would reach the screen wearing a dollar
+       sign. $27,952 of groceries is the symptom to remember. */
+    var all=S.trips.reduce(function(s,t){return s+spendView(t)},0);
     var shopsOnly=S.trips.filter(function(t){ return !isQuick(t); });
-    var shopSpend=shopsOnly.reduce(function(s,t){ return s+spendOf(t); },0);
+    var shopSpend=shopsOnly.reduce(function(s,t){ return s+spendView(t); },0);
     var nQuick=S.trips.length-shopsOnly.length;
     html+='<div class="dcard"><div class="dhead"><span class="eyebrow">'+icon("cart")+'Rhythm</span></div>'
       +'<div class="metrow" style="border-top:none;margin-top:0;padding-top:0">'
@@ -3084,7 +3082,7 @@ function fixDupesSheet(){
         +'open Trips and compare them by hand.</div></div>';
       return;
     }
-    var drop=d.sessions.reduce(function(s,t){ return s+spendOf(t); },0);
+    var drop=d.sessions.reduce(function(s,t){ return s+spendView(t); },0);
     h+='<div class="lrow"><div class="lhead">'
       +'<span class="lname">'+esc(d.date)+'</span>'
       +'<span class="lamt">−'+mv(drop,0)+'</span></div>'
