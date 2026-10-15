@@ -1015,7 +1015,7 @@ var CAT_FP  = "c3370113";
 var SEED_FP = "49f6f833";
 
 "use strict";
-var APP_VERSION = "4.22.0";
+var APP_VERSION = "4.22.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2165,8 +2165,14 @@ function monthLabel(k){
 /* vertical bars — magnitude from a zero baseline, budget as a reference */
 function monthBars(ms, selKey){
   var show=ms.slice(-6);
-  var vals=show.map(function(mo){ return S.ccy==="usd" ? mo.spend/S.fx : mo.spend; });
-  var bud = S.ccy==="usd" ? S.budgetUSD : S.budgetUSD*S.fx;
+  /* byMonth already returns the figure in the currency on screen, summed at
+     each trip's own rate. Dividing by S.fx here converted it a second time —
+     August read 32 instead of 575, and every bar sat on the floor because it
+     was being compared against a full-size budget line. The sweep that moved
+     the rest of the dashboard off the flat rate looked for m() and missed
+     this, because the division is written out by hand. */
+  var vals=show.map(function(mo){ return mo.spend; });
+  var bud = budgetInView();
   var max=Math.max(Math.max.apply(null, vals), bud)||1;
   var W=320, H=158, mL=4, mR=34, mT=18, mB=32;
   var pw=W-mL-mR, ph=H-mT-mB;
@@ -2273,6 +2279,11 @@ function rateBars(x){
   /* labels follow the currency toggle — a peso figure beside a dollar one
      is the mixing this dashboard is meant to have stopped doing */
   var usd=(S.ccy==="usd");
+  /* A per-kilo rate is a price, not a spend, and this chart exists to show
+     the price moving. Converting each reading at its own trip's rate would
+     fold currency movement into the line and you could no longer tell a
+     dearer avocado from a weaker peso. One rate for all readings keeps the
+     shape honest — the same reason catalogue prices follow S.fx. */
   var val=function(p){ return usd ? p.rate/S.fx : p.rate; };
   var max=Math.max.apply(null, h.map(val))||1;
   var W=300, H=52, bw=Math.min(30, (W-4)/h.length-8), gap=(W-4)/h.length;
