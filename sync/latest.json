@@ -1,7 +1,7 @@
 {
- "syncId": 1,
- "producedAt": "2026-10-15T02:26:56Z",
- "note": "Reconciliation of the 2026-10-14 Chedraui trip against its printed receipt. The corrected trip replaces itself in place by its own id; off-list closes to zero. Catalogue prices and the five new items ship in the build, not here.",
+ "syncId": 2,
+ "producedAt": "2026-10-15T02:48:02Z",
+ "note": "Corrections to the 2026-10-14 reconciliation: the Granny Smith line was a till mis-ring for Anjou pears, and the reusable bags move to One-offs. The receipt still ties at 2,442.82.",
  "trips": {
   "trip-1792001220015": {
    "id": "trip-1792001220015",
@@ -129,16 +129,15 @@
      "state": "bought"
     },
     {
-     "id": "manzana",
-     "es": "Manzana",
-     "en": "Apple — Granny Smith",
+     "id": "pera-mantequilla-anjou",
+     "es": "Pera Mantequilla/Anjou",
+     "en": "Anjou pear",
      "cat": "produce",
      "q": 1,
      "unitMXN": 31.25,
      "lineMXN": 31.25,
      "state": "bought",
-     "rate": 66.5,
-     "kg": 0.47
+     "note": "Rung up as Manz Granny Smith at 66.50/kg — a till mis-ring. The amount is right; the price is not the pear's, so it is left out of price history."
     },
     {
      "id": "limon-s-semilla",
@@ -244,7 +243,7 @@
      "id": "bolsa-reutilizable",
      "es": "Bolsa Reutilizable",
      "en": "Reusable checkout bag",
-     "cat": "home",
+     "cat": "oneoff",
      "q": 3,
      "unitMXN": 2.0,
      "lineMXN": 6.0,
@@ -261,16 +260,6 @@
      "state": "bought"
     },
     {
-     "id": "pera-mantequilla-anjou",
-     "es": "Pera Mantequilla/Anjou",
-     "en": "Anjou pear",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": null,
-     "lineMXN": null,
-     "state": "skip"
-    },
-    {
      "id": "espinacas",
      "es": "Espinacas",
      "en": "Spinach, bunch",
@@ -285,8 +274,8 @@
    "receiptTotal": 2442.82,
    "offList": 0,
    "bought": 23,
-   "skipped": 2,
-   "planned": 25,
+   "skipped": 1,
+   "planned": 24,
    "totalUSD": 134.2
   }
  },
