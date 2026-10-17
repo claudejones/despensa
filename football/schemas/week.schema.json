@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NFL weekly research",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "season",
+    "week",
+    "researchVersion",
+    "researchedAt",
+    "games",
+    "predictions",
+    "comboCandidates",
+    "sources"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "season": {
+      "type": "integer"
+    },
+    "week": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+    },
+    "researchVersion": {
+      "type": "string"
+    },
+    "researchedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "games": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kickoff",
+          "away",
+          "home",
+          "insights"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kickoff": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "away": {
+            "$ref": "#/$defs/team"
+          },
+          "home": {
+            "$ref": "#/$defs/team"
+          },
+          "insights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "category",
+                "summary",
+                "details"
+              ],
+              "properties": {
+                "category": {
+                  "enum": [
+                    "form",
+                    "injuries",
+                    "matchup",
+                    "market",
+                    "history"
+                  ]
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "predictions": {
+      "type": "array"
+    },
+    "comboCandidates": {
+      "type": "array"
+    },
+    "sources": {
+      "type": "array"
+    }
+  },
+  "$defs": {
+    "team": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "record"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "logo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
