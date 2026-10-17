@@ -1,0 +1,2 @@
+# GitHub Pages verification
+After commit, fetch expected public JSON URL via HTTP, validate parse/schema, confirm researchVersion and timestamp equal committed payload. Test app loading same week and missing-week behavior, verify last-successful update and stale-data warning. If Pages inaccessible or stale, report failure, do not claim deployment success. Retry boundedly, never invent a passing check.
