@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "season": 2026,
+  "timezone": "America/Cancun",
+  "researchSchedule": {
+    "initial": {
+      "weekday": "Monday",
+      "localTime": "08:00"
+    },
+    "refresh": {
+      "weekday": "Saturday",
+      "localTime": "08:00"
+    },
+    "timezone": "America/Cancun"
+  },
+  "weeks": {},
+  "lastSuccessfulPublication": null,
+  "notice": "Research is not yet published. Weekly schedules are planned and not yet activated."
+}
