@@ -1,0 +1,1149 @@
+{
+  "schemaVersion": 1,
+  "season": 2026,
+  "week": 6,
+  "researchVersion": "2026-10-17-initial-1",
+  "researchedAt": "2026-10-17T09:35:00-05:00",
+  "status": "preliminary",
+  "notes": "Research snapshot with verified highlights and user-provided October 15 indicative quotes. No independently calibrated probabilities or approved trades. Some research categories remain pending.",
+  "games": [
+    {
+      "id": "hou-jax",
+      "kickoff": "2026-10-18T08:30:00-05:00",
+      "away": {
+        "id": "houston-texans",
+        "name": "Houston Texans",
+        "record": "1-4",
+        "logo": null
+      },
+      "home": {
+        "id": "jacksonville-jaguars",
+        "name": "Jacksonville Jaguars",
+        "record": "4-1",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Houston missing David Montgomery, Tank Dell and Jalen Pitre.",
+          "details": [
+            "Houston missing David Montgomery, Tank Dell and Jalen Pitre."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Jacksonville's 4–1 record contrasts with Houston's 1–4 start.",
+          "details": [
+            "Jacksonville's 4–1 record contrasts with Houston's 1–4 start."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "ten-ind",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "tennessee-titans",
+        "name": "Tennessee Titans",
+        "record": "0-5",
+        "logo": null
+      },
+      "home": {
+        "id": "indianapolis-colts",
+        "name": "Indianapolis Colts",
+        "record": "2-3",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Tennessee enters winless; assess whether Indianapolis can exploit that weakness.",
+          "details": [
+            "Tennessee enters winless; assess whether Indianapolis can exploit that weakness."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "An opponent's poor record is not sufficient to establish value.",
+          "details": [
+            "An opponent's poor record is not sufficient to establish value."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "car-phi",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "carolina-panthers",
+        "name": "Carolina Panthers",
+        "record": "2-2",
+        "logo": null
+      },
+      "home": {
+        "id": "philadelphia-eagles",
+        "name": "Philadelphia Eagles",
+        "record": "2-3",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "The records are close, so avoid assuming Philadelphia is the stronger side.",
+          "details": [
+            "The records are close, so avoid assuming Philadelphia is the stronger side."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Confirm starting lineups before choosing an underdog.",
+          "details": [
+            "Confirm starting lineups before choosing an underdog."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "pit-tb",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "pittsburgh-steelers",
+        "name": "Pittsburgh Steelers",
+        "record": "3-2",
+        "logo": null
+      },
+      "home": {
+        "id": "tampa-bay-buccaneers",
+        "name": "Tampa Bay Buccaneers",
+        "record": "1-4",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Pittsburgh has the stronger record.",
+          "details": [
+            "Pittsburgh has the stronger record."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Investigate opponent strength and Tampa Bay's availability.",
+          "details": [
+            "Investigate opponent strength and Tampa Bay's availability."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "bal-cle",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "baltimore-ravens",
+        "name": "Baltimore Ravens",
+        "record": "4-1",
+        "logo": null
+      },
+      "home": {
+        "id": "cleveland-browns",
+        "name": "Cleveland Browns",
+        "record": "3-2",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Both teams have winning records.",
+          "details": [
+            "Both teams have winning records."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Baltimore's record edge should be adjusted for injuries and opposition.",
+          "details": [
+            "Baltimore's record edge should be adjusted for injuries and opposition."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "no-nyg",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "new-orleans-saints",
+        "name": "New Orleans Saints",
+        "record": "1-4",
+        "logo": null
+      },
+      "home": {
+        "id": "new-york-giants",
+        "name": "New York Giants",
+        "record": "3-1-1",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Saints Alvin Kamara and Chris Olave were listed questionable.",
+          "details": [
+            "Saints Alvin Kamara and Chris Olave were listed questionable."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable.",
+          "details": [
+            "Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "chi-atl",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "chicago-bears",
+        "name": "Chicago Bears",
+        "record": "3-2",
+        "logo": null
+      },
+      "home": {
+        "id": "atlanta-falcons",
+        "name": "Atlanta Falcons",
+        "record": "2-3",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Confirm quarterback availability before any prediction.",
+          "details": [
+            "Confirm quarterback availability before any prediction."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Chicago quarterback Caleb Williams listed questionable with hamstring issue.",
+          "details": [
+            "Chicago quarterback Caleb Williams listed questionable with hamstring issue."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "nyj-ne",
+      "kickoff": "2026-10-18T12:00:00-05:00",
+      "away": {
+        "id": "new-york-jets",
+        "name": "New York Jets",
+        "record": "2-3",
+        "logo": null
+      },
+      "home": {
+        "id": "new-england-patriots",
+        "name": "New England Patriots",
+        "record": "3-2",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "New England enters with the stronger record.",
+          "details": [
+            "New England enters with the stronger record."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Assess recent scoring and defense rather than record alone.",
+          "details": [
+            "Assess recent scoring and defense rather than record alone."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "ari-lar",
+      "kickoff": "2026-10-18T15:05:00-05:00",
+      "away": {
+        "id": "arizona-cardinals",
+        "name": "Arizona Cardinals",
+        "record": "1-4",
+        "logo": null
+      },
+      "home": {
+        "id": "los-angeles-rams",
+        "name": "Los Angeles Rams",
+        "record": "2-3",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Arizona enters with one win.",
+          "details": [
+            "Arizona enters with one win."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Rams are a possible later favorite, but their own 2–3 record warrants caution.",
+          "details": [
+            "Rams are a possible later favorite, but their own 2–3 record warrants caution."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "lac-kc",
+      "kickoff": "2026-10-18T15:25:00-05:00",
+      "away": {
+        "id": "los-angeles-chargers",
+        "name": "Los Angeles Chargers",
+        "record": "0-5",
+        "logo": null
+      },
+      "home": {
+        "id": "kansas-city-chiefs",
+        "name": "Kansas City Chiefs",
+        "record": "4-0",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Chiefs receiver Rashee Rice ruled out; reassess receiving depth.",
+          "details": [
+            "Chiefs receiver Rashee Rice ruled out; reassess receiving depth."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris.",
+          "details": [
+            "Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "buf-lv",
+      "kickoff": "2026-10-18T15:25:00-05:00",
+      "away": {
+        "id": "buffalo-bills",
+        "name": "Buffalo Bills",
+        "record": "4-1",
+        "logo": null
+      },
+      "home": {
+        "id": "las-vegas-raiders",
+        "name": "Las Vegas Raiders",
+        "record": "3-2",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Buffalo enters with a stronger record following Monday's win.",
+          "details": [
+            "Buffalo enters with a stronger record following Monday's win."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Raiders have a winning record; this is not an automatic favorite anchor.",
+          "details": [
+            "Raiders have a winning record; this is not an automatic favorite anchor."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "dal-gb",
+      "kickoff": "2026-10-18T19:20:00-05:00",
+      "away": {
+        "id": "dallas-cowboys",
+        "name": "Dallas Cowboys",
+        "record": "2-3",
+        "logo": null
+      },
+      "home": {
+        "id": "green-bay-packers",
+        "name": "Green Bay Packers",
+        "record": "3-2",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Green Bay's defensive injury situation deserves attention.",
+          "details": [
+            "Green Bay's defensive injury situation deserves attention."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Late kickoff can offer a review checkpoint for earlier successful legs.",
+          "details": [
+            "Late kickoff can offer a review checkpoint for earlier successful legs."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    },
+    {
+      "id": "was-sf",
+      "kickoff": "2026-10-19T19:15:00-05:00",
+      "away": {
+        "id": "washington-commanders",
+        "name": "Washington Commanders",
+        "record": "1-3-1",
+        "logo": null
+      },
+      "home": {
+        "id": "san-francisco-49ers",
+        "name": "San Francisco 49ers",
+        "record": "5-0",
+        "logo": null
+      },
+      "insights": [
+        {
+          "category": "form",
+          "summary": "San Francisco remains undefeated entering the Monday matchup.",
+          "details": [
+            "San Francisco remains undefeated entering the Monday matchup."
+          ]
+        },
+        {
+          "category": "injuries",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "matchup",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "market",
+          "summary": "Additional verified analysis pending.",
+          "details": [
+            "No verified detailed assessment published yet."
+          ]
+        },
+        {
+          "category": "history",
+          "summary": "Sunday-to-Monday separation offers an exit review if earlier legs survive.",
+          "details": [
+            "Sunday-to-Monday separation offers an exit review if earlier legs survive."
+          ]
+        }
+      ],
+      "status": "scheduled"
+    }
+  ],
+  "predictions": [],
+  "comboCandidates": [
+    {
+      "id": "A1",
+      "strategy": "A",
+      "type": "Single Game Bet",
+      "title": "New York Giants to win",
+      "legs": [
+        {
+          "gameId": "no-nyg",
+          "team": "New York Giants",
+          "side": "YES",
+          "marketPercent": 50
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.95,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "A2",
+      "strategy": "A",
+      "type": "Two-Game Combo — Early Pick + Later Favorite",
+      "title": "New York Giants and Kansas City Chiefs to win",
+      "legs": [
+        {
+          "gameId": "no-nyg",
+          "team": "New York Giants",
+          "side": "YES",
+          "marketPercent": 50
+        },
+        {
+          "gameId": "lac-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "marketPercent": 79
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 5,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "A3",
+      "strategy": "A",
+      "type": "Single Game Bet",
+      "title": "Carolina Panthers to win",
+      "legs": [
+        {
+          "gameId": "car-phi",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "marketPercent": 49
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.79,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "A4",
+      "strategy": "A",
+      "type": "Two-Game Combo — Early Pick + Later Favorite",
+      "title": "Carolina Panthers and Los Angeles Rams to win",
+      "legs": [
+        {
+          "gameId": "car-phi",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "marketPercent": 49
+        },
+        {
+          "gameId": "ari-lar",
+          "team": "Los Angeles Rams",
+          "side": "YES",
+          "marketPercent": 85
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 4.33,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "B1",
+      "strategy": "B",
+      "type": "Two-Game Combo — Simultaneous Favorites",
+      "title": "New England Patriots and Indianapolis Colts to win",
+      "legs": [
+        {
+          "gameId": "nyj-ne",
+          "team": "New England Patriots",
+          "side": "YES",
+          "marketPercent": 77
+        },
+        {
+          "gameId": "ten-ind",
+          "team": "Indianapolis Colts",
+          "side": "YES",
+          "marketPercent": 75
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.46,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "B2",
+      "strategy": "B",
+      "type": "Three-Game Combo — Simultaneous Favorites",
+      "title": "Patriots, Colts and Ravens to win",
+      "legs": [
+        {
+          "gameId": "nyj-ne",
+          "team": "New England Patriots",
+          "side": "YES",
+          "marketPercent": 77
+        },
+        {
+          "gameId": "ten-ind",
+          "team": "Indianapolis Colts",
+          "side": "YES",
+          "marketPercent": 75
+        },
+        {
+          "gameId": "bal-cle",
+          "team": "Baltimore Ravens",
+          "side": "YES",
+          "marketPercent": 68
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 4.94,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "B3",
+      "strategy": "B",
+      "type": "Two-Game Combo — Competitive Matchups",
+      "title": "Giants and Panthers to win",
+      "legs": [
+        {
+          "gameId": "no-nyg",
+          "team": "New York Giants",
+          "side": "YES",
+          "marketPercent": 50
+        },
+        {
+          "gameId": "car-phi",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "marketPercent": 49
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 7.68,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "C1",
+      "strategy": "C",
+      "type": "Three-Game Combo — Multiple Kickoff Windows",
+      "title": "Jaguars, Chiefs and Packers to win",
+      "legs": [
+        {
+          "gameId": "hou-jax",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "marketPercent": 58
+        },
+        {
+          "gameId": "lac-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "marketPercent": 79
+        },
+        {
+          "gameId": "dal-gb",
+          "team": "Green Bay Packers",
+          "side": "YES",
+          "marketPercent": 52
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 8.04,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "C2",
+      "strategy": "C",
+      "type": "Three-Game Combo — Midday and Afternoon",
+      "title": "Patriots, Colts and Rams to win",
+      "legs": [
+        {
+          "gameId": "nyj-ne",
+          "team": "New England Patriots",
+          "side": "YES",
+          "marketPercent": 77
+        },
+        {
+          "gameId": "ten-ind",
+          "team": "Indianapolis Colts",
+          "side": "YES",
+          "marketPercent": 75
+        },
+        {
+          "gameId": "ari-lar",
+          "team": "Los Angeles Rams",
+          "side": "YES",
+          "marketPercent": 85
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.92,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "C3",
+      "strategy": "C",
+      "type": "Four-Game Combo — Four Kickoff Windows",
+      "title": "Jaguars, Ravens, Bills and Packers to win",
+      "legs": [
+        {
+          "gameId": "hou-jax",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "marketPercent": 58
+        },
+        {
+          "gameId": "bal-cle",
+          "team": "Baltimore Ravens",
+          "side": "YES",
+          "marketPercent": 68
+        },
+        {
+          "gameId": "buf-lv",
+          "team": "Buffalo Bills",
+          "side": "YES",
+          "marketPercent": 69
+        },
+        {
+          "gameId": "dal-gb",
+          "team": "Green Bay Packers",
+          "side": "YES",
+          "marketPercent": 52
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 13.46,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "D1",
+      "strategy": "D",
+      "type": "Single Game Bet — Undefeated Team",
+      "title": "Kansas City Chiefs to win",
+      "legs": [
+        {
+          "gameId": "lac-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "marketPercent": 79
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 2.49,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "D2",
+      "strategy": "D",
+      "type": "Two-Game Combo — Undefeated Teams",
+      "title": "Chiefs and 49ers to win",
+      "legs": [
+        {
+          "gameId": "lac-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "marketPercent": 79
+        },
+        {
+          "gameId": "was-sf",
+          "team": "San Francisco 49ers",
+          "side": "YES",
+          "marketPercent": 78
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.18,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "E1",
+      "strategy": "E",
+      "type": "Two-Game Combo — Winless Teams Lose",
+      "title": "Tennessee Titans NO and Los Angeles Chargers NO",
+      "legs": [
+        {
+          "gameId": "ten-ind",
+          "team": "Tennessee Titans",
+          "side": "NO",
+          "marketPercent": 75
+        },
+        {
+          "gameId": "lac-kc",
+          "team": "Los Angeles Chargers",
+          "side": "NO",
+          "marketPercent": 79
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.31,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "E2",
+      "strategy": "E",
+      "type": "Three-Game Combo — Struggling Teams Lose",
+      "title": "Titans NO, Cardinals NO and Chargers NO",
+      "legs": [
+        {
+          "gameId": "ten-ind",
+          "team": "Tennessee Titans",
+          "side": "NO",
+          "marketPercent": 75
+        },
+        {
+          "gameId": "ari-lar",
+          "team": "Arizona Cardinals",
+          "side": "NO",
+          "marketPercent": 85
+        },
+        {
+          "gameId": "lac-kc",
+          "team": "Los Angeles Chargers",
+          "side": "NO",
+          "marketPercent": 79
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 3.76,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    },
+    {
+      "id": "E3",
+      "strategy": "E",
+      "type": "Two-Game Combo — One-Win Teams Lose",
+      "title": "Texans NO and Cardinals NO",
+      "legs": [
+        {
+          "gameId": "hou-jax",
+          "team": "Houston Texans",
+          "side": "NO",
+          "marketPercent": 58
+        },
+        {
+          "gameId": "ari-lar",
+          "team": "Arizona Cardinals",
+          "side": "NO",
+          "marketPercent": 85
+        }
+      ],
+      "quoteSnapshot": {
+        "stake": 2,
+        "grossPayout": 4.89,
+        "source": "User supplied October 15, 2026",
+        "executableNow": false
+      },
+      "status": "pricing-research"
+    }
+  ],
+  "sources": [
+    {
+      "title": "NFL Week 6 official injury report",
+      "url": "https://amp.nfl.com/news/nfl-week-6-injury-report-2026-season"
+    },
+    {
+      "title": "NFL Week 6 injuries",
+      "url": "https://www.nfl.com/injuries/league/2026/reg6"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Candidate construction
+Input independent forecasts, actual schedules, and any separately sourced Kalshi market snapshots. Generate A single+combo, B simultaneous, C staggered, D undefeated, E losing-team NO strategies when research supports them. Use full names and records, YES/NO, actual dates and times. No fake combo payouts. Evaluate shared exposure and quote requirements. Do not mark as recommended without executable pricing and evidence.

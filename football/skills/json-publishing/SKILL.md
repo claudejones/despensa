@@ -1,0 +1,2 @@
+# JSON validation and GitHub publishing
+Input full weekly research payload. Validate schema, unique game IDs, full slate, as-of records, provenance, frozen forecasts, leg references, and non-invented quote fields. Publish atomically to football/data/YYYY/week-NN.json on approved branch; preserve version history and last valid file. Update manifest only after valid commit. Produce commit SHA and status receipt. Never publish personal Kalshi ledger.
