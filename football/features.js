@@ -148,10 +148,11 @@ function ticketView(t) {
         `<label>${{ stake: "Stake ($)", payout: "Gross payout ($)", fee: "Entry fee ($)", market: "Quoted probability (%)" }[k]}<input type="number" min="0" step=".01" data-id="${esc(t.id)}" data-field="${k}" value="${t[k] == null && k !== "fee" ? "" : Number(t[k] || 0)}" ${draft ? "" : "disabled"}></label>`,
     )
     .join("");
-  const legs = (t.legs || [])
+  const legs = [...(t.legs || [])]
+    .sort((a,b) => new Date(data?.games.find(g=>g.id===a.gameId)?.kickoff || a.kickoff || 0) - new Date(data?.games.find(g=>g.id===b.gameId)?.kickoff || b.kickoff || 0))
     .map((l) => {
       let g = data?.games.find((g) => g.id === l.gameId);
-      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${esc(l.side)} · ${l.marketPercent == null ? "Quote not supplied" : "Historical / entered Kalshi " + esc(l.marketPercent) + "%"}</small></div>`;
+      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${l.side === "YES" ? "To win" : l.side === "NO" ? "Not to win" : esc(l.side)}${l.source ? " · " + esc(l.source) : ""} · ${l.marketPercent == null ? "Quote not supplied" : "Historical / entered Kalshi " + esc(l.marketPercent) + "%"}</small></div>`;
     })
     .join("");
   const be =
