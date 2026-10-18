@@ -253,7 +253,7 @@ function planScreen() {
         ((100 * t.quoteSnapshot.stake) / t.quoteSnapshot.grossPayout).toFixed(
           1,
         ) +
-        '%</b></div></div><p class="muted small">Historical quote, not currently executable.</p><button class="primary" data-add="' +
+        '%</b></div></div>' + (t.researchReview ? accordion('Research review', t.researchReview.summary, '<p>' + esc(t.researchReview.pricing) + '</p><p>' + esc(t.researchReview.sharedRisk) + '</p><p>' + esc(t.researchReview.settlement) + '</p>', 'clipboard-list') : '') + '<p class="muted small">Historical quote, not currently executable.</p><button class="primary" data-add="' +
         t.id +
         '">Add to Kalshi drafts</button></div>',
     )
@@ -564,7 +564,7 @@ function render() {
     render.route = route;
   }
   let v = $("#view");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.2";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.2.1";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -589,7 +589,7 @@ function render() {
   }
   if (sub === "settings") {
     v.innerHTML =
-      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.2 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
+      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.2.1 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
     icons();
     return;
   }
@@ -631,7 +631,7 @@ function render() {
       esc(data.researchVersion) +
       '</small></div></div><h3 style="margin:18px 0 10px">This week’s intelligence</h3><div class="card"><details class="research-acc"><summary><i data-lucide="clipboard-list"></i><span><b>Weekly research</b><div class="muted" style="font-size:12px">' +
       data.games.length +
-      ' games · Preliminary research published</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Team records, game times and preliminary research categories are available.</p><button data-tab="games">Review games</button></div></details><details class="research-acc"><summary><i data-lucide="brain"></i><span><b>AI predictions</b><div class="muted" style="font-size:12px">Awaiting validated probabilities</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Independent forecasts are not yet published. Office-pool selections are available separately.</p><button data-tab="picks">Open AI Picks</button></div></details><details class="research-acc"><summary><i data-lucide="layers"></i><span><b>Combo strategies</b><div class="muted" style="font-size:12px">' +
+      ' games · Research refreshed</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Updated team records, injuries, game times and market snapshots are available.</p><button data-tab="games">Review games</button></div></details><details class="research-acc"><summary><i data-lucide="brain"></i><span><b>AI predictions</b><div class="muted" style="font-size:12px">Awaiting validated probabilities</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Qualitative research leans include supporting and opposing evidence. Numerical win probabilities remain unvalidated. Office-pool selections stay independent.</p><button data-tab="picks">Open AI Picks</button></div></details><details class="research-acc"><summary><i data-lucide="layers"></i><span><b>Combo strategies</b><div class="muted" style="font-size:12px">' +
       data.comboCandidates.length +
       ' candidates across Plans A–E</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Historical Kalshi quotes, not current executable offers.</p><button data-tab="combos">Explore combos</button></div></details></div><div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
       data.week +
@@ -680,8 +680,8 @@ function render() {
                   i.details.map((x) => "<li>" + esc(x) + "</li>").join("") +
                   '</ul><p class="muted small">Snapshot: ' +
                   esc(date(data.researchedAt)) +
-                  " · Preliminary research</p>" +
-                  researchSources() +
+                  " · " + esc(data.status) + " research</p>" +
+                  researchSources(i.sourceIds || g.sourceIds) +
                   "</div></details>",
               )
               .join("") +
@@ -792,7 +792,7 @@ async function load() {
     }
     localStorage.setItem("football-pool-v03", JSON.stringify(pool));
     $("#status").textContent =
-      "Week " + data.week + " · " + data.status + " research · Times in Cancún";
+      "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
   } catch (e) {
     if (request !== loadSequence) return;
     data = null;

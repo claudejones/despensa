@@ -1,7 +1,7 @@
 name: Football mobile acceptance
 on:
   push:
-    branches: [football-screen-by-screen-implementation, football-contextual-review, football-ticket-builder, main]
+    branches: [football-screen-by-screen-implementation, football-contextual-review, football-ticket-builder, football-week6-research, main]
     paths:
       - 'football/**'
       - '.github/workflows/football-mobile-acceptance.yml'
@@ -34,6 +34,9 @@ jobs:
 
       - name: Run shared ticket builder
         run: node football/tests/ticket-flow.cjs
+
+      - name: Verify research refresh
+        run: node football/tests/research-refresh.cjs
 
       - name: Upload mobile screenshots
         if: always()

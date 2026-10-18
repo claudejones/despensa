@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "season": 2026,
   "week": 6,
-  "researchVersion": "2026-10-17-initial-1",
-  "researchedAt": "2026-10-17T09:35:00-05:00",
-  "status": "preliminary",
-  "notes": "Research snapshot with verified highlights and user-provided October 15 indicative quotes. No independently calibrated probabilities or approved trades. Some research categories remain pending.",
+  "researchVersion": "2026-10-17-refresh-2",
+  "researchedAt": "2026-10-17T23:00:17-05:00",
+  "status": "refreshed",
+  "notes": "Saturday-night source refresh: 13 upcoming games, qualitative research leans and 26 Kalshi bid/ask snapshots. Final inactives and weather remain unverified. No calibrated win probabilities or executable combo quotes. Historical October 15 combo quotes retained, not repriced.",
   "games": [
     {
       "id": "hou-jax",
@@ -13,53 +13,103 @@
       "away": {
         "id": "houston-texans",
         "name": "Houston Texans",
-        "record": "1-4",
+        "record": "1-4-0",
         "logo": null
       },
       "home": {
         "id": "jacksonville-jaguars",
         "name": "Jacksonville Jaguars",
-        "record": "4-1",
+        "record": "4-1-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Jacksonville's 4\u20131 record contrasts with Houston's 1\u20134 start.",
+          "summary": "Jacksonville won its previous London game; Houston just earned its first win.",
           "details": [
-            "Jacksonville's 4\u20131 record contrasts with Houston's 1\u20134 start."
-          ]
+            "Entering Week 6: Houston Texans 1-4-0; Jacksonville Jaguars 4-1-0.",
+            "Jacksonville won its previous London game; Houston just earned its first win."
+          ],
+          "sourceIds": [
+            "jax",
+            "hou",
+            "hou-preview",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Houston missing David Montgomery, Tank Dell and Jalen Pitre.",
+          "summary": "Houston: Montgomery, Dell and Pitre out. Jacksonville: Brown and Matiscik out; Eric Murray expected back.",
           "details": [
-            "Houston missing David Montgomery, Tank Dell and Jalen Pitre."
-          ]
+            "Houston: Montgomery, Dell and Pitre out. Jacksonville: Brown and Matiscik out; Eric Murray expected back.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "jax",
+            "hou",
+            "hou-preview"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Research lean: Jacksonville Jaguars · low",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Supporting case (analysis): Jacksonville has continuity from staying in London and a healthier backfield.",
+            "Opposing case (analysis): Houston’s pass rush can disrupt protection; Jacksonville is missing a starting corner.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "jax",
+            "hou",
+            "hou-preview"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Houston Texans YES bid 43¢ / ask 44¢ per $1 payout contract.",
+            "Jacksonville Jaguars YES bid 56¢ / ask 57¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Jacksonville beat Philadelphia 19–17 last week. A narrow win is not evidence of dominance.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Jacksonville beat Philadelphia 19–17 last week. A narrow win is not evidence of dominance.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "jax",
+            "hou",
+            "hou-preview"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "jax",
+        "hou",
+        "hou-preview",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "ten-ind",
@@ -67,53 +117,98 @@
       "away": {
         "id": "tennessee-titans",
         "name": "Tennessee Titans",
-        "record": "0-5",
+        "record": "0-5-0",
         "logo": null
       },
       "home": {
         "id": "indianapolis-colts",
         "name": "Indianapolis Colts",
-        "record": "2-3",
+        "record": "2-3-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Tennessee enters winless; assess whether Indianapolis can exploit that weakness.",
+          "summary": "Tennessee remains winless; Indianapolis enters 2–3. Taylor averages 3.9 yards per carry.",
           "details": [
-            "Tennessee enters winless; assess whether Indianapolis can exploit that weakness."
-          ]
+            "Entering Week 6: Tennessee Titans 0-5-0; Indianapolis Colts 2-3-0.",
+            "Tennessee remains winless; Indianapolis enters 2–3. Taylor averages 3.9 yards per carry."
+          ],
+          "sourceIds": [
+            "ten",
+            "ind",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Tennessee: Elliott and Winston out; Spears questionable. A full practice did not remove Spears’ designation.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Tennessee: Elliott and Winston out; Spears questionable. A full practice did not remove Spears’ designation.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "ten",
+            "ind"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "An opponent's poor record is not sufficient to establish value.",
+          "summary": "Research lean: Indianapolis Colts · moderate",
           "details": [
-            "An opponent's poor record is not sufficient to establish value."
-          ]
+            "Supporting case (analysis): Indianapolis has a home-field and established rushing-matchup case.",
+            "Opposing case (analysis): Taylor has gone 12 games without 100 rushing yards; prior success may not carry over against new coaches.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "ten",
+            "ind"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Tennessee Titans YES bid 25¢ / ask 26¢ per $1 payout contract.",
+            "Indianapolis Colts YES bid 74¢ / ask 75¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Indianapolis has won six consecutive meetings; Tennessee’s changed staff limits the usefulness of that streak.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Indianapolis has won six consecutive meetings; Tennessee’s changed staff limits the usefulness of that streak.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "ten",
+            "ind"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "ten",
+        "ind",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "car-phi",
@@ -121,53 +216,98 @@
       "away": {
         "id": "carolina-panthers",
         "name": "Carolina Panthers",
-        "record": "2-2",
+        "record": "2-2-0",
         "logo": null
       },
       "home": {
         "id": "philadelphia-eagles",
         "name": "Philadelphia Eagles",
-        "record": "2-3",
+        "record": "2-3-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "The records are close, so avoid assuming Philadelphia is the stronger side.",
+          "summary": "Carolina is 2–2; Philadelphia is 2–3 and turns to Tanner McKee.",
           "details": [
-            "The records are close, so avoid assuming Philadelphia is the stronger side."
-          ]
+            "Entering Week 6: Carolina Panthers 2-2-0; Philadelphia Eagles 2-3-0.",
+            "Carolina is 2–2; Philadelphia is 2–3 and turns to Tanner McKee."
+          ],
+          "sourceIds": [
+            "phi",
+            "phi-preview",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Confirm starting lineups before choosing an underdog.",
+          "summary": "Hurts and Barkley unavailable. DeVonta Smith and Dontayvion Wicks cleared; Drew Kendall questionable.",
           "details": [
-            "Confirm starting lineups before choosing an underdog."
-          ]
+            "Hurts and Barkley unavailable. DeVonta Smith and Dontayvion Wicks cleared; Drew Kendall questionable.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "phi",
+            "phi-preview"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Research lean: Carolina Panthers · low",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Supporting case (analysis): Carolina faces an offense missing its starting quarterback and lead runner.",
+            "Opposing case (analysis): Philadelphia retains receiving weapons; Carolina allows 156.5 rushing yards per game.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "phi",
+            "phi-preview"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Carolina Panthers YES bid 61¢ / ask 62¢ per $1 payout contract.",
+            "Philadelphia Eagles YES bid 39¢ / ask 40¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "McKee’s third career start is his first outside Week 18; the comparable starting sample is small.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "McKee’s third career start is his first outside Week 18; the comparable starting sample is small.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "phi",
+            "phi-preview"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "phi",
+        "phi-preview",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "pit-tb",
@@ -175,53 +315,98 @@
       "away": {
         "id": "pittsburgh-steelers",
         "name": "Pittsburgh Steelers",
-        "record": "3-2",
+        "record": "3-2-0",
         "logo": null
       },
       "home": {
         "id": "tampa-bay-buccaneers",
         "name": "Tampa Bay Buccaneers",
-        "record": "1-4",
+        "record": "1-4-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Pittsburgh has the stronger record.",
+          "summary": "Both won last week: Pittsburgh over Indianapolis and Tampa Bay at Dallas.",
           "details": [
-            "Pittsburgh has the stronger record."
-          ]
+            "Entering Week 6: Pittsburgh Steelers 3-2-0; Tampa Bay Buccaneers 1-4-0.",
+            "Both won last week: Pittsburgh over Indianapolis and Tampa Bay at Dallas."
+          ],
+          "sourceIds": [
+            "pit",
+            "tb",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Mayfield and Winfield out; Jalon Daniels starts again. Metcalf cleared Saturday; Freiermuth newly questionable; Roman Wilson on IR.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Mayfield and Winfield out; Jalon Daniels starts again. Metcalf cleared Saturday; Freiermuth newly questionable; Roman Wilson on IR.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Investigate opponent strength and Tampa Bay's availability.",
+          "summary": "Research lean: Pittsburgh Steelers · low",
           "details": [
-            "Investigate opponent strength and Tampa Bay's availability."
-          ]
+            "Supporting case (analysis): Pittsburgh can pressure an inexperienced starting quarterback.",
+            "Opposing case (analysis): Daniels already won at Dallas; Pittsburgh’s receiving depth is reduced.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Pittsburgh Steelers YES bid 56¢ / ask 57¢ per $1 payout contract.",
+            "Tampa Bay Buccaneers YES bid 43¢ / ask 44¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Daniels makes his third consecutive start. Treat conclusions about his ceiling cautiously.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Daniels makes his third consecutive start. Treat conclusions about his ceiling cautiously.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "pit",
+        "tb",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "bal-cle",
@@ -229,53 +414,93 @@
       "away": {
         "id": "baltimore-ravens",
         "name": "Baltimore Ravens",
-        "record": "4-1",
+        "record": "4-1-0",
         "logo": null
       },
       "home": {
         "id": "cleveland-browns",
         "name": "Cleveland Browns",
-        "record": "3-2",
+        "record": "3-2-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Both teams have winning records.",
+          "summary": "Huntley led Baltimore’s overtime comeback in Atlanta. Cleveland allowed eight sacks last week.",
           "details": [
-            "Both teams have winning records."
-          ]
+            "Entering Week 6: Baltimore Ravens 4-1-0; Cleveland Browns 3-2-0.",
+            "Huntley led Baltimore’s overtime comeback in Atlanta. Cleveland allowed eight sacks last week."
+          ],
+          "sourceIds": [
+            "bal",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Jackson and Jurgens out; Huntley starts. Hendrickson returns. Cleveland’s Judkins, Graham and Schwesinger questionable.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Jackson and Jurgens out; Huntley starts. Hendrickson returns. Cleveland’s Judkins, Graham and Schwesinger questionable.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Baltimore's record edge should be adjusted for injuries and opposition.",
+          "summary": "Research lean: Baltimore Ravens · low",
           "details": [
-            "Baltimore's record edge should be adjusted for injuries and opposition."
-          ]
+            "Supporting case (analysis): Baltimore’s returning pass rusher can exploit Cleveland’s protection problems.",
+            "Opposing case (analysis): A backup quarterback and unsettled interior line reduce Baltimore’s margin for error.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Baltimore Ravens YES bid 61¢ / ask 62¢ per $1 payout contract.",
+            "Cleveland Browns YES bid 38¢ / ask 39¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Huntley won his last three starts; that small sample does not establish a win probability.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Huntley won his last three starts; that small sample does not establish a win probability.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "bal",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "no-nyg",
@@ -283,7 +508,7 @@
       "away": {
         "id": "new-orleans-saints",
         "name": "New Orleans Saints",
-        "record": "1-4",
+        "record": "1-4-0",
         "logo": null
       },
       "home": {
@@ -295,42 +520,86 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Additional verified analysis pending.",
+          "summary": "New York enters 3–1–1; New Orleans 1–4. The Giants’ tie is preserved in their record.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Entering Week 6: New Orleans Saints 1-4-0; New York Giants 3-1-1.",
+            "New York enters 3–1–1; New Orleans 1–4. The Giants’ tie is preserved in their record."
+          ],
+          "sourceIds": [
+            "nyg",
+            "no",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Saints Alvin Kamara and Chris Olave were listed questionable. Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable.",
+          "summary": "Giants: Hood, Theo Johnson and Nubin ruled out. Check final offensive-tackle availability before relying on protection.",
           "details": [
-            "Saints Alvin Kamara and Chris Olave were listed questionable.",
-            "Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable."
-          ]
+            "Giants: Hood, Theo Johnson and Nubin ruled out. Check final offensive-tackle availability before relying on protection.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "nyg",
+            "no"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Research lean: New York Giants · low",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Supporting case (analysis): The Giants have the stronger early record and home venue.",
+            "Opposing case (analysis): The record-based case is thin without opponent-adjusted efficiency; missing defensive backs create risk.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "nyg",
+            "no"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "New Orleans Saints YES bid 49¢ / ask 50¢ per $1 payout contract.",
+            "New York Giants YES bid 50¢ / ask 51¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "No numerical head-to-head adjustment used; current availability matters more than old series outcomes.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "No numerical head-to-head adjustment used; current availability matters more than old series outcomes.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "nyg",
+            "no"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "nyg",
+        "no",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "chi-atl",
@@ -338,54 +607,98 @@
       "away": {
         "id": "chicago-bears",
         "name": "Chicago Bears",
-        "record": "3-2",
+        "record": "3-2-0",
         "logo": null
       },
       "home": {
         "id": "atlanta-falcons",
         "name": "Atlanta Falcons",
-        "record": "2-3",
+        "record": "2-3-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Chicago comes off a five-turnover loss; Atlanta lost in overtime. Both have top-two rushing offenses.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Entering Week 6: Chicago Bears 3-2-0; Atlanta Falcons 2-3-0.",
+            "Chicago comes off a five-turnover loss; Atlanta lost in overtime. Both have top-two rushing offenses."
+          ],
+          "sourceIds": [
+            "chi",
+            "chi-qb",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Confirm quarterback availability before any prediction. Chicago quarterback Caleb Williams listed questionable with hamstring issue.",
+          "summary": "Williams expected to start per Saturday reporting, still officially questionable. Monangai out; Atlanta missing Henderson.",
           "details": [
-            "Confirm quarterback availability before any prediction.",
-            "Chicago quarterback Caleb Williams listed questionable with hamstring issue."
-          ]
+            "Williams expected to start per Saturday reporting, still officially questionable. Monangai out; Atlanta missing Henderson.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Research lean: Chicago Bears · low / conditional on williams",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Supporting case (analysis): A Williams return could improve Chicago’s passing threat against Atlanta’s depleted corners.",
+            "Opposing case (analysis): Returning from a hamstring injury is uncertain; Atlanta’s run defense ranks fourth.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Chicago Bears YES bid 51¢ / ask 52¢ per $1 payout contract.",
+            "Atlanta Falcons YES bid 49¢ / ask 50¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Chicago’s 42.9% red-zone touchdown rate is last; getting chances has not meant finishing drives.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Chicago’s 42.9% red-zone touchdown rate is last; getting chances has not meant finishing drives.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "chi",
+        "chi-qb",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "nyj-ne",
@@ -393,53 +706,103 @@
       "away": {
         "id": "new-york-jets",
         "name": "New York Jets",
-        "record": "2-3",
+        "record": "2-3-0",
         "logo": null
       },
       "home": {
         "id": "new-england-patriots",
         "name": "New England Patriots",
-        "record": "3-2",
+        "record": "3-2-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "New England enters with the stronger record.",
+          "summary": "New England ranks eighth in total offense versus New York’s 26th; both defenses rank in the top five.",
           "details": [
-            "New England enters with the stronger record."
-          ]
+            "Entering Week 6: New York Jets 2-3-0; New England Patriots 3-2-0.",
+            "New England ranks eighth in total offense versus New York’s 26th; both defenses rank in the top five."
+          ],
+          "sourceIds": [
+            "ne",
+            "ne-injury",
+            "ne-roster",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "A.J. Brown activated Saturday; activation is not a final active-list guarantee. Recheck the full injury report before kickoff.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "A.J. Brown activated Saturday; activation is not a final active-list guarantee. Recheck the full injury report before kickoff.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "ne",
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Assess recent scoring and defense rather than record alone.",
+          "summary": "Research lean: New England Patriots · moderate",
           "details": [
-            "Assess recent scoring and defense rather than record alone."
-          ]
+            "Supporting case (analysis): New England has the more productive offense and home venue.",
+            "Opposing case (analysis): The Jets’ fourth-ranked defense can keep the game close; offensive rank alone is not an efficiency model.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "ne",
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "New York Jets YES bid 24¢ / ask 25¢ per $1 payout contract.",
+            "New England Patriots YES bid 75¢ / ask 76¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "New England has won three consecutive meetings. Treat this as context, not an independent pricing edge.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "New England has won three consecutive meetings. Treat this as context, not an independent pricing edge.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "ne",
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "ne",
+        "ne-injury",
+        "ne-roster",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "ari-lar",
@@ -447,53 +810,93 @@
       "away": {
         "id": "arizona-cardinals",
         "name": "Arizona Cardinals",
-        "record": "1-4",
+        "record": "1-4-0",
         "logo": null
       },
       "home": {
         "id": "los-angeles-rams",
         "name": "Los Angeles Rams",
-        "record": "2-3",
+        "record": "2-3-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Arizona enters with one win.",
+          "summary": "Arizona is 1–4; Los Angeles 2–3. The Rams played Monday, leaving a shorter preparation week.",
           "details": [
-            "Arizona enters with one win."
-          ]
+            "Entering Week 6: Arizona Cardinals 1-4-0; Los Angeles Rams 2-3-0.",
+            "Arizona is 1–4; Los Angeles 2–3. The Rams played Monday, leaving a shorter preparation week."
+          ],
+          "sourceIds": [
+            "lar",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Arizona’s Jeremiyah Love out. Rams McDuffie and Curl questionable; Davis Allen has no game designation.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Arizona’s Jeremiyah Love out. Rams McDuffie and Curl questionable; Davis Allen has no game designation.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Rams are a possible later favorite, but their own 2\u20133 record warrants caution.",
+          "summary": "Research lean: Los Angeles Rams · low",
           "details": [
-            "Rams are a possible later favorite, but their own 2\u20133 record warrants caution."
-          ]
+            "Supporting case (analysis): The home Rams face an opponent missing an important rushing option.",
+            "Opposing case (analysis): Questionable defensive backs and a short week weaken a simple favorite-based argument.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Arizona Cardinals YES bid 12¢ / ask 13¢ per $1 payout contract.",
+            "Los Angeles Rams YES bid 87¢ / ask 88¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "No quantified series adjustment used. The injury source supports availability, not a calibrated team-strength estimate.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "No quantified series adjustment used. The injury source supports availability, not a calibrated team-strength estimate.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "lar",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "lac-kc",
@@ -501,54 +904,93 @@
       "away": {
         "id": "los-angeles-chargers",
         "name": "Los Angeles Chargers",
-        "record": "0-5",
+        "record": "0-5-0",
         "logo": null
       },
       "home": {
         "id": "kansas-city-chiefs",
         "name": "Kansas City Chiefs",
-        "record": "4-0",
+        "record": "4-0-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kansas City returns from its bye. Herbert has taken 17 sacks behind a depleted line.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Entering Week 6: Los Angeles Chargers 0-5-0; Kansas City Chiefs 4-0-0.",
+            "Kansas City returns from its bye. Herbert has taken 17 sacks behind a depleted line."
+          ],
+          "sourceIds": [
+            "kc",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Chiefs receiver Rashee Rice ruled out; reassess receiving depth. Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris.",
+          "summary": "Chargers missing Alt, Awosika, Tre’ Harris, Donte Jackson and Derwin James. Chiefs Rice and Simmons also out.",
           "details": [
-            "Chiefs receiver Rashee Rice ruled out; reassess receiving depth.",
-            "Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris."
-          ]
+            "Chargers missing Alt, Awosika, Tre’ Harris, Donte Jackson and Derwin James. Chiefs Rice and Simmons also out.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Research lean: Kansas City Chiefs · moderate",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Supporting case (analysis): Kansas City combines extra rest with a clear protection matchup against Los Angeles.",
+            "Opposing case (analysis): Herbert remains dangerous when protected; Kansas City also has offensive absences.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Los Angeles Chargers YES bid 21¢ / ask 22¢ per $1 payout contract.",
+            "Kansas City Chiefs YES bid 78¢ / ask 79¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Twelve of 16 meetings since 2018 were one-score games; an unbeaten record does not remove divisional risk.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Twelve of 16 meetings since 2018 were one-score games; an unbeaten record does not remove divisional risk.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "kc",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "buf-lv",
@@ -556,53 +998,98 @@
       "away": {
         "id": "buffalo-bills",
         "name": "Buffalo Bills",
-        "record": "4-1",
+        "record": "4-1-0",
         "logo": null
       },
       "home": {
         "id": "las-vegas-raiders",
         "name": "Las Vegas Raiders",
-        "record": "3-2",
+        "record": "3-2-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Buffalo enters with a stronger record following Monday's win.",
+          "summary": "Buffalo averages 32.8 points; Las Vegas 26.4. Both rank in the bottom six in total defense.",
           "details": [
-            "Buffalo enters with a stronger record following Monday's win."
-          ]
+            "Entering Week 6: Buffalo Bills 4-1-0; Las Vegas Raiders 3-2-0.",
+            "Buffalo averages 32.8 points; Las Vegas 26.4. Both rank in the bottom six in total defense."
+          ],
+          "sourceIds": [
+            "buf",
+            "lv",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Bills Moore, Oliver, Palmer, Alford and Sanders questionable. Spencer Brown expected to play.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Bills Moore, Oliver, Palmer, Alford and Sanders questionable. Spencer Brown expected to play.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "buf",
+            "lv"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Raiders have a winning record; this is not an automatic favorite anchor.",
+          "summary": "Research lean: Buffalo Bills · moderate",
           "details": [
-            "Raiders have a winning record; this is not an automatic favorite anchor."
-          ]
+            "Supporting case (analysis): Buffalo’s 158 rushing yards per game faces a defense allowing 140.6.",
+            "Opposing case (analysis): Buffalo allows 280.4 passing yards per game, offering Las Vegas a credible counter-path.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "buf",
+            "lv"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Buffalo Bills YES bid 67¢ / ask 68¢ per $1 payout contract.",
+            "Las Vegas Raiders YES bid 32¢ / ask 33¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Buffalo practiced in California after its Monday game; this is a short-week road sequence, not a normal home week.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Buffalo practiced in California after its Monday game; this is a short-week road sequence, not a normal home week.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "buf",
+            "lv"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "buf",
+        "lv",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "dal-gb",
@@ -610,53 +1097,98 @@
       "away": {
         "id": "dallas-cowboys",
         "name": "Dallas Cowboys",
-        "record": "2-3",
+        "record": "2-3-0",
         "logo": null
       },
       "home": {
         "id": "green-bay-packers",
         "name": "Green Bay Packers",
-        "record": "3-2",
+        "record": "3-2-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Green Bay enters 3–2; Dallas 2–3. Dallas has extra rest after its Thursday Week 5 game.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Entering Week 6: Dallas Cowboys 2-3-0; Green Bay Packers 3-2-0.",
+            "Green Bay enters 3–2; Dallas 2–3. Dallas has extra rest after its Thursday Week 5 game."
+          ],
+          "sourceIds": [
+            "gb",
+            "dal",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Green Bay's defensive injury situation deserves attention.",
+          "summary": "Dallas downgraded Overshown to out Saturday. Green Bay missing Hargrave, Ford, St-Juste and Skyy Moore; Cisse questionable.",
           "details": [
-            "Green Bay's defensive injury situation deserves attention."
-          ]
+            "Dallas downgraded Overshown to out Saturday. Green Bay missing Hargrave, Ford, St-Juste and Skyy Moore; Cisse questionable.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Late kickoff can offer a review checkpoint for earlier successful legs.",
+          "summary": "Research lean: Green Bay Packers · low",
           "details": [
-            "Late kickoff can offer a review checkpoint for earlier successful legs."
-          ]
+            "Supporting case (analysis): Green Bay at home can target a Dallas defense with additional absences.",
+            "Opposing case (analysis): The Packers’ thin defensive line and corners give Dallas an upset path; extra rest favors Dallas.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Dallas Cowboys YES bid 49¢ / ask 50¢ per $1 payout contract.",
+            "Green Bay Packers YES bid 51¢ / ask 52¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "No head-to-head probability adjustment used. Green Bay’s defensive personnel differs from earlier meetings.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "No head-to-head probability adjustment used. Green Bay’s defensive personnel differs from earlier meetings.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "gb",
+        "dal",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     },
     {
       "id": "was-sf",
@@ -670,50 +1202,459 @@
       "home": {
         "id": "san-francisco-49ers",
         "name": "San Francisco 49ers",
-        "record": "5-0",
+        "record": "5-0-0",
         "logo": null
       },
       "insights": [
         {
           "category": "form",
-          "summary": "San Francisco remains undefeated entering the Monday matchup.",
+          "summary": "San Francisco is 5–0; Washington 1–3–1. Washington travels west for Monday night.",
           "details": [
-            "San Francisco remains undefeated entering the Monday matchup."
-          ]
+            "Entering Week 6: Washington Commanders 1-3-1; San Francisco 49ers 5-0-0.",
+            "San Francisco is 5–0; Washington 1–3–1. Washington travels west for Monday night."
+          ],
+          "sourceIds": [
+            "sf",
+            "was",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Additional verified analysis pending.",
+          "summary": "49ers Bosa and Deebo out; Evans questionable; Juszczyk expected back. Washington’s Croskey-Merritt out; Daniels practiced fully.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "49ers Bosa and Deebo out; Evans questionable; Juszczyk expected back. Washington’s Croskey-Merritt out; Daniels practiced fully.",
+            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+          ],
+          "sourceIds": [
+            "sf",
+            "was"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "matchup",
-          "summary": "Sunday-to-Monday separation offers an exit review if earlier legs survive.",
+          "summary": "Research lean: San Francisco 49ers · moderate",
           "details": [
-            "Sunday-to-Monday separation offers an exit review if earlier legs survive."
-          ]
+            "Supporting case (analysis): San Francisco’s continuity and home venue support the lean despite receiver uncertainty.",
+            "Opposing case (analysis): Missing Bosa and Deebo narrows the advantage; Washington’s mobile quarterback creates a different threat.",
+            "Qualitative judgment, not a validated probability or price-edge claim."
+          ],
+          "sourceIds": [
+            "sf",
+            "was"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "market",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Kalshi bid/ask snapshot · 23:00 Cancún",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Washington Commanders YES bid 21¢ / ask 22¢ per $1 payout contract.",
+            "San Francisco 49ers YES bid 78¢ / ask 79¢ per $1 payout contract.",
+            "Retrieved 2026-10-17T23:00:17-05:00. Snapshot only; depth, fees and executable availability not verified. API metadata update time is not a quote timestamp.",
+            "A combo needs its own quote. These game contracts specify $0.50 settlement per team on a tie; NO is not identical to the opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         },
         {
           "category": "history",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Monday’s inactive list is still outstanding. An unbeaten run is not a reason to skip the final injury check.",
           "details": [
-            "No verified detailed assessment published yet."
-          ]
+            "Monday’s inactive list is still outstanding. An unbeaten run is not a reason to skip the final injury check.",
+            "No weather adjustment or calibrated probability is claimed in this refresh."
+          ],
+          "sourceIds": [
+            "sf",
+            "was"
+          ],
+          "asOf": "2026-10-17T23:00:17-05:00"
         }
       ],
-      "status": "scheduled"
+      "status": "scheduled",
+      "sourceIds": [
+        "schedule",
+        "sf",
+        "was",
+        "kalshi"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00",
+      "researchLimitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
     }
   ],
-  "predictions": [],
+  "predictions": [
+    {
+      "gameId": "hou-jax",
+      "kind": "qualitative-research-lean",
+      "winner": "Jacksonville Jaguars",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "Jacksonville has continuity from staying in London and a healthier backfield.",
+      "supportingEvidence": [
+        "Jacksonville has continuity from staying in London and a healthier backfield."
+      ],
+      "opposingEvidence": [
+        "Houston’s pass rush can disrupt protection; Jacksonville is missing a starting corner."
+      ],
+      "sourceIds": [
+        "jax",
+        "hou",
+        "hou-preview"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "ten-ind",
+      "kind": "qualitative-research-lean",
+      "winner": "Indianapolis Colts",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Moderate (qualitative)",
+      "summary": "Indianapolis has a home-field and established rushing-matchup case.",
+      "supportingEvidence": [
+        "Indianapolis has a home-field and established rushing-matchup case."
+      ],
+      "opposingEvidence": [
+        "Taylor has gone 12 games without 100 rushing yards; prior success may not carry over against new coaches."
+      ],
+      "sourceIds": [
+        "ten",
+        "ind"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "car-phi",
+      "kind": "qualitative-research-lean",
+      "winner": "Carolina Panthers",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "Carolina faces an offense missing its starting quarterback and lead runner.",
+      "supportingEvidence": [
+        "Carolina faces an offense missing its starting quarterback and lead runner."
+      ],
+      "opposingEvidence": [
+        "Philadelphia retains receiving weapons; Carolina allows 156.5 rushing yards per game."
+      ],
+      "sourceIds": [
+        "phi",
+        "phi-preview"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "pit-tb",
+      "kind": "qualitative-research-lean",
+      "winner": "Pittsburgh Steelers",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "Pittsburgh can pressure an inexperienced starting quarterback.",
+      "supportingEvidence": [
+        "Pittsburgh can pressure an inexperienced starting quarterback."
+      ],
+      "opposingEvidence": [
+        "Daniels already won at Dallas; Pittsburgh’s receiving depth is reduced."
+      ],
+      "sourceIds": [
+        "pit",
+        "tb"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "bal-cle",
+      "kind": "qualitative-research-lean",
+      "winner": "Baltimore Ravens",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "Baltimore’s returning pass rusher can exploit Cleveland’s protection problems.",
+      "supportingEvidence": [
+        "Baltimore’s returning pass rusher can exploit Cleveland’s protection problems."
+      ],
+      "opposingEvidence": [
+        "A backup quarterback and unsettled interior line reduce Baltimore’s margin for error."
+      ],
+      "sourceIds": [
+        "bal"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "no-nyg",
+      "kind": "qualitative-research-lean",
+      "winner": "New York Giants",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "The Giants have the stronger early record and home venue.",
+      "supportingEvidence": [
+        "The Giants have the stronger early record and home venue."
+      ],
+      "opposingEvidence": [
+        "The record-based case is thin without opponent-adjusted efficiency; missing defensive backs create risk."
+      ],
+      "sourceIds": [
+        "nyg",
+        "no"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "chi-atl",
+      "kind": "qualitative-research-lean",
+      "winner": "Chicago Bears",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low / conditional on Williams (qualitative)",
+      "summary": "A Williams return could improve Chicago’s passing threat against Atlanta’s depleted corners.",
+      "supportingEvidence": [
+        "A Williams return could improve Chicago’s passing threat against Atlanta’s depleted corners."
+      ],
+      "opposingEvidence": [
+        "Returning from a hamstring injury is uncertain; Atlanta’s run defense ranks fourth."
+      ],
+      "sourceIds": [
+        "chi",
+        "chi-qb"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "nyj-ne",
+      "kind": "qualitative-research-lean",
+      "winner": "New England Patriots",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Moderate (qualitative)",
+      "summary": "New England has the more productive offense and home venue.",
+      "supportingEvidence": [
+        "New England has the more productive offense and home venue."
+      ],
+      "opposingEvidence": [
+        "The Jets’ fourth-ranked defense can keep the game close; offensive rank alone is not an efficiency model."
+      ],
+      "sourceIds": [
+        "ne",
+        "ne-injury",
+        "ne-roster"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "ari-lar",
+      "kind": "qualitative-research-lean",
+      "winner": "Los Angeles Rams",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "The home Rams face an opponent missing an important rushing option.",
+      "supportingEvidence": [
+        "The home Rams face an opponent missing an important rushing option."
+      ],
+      "opposingEvidence": [
+        "Questionable defensive backs and a short week weaken a simple favorite-based argument."
+      ],
+      "sourceIds": [
+        "lar"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "lac-kc",
+      "kind": "qualitative-research-lean",
+      "winner": "Kansas City Chiefs",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Moderate (qualitative)",
+      "summary": "Kansas City combines extra rest with a clear protection matchup against Los Angeles.",
+      "supportingEvidence": [
+        "Kansas City combines extra rest with a clear protection matchup against Los Angeles."
+      ],
+      "opposingEvidence": [
+        "Herbert remains dangerous when protected; Kansas City also has offensive absences."
+      ],
+      "sourceIds": [
+        "kc"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "buf-lv",
+      "kind": "qualitative-research-lean",
+      "winner": "Buffalo Bills",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Moderate (qualitative)",
+      "summary": "Buffalo’s 158 rushing yards per game faces a defense allowing 140.6.",
+      "supportingEvidence": [
+        "Buffalo’s 158 rushing yards per game faces a defense allowing 140.6."
+      ],
+      "opposingEvidence": [
+        "Buffalo allows 280.4 passing yards per game, offering Las Vegas a credible counter-path."
+      ],
+      "sourceIds": [
+        "buf",
+        "lv"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "dal-gb",
+      "kind": "qualitative-research-lean",
+      "winner": "Green Bay Packers",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (qualitative)",
+      "summary": "Green Bay at home can target a Dallas defense with additional absences.",
+      "supportingEvidence": [
+        "Green Bay at home can target a Dallas defense with additional absences."
+      ],
+      "opposingEvidence": [
+        "The Packers’ thin defensive line and corners give Dallas an upset path; extra rest favors Dallas."
+      ],
+      "sourceIds": [
+        "gb",
+        "dal"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    },
+    {
+      "gameId": "was-sf",
+      "kind": "qualitative-research-lean",
+      "winner": "San Francisco 49ers",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-10-17T23:00:17-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Moderate (qualitative)",
+      "summary": "San Francisco’s continuity and home venue support the lean despite receiver uncertainty.",
+      "supportingEvidence": [
+        "San Francisco’s continuity and home venue support the lean despite receiver uncertainty."
+      ],
+      "opposingEvidence": [
+        "Missing Bosa and Deebo narrows the advantage; Washington’s mobile quarterback creates a different threat."
+      ],
+      "sourceIds": [
+        "sf",
+        "was"
+      ],
+      "limitations": [
+        "Final game-day inactives pending",
+        "Weather not independently verified",
+        "Opponent-adjusted efficiency and calibrated win probability unavailable"
+      ]
+    }
+  ],
   "comboCandidates": [
     {
       "id": "A1",
@@ -732,14 +1673,34 @@
         "stake": 2,
         "grossPayout": 3.95,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "no-nyg",
+            "researchWinner": "New York Giants",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "nyg",
+              "no"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. New York Giants lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "A2",
       "strategy": "A",
-      "type": "Two-Game Combo \u2014 Early Pick + Later Favorite",
+      "type": "Two-Game Combo — Early Pick + Later Favorite",
       "title": "New York Giants and Kansas City Chiefs to win",
       "legs": [
         {
@@ -759,9 +1720,37 @@
         "stake": 2,
         "grossPayout": 5,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "no-nyg",
+            "researchWinner": "New York Giants",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "nyg",
+              "no"
+            ]
+          },
+          {
+            "gameId": "lac-kc",
+            "researchWinner": "Kansas City Chiefs",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "kc"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. New York Giants lean (Low (qualitative)); Kansas City Chiefs lean (Moderate (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "A3",
@@ -780,14 +1769,34 @@
         "stake": 2,
         "grossPayout": 3.79,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "car-phi",
+            "researchWinner": "Carolina Panthers",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "phi",
+              "phi-preview"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Carolina Panthers lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "A4",
       "strategy": "A",
-      "type": "Two-Game Combo \u2014 Early Pick + Later Favorite",
+      "type": "Two-Game Combo — Early Pick + Later Favorite",
       "title": "Carolina Panthers and Los Angeles Rams to win",
       "legs": [
         {
@@ -807,14 +1816,42 @@
         "stake": 2,
         "grossPayout": 4.33,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "car-phi",
+            "researchWinner": "Carolina Panthers",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "phi",
+              "phi-preview"
+            ]
+          },
+          {
+            "gameId": "ari-lar",
+            "researchWinner": "Los Angeles Rams",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "lar"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Carolina Panthers lean (Low (qualitative)); Los Angeles Rams lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "B1",
       "strategy": "B",
-      "type": "Two-Game Combo \u2014 Simultaneous Favorites",
+      "type": "Two-Game Combo — Simultaneous Favorites",
       "title": "New England Patriots and Indianapolis Colts to win",
       "legs": [
         {
@@ -834,14 +1871,44 @@
         "stake": 2,
         "grossPayout": 3.46,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "nyj-ne",
+            "researchWinner": "New England Patriots",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ne",
+              "ne-injury",
+              "ne-roster"
+            ]
+          },
+          {
+            "gameId": "ten-ind",
+            "researchWinner": "Indianapolis Colts",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ten",
+              "ind"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. New England Patriots lean (Moderate (qualitative)); Indianapolis Colts lean (Moderate (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "B2",
       "strategy": "B",
-      "type": "Three-Game Combo \u2014 Simultaneous Favorites",
+      "type": "Three-Game Combo — Simultaneous Favorites",
       "title": "Patriots, Colts and Ravens to win",
       "legs": [
         {
@@ -867,14 +1934,52 @@
         "stake": 2,
         "grossPayout": 4.94,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "nyj-ne",
+            "researchWinner": "New England Patriots",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ne",
+              "ne-injury",
+              "ne-roster"
+            ]
+          },
+          {
+            "gameId": "ten-ind",
+            "researchWinner": "Indianapolis Colts",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ten",
+              "ind"
+            ]
+          },
+          {
+            "gameId": "bal-cle",
+            "researchWinner": "Baltimore Ravens",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "bal"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. New England Patriots lean (Moderate (qualitative)); Indianapolis Colts lean (Moderate (qualitative)); Baltimore Ravens lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "B3",
       "strategy": "B",
-      "type": "Two-Game Combo \u2014 Competitive Matchups",
+      "type": "Two-Game Combo — Competitive Matchups",
       "title": "Giants and Panthers to win",
       "legs": [
         {
@@ -894,14 +1999,43 @@
         "stake": 2,
         "grossPayout": 7.68,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "no-nyg",
+            "researchWinner": "New York Giants",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "nyg",
+              "no"
+            ]
+          },
+          {
+            "gameId": "car-phi",
+            "researchWinner": "Carolina Panthers",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "phi",
+              "phi-preview"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. New York Giants lean (Low (qualitative)); Carolina Panthers lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "C1",
       "strategy": "C",
-      "type": "Three-Game Combo \u2014 Multiple Kickoff Windows",
+      "type": "Three-Game Combo — Multiple Kickoff Windows",
       "title": "Jaguars, Chiefs and Packers to win",
       "legs": [
         {
@@ -927,14 +2061,52 @@
         "stake": 2,
         "grossPayout": 8.04,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "hou-jax",
+            "researchWinner": "Jacksonville Jaguars",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "jax",
+              "hou",
+              "hou-preview"
+            ]
+          },
+          {
+            "gameId": "lac-kc",
+            "researchWinner": "Kansas City Chiefs",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "kc"
+            ]
+          },
+          {
+            "gameId": "dal-gb",
+            "researchWinner": "Green Bay Packers",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "gb",
+              "dal"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Jacksonville Jaguars lean (Low (qualitative)); Kansas City Chiefs lean (Moderate (qualitative)); Green Bay Packers lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "C2",
       "strategy": "C",
-      "type": "Three-Game Combo \u2014 Midday and Afternoon",
+      "type": "Three-Game Combo — Midday and Afternoon",
       "title": "Patriots, Colts and Rams to win",
       "legs": [
         {
@@ -960,14 +2132,52 @@
         "stake": 2,
         "grossPayout": 3.92,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "nyj-ne",
+            "researchWinner": "New England Patriots",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ne",
+              "ne-injury",
+              "ne-roster"
+            ]
+          },
+          {
+            "gameId": "ten-ind",
+            "researchWinner": "Indianapolis Colts",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ten",
+              "ind"
+            ]
+          },
+          {
+            "gameId": "ari-lar",
+            "researchWinner": "Los Angeles Rams",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "lar"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. New England Patriots lean (Moderate (qualitative)); Indianapolis Colts lean (Moderate (qualitative)); Los Angeles Rams lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "C3",
       "strategy": "C",
-      "type": "Four-Game Combo \u2014 Four Kickoff Windows",
+      "type": "Four-Game Combo — Four Kickoff Windows",
       "title": "Jaguars, Ravens, Bills and Packers to win",
       "legs": [
         {
@@ -999,14 +2209,61 @@
         "stake": 2,
         "grossPayout": 13.46,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "hou-jax",
+            "researchWinner": "Jacksonville Jaguars",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "jax",
+              "hou",
+              "hou-preview"
+            ]
+          },
+          {
+            "gameId": "bal-cle",
+            "researchWinner": "Baltimore Ravens",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "bal"
+            ]
+          },
+          {
+            "gameId": "buf-lv",
+            "researchWinner": "Buffalo Bills",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "buf",
+              "lv"
+            ]
+          },
+          {
+            "gameId": "dal-gb",
+            "researchWinner": "Green Bay Packers",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "gb",
+              "dal"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Jacksonville Jaguars lean (Low (qualitative)); Baltimore Ravens lean (Low (qualitative)); Buffalo Bills lean (Moderate (qualitative)); Green Bay Packers lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "D1",
       "strategy": "D",
-      "type": "Single Game Bet \u2014 Undefeated Team",
+      "type": "Single Game Bet — Undefeated Team",
       "title": "Kansas City Chiefs to win",
       "legs": [
         {
@@ -1020,14 +2277,33 @@
         "stake": 2,
         "grossPayout": 2.49,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "lac-kc",
+            "researchWinner": "Kansas City Chiefs",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "kc"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Kansas City Chiefs lean (Moderate (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "D2",
       "strategy": "D",
-      "type": "Two-Game Combo \u2014 Undefeated Teams",
+      "type": "Two-Game Combo — Undefeated Teams",
       "title": "Chiefs and 49ers to win",
       "legs": [
         {
@@ -1047,14 +2323,42 @@
         "stake": 2,
         "grossPayout": 3.18,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "lac-kc",
+            "researchWinner": "Kansas City Chiefs",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "kc"
+            ]
+          },
+          {
+            "gameId": "was-sf",
+            "researchWinner": "San Francisco 49ers",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "sf",
+              "was"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Kansas City Chiefs lean (Moderate (qualitative)); San Francisco 49ers lean (Moderate (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "E1",
       "strategy": "E",
-      "type": "Two-Game Combo \u2014 Winless Teams Lose",
+      "type": "Two-Game Combo — Winless Teams Lose",
       "title": "Tennessee Titans NO and Los Angeles Chargers NO",
       "legs": [
         {
@@ -1074,14 +2378,42 @@
         "stake": 2,
         "grossPayout": 3.31,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "ten-ind",
+            "researchWinner": "Indianapolis Colts",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ten",
+              "ind"
+            ]
+          },
+          {
+            "gameId": "lac-kc",
+            "researchWinner": "Kansas City Chiefs",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "kc"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Indianapolis Colts lean (Moderate (qualitative)); Kansas City Chiefs lean (Moderate (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "E2",
       "strategy": "E",
-      "type": "Three-Game Combo \u2014 Struggling Teams Lose",
+      "type": "Three-Game Combo — Struggling Teams Lose",
       "title": "Titans NO, Cardinals NO and Chargers NO",
       "legs": [
         {
@@ -1107,14 +2439,50 @@
         "stake": 2,
         "grossPayout": 3.76,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "ten-ind",
+            "researchWinner": "Indianapolis Colts",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "ten",
+              "ind"
+            ]
+          },
+          {
+            "gameId": "ari-lar",
+            "researchWinner": "Los Angeles Rams",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "lar"
+            ]
+          },
+          {
+            "gameId": "lac-kc",
+            "researchWinner": "Kansas City Chiefs",
+            "confidence": "Moderate (qualitative)",
+            "sourceIds": [
+              "kc"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Indianapolis Colts lean (Moderate (qualitative)); Los Angeles Rams lean (Low (qualitative)); Kansas City Chiefs lean (Moderate (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     },
     {
       "id": "E3",
       "strategy": "E",
-      "type": "Two-Game Combo \u2014 One-Win Teams Lose",
+      "type": "Two-Game Combo — One-Win Teams Lose",
       "title": "Texans NO and Cardinals NO",
       "legs": [
         {
@@ -1134,19 +2502,693 @@
         "stake": 2,
         "grossPayout": 4.89,
         "source": "User supplied October 15, 2026",
-        "executableNow": false
+        "executableNow": false,
+        "capturedAt": "2026-10-15"
       },
-      "status": "pricing-research"
+      "status": "historical-quote-research-review",
+      "researchReviewedAt": "2026-10-17T23:00:17-05:00",
+      "researchVersion": "2026-10-17-refresh-2",
+      "researchReview": {
+        "legAssessments": [
+          {
+            "gameId": "hou-jax",
+            "researchWinner": "Jacksonville Jaguars",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "jax",
+              "hou",
+              "hou-preview"
+            ]
+          },
+          {
+            "gameId": "ari-lar",
+            "researchWinner": "Los Angeles Rams",
+            "confidence": "Low (qualitative)",
+            "sourceIds": [
+              "lar"
+            ]
+          }
+        ],
+        "summary": "Research reviewed 2026-10-17. Jacksonville Jaguars lean (Low (qualitative)); Los Angeles Rams lean (Low (qualitative)).",
+        "pricing": "October 15 historical payout only. Obtain a fresh combo quote and fees; no current edge or expected return validated.",
+        "sharedRisk": "Repeated legs across tickets share the same failure point. Compare the combined portfolio, not each ticket in isolation.",
+        "settlement": "Binary win/loss scenario tables omit tie/void contract outcomes. NO-leg settlement must be checked separately."
+      }
     }
   ],
   "sources": [
     {
-      "title": "NFL Week 6 official injury report",
-      "url": "https://amp.nfl.com/news/nfl-week-6-injury-report-2026-season"
+      "id": "schedule",
+      "title": "NFL Week 6 schedule and records",
+      "url": "https://www.nfl.com/news/nfl-week-6-injury-report-2026-season",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
     },
     {
-      "title": "NFL Week 6 injuries",
-      "url": "https://www.nfl.com/injuries/league/2026/reg6"
+      "id": "hou",
+      "title": "Texans Week 6 injury report",
+      "url": "https://www.houstontexans.com/news/week-6-injury-report-texans-at-jaguars",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "jax",
+      "title": "Jaguars Friday availability update",
+      "url": "https://www.jaguars.com/news/friday-quick-hits-murray-ready-matiscik-brown-out-for-texans-vs-jaguars",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "hou-preview",
+      "title": "Texans London preview",
+      "url": "https://www.houstontexans.com/news/texans-at-jaguars-preview-houston-brings-its-pass-rush-to-wembley",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "ten",
+      "title": "Titans final injury report",
+      "url": "https://www.tennesseetitans.com/news/week-6-injury-report-titans-at-colts",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "ind",
+      "title": "Colts rushing matchup preview",
+      "url": "https://www.colts.com/news/colts-week-6-preview-can-jonathan-taylor-get-going-again-vs-winless-titans",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "phi",
+      "title": "Eagles final injury report",
+      "url": "https://www.philadelphiaeagles.com/news/panthers-vs-eagles-injury-report-2026-nfl-week-6-saquon-barkley-devonta-smith",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "phi-preview",
+      "title": "Eagles Saturday matchup preview",
+      "url": "https://www.philadelphiaeagles.com/news/panthers-vs-eagles-game-preview-6-storylines-to-follow-2026-week-6-nfl-regular-season-crucial-catch-tanner-mckee-bryce-young",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "pit",
+      "title": "Steelers Saturday roster and injury changes",
+      "url": "https://www.steelers.com/news/steelers-make-roster-moves-ahead-of-buccaneers-game",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "tb",
+      "title": "Buccaneers quarterback update",
+      "url": "https://www.buccaneers.com/news/october-2026-updates",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "bal",
+      "title": "Ravens and Browns availability",
+      "url": "https://www.baltimoreravens.com/news/lamar-jackson-injury-report-ravens-browns-sidelined-matt-hibner-broderick-washington",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "nyg",
+      "title": "Giants and Saints injury report",
+      "url": "https://www.giants.com/news/giants-vs-saints-week-6-injury-report-abdul-carter-jermaine-eluemunor-dnp",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "no",
+      "title": "Saints Week 6 preview",
+      "url": "https://www.neworleanssaints.com/news/new-york-giants-vs-new-orleans-saints-game-preview-2026-nfl-season-week-6-series-history-stats-connections",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "chi",
+      "title": "Bears Saturday matchup preview",
+      "url": "https://www.chicagobears.com/news/game-preview-bears-at-falcons-2026-week-6",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "chi-qb",
+      "title": "Saturday report: Williams expected to start",
+      "url": "https://www.nfl.com/news/nfl-network-bears-qb-caleb-williams-hamstring-expected-to-start-sunday-vs-falcons",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "ne",
+      "title": "Patriots matchup statistics",
+      "url": "https://www.patriots.com/news/game-preview-patriots-vs-jets-nfl-week-6",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "ne-injury",
+      "title": "Patriots and Jets final injury report",
+      "url": "https://www.patriots.com/news/week-6-injury-report-patriots-vs-jets",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "ne-roster",
+      "title": "Patriots Saturday Brown activation",
+      "url": "https://www.patriots.com/news/roster-analysis-patriots-activate-wr-a-j-brown-for-sunday-s-game-vs-the-jets-in-week-6",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "lar",
+      "title": "Rams and Cardinals final injury report",
+      "url": "https://www.therams.com/news/rams-injury-report-week-6-2026-vs-cardinals-trent-mcduffie-and-kam-curl-questionable",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "kc",
+      "title": "Chiefs Saturday matchup preview",
+      "url": "https://www.chiefs.com/news/five-things-to-watch-on-sunday-chargers-vs-chiefs-x3265",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "buf",
+      "title": "Bills final injury report",
+      "url": "https://www.buffalobills.com/news/buffalo-bills-injury-report-vs-raiders-week-6",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "lv",
+      "title": "Raiders matchup statistics",
+      "url": "https://www.raiders.com/news/game-preview-las-vegas-raiders-vs-buffalo-bills-nfl-week-6-allegiant-stadium-101826",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "gb",
+      "title": "Packers final injury report",
+      "url": "https://www.packers.com/news/packers-list-five-questionable-rule-out-four-vs-cowboys-week-6-injury-report-2026",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "dal",
+      "title": "Cowboys Saturday injury changes",
+      "url": "https://www.dallascowboys.com/news/updates-october-2026",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "sf",
+      "title": "49ers Saturday final injury report",
+      "url": "https://www.49ers.com/news/kyle-juszczyk-available-deebo-ruled-out-vs-commanders-in-week-6-wasvssf",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "was",
+      "title": "Commanders Saturday final injury report",
+      "url": "https://www.commanders.com/news/game-status-commanders-49ers-week-6",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "den",
+      "title": "Broncos completed Thursday game",
+      "url": "https://www.denverbroncos.com/",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "kalshi",
+      "title": "Kalshi public game-market snapshot",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXNFLGAME&status=open&limit=1000",
+      "retrievedAt": "2026-10-17T23:00:17-05:00"
     }
-  ]
+  ],
+  "marketSnapshots": [
+    {
+      "gameId": "hou-jax",
+      "team": "Houston Texans",
+      "ticker": "KXNFLGAME-26OCT18HOUJAC-HOU",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.43,
+      "yesAsk": 0.44,
+      "noBid": 0.56,
+      "noAsk": 0.57,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-HOU",
+      "rulesPrimary": "If Houston wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "hou-jax",
+      "team": "Jacksonville Jaguars",
+      "ticker": "KXNFLGAME-26OCT18HOUJAC-JAC",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.56,
+      "yesAsk": 0.57,
+      "noBid": 0.43,
+      "noAsk": 0.44,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-JAC",
+      "rulesPrimary": "If Jacksonville wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "ten-ind",
+      "team": "Tennessee Titans",
+      "ticker": "KXNFLGAME-26OCT18TENIND-TEN",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.25,
+      "yesAsk": 0.26,
+      "noBid": 0.74,
+      "noAsk": 0.75,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-TEN",
+      "rulesPrimary": "If Tennessee wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "ten-ind",
+      "team": "Indianapolis Colts",
+      "ticker": "KXNFLGAME-26OCT18TENIND-IND",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.74,
+      "yesAsk": 0.75,
+      "noBid": 0.25,
+      "noAsk": 0.26,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-IND",
+      "rulesPrimary": "If Indianapolis wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "car-phi",
+      "team": "Carolina Panthers",
+      "ticker": "KXNFLGAME-26OCT18CARPHI-CAR",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.61,
+      "yesAsk": 0.62,
+      "noBid": 0.38,
+      "noAsk": 0.39,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-CAR",
+      "rulesPrimary": "If Carolina wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "car-phi",
+      "team": "Philadelphia Eagles",
+      "ticker": "KXNFLGAME-26OCT18CARPHI-PHI",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.39,
+      "yesAsk": 0.4,
+      "noBid": 0.6,
+      "noAsk": 0.61,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-PHI",
+      "rulesPrimary": "If Philadelphia wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "pit-tb",
+      "team": "Pittsburgh Steelers",
+      "ticker": "KXNFLGAME-26OCT18PITTB-PIT",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.56,
+      "yesAsk": 0.57,
+      "noBid": 0.43,
+      "noAsk": 0.44,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-PIT",
+      "rulesPrimary": "If Pittsburgh wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "pit-tb",
+      "team": "Tampa Bay Buccaneers",
+      "ticker": "KXNFLGAME-26OCT18PITTB-TB",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.43,
+      "yesAsk": 0.44,
+      "noBid": 0.56,
+      "noAsk": 0.57,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-TB",
+      "rulesPrimary": "If Tampa Bay wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "bal-cle",
+      "team": "Baltimore Ravens",
+      "ticker": "KXNFLGAME-26OCT18BALCLE-BAL",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.61,
+      "yesAsk": 0.62,
+      "noBid": 0.38,
+      "noAsk": 0.39,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-BAL",
+      "rulesPrimary": "If Baltimore wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "bal-cle",
+      "team": "Cleveland Browns",
+      "ticker": "KXNFLGAME-26OCT18BALCLE-CLE",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.38,
+      "yesAsk": 0.39,
+      "noBid": 0.61,
+      "noAsk": 0.62,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-CLE",
+      "rulesPrimary": "If Cleveland wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "no-nyg",
+      "team": "New Orleans Saints",
+      "ticker": "KXNFLGAME-26OCT18NONYG-NO",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.49,
+      "yesAsk": 0.5,
+      "noBid": 0.5,
+      "noAsk": 0.51,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NO",
+      "rulesPrimary": "If New Orleans wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "no-nyg",
+      "team": "New York Giants",
+      "ticker": "KXNFLGAME-26OCT18NONYG-NYG",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.5,
+      "yesAsk": 0.51,
+      "noBid": 0.49,
+      "noAsk": 0.5,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NYG",
+      "rulesPrimary": "If New York G wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "chi-atl",
+      "team": "Chicago Bears",
+      "ticker": "KXNFLGAME-26OCT18CHIATL-CHI",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.51,
+      "yesAsk": 0.52,
+      "noBid": 0.48,
+      "noAsk": 0.49,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-CHI",
+      "rulesPrimary": "If Chicago wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "chi-atl",
+      "team": "Atlanta Falcons",
+      "ticker": "KXNFLGAME-26OCT18CHIATL-ATL",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.49,
+      "yesAsk": 0.5,
+      "noBid": 0.5,
+      "noAsk": 0.51,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-ATL",
+      "rulesPrimary": "If Atlanta wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "nyj-ne",
+      "team": "New York Jets",
+      "ticker": "KXNFLGAME-26OCT18NYJNE-NYJ",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.24,
+      "yesAsk": 0.25,
+      "noBid": 0.75,
+      "noAsk": 0.76,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NYJ",
+      "rulesPrimary": "If New York J wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "nyj-ne",
+      "team": "New England Patriots",
+      "ticker": "KXNFLGAME-26OCT18NYJNE-NE",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:05:00.760741Z",
+      "yesBid": 0.75,
+      "yesAsk": 0.76,
+      "noBid": 0.24,
+      "noAsk": 0.25,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NE",
+      "rulesPrimary": "If New England wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "ari-lar",
+      "team": "Arizona Cardinals",
+      "ticker": "KXNFLGAME-26OCT18ARILAR-ARI",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.12,
+      "yesAsk": 0.13,
+      "noBid": 0.87,
+      "noAsk": 0.88,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-ARI",
+      "rulesPrimary": "If Arizona wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "ari-lar",
+      "team": "Los Angeles Rams",
+      "ticker": "KXNFLGAME-26OCT18ARILAR-LAR",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.87,
+      "yesAsk": 0.88,
+      "noBid": 0.12,
+      "noAsk": 0.13,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-LAR",
+      "rulesPrimary": "If Los Angeles R wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "lac-kc",
+      "team": "Los Angeles Chargers",
+      "ticker": "KXNFLGAME-26OCT18LACKC-LAC",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.21,
+      "yesAsk": 0.22,
+      "noBid": 0.78,
+      "noAsk": 0.79,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-LAC",
+      "rulesPrimary": "If Los Angeles C wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "lac-kc",
+      "team": "Kansas City Chiefs",
+      "ticker": "KXNFLGAME-26OCT18LACKC-KC",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.78,
+      "yesAsk": 0.79,
+      "noBid": 0.21,
+      "noAsk": 0.22,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-KC",
+      "rulesPrimary": "If Kansas City wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "buf-lv",
+      "team": "Buffalo Bills",
+      "ticker": "KXNFLGAME-26OCT18BUFLV-BUF",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.67,
+      "yesAsk": 0.68,
+      "noBid": 0.32,
+      "noAsk": 0.33,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-BUF",
+      "rulesPrimary": "If Buffalo wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "buf-lv",
+      "team": "Las Vegas Raiders",
+      "ticker": "KXNFLGAME-26OCT18BUFLV-LV",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.32,
+      "yesAsk": 0.33,
+      "noBid": 0.67,
+      "noAsk": 0.68,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-LV",
+      "rulesPrimary": "If Las Vegas wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "dal-gb",
+      "team": "Dallas Cowboys",
+      "ticker": "KXNFLGAME-26OCT18DALGB-DAL",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.49,
+      "yesAsk": 0.5,
+      "noBid": 0.5,
+      "noAsk": 0.51,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18DALGB-DAL",
+      "rulesPrimary": "If Dallas wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "dal-gb",
+      "team": "Green Bay Packers",
+      "ticker": "KXNFLGAME-26OCT18DALGB-GB",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.51,
+      "yesAsk": 0.52,
+      "noBid": 0.48,
+      "noAsk": 0.49,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18DALGB-GB",
+      "rulesPrimary": "If Green Bay wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "was-sf",
+      "team": "Washington Commanders",
+      "ticker": "KXNFLGAME-26OCT19WASSF-WAS",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.21,
+      "yesAsk": 0.22,
+      "noBid": 0.78,
+      "noAsk": 0.79,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-WAS",
+      "rulesPrimary": "If Washington wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "was-sf",
+      "team": "San Francisco 49ers",
+      "ticker": "KXNFLGAME-26OCT19WASSF-SF",
+      "retrievedAt": "2026-10-17T23:00:17-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.78,
+      "yesAsk": 0.79,
+      "noBid": 0.21,
+      "noAsk": 0.22,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-SF",
+      "rulesPrimary": "If San Francisco wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    }
+  ],
+  "coverage": {
+    "totalWeekGames": 14,
+    "upcomingGames": 13,
+    "completedGames": 1,
+    "byeTeams": [
+      "Cincinnati Bengals",
+      "Detroit Lions",
+      "Miami Dolphins",
+      "Minnesota Vikings"
+    ],
+    "scope": "13 upcoming games in games; Thursday result in completedGames. No retrospective prediction."
+  },
+  "completedGames": [
+    {
+      "id": "sea-den",
+      "kickoff": "2026-10-15T19:15:00-05:00",
+      "away": {
+        "name": "Seattle Seahawks",
+        "score": 14
+      },
+      "home": {
+        "name": "Denver Broncos",
+        "score": 17
+      },
+      "status": "final-ot",
+      "sourceIds": [
+        "den"
+      ],
+      "verifiedAt": "2026-10-17T23:00:17-05:00"
+    }
+  ],
+  "researchQuality": {
+    "finalInactivesVerified": false,
+    "weatherVerified": false,
+    "calibratedForecasts": 0,
+    "qualitativeLeans": 13,
+    "marketSnapshotCount": 26,
+    "comboQuotesRefreshed": false,
+    "marketResponseDate": "Sun, 18 Oct 2026 04:00:11 GMT",
+    "nextReview": "Game-day inactives, weather and executable order ticket before purchase; Monday status recheck separately."
+  }
 }
