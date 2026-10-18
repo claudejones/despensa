@@ -40,3 +40,12 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Live browser suite passed all four mobile widths. Ten financial fixtures passed against the published app. Full live lifecycle, clipboard, reload persistence and backup round trip passed in isolated test browser storage.
 - Live index.html, app.js, features.js, app.css, Week 6 JSON, bundled Lucide and a team-logo asset matched the tested files byte-for-byte. Visible header and Settings show v1.0.
 - No private user tickets or selections were uploaded. Source and physical-device limitations above still apply.
+
+## v1.1 contextual review update
+
+- Plan Detail back navigation has a separate padded sticky bar immediately below the measured header, remaining accessible through long ticket lists.
+- Games and AI Picks offer contextual team selections with full names, records, logos and kickoff information. Adding saves a single draft without leaving or collapsing the research view; Office Pool picks remain independent.
+- Combo candidates likewise save in place; duplicate draft additions are disabled and the Kalshi tab displays the selected week's review count.
+- Kalshi Build supports selecting draft singles to create one combo, rejects multiple selections from the same game, and restores the original singles on request. Purchased tickets are untouched. A combined quote is never inferred; new drafts require pricing.
+- Contextual review, duplicate prevention, persistence, reversible combination and sticky positioning passed at 320/390/430px. Existing mobile and lifecycle regression suites passed. Screenshots inspected directly.
+- Publication status: development validation complete; release checks run before merge.

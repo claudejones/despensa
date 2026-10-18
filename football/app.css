@@ -611,3 +611,111 @@ a {
   display: block;
   margin-top: 5px;
 }
+.plan-backbar {
+  position: sticky;
+  top: var(--header-height, 100px);
+  z-index: 7;
+  background: var(--page);
+  padding: 10px 0 14px;
+  margin: 0 0 2px;
+}
+.plan-backbar button {
+  margin: 0;
+  min-height: 44px;
+}
+.context-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  margin: 8px 0;
+  min-height: 62px;
+}
+.context-choice img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+.context-choice > span:first-of-type {
+  flex: 1;
+  min-width: 0;
+}
+.context-choice b,
+.context-choice small {
+  display: block;
+}
+.context-choice b {
+  font-size: 13px;
+}
+.review-choice-state {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal);
+}
+.review-feedback {
+  font-size: 12px;
+  color: var(--teal);
+  display: grid;
+  gap: 8px;
+}
+.review-feedback:empty {
+  display: none;
+}
+.review-feedback button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.review-feedback svg {
+  width: 16px;
+  height: 16px;
+}
+nav [data-tab="kalshi"] {
+  position: relative;
+}
+.review-count {
+  position: absolute;
+  top: 0;
+  left: calc(50% + 8px);
+  background: var(--teal);
+  color: white;
+  font-size: 9px;
+  min-width: 16px;
+  border-radius: 10px;
+  padding: 1px 4px;
+}
+.review-combinebar {
+  position: sticky;
+  top: var(--header-height, 100px);
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--selected);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 0 0 14px;
+}
+.review-combinebar small {
+  display: block;
+}
+.draft-combine-choice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 12px 0;
+  padding: 8px;
+  background: var(--soft);
+  border-radius: 8px;
+  min-height: 44px;
+}
+.draft-combine-choice input {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  accent-color: var(--teal);
+}
