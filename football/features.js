@@ -152,7 +152,7 @@ function ticketView(t) {
     .sort((a,b) => new Date(data?.games.find(g=>g.id===a.gameId)?.kickoff || a.kickoff || 0) - new Date(data?.games.find(g=>g.id===b.gameId)?.kickoff || b.kickoff || 0))
     .map((l) => {
       let g = data?.games.find((g) => g.id === l.gameId);
-      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${l.side === "YES" ? "To win" : l.side === "NO" ? "Not to win" : esc(l.side)}${l.source ? " · " + esc(l.source) : ""} · ${l.marketPercent == null ? "Quote not supplied" : "Historical / entered Kalshi " + esc(l.marketPercent) + "%"}</small></div>`;
+      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${l.side === "YES" ? "To win" : l.side === "NO" ? "Not to win" : esc(l.side)}${l.source ? " · " + esc(l.source) : ""}</small>${selectionMarketBlock(l,{week:weekOf(t),season:t.season})}${l.marketPercent==null?'':`<small class="entered-leg-quote">Saved / entered leg quote: ${esc(l.marketPercent)}%</small>`}</div>`;
     })
     .join("");
   const be =

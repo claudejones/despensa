@@ -14,7 +14,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  }
  await click('[data-briefing=games]');await click('[data-briefing-go=games]');assert.equal(await page.locator('.game-research').count(),13);
  assert.equal(await page.locator('.game-research>.market-strip').count(),13);
- const card=page.locator('.game-research').first();await card.locator('[data-research=injuries]>summary').click();
+ const card=page.locator('.game-research').first();await card.locator('[data-research-group]>summary').click();await card.locator('[data-research=injuries]>summary').click();
  assert.match(await card.locator('.player-row').first().innerText(),/David Montgomery[\s\S]*Running back \(RB\)[\s\S]*Out/);
  await card.locator('[data-research=injuries]').scrollIntoViewIfNeeded();await page.screenshot({path:`football/test-artifacts/${width}-player-availability.png`});
  await card.locator('[data-research=form]>summary').click();assert.ok(await card.locator('[data-research=injuries]').getAttribute('open')!==null);

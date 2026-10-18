@@ -4,9 +4,11 @@ function gameQuotes(g) { return (data.marketSnapshots || []).filter(q => q.gameI
 function quotePercent(v) { return Number.isFinite(v) ? (v * 100).toFixed(0) + '%' : 'Unavailable'; }
 function marketLeader(g) { const qs=gameQuotes(g).filter(q=>Number.isFinite(q.yesAsk)).sort((a,b)=>b.yesAsk-a.yesAsk); return qs.length===2 && qs[0].yesAsk!==qs[1].yesAsk ? qs[0].team : null; }
 function marketStrip(g) {
-  const qs=gameQuotes(g);if(!qs.length)return '';
-  return `<div class="market-strip"><div class="row between"><span><i data-lucide="chart-no-axes-combined"></i> Kalshi market</span><small>YES ask snapshot</small></div><div class="market-sides">${[g.away,g.home].map(t=>`<span><b>${esc(teamAbbr(t.name))}</b> ${quotePercent(qs.find(q=>q.team===t.name)?.yesAsk)}</span>`).join('')}</div><small class="muted">${esc(date(qs[0].retrievedAt))} · Cancún · Before fees</small></div>`;
+  const rows=[g.away,g.home].map(t=>({team:t,q:selectionMarket({gameId:g.id,team:t.name,side:'YES'})}));
+  const first=rows[0].q,shared=first&&rows.every(r=>r.q&&r.q.label===first.label&&r.q.source===first.source&&r.q.capturedAt===first.capturedAt);
+  return `<div class="market-strip"><div class="row between"><span><i data-lucide="chart-no-axes-combined"></i> Market signals</span><small>${shared?esc(first.label):'Recorded · YES'}</small></div><div class="market-sides">${rows.map(({team:t,q})=>`<div><b>${esc(teamAbbr(t.name))} ${q?quotePercent(q.value):'Unavailable'}</b>${!shared?`<small>${esc(q?.label||'No sourced price')}</small>${q?`<small>${esc(q.source)}</small><small>${esc(date(q.capturedAt))} · Cancún</small>`:''}`:''}</div>`).join('')}</div>${shared?`<small>${esc(first.source)}<br>${esc(date(first.capturedAt))} · Cancún</small>`:''}</div>`;
 }
+
 function sourceDisclosure(ids) { return `<details class="source-disclosure"><summary>Sources <i data-lucide="chevron-down" class="chev"></i></summary>${researchSources(ids)}</details>`; }
 function availability(g) {
   return `<p class="small muted">Key availability updates · Final inactives pending</p>${[g.away,g.home].map(t=>{
@@ -24,7 +26,7 @@ function insightCard(g,i) {
   const body=i.category==='injuries'&&g.availability?availability(g):i.category==='market'?marketDetails(g):`<ul>${unique.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
   return `<details class="research-acc" data-research="${i.category}"><summary><i data-lucide="${icon}"></i><span><b>${label}</b><div class="muted small">${esc(i.summary)}</div></span><i data-lucide="chevron-down" class="chev"></i></summary><div class="details">${body}<p class="small muted">${i.category==='market'?'Market captured':'Research checked'}: ${esc(date(i.category==='market'?gameQuotes(g)[0]?.retrievedAt||i.asOf:i.asOf||data.researchedAt))} · Cancún</p>${sourceDisclosure(i.sourceIds||g.sourceIds)}</div></details>`;
 }
-function researchGame(g) { return `<article class="card game-research" data-update-host="games:${esc(g.id)}">${kickoff(g.kickoff)}${team(g.away.name,g.away.record)}${team(g.home.name,g.home.record)}${marketStrip(g)}${reviewActions(g)}<div class="divider"></div><h3>Research insights</h3>${g.insights.map(i=>insightCard(g,i)).join('')}</article>`; }
+function researchGame(g) { return `<article class="card game-research" data-update-host="games:${esc(g.id)}">${kickoff(g.kickoff)}${team(g.away.name,g.away.record)}${team(g.home.name,g.home.record)}${marketStrip(g)}${reviewActions(g)}<details class="research-acc research-group" data-research-group><summary><i data-lucide="clipboard-list"></i><span><b>Research insights</b><small class="muted">Form, injuries, matchup, market & history</small></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="research-sections">${g.insights.map(i=>insightCard(g,i)).join('')}</div></details></article>`; }
 function homeBriefings() {
   return `<div class="card"><div class="eyebrow">THIS WEEK’S INTELLIGENCE</div><h2>Week ${data.week} · ${data.season}</h2><div class="briefing-cards">${[['games','shield','Games',data.games.length,'Availability, recent form and market signals'],['picks','brain','AI Picks',publishedPicks().length,'Research leans · supporting and opposing evidence'],['combos','layers','Combo candidates',data.comboCandidates.length,'Plans A–E · shared exposure and timing']].map(([key,icon,label,count,desc])=>`<button class="briefing-card" data-briefing="${key}" aria-haspopup="dialog"><i data-lucide="${icon}"></i><span><b>${label} <span class="briefing-count">${count}</span></b><small>${desc}</small></span><i data-lucide="chevron-right"></i></button>`).join('')}</div><p class="small muted">Final inactives pending · Combo quotes historical</p></div>`;
 }
@@ -45,3 +47,21 @@ function openBriefing(kind) {
   document.querySelector('[data-review-close]').setAttribute('aria-label','Close weekly briefing');
 }
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.briefing)openBriefing(b.dataset.briefing);if(b.dataset.briefingGo){closeReviewSheet();tab=b.dataset.briefingGo;sub='';plan='';render();icons();window.scrollTo(0,0);}});
+
+// Read-only signals. Never substitute an opposing team's YES for this team's NO.
+function selectionMarket(l,scope={}) {
+  if(!data||l.side==='PROP'||!['YES','NO'].includes(l.side))return null;
+  if((scope.week!=null&&Number(scope.week)!==Number(data.week))||(scope.season!=null&&Number(scope.season)!==Number(data.season)))return null;
+  const valid=p=>Number.isFinite(p)&&p>=0&&p<=1;
+  const qs=(data.marketSnapshots||[]).filter(q=>q.gameId===l.gameId&&q.team===l.team&&valid(q[l.side==='YES'?'yesAsk':'noAsk'])&&Number.isFinite(Date.parse(q.retrievedAt))&&(q.ticker?.startsWith('KXNFL')||q.sourceUrl?.includes('kalshi.com/'))).sort((a,b)=>Date.parse(b.retrievedAt)-Date.parse(a.retrievedAt));
+  if(qs.length){const q=qs[0];return {value:q[l.side==='YES'?'yesAsk':'noAsk'],label:'Kalshi '+l.side+' ask',source:'Historical snapshot · Before fees',capturedAt:q.retrievedAt};}
+  if(preferences.marketSource==='kalshi')return null;
+  const estimates=(data.researchMarketEstimates||[]).filter(q=>q.gameId===l.gameId&&q.team===l.team&&q.side===l.side&&valid(q.probability)&&Number.isFinite(Date.parse(q.capturedAt))&&q.sourceName&&/^https:\/\//.test(q.sourceUrl||'')).sort((a,b)=>Date.parse(b.capturedAt)-Date.parse(a.capturedAt));
+  if(!estimates.length)return null;
+  const q=estimates[0];return {value:q.probability,label:'Research market estimate · '+l.side,source:q.sourceName,capturedAt:q.capturedAt};
+}
+function selectionMarketBlock(l,scope={}) {
+  if(l.side==='PROP')return '';
+  const q=selectionMarket(l,scope);
+  return `<div class="selection-market"><div class="selection-market-top"><span>${esc(q?.label||'Market estimate')}</span><strong>${q?quotePercent(q.value):'Unavailable'}</strong></div>${q?`<small>${esc(q.source)}</small><small>Captured ${esc(date(q.capturedAt))} · Cancún</small>`:'<small>No sourced price for this selection.</small>'}</div>`;
+}

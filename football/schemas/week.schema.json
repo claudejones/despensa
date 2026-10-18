@@ -99,6 +99,52 @@
     },
     "sources": {
       "type": "array"
+    },
+    "researchMarketEstimates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "gameId",
+          "team",
+          "side",
+          "probability",
+          "capturedAt",
+          "sourceName",
+          "sourceUrl"
+        ],
+        "properties": {
+          "gameId": {
+            "type": "string"
+          },
+          "team": {
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "YES",
+              "NO"
+            ]
+          },
+          "probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceUrl": {
+            "type": "string",
+            "pattern": "^https://"
+          }
+        }
+      }
     }
   },
   "$defs": {

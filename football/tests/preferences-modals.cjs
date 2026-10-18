@@ -4,8 +4,8 @@ const page=await browser.newPage({viewport:{width,height:780}}),errors=[];page.o
 await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
 const original=await page.evaluate(()=>JSON.stringify({tickets,pool,funding,learning}));await page.locator('[data-action=settings]').click();
 assert.doesNotMatch(await page.locator('#view').innerText(),/Team presentation|Choose NFL week|Open Performance/);
-await page.locator('#prefStart').selectOption('picks');await page.locator('#prefResearch').check();await page.locator('#prefPulse').uncheck();await page.locator('#prefTime').selectOption('24');
-assert.match(await page.locator('#timePreview').innerText(),/19:20/);assert.equal(await page.locator('[data-preference]').count(),4);
+await page.locator('#prefStart').selectOption('picks');await page.locator('#prefResearch').selectOption('all');await page.locator('#prefPulse').uncheck();await page.locator('#prefTime').selectOption('24');
+assert.match(await page.locator('#timePreview').innerText(),/19:20/);assert.equal(await page.locator('[data-preference]').count(),5);
 await page.screenshot({path:`football/test-artifacts/${width}-settings-preferences.png`,fullPage:true});
 await page.locator('nav [data-tab=games]').click();assert.doesNotMatch(await page.locator('#status').innerText(),/AM|PM/);
 await page.reload();await page.waitForFunction(()=>data?.games?.length);assert.equal(await page.locator('nav .active').getAttribute('data-tab'),'picks');assert.ok(await page.locator('[data-research-detail][open]').count()>0);
@@ -21,6 +21,6 @@ await page.evaluate(()=>{window.confirmResult=null;appConfirm('Replace local tic
 // Reset test-only ticket objects; preferences must never touch personal data.
 await page.evaluate(original=>{const x=JSON.parse(original);tickets=x.tickets;pool=x.pool;funding=x.funding;learning=x.learning},original);
 assert.equal(await page.evaluate(()=>JSON.stringify({tickets,pool,funding,learning})),original);
-await page.locator('[data-action=settings]').click();await page.locator('#prefResearch').uncheck();await page.locator('#prefTime').selectOption('12');await page.locator('nav [data-tab=games]').click();assert.equal(await page.locator('[data-research][open]').count(),0);assert.match(await page.locator('.kickoff-row').first().innerText(),/AM/);
+await page.locator('[data-action=settings]').click();await page.locator('#prefResearch').selectOption('collapsed');await page.locator('#prefTime').selectOption('12');await page.locator('nav [data-tab=games]').click();assert.equal(await page.locator('[data-research][open]').count(),0);assert.match(await page.locator('.kickoff-row').first().innerText(),/AM/);
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);assert.deepEqual(errors,[]);await page.close();console.log('PASS preferences and app modals '+width);
 }}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});
