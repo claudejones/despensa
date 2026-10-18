@@ -191,3 +191,8 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - $2 fractional price benchmark before costs, with missing quotes excluded from financial results. Verified full-game results only; tie/void outcomes require rule handling. No cash-out simulation.
 - Research publication workflow appends eligible new pregame AI entries automatically and requests Pages rebuild. Existing entries never change, including unpriced entries. Post-kickoff additions rejected.
 - Engine skill tests: 13 passed. Archive unit tests and browser acceptance at 320/375/430 passed. Personal local storage unchanged by AI view.
+
+## v1.7.1 — Consistent expand/collapse controls
+- Shared native summary styling suppresses browser markers, right-aligns a single 20px Lucide chevron, and rotates only the owning summary on open. Minimum 44px header target; reduced-motion support and native keyboard controls retained.
+- Research summary styles now target direct children so nested source disclosures do not inherit unintended layouts.
+- Verified closed/open chevrons, alignment, Enter/Space, independent nested state and mobile screenshots at 320/375/430px. No personal data or financial logic changes.
