@@ -86,6 +86,8 @@ jobs:
       - name: Verify direct actions and purchase correction
         run: node football/tests/direct-actions-correction.cjs
 
+      - name: Verify refreshed final results
+        run: node football/tests/data-refresh.cjs
       - name: Verify automatic final loss reconciliation
         run: node football/tests/result-reconciliation.cjs
 
