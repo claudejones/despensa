@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
- const errors=[];let passed=0;
+ const errors=[];let passed=0;fs.mkdirSync('football/test-artifacts',{recursive:true});
  try{
  for(const width of [320,375,390,430]){
   const page=await browser.newPage({viewport:{width,height:844},deviceScaleFactor:1});
@@ -35,7 +35,7 @@ const fs = require('node:fs');
   assert.match(await page.locator('#view').innerText(),/Personal data/);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
   assert.equal(overflow,false,'no horizontal overflow at '+width);
-  passed++;await page.close();
+  for(const [screen,selector] of [['home','[data-tab=weeks]'],['games','[data-tab=games]'],['picks','[data-tab=picks]'],['combos','[data-tab=combos]'],['kalshi','[data-tab=kalshi]']]){await page.locator(selector).first().click();await page.screenshot({path:'football/test-artifacts/'+width+'-'+screen+'.png',fullPage:true})}await page.locator('[data-action=calendar]').first().click();await page.screenshot({path:'football/test-artifacts/'+width+'-season.png',fullPage:true});await page.locator('[data-action=settings]').first().click();await page.screenshot({path:'football/test-artifacts/'+width+'-settings.png',fullPage:true});passed++;await page.close();
  }
  assert.deepEqual(errors,[],'no browser page errors');
  console.log('PASS '+passed+' mobile viewports');
