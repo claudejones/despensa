@@ -1,0 +1,35 @@
+name: Football mobile acceptance
+on:
+  push:
+    branches: [football-screen-by-screen-implementation]
+    paths:
+      - 'football/**'
+      - '.github/workflows/football-mobile-acceptance.yml'
+  workflow_dispatch:
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: npm install --no-save playwright@1.58.2
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Start static server
+        run: python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/football-server.log 2>&1 &
+      - name: Run mobile smoke
+        run: node football/tests/mobile-smoke.cjs
+      - name: Run financial acceptance
+        run: node football/tests/financial-acceptance.cjs
+
+      - name: Upload mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: football-mobile-screenshots
+          path: football/test-artifacts/*.png
+          if-no-files-found: warn
