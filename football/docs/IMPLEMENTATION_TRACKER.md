@@ -1,7 +1,7 @@
 # NFL Intelligence — implementation tracker
 
 **Target release:** v1.0 (not yet complete)  
-**Current development build identifier:** v0.4.3  
+**Current development build identifier:** v0.4.4  
 **Development branch:** `football-screen-by-screen-implementation`  
 **Published production:** prior v0.4.x build; this branch is NOT published.
 
@@ -14,8 +14,8 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 | Season Overview | Approved | **Implemented (unverified)**: Weeks/Season Summary, 18-week cards, close button, global week persisted on selection | **Do not review yet** |
 | Games and research | Approved | **Implemented (unverified)**: independent research accordions, small logos with fallback, time-window pills; source-category mapping and browser tests still pending | **Do not review yet** |
 | AI Picks and Office Pool | Approved | **Implemented (unverified)**: compact cards, small logos, time pills, equal-width buttons, toggle selections and copy action; clipboard and browser tests still pending | **Do not review yet** |
-| Combo overview Plans A–E | Approved | Partial | **Do not review yet** |
-| Plan Detail / payout sheets / scenario economics | Approved | Partial, comprehensive shared-outcome evaluation missing | **Do not review yet** |
+| Combo overview Plans A–E | Approved | Existing overview implemented, needs visual/browser validation | **Do not review yet** |
+| Plan Detail / payout sheets / scenario economics | Approved | **Implemented (unverified)**: tickets, kickoff order, payout sheets, exact enumerated settlement scenarios with shared-game outcomes; still needs browser tests and portfolio editing | **Do not review yet** |
 | Kalshi Build/Evaluate/Monitor/Close | Approved | Partial, ticket editing and partial-sale accounting require more work | **Do not review yet** |
 | Performance Dashboard | Approved | Partial, historical charts and season/weekly metrics missing | **Do not review yet** |
 | Settings | Approved: light only, no swipe | Simplified, needs visual review | **Do not review yet** |
@@ -24,7 +24,7 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 | Verified GitHub Pages release | Required | **Pending** | **Do not review yet** |
 
 ## Version rules
-- `v0.4.3`: development checkpoint, not a published or complete release.
+- `v0.4.4`: development checkpoint, not a published or complete release.
 - `v1.0`: reserve for the fully implemented and verified release.
 - Update this tracker in every subsequent development change. Never mark a screen done solely from a JavaScript syntax check.
 
@@ -36,7 +36,14 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 5. Finish Performance and historical dashboard.
 6. Add automated interaction and visual checks; only then publish for iPhone testing.
 
-## v0.4.3 checkpoint
+## v0.4.4 checkpoint
 - Games and AI Picks now share Cancún-local kickoff-window pills, compact team logo treatment, and image fallbacks.
 - Office-pool buttons expose selection state to accessibility tools and retain tap-to-deselect behavior.
 - JavaScript syntax checked. **No browser or visual acceptance tests performed yet.**
+
+## v0.4.4 checkpoint
+- Plan Detail now enumerates possible game winner combinations, rather than assuming ticket independence.
+- Best and worst settlement net reflect shared underlying games and actual supplied historical ticket stakes and gross payouts.
+- Plans A–E show tickets, outcomes, timing, overlap and plan-specific payout sheets.
+- Historical quote status is explicit. No live prices or validated expected value are claimed.
+- JavaScript syntax passed; browser and financial fixture tests still pending.
