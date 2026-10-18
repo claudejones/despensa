@@ -54,6 +54,7 @@ const { chromium } = require("playwright"),
       await page.locator("[data-tab=games]").first().click();
       await page.locator(".context-review summary").first().click();
       await page.locator("[data-review-game]").first().click();
+      await page.locator("[data-review-new=single]").click();
       assert.match(await page.locator("#title").innerText(), /Game Research/);
       assert.equal(
         await page.locator(".context-review").first().getAttribute("open"),
@@ -72,7 +73,7 @@ const { chromium } = require("playwright"),
       await page.locator(".context-review summary").first().click();
       assert.equal(
         await page.locator("[data-review-game]").first().isDisabled(),
-        true,
+        false,
       );
       await page.locator(".context-review summary").nth(1).click();
       await page
@@ -81,12 +82,10 @@ const { chromium } = require("playwright"),
         .locator("[data-review-game]")
         .first()
         .click();
+      await page.locator("[data-review-new=single]").click();
+      await page.locator("[data-review-toast-close]").click();
       assert.equal(await page.evaluate(() => tickets.length), 2);
-      await page
-        .locator(".context-review")
-        .nth(1)
-        .locator("[data-open-review]")
-        .click();
+      await page.locator("nav [data-tab=kalshi]").click();
       assert.equal(await page.locator(".ticket").count(), 2);
       await page.locator("[data-combo-select]").nth(0).check();
       await page.locator("[data-combo-select]").nth(1).check();

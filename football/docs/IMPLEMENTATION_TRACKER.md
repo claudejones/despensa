@@ -49,3 +49,13 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Kalshi Build supports selecting draft singles to create one combo, rejects multiple selections from the same game, and restores the original singles on request. Purchased tickets are untouched. A combined quote is never inferred; new drafts require pricing.
 - Contextual review, duplicate prevention, persistence, reversible combination and sticky positioning passed at 320/390/430px. Existing mobile and lifecycle regression suites passed. Screenshots inspected directly.
 - Published via PR #8 at commit `3a2a976e5ba7444a11fad78a399a59630575c680`. Branch acceptance 39092062304, main acceptance 39092160056 and Pages deployment 39092159957 all succeeded. Live contextual-review and sticky-navigation tests passed at 320/390/430px; live HTML confirmed v1.1.\n- Production: https://claudejones.github.io/despensa/football/?v=1.1
+
+## v1.2 approved shared ticket flow
+
+- Implemented the inline prototype approved October 17: native bottom sheet, contextual single/new combo/existing combo destinations, active-ticket switcher, Undo, editable copies of strategy tickets, and final Kalshi draft review.
+- Full team names, local logos, records, kickoff/daypart formatting, Lucide icons and existing light design tokens are reused. Fixed ticket bar measures navigation height and reserves content space; sheet supports native modal focus and dismissal.
+- Draft selection edits clear obsolete pricing and validated probabilities. Undo restores the prior draft; purchased tickets stay protected. Duplicate games within a combo are blocked, shared games across drafts are identified, and incomplete one-leg combos cannot be recorded as purchases.
+- Active draft and tickets persist locally. Office Pool storage, ledger events, research data and financial calculations remain intact.
+- Local shared-flow checks passed 320/375/430px; contextual/sticky suite passed 320/390/430px; four-width smoke, 10 financial fixtures and full lifecycle/backup suite passed. Actual mobile screenshots inspected. Physical iPhone Safari remains a user verification step.
+- Research remains preliminary; this release changes the approved ticket interaction, not the research evidence.
+- Publication receipt will be recorded after deployment verification.
