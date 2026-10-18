@@ -838,3 +838,5 @@ button svg {vertical-align:middle;}
 .ticket .edit-selections {display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;}
 .ticket .edit-selections svg {width:20px;height:20px;flex:none;}
 .ticket .edit-selections+button {margin-inline-start:10px;}
+
+.leg-quote {margin:12px 0 4px;}.leg-quote small {display:block;font-size:11px;line-height:1.45;margin-top:6px;}.quote-estimate {margin:12px 0;}.quote-estimate .row {align-items:flex-start;}.quote-estimate b {white-space:nowrap;}

@@ -560,7 +560,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.4";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.5";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -994,7 +994,7 @@ document.addEventListener("change", async (e) => {
   if (e.target.dataset.id) {
     let t = tickets.find((x) => x.id === e.target.dataset.id),
       field = e.target.dataset.field;
-    if (!t) return;
+    if (!t || !["status","stake","payout","fee","market","proceeds"].includes(field)) return;
     let value = e.target.value;
     if (field === "status") {
       if (value === "purchased" && t.status === "draft") {
@@ -1012,6 +1012,7 @@ document.addEventListener("change", async (e) => {
           stake: Number(t.stake),
           payout: Number(t.payout),
         });
+        freezeTicketPricing(t);
         t.remainingFraction = 1;
       } else if (t.status === "draft" && value !== "draft") {
         appAlert("Record purchase first.");
@@ -1040,21 +1041,23 @@ document.addEventListener("change", async (e) => {
     } else {
       let n = value === "" ? null : Number(value);
       if (n !== null && (!Number.isFinite(n) || n < 0 || (field === "market" && n > 100))) {
-        appAlert("Enter a valid nonnegative amount.");
-        render();
+        e.target.setCustomValidity(field === "market" ? "Enter a percentage from 0 to 100." : "Enter a valid nonnegative amount.");
+        e.target.reportValidity();
         return;
       }
       if (
         t.status !== "draft" &&
-        ["stake", "payout", "fee", "proceeds"].includes(field)
+        ["stake", "payout", "fee", "market", "proceeds"].includes(field)
       ) {
         appAlert("Original purchased terms cannot be changed.");
         render();
         return;
       }
+      e.target.setCustomValidity("");
       t[field] = n;
     }
     save();
+    if(field !== "status") { updateTicketPricing(t); return; }
     render();
   }
   if (e.target.id === "settingsImport") {

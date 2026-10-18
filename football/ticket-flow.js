@@ -113,8 +113,8 @@ document.addEventListener('click',e=>{
     reviewEditor.title=document.querySelector('#reviewTitle').value;
     const i=Number(b.dataset.reviewSwitch??b.dataset.reviewSide??b.dataset.reviewRemove),l=reviewEditor.legs[i];
     if(b.hasAttribute('data-review-remove'))reviewEditor.legs.splice(i,1);
-    else if(b.hasAttribute('data-review-side')){l.side=l.side==='NO'?'YES':'NO';l.marketPercent=null;l.source='My choice'}
-    else {const g=data.games.find(g=>g.id===l.gameId),t=g.away.name===l.team?g.home:g.away;l.team=t.name;l.record=t.record;l.opponent=t===g.away?g.home.name:g.away.name;l.source='My choice';l.marketPercent=null}
+    else if(b.hasAttribute('data-review-side')){l.side=l.side==='NO'?'YES':'NO';l.marketPercent=null;delete l.quotedPercent;delete l.quotedAt;l.source='My choice'}
+    else {const g=data.games.find(g=>g.id===l.gameId),t=g.away.name===l.team?g.home:g.away;l.team=t.name;l.record=t.record;l.opponent=t===g.away?g.home.name:g.away.name;l.source='My choice';l.marketPercent=null;delete l.quotedPercent;delete l.quotedAt}
     drawReviewEditor();
   }
   if(b.hasAttribute('data-review-save')||b.hasAttribute('data-review-more')||b.hasAttribute('data-review-finish')){if(!saveReviewEditor())return;closeReviewSheet();if(b.hasAttribute('data-review-finish')){tab='kalshi';kalshiStage='build';sub='';plan='';}if(b.hasAttribute('data-review-more')){tab='games';sub='';plan='';render()}refreshReviewFlow();reviewToast('Draft updated.');}
