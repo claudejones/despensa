@@ -561,7 +561,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.5.0";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.5.1";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -613,7 +613,7 @@ function render() {
     return;
   }
   if (tab === "weeks")
-    v.innerHTML = homeBriefings() + homePerformanceCard() +
+    v.innerHTML = homeBriefings() + homePoolCard() + homePerformanceCard() +
       '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
       data.week +
       '</small></div><p class="muted">' +
@@ -914,18 +914,13 @@ document.addEventListener("click", async (e) => {
     let t = tickets.find((x) => x.id === b.dataset.settle);
     if (!t || t.status !== "purchased") return;
     let p = document.getElementById("settle-" + t.id)?.value,
-      fee = document.getElementById("settle-fee-" + t.id)?.value,
-      amount = Number(p),
-      cost = Number(fee);
+      amount = Number(p);
     if (
       p === "" ||
-      fee === "" ||
       !Number.isFinite(amount) ||
-      amount < 0 ||
-      !Number.isFinite(cost) ||
-      cost < 0
+      amount < 0
     )
-      return appAlert("Enter valid settlement proceeds and fee.");
+      return appAlert("Enter a valid final amount received.");
     if (!await appConfirm("Record final settlement and close remaining position?"))
       return;
     t.events ??= [];
@@ -933,11 +928,12 @@ document.addEventListener("click", async (e) => {
       kind: "settlement",
       time: new Date().toISOString(),
       proceeds: amount,
-      fee: cost,
+      fee: 0,
+      proceedsAreNet: true,
       portion: t.remainingFraction ?? 1,
     });
     t.settlementProceeds = amount;
-    t.settlementFee = cost;
+    // Legacy settlementFee values remain readable; new settlements have no fee.
     t.remainingFraction = 0;
     t.status = amount > 0 ? "won" : "lost";
     save();
@@ -959,10 +955,6 @@ document.addEventListener("click", async (e) => {
       )
     )
       return;
-    let rawFee = document.getElementById("sale-fee-" + t.id)?.value,
-      fee = Number(rawFee);
-    if (rawFee === "" || !Number.isFinite(fee) || fee < 0)
-      return appAlert("Enter a valid sale fee.");
     let remaining = t.remainingFraction ?? 1,
       portion = (remaining * pct) / 100;
     t.events ??= [];
@@ -971,7 +963,8 @@ document.addEventListener("click", async (e) => {
       time: new Date().toISOString(),
       portion,
       proceeds: amount,
-      fee,
+      fee: 0,
+      proceedsAreNet: true,
     });
     t.proceeds = (Number(t.proceeds) || 0) + amount;
     t.remainingFraction = Math.max(0, remaining - portion);

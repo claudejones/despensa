@@ -68,6 +68,9 @@ jobs:
       - name: Verify Kalshi workspace views
         run: node football/tests/workspace-views.cjs
 
+      - name: Verify optional Pool and simplified close form
+        run: node football/tests/pool-close-polish.cjs
+
       - name: Upload mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4

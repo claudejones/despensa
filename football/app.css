@@ -857,3 +857,5 @@ button svg {vertical-align:middle;}
 .ticket-content{border-top:1px solid #dce5eb;margin-top:16px;padding-top:16px}
 .ticket-content>.research-acc{margin-top:12px}.ticket-content>div>.pill{display:none}
 .ticket-fold[open] .ticket-summary-teams{display:none}
+
+.exposure-selection .row{gap:8px}.exposure-selection svg,.rename-ticket svg{width:20px;height:20px;flex-shrink:0}.rename-ticket{display:inline-flex;align-items:center;gap:8px;margin:12px 0}.home-performance .grid3 b{overflow-wrap:anywhere;font-size:20px}[data-close-final][hidden],[data-close-sale][hidden]{display:none}
