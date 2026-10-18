@@ -1,7 +1,7 @@
 name: Football mobile acceptance
 on:
   push:
-    branches: [football-screen-by-screen-implementation, football-contextual-review, football-ticket-builder, football-week6-research, football-research-briefings, football-fixed-ticket-dock, main]
+    branches: [football-screen-by-screen-implementation, football-contextual-review, football-ticket-builder, football-week6-research, football-research-briefings, football-fixed-ticket-dock, football-drawer-polish, main]
     paths:
       - 'football/**'
       - '.github/workflows/football-mobile-acceptance.yml'
@@ -43,6 +43,9 @@ jobs:
 
       - name: Verify active ticket dock during scrolling
         run: node football/tests/ticket-dock.cjs
+
+      - name: Verify drawer layout and navigation
+        run: node football/tests/sheet-navigation.cjs
 
       - name: Upload mobile screenshots
         if: always()

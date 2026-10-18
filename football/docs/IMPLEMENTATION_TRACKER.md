@@ -85,3 +85,10 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Fixes the reported active combo bar slipping behind the tabs during iPhone Safari toolbar changes. The bar and navigation now share one fixed container and stack in normal layout, eliminating independent bottom offsets.
 - Container/bar resize observation maintains content clearance and toast offsets. Existing visibility rules, drafts, selections and storage are unchanged.
 - Added scroll/viewport-height/safe-area regression coverage at 320/375/430px, asserting adjacency, viewport anchoring, unobscured View ticket hit targets, working sheet opening and unchanged ticket data. Shared ticket flow passed at all three widths; screenshot inspected. These simulations do not reproduce the physical iPhone browser toolbar itself.
+
+## v1.3.2 — drawer layout and navigation (2026-10-18)
+- Shared research/ticket sheet uses a compact header, 20px close icon in a 44px target, independently scrolling content, and a separate briefing footer. Section spacing is consistent; footer cannot cover the final research lines.
+- Newly opened sheets reset to the top, including switching sheet content. Tab taps (including active tab) and reloads return the page to the top. Closing a sheet retains the underlying page context.
+- Reuse Cancún date/hour formatters and retain already-rendered Lucide SVGs instead of rebuilding them on each UI synchronization. Touch controls use manipulation behavior.
+- Added sheet-navigation acceptance at 320/375/430px, viewport resizing, reset behavior, single-tap navigation, icon identity, and unchanged ticket/pool data. Inspected actual mobile screenshots. Existing briefing, ticket-flow and dock suites passed locally; publication gated on full GitHub acceptance.
+- Physical iPhone Safari toolbar behavior remains a user-device confirmation; browser chrome cannot be programmatically forced to expand.
