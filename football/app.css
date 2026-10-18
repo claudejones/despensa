@@ -746,7 +746,7 @@ nav [data-tab="kalshi"] {
 #ticketToast button { flex:none; }
 .review-overlap { background:var(--soft); padding:10px; border-radius:10px; font-size:12px; }
 .review-overlap svg { width:16px; height:16px; vertical-align:middle; }
-.candidate-feedback + button, [data-review-candidate-edit] { margin-top:10px; }
+
 /* Research briefings reuse the approved light cards and native bottom sheet. */
 .briefing-cards {display:grid;gap:10px}
 .briefing-card {display:flex;align-items:center;gap:12px;width:100%;padding:15px;text-align:left;background:var(--paper)}
@@ -814,7 +814,7 @@ button, summary, a {touch-action:manipulation;}
 .preference-stacked {flex-direction:column;align-items:stretch;gap:10px;}.preference-stacked select {max-width:none;width:100%;}
 
 .home-performance {display:block;width:100%;text-align:left;}.home-performance h3 {display:flex;align-items:center;gap:8px;margin:0;}.home-performance svg {width:20px;height:20px;}.home-performance .grid3 {margin:14px 0;}.home-performance .grid3 b {display:block;font-size:18px;margin-top:5px;}.home-performance .grid3 small {font-size:11px;}
-.pool-toolbar {display:grid;gap:8px;margin:12px 0;}.pool-toolbar button {display:flex;align-items:center;justify-content:center;gap:8px;}.pool-toolbar svg {width:18px;height:18px;}.pool-current {padding:12px;background:var(--soft);border-radius:12px;}.pool-current>b,.pool-result-choice {display:block;margin:4px 0 10px;}.pool-actions {display:flex;gap:8px;}.destination-heading {margin-top:18px;}.pool-analysis {display:flex;align-items:center;gap:8px;margin-top:10px;}.pool-analysis svg {width:18px;height:18px;}.pool-card .pool-clear {margin-top:4px;}.pool-from-combo {margin-top:10px;font-size:12px;}.pick-card {scroll-margin-top:calc(var(--header-height,100px) + 12px);}
+.pool-toolbar {display:grid;gap:8px;margin:12px 0;}.pool-toolbar button {display:flex;align-items:center;justify-content:center;gap:8px;}.pool-toolbar svg {width:18px;height:18px;}.pool-current {padding:12px;background:var(--soft);border-radius:12px;}.pool-current>b,.pool-result-choice {display:block;margin:4px 0 10px;}.pool-actions {display:flex;gap:8px;}.destination-heading {margin-top:18px;}.pool-analysis {display:flex;align-items:center;gap:8px;margin-top:10px;}.pool-analysis svg {width:18px;height:18px;}.pool-from-combo {margin-top:10px;font-size:12px;}.pick-card {scroll-margin-top:calc(var(--header-height,100px) + 12px);}
 
 /* Shared onward actions and an accessible, freely navigable ticket workflow. */
 .destination-cta {display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;}
@@ -894,3 +894,16 @@ details[open] > summary > .chev {transform:rotate(180deg)}
 .paper-ticket .detail-link .row{gap:10px;flex-wrap:wrap}
 .paper-ticket .detail-link .pill{font-size:12px}
 .drawer-ticket .leg-team .team{margin:0 0 6px}
+
+/* Shared action groups: aligned rows, explicit gaps, and predictable mobile wrapping. */
+.button-group,.actions,.pool-actions{gap:12px;align-items:stretch;flex-wrap:wrap}
+.button-group>button,.actions>button,.pool-actions>button,.grid2>button{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;white-space:normal;overflow-wrap:break-word;line-height:1.35;margin:0}
+.button-group>button,.actions>button,.pool-actions>button{flex:1 1 145px}
+.button-group>button svg,.actions>button svg,.pool-actions>button svg,.grid2>button svg{width:20px;height:20px;flex:0 0 20px}
+.candidate-actions{margin-top:16px}
+.pool-card-actions{margin-top:12px}
+.sheet-destinations{gap:12px}
+.ticket-tools{gap:12px;align-items:center}
+@media(max-width:380px){.candidate-actions>button{flex-basis:100%}}
+
+.candidate-actions + .candidate-feedback{margin-top:12px}

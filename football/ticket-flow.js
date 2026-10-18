@@ -94,6 +94,7 @@ syncReviewUI = function() {
     b.querySelector('.review-choice-state').textContent=matches.length?'In '+matches.length+' ticket'+(matches.length===1?'':'s'):'Add';
   });
   document.querySelectorAll('[data-add]').forEach(b=>{
+    if(!b.parentElement.classList.contains('candidate-actions')){const group=document.createElement('div');group.className='button-group candidate-actions';b.before(group);group.append(b);}
     let edit=b.parentElement.querySelector('[data-review-candidate-edit="'+b.dataset.add+'"]');
     if(!edit){edit=document.createElement('button');edit.dataset.reviewCandidateEdit=b.dataset.add;b.after(edit)}
     edit.textContent=candidateInReview(b.dataset.add)?'Edit saved ticket':'Customize ticket';
