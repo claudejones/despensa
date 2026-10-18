@@ -101,3 +101,9 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 - Added executable Playwright smoke test covering 320/375/390/430px layouts, calendar open/close, research accordions, office-pool selection/deselection, Plan A, Kalshi stage controls and Settings.
 - Added GitHub Actions browser acceptance workflow. Initial CI run is queued/running; **no test pass is claimed until results are inspected**.
 - Version label updated to v0.5.4. No production deployment.
+
+## Financial acceptance CI milestone
+- Added executable Playwright fixtures for winning/losing singles, partial-sale basis and fees, final settlement, multiple sales, and correlated Plan A scenarios.
+- Financial tests are now mandatory in GitHub Actions alongside the mobile smoke suite.
+- CI run started; do not mark financial tests passed until the run concludes successfully.
+- Detailed screenshot comparison with approved mockups and production deployment remain pending.
