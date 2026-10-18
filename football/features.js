@@ -129,31 +129,6 @@ function exposureView(rows) {
   html += `<p class="small muted">${rows.length} ${rows.length===1?'ticket':'tickets'} below · ${priced.length} priced${rows.length>priced.length?` · ${rows.length-priced.length} awaiting payout details`:''}</p>`;
   return '<div class="card">' + html + "</div>";
 }
-function ticketView(t) {
-  const draft = t.status === "draft",
-    closed = isClosed(t),
-    active = t.status === "purchased";
-  const fields = ["stake", "payout", "fee", "market"]
-    .map(
-      (k) =>
-        `<label>${{ stake: "Stake ($)", payout: "Gross payout ($)", fee: "Entry fee ($)", market: "Actual ticket quote (%) · optional" }[k]}<input type="number" min="0" step=".01" data-id="${esc(t.id)}" data-field="${k}" value="${t[k] == null && k !== "fee" ? "" : Number(t[k] || 0)}" ${draft ? "" : "disabled"}></label>`,
-    )
-    .join("");
-  const legs = [...(t.legs || [])]
-    .sort((a,b) => new Date(data?.games.find(g=>g.id===a.gameId)?.kickoff || a.kickoff || 0) - new Date(data?.games.find(g=>g.id===b.gameId)?.kickoff || b.kickoff || 0))
-    .map((l) => {
-      let g = data?.games.find((g) => g.id === l.gameId);
-      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${l.side === "YES" ? "To win" : l.side === "NO" ? "Not to win" : esc(l.side)}${l.source ? " · " + esc(l.source) : ""}</small>${selectionMarketBlock(l,{week:weekOf(t),season:t.season})}${legQuoteControl(t,l)}${l.marketPercent==null?'':`<small class="entered-leg-quote">Saved / entered leg quote: ${esc(l.marketPercent)}%</small>`}</div>`;
-    })
-    .join("");
-  const be =
-    Number(t.payout) > 0
-      ? (100 * (Number(t.stake || 0) + Number(t.fee || 0))) / Number(t.payout)
-      : null;
-  let monitor = active ? accordion("Market observations", "Save an offer or note without changing your bet", `<label>Observed cash-out offer ($)<input id="offer-${t.id}" type="number" min="0" step=".01"></label><label>Decision<select id="decision-${t.id}"><option>Hold</option><option>Consider sale</option></select></label><label>Decision note<textarea id="note-${t.id}" rows="2"></textarea></label><button data-observe="${t.id}">Record observation</button>`, "activity")
-    + accordion("Close or reduce bet", `${(remaining(t)*100).toFixed(1)}% remaining · ${money(basis(t))} at risk`, `<label>What happened?<select data-close-choice="${esc(t.id)}"><option value="sale">I sold early</option><option value="final">The bet finished</option></select></label><div data-close-sale><p class="small muted">Record a sale completed in Kalshi. Enter the amount received after fees; fees will not be subtracted again.</p><div class="grid2"><label>Sold % of remaining<input id="qty-${t.id}" type="number" min="1" max="100" value="100"></label><label>Amount received after fees ($)<input id="sale-${t.id}" type="number" min="0" step=".01"></label></div><button data-sale="${t.id}">Record cash-out</button></div><div data-close-final hidden><p class="small muted">Enter the final payout for the remaining bet, or $0 if it lost. There is no settlement fee.</p><label>Final amount received ($)<input id="settle-${t.id}" type="number" min="0" step=".01"></label><button data-settle="${t.id}">Record final result</button></div>`, "wallet") : "";
-  return `<article class="card ticket" data-ticket-id="${esc(t.id)}"><details class="ticket-fold" ${ticketExpanded(t)?"open":""}><summary class="ticket-summary">${ticketSummary(t)}</summary><div class="ticket-content"><div class="row between"><div><span class="eyebrow">${esc(t.type || ((t.legs || []).length > 1 ? "Combo" : "Single game bet"))} · WEEK ${weekOf(t)}</span><h3>${esc(t.title)}</h3></div><span class="pill">${esc(t.status)}</span></div><button class="rename-ticket" data-rename-ticket="${esc(t.id)}"><i data-lucide="pencil"></i> Rename ticket</button>${draftChoice(t)}${draft ? reviewOverlap(t) : ""}${legs}${draft ? `<button class="edit-selections" data-review-edit="${esc(t.id)}"><i data-lucide="pencil"></i> Edit selections</button>${t.pricingNeedsRefresh ? `<p class="muted small">Selections changed · enter a fresh quote.</p>` : ""}` : ""}${t.status === "draft" && t.originalDrafts ? `<button data-undo-combo="${t.id}">Restore separate singles</button>` : ""}${accordion("Ticket pricing", draft ? "Enter your actual stake, gross payout and fees" : "Purchased terms · protected", `<div class="grid2">${fields}</div>`, "receipt", draft && !t.source?.includes("review"))}<div data-pricing-totals="${esc(t.id)}">${ticketPricingTotals(t)}</div>${draft ? `<div class="row actions"><button class="primary" data-purchase="${t.id}">Record purchase</button><button data-del="${t.id}">Remove draft</button></div>` : ""}${active?`<button class="rename-ticket" data-correct-purchase="${esc(t.id)}"><i data-lucide="pencil"></i> Correct purchase details</button>`:""}${monitor}${ticketJournal(t)}</div></details></article>`;
-}
 function workspaceScreen() {
   const rows = scopeTickets(),
     drafts = rows.filter((t) => t.status === "draft"),
@@ -255,6 +230,7 @@ document.addEventListener("click", (e) => {
         ": " +
         document.getElementById("note-" + t.id).value,
     });
+    closeReviewSheet();
     save();
     render();
   }

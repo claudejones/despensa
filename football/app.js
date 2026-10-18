@@ -513,7 +513,7 @@ const isClosed = (t) => ["sold", "won", "lost"].includes(t.status),
   realizedNet = (t) => realizedProceeds(t) - realizedBasis(t) - realizedFees(t);
 function ticketJournal(t) {
   return (
-    '<details class="research-acc"><summary><i data-lucide="history"></i><span><b>Decision history</b><div class="muted" style="font-size:12px">' +
+    '<details class="research-acc"><summary><i data-lucide="history"></i><span><b>Activity</b><div class="muted" style="font-size:12px">' +
     events(t).length +
     ' recorded events</div></span><i data-lucide="chevron-down" class="chev"></i></summary><div class="details">' +
     (events(t).length
@@ -560,8 +560,8 @@ function render() {
   }
   let v = $("#view");
   $("#status").hidden = sub === "settings";
-  if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.5.2";
+  if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.6.0";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -700,6 +700,7 @@ async function load() {
   const request = ++loadSequence,
     week = $("#week").value;
   data = null;
+  autoClosed = 0;
   researchChanges={snapshot:{},unread:{}};
   render();
   try {
@@ -725,6 +726,7 @@ async function load() {
       throw Error("Invalid week data");
     data = next;
     rememberPoolResearch(data);
+    autoClosed = reconcileFinalLosses(data);
     trackResearchChanges(data);
     data.games.sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
     pool = readStore("football-pool-v03", pool);
@@ -736,7 +738,7 @@ async function load() {
     }
     if (poolMigrated) localStorage.setItem("football-pool-v03", JSON.stringify(pool));
     $("#status").textContent =
-      "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
+      "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
   } catch (e) {
     if (request !== loadSequence) return;
     data = null;
@@ -936,6 +938,7 @@ document.addEventListener("click", async (e) => {
     // Legacy settlementFee values remain readable; new settlements have no fee.
     t.remainingFraction = 0;
     t.status = amount > 0 ? "won" : "lost";
+    closeReviewSheet();
     save();
     render();
   }
@@ -969,6 +972,7 @@ document.addEventListener("click", async (e) => {
     t.proceeds = (Number(t.proceeds) || 0) + amount;
     t.remainingFraction = Math.max(0, remaining - portion);
     if (t.remainingFraction < 0.000001) t.status = "sold";
+    closeReviewSheet();
     save();
     render();
   }

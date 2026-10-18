@@ -170,3 +170,12 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Replaced Choose a pick accordion with visible Pick for My Pool and Add to Kalshi ticket buttons, each opening its own drawer.
 - Open tickets support correction of the original gross payout; history records old/new amounts, while selections, cash-outs, locked quote snapshots and stored records are preserved.
 - Regression coverage includes direct destination independence, invalid correction input, partial-sale correction math, reload persistence and collapsed Analysis.
+
+## v1.6.0 — refined tickets and verified score reconciliation
+
+- Approved compact single/combo hierarchy: one header, selections, purchase details, calculation disclosure and Activity; readable purchased amounts replace disabled fields. Closing and observations use focused drawers.
+- Refreshed Oct 18 score snapshots from ESPN; Houston 34–31 Jacksonville final corroborated by Jaguars official game report. Original research/market timestamps and pregame records remain intact.
+- Automatically records $0 remaining payout for purchased full-game winner tickets defeated by a verified final result, including combos. Drafts, winners, live/tied/unverified results and unsupported markets do not auto-close.
+- Preserves previous cash-outs, fees, quotes and original records; adds source-backed Activity event and reversible automatic result. Undo opts that ticket out of automatic closing. Repeated loads do not duplicate events.
+- Scores are published snapshots, not a continuous live feed. Reconciliation applies to the loaded season/week on the user's device; no Kalshi account access or personal ledger publication.
+- Regression covers NO outcomes, partial proceeds, manual records, scope, repeat loads and undo at 320/375/430 px.
