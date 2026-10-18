@@ -92,3 +92,10 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Reuse Cancún date/hour formatters and retain already-rendered Lucide SVGs instead of rebuilding them on each UI synchronization. Touch controls use manipulation behavior.
 - Added sheet-navigation acceptance at 320/375/430px, viewport resizing, reset behavior, single-tap navigation, icon identity, and unchanged ticket/pool data. Inspected actual mobile screenshots. Existing briefing, ticket-flow and dock suites passed locally; publication gated on full GitHub acceptance.
 - Physical iPhone Safari toolbar behavior remains a user-device confirmation; browser chrome cannot be programmatically forced to expand.
+
+## v1.3.3 — meaningful research updates and calendar cleanup (2026-10-18)
+- Added per-device/per-season/week research baselines and unread change records, separate from ticket and pool storage. First load establishes a baseline; source-check timestamps and version-only refreshes do not produce badges.
+- Teal Updated pills identify affected Home summaries, Games/AI Picks/Combos headings, strategy cards and individual game/pick/candidate cards. Two gentle pulses respect reduced motion. What changed shows changed categories, player status/YES ask/pick changes where available, and an explicitly labeled Cancún detection time.
+- Mark reviewed clears only the displayed changes; closing the sheet retains unread state. Read/unread state survives reloads. Detection runs when weekly JSON is loaded; this is not a live market feed or background polling feature.
+- Removed the redundant Open selected week CTA. Selecting a calendar week still loads it and closes Season Overview.
+- Added mobile tests at 320/375/430 for timestamp-only refreshes, actual changes, read persistence, selective clearing, reduced motion, no nested buttons, calendar selection, and unchanged personal data. Screenshots inspected. Full acceptance gates publication.
