@@ -815,3 +815,17 @@ button, summary, a {touch-action:manipulation;}
 
 .home-performance {display:block;width:100%;text-align:left;}.home-performance h3 {display:flex;align-items:center;gap:8px;margin:0;}.home-performance svg {width:20px;height:20px;}.home-performance .grid3 {margin:14px 0;}.home-performance .grid3 b {display:block;font-size:18px;margin-top:5px;}.home-performance .grid3 small {font-size:11px;}
 .pool-toolbar {display:grid;gap:8px;margin:12px 0;}.pool-toolbar button {display:flex;align-items:center;justify-content:center;gap:8px;}.pool-toolbar svg {width:18px;height:18px;}.pool-current {padding:12px;background:var(--soft);border-radius:12px;}.pool-current>b,.pool-result-choice {display:block;margin:4px 0 10px;}.pool-actions {display:flex;gap:8px;}.destination-heading {margin-top:18px;}.pool-analysis {display:flex;align-items:center;gap:8px;margin-top:10px;}.pool-analysis svg {width:18px;height:18px;}.pool-card .pool-clear {margin-top:4px;}.pool-from-combo {margin-top:10px;font-size:12px;}.pick-card {scroll-margin-top:calc(var(--header-height,100px) + 12px);}
+
+/* Shared onward actions and an accessible, freely navigable ticket workflow. */
+.destination-cta {display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;}
+.destination-cta svg {width:20px;height:20px;flex:none;}
+.briefing-action {display:block;color:var(--teal);font-size:11px;font-weight:600;margin-top:6px;}
+.workspace-flow {margin:16px 0;}
+.workspace-steps {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:0;}
+.workspace-steps li {position:relative;min-width:0;}
+.workspace-steps li:not(:last-child)::after {content:"";position:absolute;left:calc(50% + 17px);right:calc(-50% + 17px);top:23px;height:2px;background:var(--line);pointer-events:none;}
+.workspace-steps button {position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;width:100%;padding:7px 2px;border:0;border-radius:10px;background:transparent;font-size:12px;min-height:72px;}
+.step-number {display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--paper);font-weight:700;}
+.workspace-steps .active {color:var(--teal);font-weight:700;background:var(--soft);}
+.workspace-steps .active .step-number {background:var(--teal);border-color:var(--teal);color:white;}
+.workflow-hint {margin:8px 0 0;text-align:center;min-height:32px;}

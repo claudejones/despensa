@@ -475,7 +475,7 @@ function seasonScreen() {
         Number($("#week").value) +
         '</b></div><div class="metric"><small>Realized P&L</small><b>' +
         money(realized) +
-        '</b></div><div class="metric"><small>AI accuracy</small><b>—</b></div></div><p class="muted">Season-wide performance uses only recorded results. Independent AI predictions are awaiting validation.</p><button data-action="results">Open Performance Dashboard <i data-lucide="arrow-right"></i></button>') +
+        '</b></div><div class="metric"><small>AI accuracy</small><b>—</b></div></div><p class="muted">Season-wide performance uses only recorded results. Independent AI predictions are awaiting validation.</p><button class="destination-cta" data-action="results"><span>View performance</span><i data-lucide="arrow-right"></i></button>') +
     "</div>"
   );
 }
@@ -560,7 +560,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.2";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
