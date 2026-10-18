@@ -7,6 +7,7 @@ assert.doesNotMatch(await page.locator('#view').innerText(),/Team presentation|C
 await page.locator('#prefStart').selectOption('picks');await page.locator('#prefResearch').check();await page.locator('#prefPulse').uncheck();await page.locator('#prefTime').selectOption('24');
 assert.match(await page.locator('#timePreview').innerText(),/19:20/);assert.equal(await page.locator('[data-preference]').count(),4);
 await page.screenshot({path:`football/test-artifacts/${width}-settings-preferences.png`,fullPage:true});
+await page.locator('nav [data-tab=games]').click();assert.doesNotMatch(await page.locator('#status').innerText(),/AM|PM/);
 await page.reload();await page.waitForFunction(()=>data?.games?.length);assert.equal(await page.locator('nav .active').getAttribute('data-tab'),'picks');assert.ok(await page.locator('[data-research-detail][open]').count()>0);
 await page.locator('nav [data-tab=games]').click();assert.equal(await page.locator('[data-research][open]').count(),65);await page.locator('[data-research=form]>summary').first().click();await page.evaluate(()=>icons());assert.equal(await page.locator('[data-research=form]').first().getAttribute('open'),null,'Manual collapse respected');
 assert.equal(await page.evaluate(()=>preferences.updateAnimation),false);assert.equal(await page.evaluate(()=>(()=>{const h=document.createElement('div');h.className='update-pulse';h.innerHTML='<span class="update-dot"></span>';document.body.append(h);const name=getComputedStyle(h.firstChild).animationName;h.remove();return name})()),'none');
