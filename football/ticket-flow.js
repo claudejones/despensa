@@ -27,7 +27,7 @@ function openReviewSheet(title, html) {
 function closeReviewSheet() { reviewDialog().close(); }
 function legPresentation(l) {
   const g = data?.games.find(g => g.id === l.gameId), t = g && [g.away,g.home].find(t=>t.name===l.team);
-  return `${l.side === 'PROP' ? `<b>${esc(l.prop || 'Player prop')}</b>` : team(l.team, t?.record || l.record)}<div class="small muted">${l.side==='NO'?'Not to win':l.side==='PROP'?'Player prop':'To win'}${l.source ? ' · '+esc(l.source):''}</div>${g || l.kickoff ? kickoff(g?.kickoff || l.kickoff) : ''}`;
+  return `${l.side === 'PROP' ? `<b>${esc(l.prop || 'Player prop')}</b>` : team(l.team, t?.record || l.record)}<div class="small muted">${l.side==='NO'?'Not to win':l.side==='PROP'?'Player prop':'To win'}${l.source ? ' · '+esc(l.source):''}</div>${selectionMarketBlock(l)}${g || l.kickoff ? kickoff(g?.kickoff || l.kickoff) : ''}`;
 }
 function refreshReviewFlow() { save(); if(tab==='kalshi') render(); icons(); }
 function rememberReview(t) { reviewUndo = {id:t.id, before:structuredClone(t)}; }
@@ -133,3 +133,5 @@ window.addEventListener('pageshow',measureBottomDock);
 
 
 document.addEventListener("change", e => { if(e.target.dataset.field || e.target.id === "week") { reviewUndo=null;document.querySelector("#ticketToast")?.remove(); } });
+
+document.addEventListener('change',e=>{if(e.target.id==='reviewOutcome'&&reviewPending){const box=document.querySelector('.sheet-selection .selection-market');if(box)box.outerHTML=selectionMarketBlock({...reviewPending,side:e.target.value});}});

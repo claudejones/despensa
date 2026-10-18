@@ -14,6 +14,7 @@ function researchSnapshot(d){
       'Matchup and schedule':{kickoff:g.kickoff,away:g.away,home:g.home,status:g.status},
       'Player availability':{players:g.availability,impact:g.availabilityImpact},
       'Research':g.insights,
+      ...((d.researchMarketEstimates||[]).some(q=>q.gameId===g.id)?{'Research market estimates':d.researchMarketEstimates.filter(q=>q.gameId===g.id)}:{}),
       'Market prices':(d.marketSnapshots||[]).filter(q=>q.gameId===g.id).sort((a,b)=>String(a.team).localeCompare(String(b.team)))
     };
     out['games:'+g.id]={label:g.away.name+' vs. '+g.home.name,parts};
@@ -30,7 +31,7 @@ function trackResearchChanges(d){
   if(valid)for(const id of new Set([...Object.keys(previous.snapshot),...Object.keys(next)])){
     const old=previous.snapshot[id],now=next[id];
     if(JSON.stringify(old)===JSON.stringify(now))continue;
-    const changes=!old?['New research published']:!now?['Removed from current research']:Object.keys(now.parts).filter(k=>JSON.stringify(now.parts[k])!==JSON.stringify(old.parts[k])).map(k=>k+' changed');
+    const changes=!old?['New research published']:!now?['Removed from current research']:[...new Set([...Object.keys(now.parts),...Object.keys(old.parts)])].filter(k=>JSON.stringify(now.parts[k])!==JSON.stringify(old.parts[k])).map(k=>k+' changed');
     if(old&&now&&id.startsWith('picks:')){
       const before=old.parts['AI pick and rationale']?.[0]?.winner,after=now.parts['AI pick and rationale']?.[0]?.winner;
       if(before!==after)changes.push(`Pick: ${before||'Unpublished'} → ${after||'Unpublished'}`);

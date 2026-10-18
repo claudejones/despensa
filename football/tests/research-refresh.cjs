@@ -13,7 +13,7 @@ assert.equal(await page.getByText('AI RESEARCH LEAN',{exact:true}).count(),13);a
 assert.equal(await page.evaluate(()=>data.games.filter(forecast).length),0);
 await page.locator('.pick-card details summary').first().click();assert.ok(await page.locator('.pick-card').first().locator('a[href^="https:"]').count());
 fs.mkdirSync('football/test-artifacts',{recursive:true});await page.screenshot({path:'football/test-artifacts/research-ai-375.png'});
-await page.locator('nav [data-tab=games]').click();await page.getByText('Market & Probability',{exact:true}).first().click();await page.screenshot({path:'football/test-artifacts/research-market-375.png'});
+await page.locator('nav [data-tab=games]').click();await page.locator('[data-research-group]>summary').first().click();await page.getByText('Market & Probability',{exact:true}).first().click();await page.screenshot({path:'football/test-artifacts/research-market-375.png'});
 await page.locator('nav [data-tab=combos]').click();await page.locator('[data-plan=A]').click();assert.ok(await page.getByText('Research review',{exact:true}).count());
 assert.deepEqual(errors,[]);console.log('PASS refreshed research: source references, provenance, qualitative-only forecasts, market snapshots, combo review');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});
