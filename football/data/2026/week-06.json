@@ -56,7 +56,7 @@
           "category": "matchup",
           "summary": "Research lean: Jacksonville Jaguars · low",
           "details": [
-            "Supporting case (analysis): Jacksonville has continuity from staying in London and a healthier backfield.",
+            "Supporting case (analysis): Jacksonville has continuity from staying in London and enters 4–1 after beating Philadelphia.",
             "Opposing case (analysis): Houston’s pass rush can disrupt protection; Jacksonville is missing a starting corner.",
             "Qualitative judgment, not a validated probability or price-edge claim."
           ],
@@ -1302,9 +1302,9 @@
       "frozenAt": "2026-10-17T23:00:17-05:00",
       "modelVersion": "source-based-qualitative-v1",
       "confidence": "Low (qualitative)",
-      "summary": "Jacksonville has continuity from staying in London and a healthier backfield.",
+      "summary": "Jacksonville has continuity from staying in London and enters 4–1 after beating Philadelphia.",
       "supportingEvidence": [
-        "Jacksonville has continuity from staying in London and a healthier backfield."
+        "Jacksonville has continuity from staying in London and enters 4–1 after beating Philadelphia."
       ],
       "opposingEvidence": [
         "Houston’s pass rush can disrupt protection; Jacksonville is missing a starting corner."
