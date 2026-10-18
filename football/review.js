@@ -11,13 +11,13 @@ function singleInReview(gameId, name) {
   );
 }
 function reviewActions(g) {
-  return `<details class="research-acc context-review"><summary><i data-lucide="list-plus"></i><span><b>Add to Kalshi review</b><div class="muted small">Choose a team to win · save a draft</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${[
+  return `<details class="research-acc context-review"><summary><i data-lucide="list-plus"></i><span><b>Add to ticket</b><div class="muted small">Choose an outcome · single or combo</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${[
     g.away,
     g.home,
   ]
     .map((t) => {
       const added = singleInReview(g.id, t.name);
-      return `<button class="context-choice" data-review-game="${g.id}" data-review-team="${esc(t.name)}" ${added ? "disabled" : ""}><img src="assets/teams/${teamCode(t.name)}.png" alt="" onerror="this.style.display='none'"><span><b>${esc(t.name)}</b><small>${esc(record(t.record))} · YES to win</small></span><span class="review-choice-state">${added ? "Added" : "Add"}</span></button>`;
+      return `<button class="context-choice" data-review-game="${g.id}" data-review-team="${esc(t.name)}" ${added ? "disabled" : ""}><img src="assets/teams/${teamCode(t.name)}.png" alt="" onerror="this.style.display='none'"><span><b>${esc(t.name)}</b><small>${esc(record(t.record))} · Select outcome</small></span><span class="review-choice-state">${added ? "Added" : "Add"}</span></button>`;
     })
     .join(
       "",
