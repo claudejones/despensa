@@ -1,0 +1,32 @@
+name: Archive published AI paper picks
+on:
+  push:
+    branches: [main]
+    paths: ['football/data/2026/week-*.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: football-ai-paper-archive
+  cancel-in-progress: false
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Archive eligible pregame publications
+        run: python3 football/scripts/archive-ai-paper.py
+      - name: Publish new immutable entries
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- football/data/2026/ai-paper.json; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add football/data/2026/ai-paper.json
+          git commit -m 'Archive new pregame AI paper selections'
+          git push origin HEAD:main
+          gh api --method POST repos/${{ github.repository }}/pages/builds

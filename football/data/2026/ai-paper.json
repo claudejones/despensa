@@ -1,0 +1,396 @@
+{
+  "schemaVersion": 1,
+  "season": 2026,
+  "entries": [
+    {
+      "id": "2026:6:single:hou-jax",
+      "kind": "single",
+      "title": "Jacksonville Jaguars",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Jacksonville has continuity from staying in London and enters 4\u20131 after beating Philadelphia.",
+      "legs": [
+        {
+          "gameId": "hou-jax",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "kickoff": "2026-10-18T08:30:00-05:00",
+          "record": "4-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-JAC",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.57,
+        "payout": 3.5087719298245617,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:ten-ind",
+      "kind": "single",
+      "title": "Indianapolis Colts",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Indianapolis has a home-field and established rushing-matchup case.",
+      "legs": [
+        {
+          "gameId": "ten-ind",
+          "team": "Indianapolis Colts",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "2-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-IND",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.75,
+        "payout": 2.6666666666666665,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:car-phi",
+      "kind": "single",
+      "title": "Carolina Panthers",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Carolina faces an offense missing its starting quarterback and lead runner.",
+      "legs": [
+        {
+          "gameId": "car-phi",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "2-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-CAR",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.62,
+        "payout": 3.2258064516129035,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:pit-tb",
+      "kind": "single",
+      "title": "Pittsburgh Steelers",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Pittsburgh can pressure an inexperienced starting quarterback.",
+      "legs": [
+        {
+          "gameId": "pit-tb",
+          "team": "Pittsburgh Steelers",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-PIT",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.57,
+        "payout": 3.5087719298245617,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:bal-cle",
+      "kind": "single",
+      "title": "Baltimore Ravens",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Baltimore\u2019s returning pass rusher can exploit Cleveland\u2019s protection problems.",
+      "legs": [
+        {
+          "gameId": "bal-cle",
+          "team": "Baltimore Ravens",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "4-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-BAL",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.62,
+        "payout": 3.2258064516129035,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:no-nyg",
+      "kind": "single",
+      "title": "New York Giants",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "The Giants have the stronger early record and home venue.",
+      "legs": [
+        {
+          "gameId": "no-nyg",
+          "team": "New York Giants",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "3-1-1"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NYG",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.51,
+        "payout": 3.9215686274509802,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:chi-atl",
+      "kind": "single",
+      "title": "Chicago Bears",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "A Williams return could improve Chicago\u2019s passing threat against Atlanta\u2019s depleted corners.",
+      "legs": [
+        {
+          "gameId": "chi-atl",
+          "team": "Chicago Bears",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-CHI",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.52,
+        "payout": 3.846153846153846,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:nyj-ne",
+      "kind": "single",
+      "title": "New England Patriots",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "New England has the more productive offense and home venue.",
+      "legs": [
+        {
+          "gameId": "nyj-ne",
+          "team": "New England Patriots",
+          "side": "YES",
+          "kickoff": "2026-10-18T12:00:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NE",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.76,
+        "payout": 2.6315789473684212,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:ari-lar",
+      "kind": "single",
+      "title": "Los Angeles Rams",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "The home Rams face an opponent missing an important rushing option.",
+      "legs": [
+        {
+          "gameId": "ari-lar",
+          "team": "Los Angeles Rams",
+          "side": "YES",
+          "kickoff": "2026-10-18T15:05:00-05:00",
+          "record": "2-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-LAR",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.88,
+        "payout": 2.272727272727273,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:lac-kc",
+      "kind": "single",
+      "title": "Kansas City Chiefs",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Kansas City combines extra rest with a clear protection matchup against Los Angeles.",
+      "legs": [
+        {
+          "gameId": "lac-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-10-18T15:25:00-05:00",
+          "record": "4-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-KC",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.79,
+        "payout": 2.531645569620253,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:buf-lv",
+      "kind": "single",
+      "title": "Buffalo Bills",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Buffalo\u2019s 158 rushing yards per game faces a defense allowing 140.6.",
+      "legs": [
+        {
+          "gameId": "buf-lv",
+          "team": "Buffalo Bills",
+          "side": "YES",
+          "kickoff": "2026-10-18T15:25:00-05:00",
+          "record": "4-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-BUF",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.68,
+        "payout": 2.941176470588235,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:dal-gb",
+      "kind": "single",
+      "title": "Green Bay Packers",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Green Bay at home can target a Dallas defense with additional absences.",
+      "legs": [
+        {
+          "gameId": "dal-gb",
+          "team": "Green Bay Packers",
+          "side": "YES",
+          "kickoff": "2026-10-18T19:20:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18DALGB-GB",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.52,
+        "payout": 3.846153846153846,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:6:single:was-sf",
+      "kind": "single",
+      "title": "San Francisco 49ers",
+      "publishedAt": "2026-10-17T23:00:17-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "San Francisco\u2019s continuity and home venue support the lean despite receiver uncertainty.",
+      "legs": [
+        {
+          "gameId": "was-sf",
+          "team": "San Francisco 49ers",
+          "side": "YES",
+          "kickoff": "2026-10-19T19:15:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 6,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-SF",
+        "capturedAt": "2026-10-17T23:00:17-05:00",
+        "price": 0.79,
+        "payout": 2.531645569620253,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-18T19:08:45.358403+00:00",
+      "archiveMode": "reconstructed-pregame",
+      "researchVersion": "2026-10-17-detail-3"
+    }
+  ]
+}
