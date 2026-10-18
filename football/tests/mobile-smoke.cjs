@@ -47,6 +47,7 @@ const fs = require('node:fs');
   await accordions.first().locator('summary').click();
   assert.ok(await accordions.first().getAttribute('open')!==null,'research accordion expands');
   await page.locator('[data-tab=picks]').first().click();
+  const copyPosition=await page.locator('.copybar').evaluate(el=>getComputedStyle(el).position);assert.equal(copyPosition,'static','office pool summary must not overlay picks');
   const pair=page.locator('.pick-card').first().locator('[data-pool]');
   assert.equal(await pair.count(),2,'two equal-choice buttons');
   const sizes=await pair.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().width));
