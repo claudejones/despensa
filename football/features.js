@@ -79,6 +79,8 @@ function validateBackup(x) {
     )
       throw Error("Invalid remaining quantity");
     if (t.legs != null && !Array.isArray(t.legs)) throw Error("Invalid legs");
+    for(const l of t.legs||[]) if(l.quotedPercent!=null&&(!Number.isFinite(l.quotedPercent)||l.quotedPercent<0||l.quotedPercent>100)) throw Error("Invalid leg quote");
+    if(t.pricingSnapshot!=null&&(!Array.isArray(t.pricingSnapshot.legs)||t.pricingSnapshot.legs.some(l=>l.quote!=null&&(!Number.isFinite(l.quote.value)||l.quote.value<0||l.quote.value>1)))) throw Error("Invalid locked quote snapshot");
     if (t.events != null && !Array.isArray(t.events))
       throw Error("Invalid event history");
   }
@@ -145,14 +147,14 @@ function ticketView(t) {
   const fields = ["stake", "payout", "fee", "market"]
     .map(
       (k) =>
-        `<label>${{ stake: "Stake ($)", payout: "Gross payout ($)", fee: "Entry fee ($)", market: "Quoted probability (%)" }[k]}<input type="number" min="0" step=".01" data-id="${esc(t.id)}" data-field="${k}" value="${t[k] == null && k !== "fee" ? "" : Number(t[k] || 0)}" ${draft ? "" : "disabled"}></label>`,
+        `<label>${{ stake: "Stake ($)", payout: "Gross payout ($)", fee: "Entry fee ($)", market: "Actual ticket quote (%) · optional" }[k]}<input type="number" min="0" step=".01" data-id="${esc(t.id)}" data-field="${k}" value="${t[k] == null && k !== "fee" ? "" : Number(t[k] || 0)}" ${draft ? "" : "disabled"}></label>`,
     )
     .join("");
   const legs = [...(t.legs || [])]
     .sort((a,b) => new Date(data?.games.find(g=>g.id===a.gameId)?.kickoff || a.kickoff || 0) - new Date(data?.games.find(g=>g.id===b.gameId)?.kickoff || b.kickoff || 0))
     .map((l) => {
       let g = data?.games.find((g) => g.id === l.gameId);
-      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${l.side === "YES" ? "To win" : l.side === "NO" ? "Not to win" : esc(l.side)}${l.source ? " · " + esc(l.source) : ""}</small>${selectionMarketBlock(l,{week:weekOf(t),season:t.season})}${l.marketPercent==null?'':`<small class="entered-leg-quote">Saved / entered leg quote: ${esc(l.marketPercent)}%</small>`}</div>`;
+      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${l.side === "YES" ? "To win" : l.side === "NO" ? "Not to win" : esc(l.side)}${l.source ? " · " + esc(l.source) : ""}</small>${selectionMarketBlock(l,{week:weekOf(t),season:t.season})}${legQuoteControl(t,l)}${l.marketPercent==null?'':`<small class="entered-leg-quote">Saved / entered leg quote: ${esc(l.marketPercent)}%</small>`}</div>`;
     })
     .join("");
   const be =
@@ -167,7 +169,7 @@ function ticketView(t) {
         "activity",
       )
     : "";
-  return `<article class="card ticket"><div class="row between"><div><span class="eyebrow">${esc(t.type || ((t.legs || []).length > 1 ? "Combo" : "Single game bet"))} · WEEK ${weekOf(t)}</span><h3>${esc(t.title)}</h3></div><span class="pill">${esc(t.status)}</span></div>${draftChoice(t)}${draft ? reviewOverlap(t) : ""}${legs}${draft ? `<button class="edit-selections" data-review-edit="${esc(t.id)}"><i data-lucide="pencil"></i> Edit selections</button>${t.pricingNeedsRefresh ? `<p class="muted small">Selections changed · enter a fresh quote.</p>` : ""}` : ""}${t.status === "draft" && t.originalDrafts ? `<button data-undo-combo="${t.id}">Restore separate singles</button>` : ""}${accordion("Ticket pricing", draft ? "Enter your actual stake, gross payout and fees" : "Purchased terms · protected", `<div class="grid2">${fields}</div>`, "receipt", draft && !t.source?.includes("review"))}<div class="soft"><div class="row between"><span>Break-even</span><b>${be === null ? "—" : be.toFixed(1) + "%"}</b></div><div class="row between"><span>${closed ? "Realized net" : "Potential net at full payout"}</span><b>${draft && !(Number(t.payout) > 0) ? "—" : money(closed ? realizedNet(t) : Number(t.payout || 0) - Number(t.stake || 0) - Number(t.fee || 0))}</b></div><p class="small muted">${t.validatedProbability != null ? "Validated probability: " + (100 * t.validatedProbability).toFixed(1) + "% · Expected net " + money(t.validatedProbability * Number(t.payout) - Number(t.stake) - Number(t.fee || 0)) : "Expected net unavailable · independent probability not validated."}</p></div>${draft ? `<div class="row actions"><button class="primary" data-purchase="${t.id}">Record purchase</button><button data-del="${t.id}">Remove draft</button></div>` : ""}${monitor}${ticketJournal(t)}</article>`;
+  return `<article class="card ticket"><div class="row between"><div><span class="eyebrow">${esc(t.type || ((t.legs || []).length > 1 ? "Combo" : "Single game bet"))} · WEEK ${weekOf(t)}</span><h3>${esc(t.title)}</h3></div><span class="pill">${esc(t.status)}</span></div>${draftChoice(t)}${draft ? reviewOverlap(t) : ""}${legs}${draft ? `<button class="edit-selections" data-review-edit="${esc(t.id)}"><i data-lucide="pencil"></i> Edit selections</button>${t.pricingNeedsRefresh ? `<p class="muted small">Selections changed · enter a fresh quote.</p>` : ""}` : ""}${t.status === "draft" && t.originalDrafts ? `<button data-undo-combo="${t.id}">Restore separate singles</button>` : ""}${accordion("Ticket pricing", draft ? "Enter your actual stake, gross payout and fees" : "Purchased terms · protected", `<div class="grid2">${fields}</div>`, "receipt", draft && !t.source?.includes("review"))}<div data-pricing-totals="${esc(t.id)}">${ticketPricingTotals(t)}</div>${draft ? `<div class="row actions"><button class="primary" data-purchase="${t.id}">Record purchase</button><button data-del="${t.id}">Remove draft</button></div>` : ""}${monitor}${ticketJournal(t)}</article>`;
 }
 function workspaceScreen() {
   const rows = scopeTickets(),
@@ -234,9 +236,12 @@ document.addEventListener("click", (e) => {
   if (b.dataset.purchase) {
     const t = tickets.find((t) => t.id === b.dataset.purchase);
     if (!t || t.status !== "draft") return;
+    const invalid=[...b.closest(".ticket").querySelectorAll("input[data-field],input[data-leg-quote]")].find(input=>!input.validity.valid);
+    if(invalid){invalid.reportValidity();return;}
     if (t.type === "Combo" && t.legs.length < 2) return appAlert("Add at least two selections to this combo before recording purchase.");
     if (!(Number(t.stake) > 0 && Number(t.payout) > 0))
       return appAlert("Enter positive stake and gross payout first.");
+    freezeTicketPricing(t);
     t.status = "purchased";
     t.remainingFraction = 1;
     t.events ??= [];

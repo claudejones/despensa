@@ -62,6 +62,9 @@ jobs:
       - name: Verify update preservation and button spacing
         run: node football/tests/update-preservation.cjs
 
+      - name: Verify pricing focus and per-leg quotes
+        run: node football/tests/pricing-editor.cjs
+
       - name: Upload mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4
