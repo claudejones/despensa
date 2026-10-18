@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
  const page=await browser.newPage({viewport:{width:390,height:844}});
  try{
  await page.goto('http://127.0.0.1:8765/football/',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>typeof window.analyzePlan==='function'&&typeof window.realizedNet==='function');
+ await page.waitForFunction(()=>typeof analyzePlan==='function'&&typeof realizedNet==='function'&&typeof data!=='undefined'&&data?.comboCandidates?.length>0);
  const results=await page.evaluate(()=>{
  const test=(name,actual,expected)=>({name,actual,expected,pass:Math.abs(actual-expected)<0.00001});
  const base={stake:6,status:'purchased',remainingFraction:0.5,events:[{kind:'sale',portion:0.5,proceeds:7.32,fee:0.2}]};
