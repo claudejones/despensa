@@ -97,6 +97,7 @@ const { chromium } = require("playwright"),
       await page.waitForFunction(() => data?.games?.length);
       await page.locator("[data-tab=kalshi]").first().click();
       assert.equal(await page.locator(".ticket").count(), 1);
+      await page.locator(".ticket-summary").click();
       await page.locator("[data-undo-combo]").click();
       assert.equal(await page.locator(".ticket").count(), 2);
       await page.screenshot({

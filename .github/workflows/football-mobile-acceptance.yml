@@ -65,6 +65,9 @@ jobs:
       - name: Verify pricing focus and per-leg quotes
         run: node football/tests/pricing-editor.cjs
 
+      - name: Verify Kalshi workspace views
+        run: node football/tests/workspace-views.cjs
+
       - name: Upload mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4

@@ -1,6 +1,6 @@
 # NFL Intelligence — implementation tracker
 
-Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.4.0**, publication gated by mobile acceptance and Pages verification.
+Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.5.0**, publication gated by mobile acceptance and Pages verification.
 
 ## Implemented and locally verified
 
@@ -146,3 +146,12 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Distinct binary-game percentages multiply into an explicitly independence-assumed market estimate, never a calibrated probability or executable combo quote. Same-game combinations/props or missing quotes remain unavailable. Actual stake/payout/fees and optional actual ticket quote remain separate; break-even and profit calculations are unchanged.
 - Recording purchase freezes per-leg quote values, source labels and captured timestamps. Purchased quote controls are read-only; old purchased tickets without snapshots are not backfilled. Changing a selection clears its override.
 - New 320/375/430 browser coverage verifies no blur redraw/jump, overrides, fallback, zero/invalid/missing values, repeated-game exclusion and immutable quote snapshots after research changes/reload. Financial fixtures, full purchase/sale/settlement/backup lifecycle, shared builder and update-preservation tests passed locally; screenshots inspected.
+
+## v1.5.0 — clearer Kalshi workspace (2026-10-18)
+
+- Replaced numbered workflow with Drafts, Analysis, Open bets and History; direct Performance access.
+- Compact expandable ticket summaries retain expansion during edits and rerenders.
+- Analysis lists every priced game with “Included in N tickets,” ticket names and an overlapping-exposure explanation.
+- Separate observations, executed cash-outs and settlement. Purchased quote history is read-only or “Not recorded.”
+- Profit labels account for stake and fees; partial-sale potential includes realized cash-outs plus remaining potential.
+- Workspace, lifecycle, quote editing, financial and raw storage preservation regression coverage; mobile screenshots at 320/375/430px. No save-key changes or personal-data migrations.
