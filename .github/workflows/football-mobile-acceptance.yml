@@ -25,6 +25,10 @@ jobs:
         run: node football/tests/mobile-smoke.cjs
       - name: Verify all-in pricing
         run: node football/tests/all-in-pricing.cjs
+      - name: Verify automatic AI paper portfolio
+        run: |
+          python3 -m unittest discover -s football/tests -p test_ai_archive.py -v
+          node football/tests/ai-paper.cjs
       - name: Run financial acceptance
         run: node football/tests/financial-acceptance.cjs
 

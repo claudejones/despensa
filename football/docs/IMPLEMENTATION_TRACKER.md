@@ -184,3 +184,10 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Removed separate entry fee input and purchase-detail fee row. Total paid includes trading costs; cash-outs use actual credited amounts.
 - Legacy saved fees remain in accounting. Editing a legacy draft total folds its old fee into the new all-in amount; reloads leave stored records unchanged.
 - Verified financial acceptance, all-in pricing, and update preservation at 320/375/430px.
+
+## v1.7.0 — Automatic AI paper portfolio
+- Home entry and Performance AI paper view, singles/combos, season/week filters, settled P/L and ROI, win rate, open stakes, weekly cumulative table and expandable sourced tickets.
+- Separate public append-only archive; no personal data reads/writes. Week 6 contains 13 reconstructed pregame AI leans. User-supplied strategy candidates excluded; no AI-authored combos currently archived.
+- $2 fractional price benchmark before costs, with missing quotes excluded from financial results. Verified full-game results only; tie/void outcomes require rule handling. No cash-out simulation.
+- Research publication workflow appends eligible new pregame AI entries automatically and requests Pages rebuild. Existing entries never change, including unpriced entries. Post-kickoff additions rejected.
+- Engine skill tests: 13 passed. Archive unit tests and browser acceptance at 320/375/430 passed. Personal local storage unchanged by AI view.

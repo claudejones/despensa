@@ -561,7 +561,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.6.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.7.0";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -597,7 +597,7 @@ function render() {
     return;
   }
   if (sub === "results") {
-    v.innerHTML = performanceTabs()+(performanceView==='pool'?poolPerformanceScreen():performanceScreen());
+    v.innerHTML = performanceTabs()+(performanceView==='ai'?paperPortfolioScreen():performanceView==='pool'?poolPerformanceScreen():performanceScreen());
     icons();
     return;
   }
@@ -613,7 +613,7 @@ function render() {
     return;
   }
   if (tab === "weeks")
-    v.innerHTML = homeBriefings() + homePoolCard() + homePerformanceCard() +
+    v.innerHTML = homeBriefings() + homePoolCard() + homePerformanceCard() + homePaperCard() +
       '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
       data.week +
       '</small></div><p class="muted">' +
@@ -807,6 +807,7 @@ document.addEventListener("click", async (e) => {
     plan = "";
     render();
     if(performanceView === "pool") loadPoolResults();
+    if(performanceView === "ai") loadPaperPortfolio();
   }
   if (b.dataset.week) {
     $("#week").value = b.dataset.week;
