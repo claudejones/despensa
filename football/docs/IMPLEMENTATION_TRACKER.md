@@ -58,4 +58,6 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Active draft and tickets persist locally. Office Pool storage, ledger events, research data and financial calculations remain intact.
 - Local shared-flow checks passed 320/375/430px; contextual/sticky suite passed 320/390/430px; four-width smoke, 10 financial fixtures and full lifecycle/backup suite passed. Actual mobile screenshots inspected. Physical iPhone Safari remains a user verification step.
 - Research remains preliminary; this release changes the approved ticket interaction, not the research evidence.
-- Publication receipt will be recorded after deployment verification.
+- Published through PR #9 at application commit `06bcd6926b8e84e6d3c5baa50e227a501837586e`. Development acceptance 39094894245, main acceptance 39094963741 and Pages deployment 39094963315 succeeded.
+- Live shared-ticket flow passed 320/375/430px, including contextual additions, Undo, editing suggestions, quote invalidation/restoration, persistence, switching and overlap. Live index, CSS and all four application scripts matched tested files byte-for-byte.
+- Production: https://claudejones.github.io/despensa/football/?v=1.2
