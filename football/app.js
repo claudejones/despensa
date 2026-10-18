@@ -468,13 +468,7 @@ function seasonScreen() {
             "</span></button>"
           );
         }).join("") +
-        '</div><div class="season-detail"><b>Week ' +
-        Number($("#week").value) +
-        '</b><p class="muted">' +
-        (catalog.weeks?.[$("#week").value]
-          ? "Research available for this week"
-          : "Research not yet published for this week") +
-        '</p></div>'
+        '</div>'
       : '<div class="grid2"><div class="metric"><small>Weeks with research</small><b>' +
         Object.keys(catalog.weeks || {}).length +
         '</b></div><div class="metric"><small>Selected week</small><b>' +
@@ -566,7 +560,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.0";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.1";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
