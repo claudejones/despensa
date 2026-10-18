@@ -45,7 +45,7 @@ const fs = require('node:fs');
   assert.ok(await page.locator('.time-pill').count()>=1,'game time pill');
   const accordions=page.locator('.research-acc');
   assert.ok(await accordions.count()>=2,'research categories independently expandable');
-  await accordions.first().locator('summary').click();
+  await accordions.first().locator(':scope > summary').click();
   assert.ok(await accordions.first().getAttribute('open')!==null,'research accordion expands');
   await page.locator('[data-tab=picks]').first().click();
   await page.locator('[data-picks-view=pool]').click();
