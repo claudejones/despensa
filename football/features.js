@@ -95,7 +95,7 @@ function exposureView(rows) {
   const priced = rows.filter((t) => Number(t.payout) > 0 && t.legs?.length),
     keys = [...new Set(priced.flatMap((t) => t.legs.map((l) => l.gameId)))];
   let html =
-    '<h3>Portfolio evaluation</h3><p class="muted small">Combined view of the tickets below, including shared game outcomes.</p>';
+    '<h3>Portfolio evaluation</h3><p class="muted small">Potential results for the remaining bets below, including shared game outcomes.</p>';
   const eligible =
     priced.length &&
     keys.length <= 16 &&
@@ -122,7 +122,7 @@ function exposureView(rows) {
       metric("Worst-case result", money(a.worst)) +
       '</div><p class="small muted">' +
       a.outcomes.length +
-      " win/loss combinations · includes entry fees, excludes future exit fees. Tie/void contracts require their market settlement rules; these scenarios assume a winner.</p>";
+      " outcomes · After entry fees, before future sale fees. Assumes each game has a winner; ties and voids follow market rules.</p>";
   } else
     html +=
       '<p class="muted">Exact joint outcomes require priced game-winner legs from this week. Player props require their own joint probability model.</p>';
