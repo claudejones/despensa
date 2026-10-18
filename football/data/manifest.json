@@ -17,9 +17,9 @@
     "06": {
       "path": "2026/week-06.json",
       "status": "refreshed",
-      "researchVersion": "2026-10-17-refresh-2"
+      "researchVersion": "2026-10-17-detail-3"
     }
   },
-  "lastSuccessfulPublication": "2026-10-17T23:00:17-05:00",
+  "lastSuccessfulPublication": "2026-10-17T23:44:52-05:00",
   "notice": "Week 6 refreshed from official sources; final inactives pending. Qualitative leans are not calibrated probabilities; markets are snapshots. Automatic publication is not active."
 }

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "season": 2026,
   "week": 6,
-  "researchVersion": "2026-10-17-refresh-2",
-  "researchedAt": "2026-10-17T23:00:17-05:00",
+  "researchVersion": "2026-10-17-detail-3",
+  "researchedAt": "2026-10-17T23:44:52-05:00",
   "status": "refreshed",
-  "notes": "Saturday-night source refresh: 13 upcoming games, qualitative research leans and 26 Kalshi bid/ask snapshots. Final inactives and weather remain unverified. No calibrated win probabilities or executable combo quotes. Historical October 15 combo quotes retained, not repriced.",
+  "notes": "Expanded official-source research with player positions and availability, recent form, historical context and separate Kalshi price snapshots. Final inactives and weather remain unverified. Qualitative AI leans are unchanged; numerical win probabilities are not calibrated. Combo quotes remain historical.",
   "games": [
     {
       "id": "hou-jax",
@@ -25,32 +25,29 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Jacksonville won its previous London game; Houston just earned its first win.",
+          "summary": "Pass rush and ball security sharpen the London matchup.",
           "details": [
-            "Entering Week 6: Houston Texans 1-4-0; Jacksonville Jaguars 4-1-0.",
-            "Jacksonville won its previous London game; Houston just earned its first win."
+            "Houston’s Will Anderson Jr. recorded three sacks in the win over Tennessee.",
+            "Jacksonville has won three straight: 35–6 over New England, 22–17 at Cincinnati and 19–17 over Philadelphia.",
+            "Jacksonville allows 63.8 rushing yards per game but 266.2 passing yards. Analysis: Houston’s route to offense may run through the passing game."
           ],
           "sourceIds": [
-            "jax",
-            "hou",
-            "hou-preview",
-            "schedule"
-          ],
-          "asOf": "2026-10-17T23:00:17-05:00"
-        },
-        {
-          "category": "injuries",
-          "summary": "Houston: Montgomery, Dell and Pitre out. Jacksonville: Brown and Matiscik out; Eric Murray expected back.",
-          "details": [
-            "Houston: Montgomery, Dell and Pitre out. Jacksonville: Brown and Matiscik out; Eric Murray expected back.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
-          ],
-          "sourceIds": [
-            "jax",
             "hou",
             "hou-preview"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "5 key players unavailable · 3 availability decisions to watch",
+          "details": [
+            "Houston loses a runner, receiver and safety. Jacksonville is short at cornerback and long snapper; Murray’s return helps the secondary but does not replace Brown."
+          ],
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -83,25 +80,23 @@
         },
         {
           "category": "history",
-          "summary": "Jacksonville beat Philadelphia 19–17 last week. A narrow win is not evidence of dominance.",
+          "summary": "The previous meeting showed how quickly this matchup can turn.",
           "details": [
-            "Jacksonville beat Philadelphia 19–17 last week. A narrow win is not evidence of dominance.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Houston overturned a 19-point second-half deficit in the last meeting.",
+            "Danielle Hunter had 3.5 sacks in that comeback; Jacksonville’s Parker Washington scored twice.",
+            "Context: that game featured Davis Mills at quarterback. Its result is useful for understanding pressure and volatility, not as a direct forecast."
           ],
           "sourceIds": [
-            "jax",
-            "hou",
             "hou-preview"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "jax",
         "hou",
         "hou-preview",
+        "jax",
         "kalshi"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
@@ -109,7 +104,127 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Houston Texans",
+          "name": "David Montgomery",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Tank Dell",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Jalen Pitre",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Henry To'oTo'o",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Ja'Marcus Ingram",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "name": "Montaric Brown",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "name": "Ross Matiscik",
+          "position": "LS",
+          "positionName": "Long snapper",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "name": "Jaylon Jones",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "name": "Eric Murray",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Cleared",
+          "note": "No game designation after full Friday practice",
+          "sourceIds": [
+            "hou",
+            "jax"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Houston loses a runner, receiver and safety. Jacksonville is short at cornerback and long snapper; Murray’s return helps the secondary but does not replace Brown."
     },
     {
       "id": "ten-ind",
@@ -129,30 +244,28 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Tennessee remains winless; Indianapolis enters 2–3. Taylor averages 3.9 yards per carry.",
+          "summary": "Indianapolis needs better early rushing lanes.",
           "details": [
-            "Entering Week 6: Tennessee Titans 0-5-0; Indianapolis Colts 2-3-0.",
-            "Tennessee remains winless; Indianapolis enters 2–3. Taylor averages 3.9 yards per carry."
+            "Jonathan Taylor averages 3.9 yards per carry, below his 4.8 career average.",
+            "Taylor has been contacted at or behind the line on 47.5% of carries this season.",
+            "Indianapolis faces stacked boxes on 27.7% of runs. Analysis: blocking and passing answers matter more than simply increasing Taylor’s carries."
           ],
           "sourceIds": [
-            "ten",
-            "ind",
-            "schedule"
+            "ind"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Tennessee: Elliott and Winston out; Spears questionable. A full practice did not remove Spears’ designation.",
+          "summary": "4 key players unavailable · 3 availability decisions to watch",
           "details": [
-            "Tennessee: Elliott and Winston out; Spears questionable. A full practice did not remove Spears’ designation.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Tennessee’s running-back rotation depends on Spears’ availability. Indianapolis loses receiver and linebacker depth; verify the final active list before settling a ticket."
           ],
           "sourceIds": [
             "ten",
-            "ind"
+            "ind-injury"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -184,31 +297,137 @@
         },
         {
           "category": "history",
-          "summary": "Indianapolis has won six consecutive meetings; Tennessee’s changed staff limits the usefulness of that streak.",
+          "summary": "Taylor has produced against Tennessee, but the defensive staff changed.",
           "details": [
-            "Indianapolis has won six consecutive meetings; Tennessee’s changed staff limits the usefulness of that streak.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Indianapolis won the last six meetings, averaging 160.7 rushing yards in those wins.",
+            "Taylor’s last three meetings produced 218, 102 and 153 rushing yards, with nine total touchdowns.",
+            "Context: Tennessee now has Robert Saleh and Gus Bradley on its defensive staff; past rushing success is not a guarantee."
           ],
           "sourceIds": [
-            "ten",
             "ind"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "ten",
         "ind",
-        "kalshi"
+        "ten",
+        "schedule",
+        "kalshi",
+        "ind-injury"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
       "researchLimitations": [
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Tennessee Titans",
+          "name": "Jordan Elliott",
+          "position": "DL",
+          "positionName": "Defensive lineman",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ten",
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Tennessee Titans",
+          "name": "Kevin Winston Jr.",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ten",
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Tennessee Titans",
+          "name": "Tyjae Spears",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Questionable",
+          "note": "Full practice does not remove the game designation",
+          "sourceIds": [
+            "ten",
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Tennessee Titans",
+          "name": "Joshua Williams",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Questionable",
+          "note": "Practice window; activation required",
+          "sourceIds": [
+            "ten",
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Ashton Dulin",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ten",
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Jaylon Carlies",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ten",
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Tyler Warren",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Questionable",
+          "note": "Limited Friday with a groin injury",
+          "sourceIds": [
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Will Mallory",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Cleared",
+          "note": "Activated Saturday; questionable designation lifted",
+          "sourceIds": [
+            "ind-injury"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Tennessee’s running-back rotation depends on Spears’ availability. Indianapolis loses receiver and linebacker depth; verify the final active list before settling a ticket."
     },
     {
       "id": "car-phi",
@@ -228,30 +447,28 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Carolina is 2–2; Philadelphia is 2–3 and turns to Tanner McKee.",
+          "summary": "Carolina brings passing production; Philadelphia changes quarterbacks.",
           "details": [
-            "Entering Week 6: Carolina Panthers 2-2-0; Philadelphia Eagles 2-3-0.",
-            "Carolina is 2–2; Philadelphia is 2–3 and turns to Tanner McKee."
+            "Carolina comes off a bye and ranks second in passing yards per game at 301.3.",
+            "Carolina has forced eight turnovers but allows 156.5 rushing yards per game.",
+            "Philadelphia lost 19–17 in London last week. Analysis: McKee’s ball security and the replacement running game are key to avoiding another narrow loss."
           ],
           "sourceIds": [
-            "phi",
             "phi-preview",
-            "schedule"
+            "jax"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Hurts and Barkley unavailable. DeVonta Smith and Dontayvion Wicks cleared; Drew Kendall questionable.",
+          "summary": "5 key players unavailable · 4 availability decisions to watch",
           "details": [
-            "Hurts and Barkley unavailable. DeVonta Smith and Dontayvion Wicks cleared; Drew Kendall questionable.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Philadelphia changes both its starting quarterback and lead runner. Returning receivers help, but Carolina also has uncertainty at offensive tackle."
           ],
           "sourceIds": [
-            "phi",
-            "phi-preview"
+            "phi"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -283,23 +500,23 @@
         },
         {
           "category": "history",
-          "summary": "McKee’s third career start is his first outside Week 18; the comparable starting sample is small.",
+          "summary": "McKee’s previous starts provide only a small comparison sample.",
           "details": [
-            "McKee’s third career start is his first outside Week 18; the comparable starting sample is small.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "This is Tanner McKee’s third career start and his first outside Week 18.",
+            "Carolina’s 59 points allowed in the opener contrasts with its subsequent defensive improvement, as described in Philadelphia’s preview.",
+            "Context: the new starting quarterback and replacement runners make old team-level results less comparable."
           ],
           "sourceIds": [
-            "phi",
             "phi-preview"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "phi",
         "phi-preview",
+        "jax",
+        "phi",
         "kalshi"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
@@ -307,7 +524,142 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Carolina Panthers",
+          "name": "A.J. Dillon",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Monroe Freeling",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Doubtful",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Taylor Moton",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Questionable",
+          "note": "Practice window; activation required",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Trevor Etienne",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Questionable",
+          "note": "Team plans activation; final active list pending",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Jalen Hurts",
+          "position": "QB",
+          "positionName": "Quarterback",
+          "status": "Out",
+          "note": "Tanner McKee is the announced starter",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Saquon Barkley",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "Dameon Pierce expected to lead the backfield",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Will Shipley",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "IR",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Jalyx Hunt",
+          "position": "OLB",
+          "positionName": "Outside linebacker",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Drew Kendall",
+          "position": "C",
+          "positionName": "Center",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "DeVonta Smith",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Cleared",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Dontayvion Wicks",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Cleared",
+          "note": "",
+          "sourceIds": [
+            "phi"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Philadelphia changes both its starting quarterback and lead runner. Returning receivers help, but Carolina also has uncertainty at offensive tackle."
     },
     {
       "id": "pit-tb",
@@ -327,30 +679,29 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Both won last week: Pittsburgh over Indianapolis and Tampa Bay at Dallas.",
+          "summary": "Tampa Bay’s rookie gets another start; Pittsburgh reshuffles receivers.",
           "details": [
-            "Entering Week 6: Pittsburgh Steelers 3-2-0; Tampa Bay Buccaneers 1-4-0.",
-            "Both won last week: Pittsburgh over Indianapolis and Tampa Bay at Dallas."
+            "Jalon Daniels earned his first win at Dallas in Week 5; Tampa Bay has extra rest after that Thursday game.",
+            "Pittsburgh beat Indianapolis last week, but Roman Wilson’s injury removes a receiver with 14 catches, 188 yards and two touchdowns this season.",
+            "Analysis: those results offer encouragement, but Daniels’ small starting sample and Pittsburgh’s reduced receiving depth limit confidence."
           ],
           "sourceIds": [
-            "pit",
             "tb",
-            "schedule"
+            "pit"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Mayfield and Winfield out; Jalon Daniels starts again. Metcalf cleared Saturday; Freiermuth newly questionable; Roman Wilson on IR.",
+          "summary": "3 key players unavailable · 1 availability decisions to watch",
           "details": [
-            "Mayfield and Winfield out; Jalon Daniels starts again. Metcalf cleared Saturday; Freiermuth newly questionable; Roman Wilson on IR.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Pittsburgh loses receiver depth and may be without its tight end. Tampa Bay continues with a rookie quarterback and without a key safety."
           ],
           "sourceIds": [
             "pit",
             "tb"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -382,23 +733,22 @@
         },
         {
           "category": "history",
-          "summary": "Daniels makes his third consecutive start. Treat conclusions about his ceiling cautiously.",
+          "summary": "A rookie starter changes the usefulness of older team comparisons.",
           "details": [
-            "Daniels makes his third consecutive start. Treat conclusions about his ceiling cautiously.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Daniels is making his third consecutive start; Mayfield had previously started 57 straight games for Tampa Bay.",
+            "Daniels’ first win came at Dallas in Week 5.",
+            "Context: two starts offer little evidence for a stable forecast. Current quarterback and receiver availability carry more weight than an old series record."
           ],
           "sourceIds": [
-            "pit",
             "tb"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "pit",
         "tb",
+        "pit",
         "kalshi"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
@@ -406,7 +756,75 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Pittsburgh Steelers",
+          "name": "Roman Wilson",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "IR",
+          "note": "",
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Pittsburgh Steelers",
+          "name": "Pat Freiermuth",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Questionable",
+          "note": "Added Saturday with a calf injury",
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Pittsburgh Steelers",
+          "name": "DK Metcalf",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Cleared",
+          "note": "Designation removed Saturday",
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Baker Mayfield",
+          "position": "QB",
+          "positionName": "Quarterback",
+          "status": "Out",
+          "note": "Jalon Daniels starts for a third consecutive game",
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Antoine Winfield Jr.",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "pit",
+            "tb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Pittsburgh loses receiver depth and may be without its tight end. Tampa Bay continues with a rookie quarterback and without a key safety."
     },
     {
       "id": "bal-cle",
@@ -426,28 +844,27 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Huntley led Baltimore’s overtime comeback in Atlanta. Cleveland allowed eight sacks last week.",
+          "summary": "Cleveland’s protection is the clearest recent pressure point.",
           "details": [
-            "Entering Week 6: Baltimore Ravens 4-1-0; Cleveland Browns 3-2-0.",
-            "Huntley led Baltimore’s overtime comeback in Atlanta. Cleveland allowed eight sacks last week."
-          ],
-          "sourceIds": [
-            "bal",
-            "schedule"
-          ],
-          "asOf": "2026-10-17T23:00:17-05:00"
-        },
-        {
-          "category": "injuries",
-          "summary": "Jackson and Jurgens out; Huntley starts. Hendrickson returns. Cleveland’s Judkins, Graham and Schwesinger questionable.",
-          "details": [
-            "Jackson and Jurgens out; Huntley starts. Hendrickson returns. Cleveland’s Judkins, Graham and Schwesinger questionable.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Cleveland allowed eight sacks against the Jets last week; Deshaun Watson has taken 19 this season.",
+            "Baltimore won in overtime at Atlanta with Tyler Huntley starting.",
+            "Analysis: Hendrickson’s return supports the pressure matchup, while Baltimore’s own center and guard issues make turnovers a risk on both sides."
           ],
           "sourceIds": [
             "bal"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "6 key players unavailable · 5 availability decisions to watch",
+          "details": [
+            "Baltimore’s backup quarterback operates behind an unsettled interior line. Cleveland’s uncertain defensive leaders could change both pressure and run defense."
+          ],
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -478,20 +895,20 @@
         },
         {
           "category": "history",
-          "summary": "Huntley won his last three starts; that small sample does not establish a win probability.",
+          "summary": "Huntley’s recent starts are encouraging but few.",
           "details": [
-            "Huntley won his last three starts; that small sample does not establish a win probability.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Huntley has won his last three starts, counting games from last season.",
+            "Jackson is missing his second consecutive game; this is Huntley’s second start of the current stretch.",
+            "Context: the offensive line remains unsettled. Three wins do not establish a calibrated probability for this matchup."
           ],
           "sourceIds": [
             "bal"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
         "bal",
         "kalshi"
       ],
@@ -500,7 +917,154 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Baltimore Ravens",
+          "name": "Lamar Jackson",
+          "position": "QB",
+          "positionName": "Quarterback",
+          "status": "Out",
+          "note": "Tyler Huntley starts again",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Cam Jurgens",
+          "position": "C",
+          "positionName": "Center",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Broderick Washington Jr.",
+          "position": "DT",
+          "positionName": "Defensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Matthew Hibner",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Andrew Vorhees",
+          "position": "G",
+          "positionName": "Guard",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Emery Jones Jr.",
+          "position": "G",
+          "positionName": "Guard",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Trey Hendrickson",
+          "position": "DE",
+          "positionName": "Defensive end",
+          "status": "Cleared",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Quinshon Judkins",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Mason Graham",
+          "position": "DT",
+          "positionName": "Defensive tackle",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Carson Schwesinger",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Teven Jenkins",
+          "position": "G",
+          "positionName": "Guard",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Dylan Sampson",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "bal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Baltimore’s backup quarterback operates behind an unsettled interior line. Cleveland’s uncertain defensive leaders could change both pressure and run defense."
     },
     {
       "id": "no-nyg",
@@ -520,30 +1084,27 @@
       "insights": [
         {
           "category": "form",
-          "summary": "New York enters 3–1–1; New Orleans 1–4. The Giants’ tie is preserved in their record.",
+          "summary": "New York’s defensive results are stronger than New Orleans’.",
           "details": [
-            "Entering Week 6: New Orleans Saints 1-4-0; New York Giants 3-1-1.",
-            "New York enters 3–1–1; New Orleans 1–4. The Giants’ tie is preserved in their record."
+            "The Saints lost 23–13 to Minnesota last week.",
+            "New Orleans allows 30.2 points per game versus New York’s 21.2; the Saints also allow 148.8 rushing yards per game.",
+            "Turnover margin: Saints −6, Giants +1. Analysis: New Orleans needs cleaner possessions, not just an improvement in scoring."
           ],
           "sourceIds": [
-            "nyg",
-            "no",
-            "schedule"
+            "no"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Giants: Hood, Theo Johnson and Nubin ruled out. Check final offensive-tackle availability before relying on protection.",
+          "summary": "5 key players unavailable · 5 availability decisions to watch",
           "details": [
-            "Giants: Hood, Theo Johnson and Nubin ruled out. Check final offensive-tackle availability before relying on protection.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "New York has absences in the secondary and uncertainty at both tackles. New Orleans’ Kamara and Olave decisions matter for its offensive options."
           ],
           "sourceIds": [
-            "nyg",
-            "no"
+            "nyg"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -575,23 +1136,22 @@
         },
         {
           "category": "history",
-          "summary": "No numerical head-to-head adjustment used; current availability matters more than old series outcomes.",
+          "summary": "New Orleans has had recent success in this series.",
           "details": [
-            "No numerical head-to-head adjustment used; current availability matters more than old series outcomes.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "The Saints won the last three meetings, including 26–14 on October 5, 2025.",
+            "New Orleans also won its last two visits to MetLife Stadium.",
+            "Context: current New Orleans defensive performance is weaker than that streak suggests; historical success is supporting context only."
           ],
           "sourceIds": [
-            "nyg",
             "no"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "nyg",
         "no",
+        "nyg",
         "kalshi"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
@@ -599,7 +1159,130 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "New Orleans Saints",
+          "name": "Kaden Elliss",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "Anfernee Jennings",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "Alvin Kamara",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "Chris Olave",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Colton Hood",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Theo Johnson",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Tyler Nubin",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Andrew Thomas",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Jermaine Eluemunor",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Abdul Carter",
+          "position": "OLB",
+          "positionName": "Outside linebacker",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "nyg"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "New York has absences in the secondary and uncertainty at both tackles. New Orleans’ Kamara and Olave decisions matter for its offensive options."
     },
     {
       "id": "chi-atl",
@@ -619,30 +1302,28 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Chicago comes off a five-turnover loss; Atlanta lost in overtime. Both have top-two rushing offenses.",
+          "summary": "Strong rushing attacks meet strong run defenses.",
           "details": [
-            "Entering Week 6: Chicago Bears 3-2-0; Atlanta Falcons 2-3-0.",
-            "Chicago comes off a five-turnover loss; Atlanta lost in overtime. Both have top-two rushing offenses."
+            "Chicago averages 173.2 rushing yards per game; Atlanta averages 166.8. Their run defenses allow 96.0 and 80.2 respectively.",
+            "Chicago managed 246 total yards and five turnovers in last week’s loss at Green Bay.",
+            "Atlanta is 0–2 at home and allowed Baltimore 208 rushing yards last week. Analysis: season averages conceal a recent defensive setback."
           ],
           "sourceIds": [
-            "chi",
-            "chi-qb",
-            "schedule"
+            "chi"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Williams expected to start per Saturday reporting, still officially questionable. Monangai out; Atlanta missing Henderson.",
+          "summary": "6 key players unavailable · 1 availability decisions to watch",
           "details": [
-            "Williams expected to start per Saturday reporting, still officially questionable. Monangai out; Atlanta missing Henderson.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Chicago’s lean is conditional on Williams’ return. Both teams are missing defenders; Atlanta’s cornerback depth and Chicago’s front warrant attention."
           ],
           "sourceIds": [
             "chi",
             "chi-qb"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -674,21 +1355,20 @@
         },
         {
           "category": "history",
-          "summary": "Chicago’s 42.9% red-zone touchdown rate is last; getting chances has not meant finishing drives.",
+          "summary": "Recent opponent results show why records alone can mislead.",
           "details": [
-            "Chicago’s 42.9% red-zone touchdown rate is last; getting chances has not meant finishing drives.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Atlanta beat Green Bay 35–14 on the road; Chicago then lost 31–7 at Green Bay.",
+            "Before allowing Baltimore 208 rushing yards, Atlanta allowed 58, 68, 17 and 50 in its first four games.",
+            "Context: the games were played under different personnel conditions. Shared opponents are a comparison point, not a transitive prediction."
           ],
           "sourceIds": [
-            "chi",
-            "chi-qb"
+            "chi"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
         "chi",
         "chi-qb",
         "kalshi"
@@ -698,7 +1378,114 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Chicago Bears",
+          "name": "Caleb Williams",
+          "position": "QB",
+          "positionName": "Quarterback",
+          "status": "Questionable",
+          "note": "Expected to start per Saturday reporting; not yet confirmed active",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Kyle Monangai",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Dayo Odeyingbo",
+          "position": "DE",
+          "positionName": "Defensive end",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "T.J. Edwards",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Montez Sweat",
+          "position": "DE",
+          "positionName": "Defensive end",
+          "status": "Suspended",
+          "note": "",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "C.J. Henderson",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "A.J. Terrell",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "IR",
+          "note": "",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "Michael Penix Jr.",
+          "position": "QB",
+          "positionName": "Quarterback",
+          "status": "Expected to play",
+          "note": "Expected fourth straight start per team preview",
+          "sourceIds": [
+            "chi",
+            "chi-qb"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Chicago’s lean is conditional on Williams’ return. Both teams are missing defenders; Atlanta’s cornerback depth and Chicago’s front warrant attention."
     },
     {
       "id": "nyj-ne",
@@ -718,32 +1505,28 @@
       "insights": [
         {
           "category": "form",
-          "summary": "New England ranks eighth in total offense versus New York’s 26th; both defenses rank in the top five.",
+          "summary": "New England’s offense is improving; turnovers remain a counter-signal.",
           "details": [
-            "Entering Week 6: New York Jets 2-3-0; New England Patriots 3-2-0.",
-            "New England ranks eighth in total offense versus New York’s 26th; both defenses rank in the top five."
+            "New England gained 405 yards at Buffalo and 536 against Las Vegas in its last two games.",
+            "Scoring averages: Patriots 22.0, Jets 18.6. Points allowed: Patriots 18.8, Jets 19.2.",
+            "The Patriots’ turnover margin is −5 versus the Jets’ +3. Analysis: the offensive advantage does not eliminate possession risk."
           ],
           "sourceIds": [
-            "ne",
-            "ne-injury",
-            "ne-roster",
-            "schedule"
+            "ne"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "A.J. Brown activated Saturday; activation is not a final active-list guarantee. Recheck the full injury report before kickoff.",
+          "summary": "5 key players unavailable · 4 availability decisions to watch",
           "details": [
-            "A.J. Brown activated Saturday; activation is not a final active-list guarantee. Recheck the full injury report before kickoff.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "The Jets lose their lead runner and a receiving option. Brown’s activation helps New England’s options, but does not confirm game-day availability."
           ],
           "sourceIds": [
-            "ne",
             "ne-injury",
             "ne-roster"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -776,22 +1559,20 @@
         },
         {
           "category": "history",
-          "summary": "New England has won three consecutive meetings. Treat this as context, not an independent pricing edge.",
+          "summary": "New England swept the 2025 meetings.",
           "details": [
-            "New England has won three consecutive meetings. Treat this as context, not an independent pricing edge.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "The Patriots won 27–14 at home and 42–10 at the Jets in 2025.",
+            "Drake Maye threw five touchdown passes in the December meeting.",
+            "Context: New York’s current top-five defense and turnover advantage must be considered before expecting a repeat."
           ],
           "sourceIds": [
-            "ne",
-            "ne-injury",
-            "ne-roster"
+            "ne"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
         "ne",
         "ne-injury",
         "ne-roster",
@@ -802,7 +1583,127 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "New York Jets",
+          "name": "Breece Hall",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Adonai Mitchell",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Dylan Parham",
+          "position": "G",
+          "positionName": "Guard",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Kenyon Sadiq",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Carlton Davis III",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Karon Prunty",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "TreVeyon Henderson",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Will Campbell",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "A.J. Brown",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "Activated Saturday; final active list pending",
+          "sourceIds": [
+            "ne-injury",
+            "ne-roster"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "The Jets lose their lead runner and a receiving option. Brown’s activation helps New England’s options, but does not confirm game-day availability."
     },
     {
       "id": "ari-lar",
@@ -822,28 +1723,28 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Arizona is 1–4; Los Angeles 2–3. The Rams played Monday, leaving a shorter preparation week.",
+          "summary": "The Rams’ yardage advantage has not translated into wins.",
           "details": [
-            "Entering Week 6: Arizona Cardinals 1-4-0; Los Angeles Rams 2-3-0.",
-            "Arizona is 1–4; Los Angeles 2–3. The Rams played Monday, leaving a shorter preparation week."
+            "Los Angeles has outgained opponents by 696 total yards through five games, according to its team preview.",
+            "Buffalo beat the Rams 37–34 in overtime Monday, leaving Los Angeles a short preparation week.",
+            "Los Angeles replaces kicker Harrison Mevis with Blake Grupe. Analysis: late-game execution and special teams remain relevant despite strong offensive production."
           ],
           "sourceIds": [
-            "lar",
-            "schedule"
+            "lar-preview",
+            "lv"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Arizona’s Jeremiyah Love out. Rams McDuffie and Curl questionable; Davis Allen has no game designation.",
+          "summary": "3 key players unavailable · 3 availability decisions to watch",
           "details": [
-            "Arizona’s Jeremiyah Love out. Rams McDuffie and Curl questionable; Davis Allen has no game designation.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Arizona loses a running option and two safeties. Los Angeles also has uncertain defensive backs, making final availability important on both sides."
           ],
           "sourceIds": [
             "lar"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -874,29 +1775,120 @@
         },
         {
           "category": "history",
-          "summary": "No quantified series adjustment used. The injury source supports availability, not a calibrated team-strength estimate.",
+          "summary": "McVay’s Rams have dominated the series; coaching context matters.",
           "details": [
-            "No quantified series adjustment used. The injury source supports availability, not a calibrated team-strength estimate.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Los Angeles is 16–3 against Arizona under Sean McVay, including a playoff victory.",
+            "Arizona now has Mike LaFleur as head coach, previously part of the Rams staff.",
+            "Context: the long-run record spans different rosters and quarterbacks; it supports familiarity, not an 84% forecast for this game."
           ],
           "sourceIds": [
-            "lar"
+            "lar-preview",
+            "lar-roundup"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
+        "lar-preview",
+        "lv",
         "lar",
-        "kalshi"
+        "kalshi",
+        "lar-roundup"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
       "researchLimitations": [
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Arizona Cardinals",
+          "name": "Jeremiyah Love",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Wydett Williams",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Andrew Wingard",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Budda Baker",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Trent McDuffie",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Kam Curl",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Davis Allen",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Cleared",
+          "note": "",
+          "sourceIds": [
+            "lar"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Arizona loses a running option and two safeties. Los Angeles also has uncertain defensive backs, making final availability important on both sides."
     },
     {
       "id": "lac-kc",
@@ -916,28 +1908,27 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Kansas City returns from its bye. Herbert has taken 17 sacks behind a depleted line.",
+          "summary": "Protection and turnovers separate the teams’ early results.",
           "details": [
-            "Entering Week 6: Los Angeles Chargers 0-5-0; Kansas City Chiefs 4-0-0.",
-            "Kansas City returns from its bye. Herbert has taken 17 sacks behind a depleted line."
-          ],
-          "sourceIds": [
-            "kc",
-            "schedule"
-          ],
-          "asOf": "2026-10-17T23:00:17-05:00"
-        },
-        {
-          "category": "injuries",
-          "summary": "Chargers missing Alt, Awosika, Tre’ Harris, Donte Jackson and Derwin James. Chiefs Rice and Simmons also out.",
-          "details": [
-            "Chargers missing Alt, Awosika, Tre’ Harris, Donte Jackson and Derwin James. Chiefs Rice and Simmons also out.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Justin Herbert has taken 17 sacks and completed 59.4% of passes while playing behind a depleted line.",
+            "The Chargers have 13 giveaways; Kansas City has two and a +5 turnover margin.",
+            "Kansas City averages 6.54 yards per play. Analysis: balanced offense can limit exposure to the Chargers’ pass rush."
           ],
           "sourceIds": [
             "kc"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "7 key players unavailable · 0 availability decisions to watch",
+          "details": [
+            "Los Angeles is missing two starting linemen and multiple passing-game contributors. Kansas City also loses a receiver and tackle; protection matters for both."
+          ],
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -968,20 +1959,20 @@
         },
         {
           "category": "history",
-          "summary": "Twelve of 16 meetings since 2018 were one-score games; an unbeaten record does not remove divisional risk.",
+          "summary": "Close finishes are common in this divisional series.",
           "details": [
-            "Twelve of 16 meetings since 2018 were one-score games; an unbeaten record does not remove divisional risk.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Twelve of the 16 meetings since 2018 were decided by one score.",
+            "Kansas City is 2–0 in one-possession games this season after going 1–9 in those games in 2025.",
+            "Context: that reversal shows how unstable close-game records can be. A strong favorite can still face a narrow finish."
           ],
           "sourceIds": [
             "kc"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
         "kc",
         "kalshi"
       ],
@@ -990,7 +1981,94 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Joe Alt",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Kayode Awosika",
+          "position": "G",
+          "positionName": "Guard",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Tre’ Harris",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Donte Jackson",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Derwin James",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Rashee Rice",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Josh Simmons",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "kc"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Los Angeles is missing two starting linemen and multiple passing-game contributors. Kansas City also loses a receiver and tackle; protection matters for both."
     },
     {
       "id": "buf-lv",
@@ -1010,30 +2088,28 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Buffalo averages 32.8 points; Las Vegas 26.4. Both rank in the bottom six in total defense.",
+          "summary": "Buffalo’s scoring meets a defense that can create takeaways.",
           "details": [
-            "Entering Week 6: Buffalo Bills 4-1-0; Las Vegas Raiders 3-2-0.",
-            "Buffalo averages 32.8 points; Las Vegas 26.4. Both rank in the bottom six in total defense."
+            "Buffalo averages 32.8 points and Las Vegas 26.4; both rank in the bottom six in total defense.",
+            "The Bills have nine giveaways over their last three games. Las Vegas has 10 takeaways this season.",
+            "Buffalo won 37–34 in overtime Monday. Analysis: offensive upside comes with short-week fatigue and turnover risk."
           ],
           "sourceIds": [
-            "buf",
-            "lv",
-            "schedule"
+            "lv"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Bills Moore, Oliver, Palmer, Alford and Sanders questionable. Spencer Brown expected to play.",
+          "summary": "3 key players unavailable · 5 availability decisions to watch",
           "details": [
-            "Bills Moore, Oliver, Palmer, Alford and Sanders questionable. Spencer Brown expected to play.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Buffalo’s receiver and defensive-line availability remains unsettled. Las Vegas loses receiving and defensive-line depth; check the final active lists."
           ],
           "sourceIds": [
             "buf",
-            "lv"
+            "schedule"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -1065,23 +2141,23 @@
         },
         {
           "category": "history",
-          "summary": "Buffalo practiced in California after its Monday game; this is a short-week road sequence, not a normal home week.",
+          "summary": "The latest meeting is several seasons old.",
           "details": [
-            "Buffalo practiced in California after its Monday game; this is a short-week road sequence, not a normal home week.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Buffalo won the last meeting 38–10 on September 17, 2023.",
+            "Las Vegas leads the regular-season series 21–20.",
+            "Context: both coaching and personnel have changed. Current scoring, defense and turnover patterns are more useful than the 2023 margin."
           ],
           "sourceIds": [
-            "buf",
             "lv"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "buf",
         "lv",
+        "buf",
+        "schedule",
         "kalshi"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
@@ -1089,7 +2165,127 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Buffalo Bills",
+          "name": "DJ Moore",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Joshua Palmer",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Ed Oliver",
+          "position": "DL",
+          "positionName": "Defensive lineman",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "T.J. Sanders",
+          "position": "DL",
+          "positionName": "Defensive lineman",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Dee Alford",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Spencer Brown",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Cleared",
+          "note": "Coach expects him to play",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Dont’e Thornton Jr.",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Carter Runyon",
+          "position": "TE",
+          "positionName": "Tight end",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Tonka Hemingway",
+          "position": "DT",
+          "positionName": "Defensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "buf",
+            "schedule"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Buffalo’s receiver and defensive-line availability remains unsettled. Las Vegas loses receiving and defensive-line depth; check the final active lists."
     },
     {
       "id": "dal-gb",
@@ -1109,30 +2305,30 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Green Bay enters 3–2; Dallas 2–3. Dallas has extra rest after its Thursday Week 5 game.",
+          "summary": "Green Bay comes off a strong win; Dallas has extra rest.",
           "details": [
-            "Entering Week 6: Dallas Cowboys 2-3-0; Green Bay Packers 3-2-0.",
-            "Green Bay enters 3–2; Dallas 2–3. Dallas has extra rest after its Thursday Week 5 game."
+            "Green Bay beat Chicago 31–7 last week, when the Bears committed five turnovers.",
+            "Dallas last played on Thursday in Week 5, giving it extra preparation time for this trip.",
+            "Green Bay’s defensive line is depleted and guards Aaron Banks and Jacob Monk remain uncertain. Analysis: last week’s margin should not be projected without the personnel context."
           ],
           "sourceIds": [
-            "gb",
+            "chi",
             "dal",
-            "schedule"
+            "gb"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "Dallas downgraded Overshown to out Saturday. Green Bay missing Hargrave, Ford, St-Juste and Skyy Moore; Cisse questionable.",
+          "summary": "7 key players unavailable · 2 availability decisions to watch",
           "details": [
-            "Dallas downgraded Overshown to out Saturday. Green Bay missing Hargrave, Ford, St-Juste and Skyy Moore; Cisse questionable.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Dallas loses another linebacker. Green Bay’s defensive-tackle absences and cornerback uncertainty create openings despite the home-team lean."
           ],
           "sourceIds": [
             "gb",
             "dal"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -1164,23 +2360,23 @@
         },
         {
           "category": "history",
-          "summary": "No head-to-head probability adjustment used. Green Bay’s defensive personnel differs from earlier meetings.",
+          "summary": "Personnel continuity is limited on Green Bay’s defense.",
           "details": [
-            "No head-to-head probability adjustment used. Green Bay’s defensive personnel differs from earlier meetings.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Keisean Nixon has appeared in 73 consecutive regular-season games since joining Green Bay in 2022.",
+            "Hargrave suffered a season-ending Achilles injury against Chicago, changing the defensive front from last week.",
+            "Context: no reliable recent head-to-head adjustment is published here. Availability is more relevant than extrapolating an old matchup."
           ],
           "sourceIds": [
-            "gb",
-            "dal"
+            "gb"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "gb",
+        "chi",
         "dal",
+        "gb",
         "kalshi"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
@@ -1188,7 +2384,140 @@
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Dallas Cowboys",
+          "name": "DeMarvion Overshown",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Out",
+          "note": "Downgraded Saturday",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Cobie Durant",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Drew Shelton",
+          "position": "OT",
+          "positionName": "Offensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Joey Porter Jr.",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Javon Hargrave",
+          "position": "DT",
+          "positionName": "Defensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Jonathan Ford",
+          "position": "DT",
+          "positionName": "Defensive tackle",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Benjamin St-Juste",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Skyy Moore",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Brandon Cisse",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Keisean Nixon",
+          "position": "CB",
+          "positionName": "Cornerback",
+          "status": "Cleared",
+          "note": "",
+          "sourceIds": [
+            "gb",
+            "dal"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Dallas loses another linebacker. Green Bay’s defensive-tackle absences and cornerback uncertainty create openings despite the home-team lean."
     },
     {
       "id": "was-sf",
@@ -1208,30 +2537,29 @@
       "insights": [
         {
           "category": "form",
-          "summary": "San Francisco is 5–0; Washington 1–3–1. Washington travels west for Monday night.",
+          "summary": "San Francisco stays unbeaten; Washington changes its rushing rotation.",
           "details": [
-            "Entering Week 6: Washington Commanders 1-3-1; San Francisco 49ers 5-0-0.",
-            "San Francisco is 5–0; Washington 1–3–1. Washington travels west for Monday night."
+            "San Francisco won 32–29 at Seattle in Week 5.",
+            "Washington’s Rachaad White has 118 rushing yards on 29 carries and has caught all 10 targets this season.",
+            "Austin Ekeler had 29 rushing yards on four carries in London. Analysis: these are limited samples for a backfield now missing Croskey-Merritt."
           ],
           "sourceIds": [
-            "sf",
-            "was",
-            "schedule"
+            "sf-game",
+            "was"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "injuries",
-          "summary": "49ers Bosa and Deebo out; Evans questionable; Juszczyk expected back. Washington’s Croskey-Merritt out; Daniels practiced fully.",
+          "summary": "5 key players unavailable · 4 availability decisions to watch",
           "details": [
-            "49ers Bosa and Deebo out; Evans questionable; Juszczyk expected back. Washington’s Croskey-Merritt out; Daniels practiced fully.",
-            "Questionable is not ruled out. Check final inactives approximately 90 minutes before kickoff."
+            "Washington must redistribute rushing work. San Francisco is missing Bosa and Samuel, with additional receivers uncertain; Monday’s active list matters."
           ],
           "sourceIds": [
-            "sf",
-            "was"
+            "was",
+            "sf"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         },
         {
           "category": "matchup",
@@ -1263,31 +2591,165 @@
         },
         {
           "category": "history",
-          "summary": "Monday’s inactive list is still outstanding. An unbeaten run is not a reason to skip the final injury check.",
+          "summary": "Washington’s trips to San Francisco have been difficult.",
           "details": [
-            "Monday’s inactive list is still outstanding. An unbeaten run is not a reason to skip the final injury check.",
-            "No weather adjustment or calibrated probability is claimed in this refresh."
+            "Washington’s record on the road in San Francisco is 3–10–1; its last win there was in 2004.",
+            "Washington beat San Francisco 23–15 in 2020, but that game was played in Arizona.",
+            "Context: the venue distinction matters, while the long span includes many different teams. It is not a stand-alone reason to select San Francisco."
           ],
           "sourceIds": [
-            "sf",
-            "was"
+            "was-preview"
           ],
-          "asOf": "2026-10-17T23:00:17-05:00"
+          "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
       "status": "scheduled",
       "sourceIds": [
-        "schedule",
-        "sf",
+        "sf-game",
         "was",
-        "kalshi"
+        "sf",
+        "kalshi",
+        "was-preview"
       ],
       "verifiedAt": "2026-10-17T23:00:17-05:00",
       "researchLimitations": [
         "Final game-day inactives pending",
         "Weather not independently verified",
         "Opponent-adjusted efficiency and calibrated win probability unavailable"
-      ]
+      ],
+      "availability": [
+        {
+          "team": "Washington Commanders",
+          "name": "Jacory Croskey-Merritt",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Marcus Mariota",
+          "position": "QB",
+          "positionName": "Quarterback",
+          "status": "Out",
+          "note": "Backup quarterback; starter Jayden Daniels practiced fully",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Charles Omenihu",
+          "position": "DE",
+          "positionName": "Defensive end",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Stefon Diggs",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Jeremy McNichols",
+          "position": "RB",
+          "positionName": "Running back",
+          "status": "Questionable",
+          "note": "Activation decision expected Monday",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Nick Bosa",
+          "position": "DL",
+          "positionName": "Defensive lineman",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Deebo Samuel Sr.",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Out",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Mike Evans",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Christian Kirk",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "status": "Questionable",
+          "note": "",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Kyle Juszczyk",
+          "position": "FB",
+          "positionName": "Fullback",
+          "status": "Cleared",
+          "note": "Expected to return Monday",
+          "sourceIds": [
+            "was",
+            "sf"
+          ],
+          "asOf": "2026-10-17T23:44:52-05:00"
+        }
+      ],
+      "availabilityImpact": "Washington must redistribute rushing work. San Francisco is missing Bosa and Samuel, with additional receivers uncertain; Monday’s active list matters."
     }
   ],
   "predictions": [
@@ -2704,6 +4166,36 @@
       "title": "Kalshi public game-market snapshot",
       "url": "https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXNFLGAME&status=open&limit=1000",
       "retrievedAt": "2026-10-17T23:00:17-05:00"
+    },
+    {
+      "id": "lar-preview",
+      "title": "Rams Week 6 matchup preview",
+      "url": "https://www.therams.com/news/rams-seek-statement-win-against-cardinals-game-preview",
+      "retrievedAt": "2026-10-17T23:44:52-05:00"
+    },
+    {
+      "id": "lar-roundup",
+      "title": "Rams Week 6 preparation and coaching context",
+      "url": "https://www.therams.com/news/top-rams-news-previews-and-predictions-for-rams-vs-cardinals-sunday-at-sofi-stadium-for-week-6-2026",
+      "retrievedAt": "2026-10-17T23:44:52-05:00"
+    },
+    {
+      "id": "sf-game",
+      "title": "49ers Week 6 game hub and Week 5 recap",
+      "url": "https://www.49ers.com/game-day/2026/reg-week6/commanders-at-49ers/",
+      "retrievedAt": "2026-10-17T23:44:52-05:00"
+    },
+    {
+      "id": "was-preview",
+      "title": "Washington Week 6 series and venue preview",
+      "url": "https://www.commanders.com/news/commanders-vs-49ers-preview-a-trip-out-west",
+      "retrievedAt": "2026-10-17T23:44:52-05:00"
+    },
+    {
+      "id": "ind-injury",
+      "title": "Colts Week 6 final availability",
+      "url": "https://www.colts.com/news/colts-rule-out-lb-jaylon-carlies-wr-ashton-dulin-ahead-for-week-6",
+      "retrievedAt": "2026-10-17T23:44:52-05:00"
     }
   ],
   "marketSnapshots": [

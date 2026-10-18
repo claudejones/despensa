@@ -275,7 +275,7 @@ main {
   margin-left: auto;
   flex: none;
 }
-.research-acc[open] .chev {
+.research-acc[open] > summary .chev {
   transform: rotate(180deg);
 }
 .research-acc .details {
@@ -562,7 +562,7 @@ th:not(:first-child) {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.research-acc[open] summary .muted {
+.research-acc[open] > summary .muted {
   display: block;
 }
 .row > div,
@@ -747,3 +747,13 @@ nav [data-tab="kalshi"] {
 .review-overlap { background:var(--soft); padding:10px; border-radius:10px; font-size:12px; }
 .review-overlap svg { width:16px; height:16px; vertical-align:middle; }
 .candidate-feedback + button, [data-review-candidate-edit] { margin-top:10px; }
+/* Research briefings reuse the approved light cards and native bottom sheet. */
+.briefing-cards {display:grid;gap:10px}
+.briefing-card {display:flex;align-items:center;gap:12px;width:100%;padding:15px;text-align:left;background:var(--paper)}
+.briefing-card>span {flex:1;min-width:0}.briefing-card small {display:block;color:var(--muted);line-height:1.45;margin-top:4px}.briefing-card>svg {flex:none;width:22px}
+.briefing-count {color:var(--teal,#167f84);margin-left:5px}.briefing-item {padding:16px 0;border-bottom:1px solid var(--line)}.briefing-item p,.briefing-item li {font-size:14px;line-height:1.5}.briefing-item .team {font-size:14px}
+.briefing-footer {position:sticky;bottom:0;background:var(--paper);padding:14px 0 max(14px,env(safe-area-inset-bottom));border-top:1px solid var(--line);margin-top:15px}.briefing-footer button {width:100%;display:flex;justify-content:space-between;align-items:center}
+.market-strip {padding:10px 12px;background:var(--soft,#edf4f5);border-radius:12px;margin:12px 0;font-size:12px}.market-strip svg {width:16px;height:16px;vertical-align:middle}.market-strip .row {flex-wrap:wrap;gap:5px}.market-sides {display:flex;justify-content:space-between;gap:10px;margin:6px 0;font-size:15px}.market-strip small {font-size:11px;line-height:1.5}
+.availability-group {margin:16px 0}.availability-group>.team {font-size:13px}.player-row {display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:8px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}.player-row>svg {width:16px;height:18px;color:var(--muted)}.player-row small {display:block;font-size:11px;line-height:1.5;margin-top:3px}.availability-status {border-radius:7px;padding:4px 6px;font-size:10px;white-space:nowrap}.status-out {background:#f9ebec;color:#983e4a}.status-watch {background:#fff4da;color:#775417}.status-ready {background:#e4f2ef;color:#20695b}
+.quote-table {font-size:12px;margin:14px 0}.quote-table>div {display:grid;grid-template-columns:minmax(0,1fr) 42px 42px;gap:7px;border-bottom:1px solid var(--line);padding:9px 0}.quote-table b:not(:first-child) {text-align:right}
+.source-disclosure {border-top:1px solid var(--line);margin-top:12px;font-size:12px}.source-disclosure>summary {display:flex;justify-content:space-between;align-items:center;min-height:44px;cursor:pointer;color:var(--teal,#167f84);list-style:none}.source-disclosure>summary::-webkit-details-marker{display:none}.source-disclosure>summary svg {width:16px;height:16px}.source-disclosure[open]>summary .chev {transform:rotate(180deg)}.source-disclosure a {display:block;margin:8px 0;overflow-wrap:anywhere}.research-acc .details {overflow-wrap:anywhere}.research-acc .details li {margin-bottom:10px}
