@@ -203,3 +203,9 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Ticket pricing is saved without rebuilding inputs; pending valid pricing edits also save on Escape, Close or replacement. Closed forms are removed to prevent stale controls. Purchase/removal/restore actions close the old ticket view.
 - Combining single drafts remains available on summary cards. Drawer selections retain team logos, records and outcome labels.
 - No storage keys, research records, fee accounting or reconciliation rules changed. Updated browser journeys for drawer navigation; new regression covers context, scroll/focus restoration, one-dialog replacement and pricing persistence at 320/375/430px.
+
+## v1.8.1 — App-wide action spacing audit
+- Strategy Add/Customize actions now share an explicit responsive action group; removed the injected secondary button's independent top margin. Saved feedback appears below the group.
+- Shared action groups use 12px gaps, aligned button heights, consistent icon spacing and mobile wrapping. Pool Clear/AI analysis actions use the same layout; ticket-editor choices and form actions align consistently.
+- Audited Home, Games, AI/Pool, Plans A–E, calendar, Settings, all Kalshi views, Performance, ticket editing, manual builder and confirmation controls at 320/375/430px. Added geometry regression for gaps, alignment, touch targets and overflow; inspected actual mobile screenshots.
+- No personal storage or financial calculation changes. Existing update-preservation test passed.

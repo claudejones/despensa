@@ -88,12 +88,13 @@ function addCandidateReview(b) {
     events: [],
   });
   save();
-  let feedback = b.parentElement.querySelector(".candidate-feedback");
+  const actions=b.parentElement.classList.contains("candidate-actions")?b.parentElement:null;
+  let feedback = (actions?.parentElement||b.parentElement).querySelector(".candidate-feedback");
   if (!feedback) {
     feedback = document.createElement("div");
     feedback.className = "review-feedback candidate-feedback";
     feedback.setAttribute("role", "status");
-    b.after(feedback);
+    if(actions)actions.after(feedback);else b.after(feedback);
   }
   reviewFeedback(feedback, "Saved with its historical quote.");
   syncReviewUI();
