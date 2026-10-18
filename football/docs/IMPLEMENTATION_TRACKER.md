@@ -1,6 +1,6 @@
 # NFL Intelligence — implementation tracker
 
-Published release: **v1.0**. Implementation merged from `football-screen-by-screen-implementation` to `main` via PR #7.
+Published release: **v1.1**. Implementation merged from `football-screen-by-screen-implementation` to `main` via PR #7; contextual review follow-up via PR #8.
 
 ## Implemented and locally verified
 
@@ -48,4 +48,4 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Combo candidates likewise save in place; duplicate draft additions are disabled and the Kalshi tab displays the selected week's review count.
 - Kalshi Build supports selecting draft singles to create one combo, rejects multiple selections from the same game, and restores the original singles on request. Purchased tickets are untouched. A combined quote is never inferred; new drafts require pricing.
 - Contextual review, duplicate prevention, persistence, reversible combination and sticky positioning passed at 320/390/430px. Existing mobile and lifecycle regression suites passed. Screenshots inspected directly.
-- Publication status: development validation complete; release checks run before merge.
+- Published via PR #8 at commit `3a2a976e5ba7444a11fad78a399a59630575c680`. Branch acceptance 39092062304, main acceptance 39092160056 and Pages deployment 39092159957 all succeeded. Live contextual-review and sticky-navigation tests passed at 320/390/430px; live HTML confirmed v1.1.\n- Production: https://claudejones.github.io/despensa/football/?v=1.1
