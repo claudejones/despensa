@@ -1,7 +1,7 @@
 # NFL Intelligence — implementation tracker
 
 **Target release:** v1.0 (not yet complete)  
-**Current development build identifier:** v0.5.2  
+**Current development build identifier:** v0.5.3  
 **Development branch:** `football-screen-by-screen-implementation`  
 **Published production:** prior v0.4.x build; this branch is NOT published.
 
@@ -18,13 +18,13 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 | Plan Detail / payout sheets / scenario economics | Approved | **Implemented (unverified)**: tickets, kickoff order, payout sheets, exact enumerated settlement scenarios with shared-game outcomes; still needs browser tests and portfolio editing | **Do not review yet** |
 | Kalshi Build/Evaluate/Monitor/Close | Approved | **Implemented (unverified)** stage filtering, event journal and partial-sale calculations; validation and safeguards still incomplete | **Do not review yet** |
 | Performance Dashboard | Approved | **Implemented (unverified)** season/selected-week metrics, realized P&L, weekly bars, singles vs combos; detailed strategy/AI calibration pending | **Do not review yet** |
-| Settings | Approved: light only, no swipe | Simplified, needs visual review | **Do not review yet** |
+| Settings | Approved: light only, no swipe | **Implemented (unverified)**: light-only design, game presentation, calendar/Performance routes, ticket and pool backup export/import | **Do not review yet** |
 | Weekly research + prediction engine | Approved concept | Existing JSON and reusable workflow instructions; scheduled research and validated AI probabilities NOT active | **Do not review yet** |
 | Automated iPhone-width/browser acceptance tests | Required | **Pending** | **Do not review yet** |
 | Verified GitHub Pages release | Required | **Pending** | **Do not review yet** |
 
 ## Version rules
-- `v0.5.2`: development checkpoint, not a published or complete release.
+- `v0.5.3`: development checkpoint, not a published or complete release.
 - `v1.0`: reserve for the fully implemented and verified release.
 - Update this tracker in every subsequent development change. Never mark a screen done solely from a JavaScript syntax check.
 
@@ -36,56 +36,62 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 5. Finish Performance and historical dashboard.
 6. Add automated interaction and visual checks; only then publish for iPhone testing.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Games and AI Picks now share Cancún-local kickoff-window pills, compact team logo treatment, and image fallbacks.
 - Office-pool buttons expose selection state to accessibility tools and retain tap-to-deselect behavior.
 - JavaScript syntax checked. **No browser or visual acceptance tests performed yet.**
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Plan Detail now enumerates possible game winner combinations, rather than assuming ticket independence.
 - Best and worst settlement net reflect shared underlying games and actual supplied historical ticket stakes and gross payouts.
 - Plans A–E show tickets, outcomes, timing, overlap and plan-specific payout sheets.
 - Historical quote status is explicit. No live prices or validated expected value are claimed.
 - JavaScript syntax passed; browser and financial fixture tests still pending.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Performance now includes season/selected-week switch, realized cost basis/proceeds/ROI/open risk, weekly P&L bars, and singles vs combos.
 - Kalshi workflow stages and partial-sale event helpers from previous checkpoint remain implemented but unverified.
 - Remaining: purchased-ticket immutability, settlement verification, precise partial-sale fees, bankroll transfers, full strategy breakdown, AI accuracy, historical learning and browser tests.
 - Do not mark release ready based on syntax validation.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Purchase status transition now checks positive stake and payout and records a timestamped purchase event.
 - Original stake and gross payout are protected after a purchase is recorded.
 - A draft cannot jump straight to sold/won/lost; an open position cannot be marked sold while quantity remains.
 - Partial sale input now rejects empty proceeds, invalid percentages and nonfinite/negative proceeds; sale events record fee field for future extension.
 - JavaScript syntax verified; browser tests and full accounting validation remain pending.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Added visible Kalshi Build / Evaluate / Monitor / Close tab controls, wired to existing stage state.
 - Ticket filtering by stage has now been wired, but remains unverified in a browser.
 - Browser interaction and financial tests remain pending. No production publication.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Kalshi stage controls now filter draft, evaluation, purchased monitoring, and closed ticket lists.
 - No browser interaction test yet; ticket accounting and full closeout remain unverified.
 - Development branch only; not published.
 
-## v0.5.2 checkpoint
-- Development version label synchronized in HTML to v0.5.2.
+## v0.5.3 checkpoint
+- Development version label synchronized in HTML to v0.5.3.
 - Added financial acceptance fixture specification with shared-outcome, partial-sale, fees, invalid inputs, week persistence and office-pool cases.
 - Adjusted closed-ticket proceeds helper to avoid omitting recorded sale proceeds when the total is greater than the stored proceeds field. **This is not a substitute for a fully specified settlement ledger.**
 - Full financial test execution and browser tests are still pending. Not ready to publish.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Separated recorded partial-sale proceeds from final settlement proceeds in realized P&L calculation.
 - Preserved a compatibility fallback for older closed tickets without event histories.
 - Known gap: settlement entry UI and fee allocation still need implementation; calculation behavior has not been fixture-tested or browser-tested.
 - No publication; do not review yet.
 
-## v0.5.2 checkpoint
+## v0.5.3 checkpoint
 - Added final settlement proceeds and settlement fee inputs for purchased positions.
 - Added fee input for executed partial sales, and timestamped settlement events.
 - Final settlement closes remaining exposure, preserving prior partial-sale event proceeds separately.
 - JavaScript syntax validated, but financial acceptance fixtures and browser tests remain unexecuted.
 - Development branch only, not published; no user review yet.
+
+## v0.5.3 checkpoint
+- Completed Settings screen implementation: light-only, no swipe control, season/timezone, presentation rules, personal data backup and version display.
+- Backup export now includes tickets, office-pool selections and selected week; Settings import validates schema and confirms replacement.
+- Calendar and Performance actions are linked from Settings.
+- JavaScript syntax passed. **Browser interaction, accessibility and import/export round-trip tests are not yet complete.**
