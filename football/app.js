@@ -203,7 +203,7 @@ function planScreen() {
   let ticketCards = arr
     .map(
       (t) =>
-        '<div class="card"><div class="eyebrow">TICKET ' +
+        '<div class="card" data-update-host="combos:' + esc(t.id) + '"><div class="eyebrow">TICKET ' +
         t.id +
         " · " +
         (t.legs.length === 1
@@ -471,7 +471,7 @@ function seasonScreen() {
         (catalog.weeks?.[$("#week").value]
           ? "Research available for this week"
           : "Research not yet published for this week") +
-        '</p><button class="primary" data-action="calendar">Open selected week <i data-lucide="arrow-right"></i></button></div>'
+        '</p></div>'
       : '<div class="grid2"><div class="metric"><small>Weeks with research</small><b>' +
         Object.keys(catalog.weeks || {}).length +
         '</b></div><div class="metric"><small>Selected week</small><b>' +
@@ -546,6 +546,7 @@ function ticketJournal(t) {
 let perfMode = "season";
 function icons() {
   syncReviewUI();
+  syncResearchUpdates();
   // Lucide retains data-lucide on rendered SVGs; do not replace those again.
   if (window.lucide && document.querySelector('i[data-lucide]')) {
     window.lucide.createIcons();
@@ -559,7 +560,7 @@ function render() {
     render.route = route;
   }
   let v = $("#view");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.2";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.3";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -574,6 +575,8 @@ function render() {
               combos: "Combo Strategies",
               kalshi: "My Kalshi",
             }[tab];
+  $("#sectionUpdates").innerHTML = "";
+  $("#sectionUpdates").dataset.updateHost = data && !sub && ["games","picks","combos"].includes(tab) ? tab : "";
   document
     .querySelectorAll("[data-tab]")
     .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
@@ -584,7 +587,7 @@ function render() {
   }
   if (sub === "settings") {
     v.innerHTML =
-      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.3.2 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
+      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.3.3 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
     icons();
     return;
   }
@@ -695,6 +698,7 @@ async function load() {
   const request = ++loadSequence,
     week = $("#week").value;
   data = null;
+  researchChanges={snapshot:{},unread:{}};
   render();
   try {
     if (!catalog.loaded) {
@@ -718,6 +722,7 @@ async function load() {
     )
       throw Error("Invalid week data");
     data = next;
+    trackResearchChanges(data);
     data.games.sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
     for (const g of data.games) {
       const old = data.week + "-" + g.id,
