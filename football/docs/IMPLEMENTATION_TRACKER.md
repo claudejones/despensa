@@ -1,6 +1,6 @@
 # NFL Intelligence — implementation tracker
 
-Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.5.1**, publication gated by mobile acceptance and Pages verification.
+Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.5.2**, publication gated by mobile acceptance and Pages verification.
 
 ## Implemented and locally verified
 
@@ -163,3 +163,10 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - One Close or reduce bet section: I sold early / The bet finished. New proceeds are net of fees; removed new sale/settlement fee inputs. Legacy fees remain in historical calculations and backups.
 - Name-only editing for drafts, open and closed tickets; financial terms and history protected.
 - Mobile acceptance includes partial net cash-out, final zero payout, legacy fee preservation, Pool nonparticipation and ticket renaming.
+
+## v1.5.2 — simple Analysis, direct pick actions and payout correction
+
+- Removed repeated selection exposure from Analysis; combined totals describe the ticket cards below. Cards start collapsed on entry.
+- Replaced Choose a pick accordion with visible Pick for My Pool and Add to Kalshi ticket buttons, each opening its own drawer.
+- Open tickets support correction of the original gross payout; history records old/new amounts, while selections, cash-outs, locked quote snapshots and stored records are preserved.
+- Regression coverage includes direct destination independence, invalid correction input, partial-sale correction math, reload persistence and collapsed Analysis.

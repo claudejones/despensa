@@ -561,7 +561,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.5.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.5.2";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"

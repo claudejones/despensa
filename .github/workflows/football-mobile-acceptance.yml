@@ -71,6 +71,9 @@ jobs:
       - name: Verify optional Pool and simplified close form
         run: node football/tests/pool-close-polish.cjs
 
+      - name: Verify direct actions and purchase correction
+        run: node football/tests/direct-actions-correction.cjs
+
       - name: Upload mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4

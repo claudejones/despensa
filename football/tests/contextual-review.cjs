@@ -52,13 +52,13 @@ const { chromium } = require("playwright"),
         /Five portfolio strategies/,
       );
       await page.locator("[data-tab=games]").first().click();
-      await page.locator(".context-review summary").first().click();
+      await page.locator("[data-kalshi-choose]").first().click();
       await page.locator("[data-review-game]").first().click();
       await page.locator("[data-review-new=single]").click();
       assert.match(await page.locator("#title").innerText(), /Game Research/);
       assert.equal(
-        await page.locator(".context-review").first().getAttribute("open"),
-        "",
+        await page.locator("[data-kalshi-choose]").first().isVisible(),
+        true,
       );
       assert.equal(await page.evaluate(() => tickets.length), 1);
       assert.equal(await page.evaluate(() => tickets[0].payout), null);
@@ -70,16 +70,15 @@ const { chromium } = require("playwright"),
         path: `football/test-artifacts/${width}-context-games.png`,
       });
       await page.locator("[data-tab=picks]").first().click();
-      await page.locator(".context-review summary").first().click();
+      await page.locator("[data-kalshi-choose]").first().click();
       assert.equal(
         await page.locator("[data-review-game]").first().isDisabled(),
         false,
       );
-      await page.locator(".context-review summary").nth(1).click();
+      await page.locator("[data-review-close]").click();
+      await page.locator("[data-kalshi-choose]").nth(1).click();
       await page
-        .locator(".context-review")
-        .nth(1)
-        .locator("[data-review-game]")
+        .locator("#ticketSheet [data-review-game]")
         .first()
         .click();
       await page.locator("[data-review-new=single]").click();
