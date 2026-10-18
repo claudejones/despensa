@@ -1,6 +1,6 @@
 # NFL Intelligence — implementation tracker
 
-Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.5.0**, publication gated by mobile acceptance and Pages verification.
+Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.5.1**, publication gated by mobile acceptance and Pages verification.
 
 ## Implemented and locally verified
 
@@ -155,3 +155,11 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Separate observations, executed cash-outs and settlement. Purchased quote history is read-only or “Not recorded.”
 - Profit labels account for stake and fees; partial-sale potential includes realized cash-outs plus remaining potential.
 - Workspace, lifecycle, quote editing, financial and raw storage preservation regression coverage; mobile screenshots at 320/375/430px. No save-key changes or personal-data migrations.
+
+## v1.5.1 — selection exposure, optional Pool and closing bets
+
+- Exposure groups exact team/outcome selections, with team logos and individual ticket names.
+- Picks navigation and direct My Pool Home access; no Pool result on Home until selections exist.
+- One Close or reduce bet section: I sold early / The bet finished. New proceeds are net of fees; removed new sale/settlement fee inputs. Legacy fees remain in historical calculations and backups.
+- Name-only editing for drafts, open and closed tickets; financial terms and history protected.
+- Mobile acceptance includes partial net cash-out, final zero payout, legacy fee preservation, Pool nonparticipation and ticket renaming.
