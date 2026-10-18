@@ -789,3 +789,19 @@ button, summary, a {touch-action:manipulation;}
 .update-pulse .update-dot {animation:research-update-pulse 1.2s ease-out 2;}
 @keyframes research-update-pulse {0%,100%{box-shadow:0 0 0 0 #167f8400}40%{box-shadow:0 0 0 5px #167f8433}}
 @media(prefers-reduced-motion:reduce){.update-pulse .update-dot{animation:none;}}
+
+.preference-card h3,.settings-card h3 {display:flex;align-items:center;gap:8px;}
+.preference-card h3 svg,.settings-card h3 svg {width:19px;height:19px;color:var(--teal);}
+.preference-row {display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);}
+.preference-row>span {min-width:0;flex:1;}.preference-row small {display:block;margin-top:4px;font-size:12px;line-height:1.45;}
+.preference-row select {max-width:130px;font-size:16px;min-height:44px;}
+.preference-row input[role=switch] {appearance:none;flex:none;width:48px;height:44px;margin:0;padding:0;border:0;border-radius:24px;background:linear-gradient(var(--line),var(--line)) center/48px 28px no-repeat;position:relative;cursor:pointer;}
+.preference-row input[role=switch]::after {content:"";position:absolute;width:22px;height:22px;top:11px;left:3px;background:white;border-radius:50%;box-shadow:0 1px 3px #19334b55;}
+.preference-row input[role=switch]:checked {background-image:linear-gradient(var(--teal),var(--teal));}
+.preference-row input[role=switch]:checked::after {left:23px;}
+.preference-saved {min-height:18px;color:var(--teal);margin-bottom:0;}.backup-button {display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}.backup-button svg {width:18px;height:18px;}
+.settings-about {display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:8px 4px;}
+.no-update-animation .update-dot {animation:none;}
+.app-message {width:min(calc(100% - 32px),400px);max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--line);border-radius:20px;padding:22px;background:var(--paper);color:var(--ink);box-shadow:0 12px 40px #19334b33;}
+.app-message::backdrop {background:#19334b77;}.message-heading {display:flex;align-items:center;gap:10px;}.message-heading h2 {font-size:18px;margin:0;}.message-symbol {font-size:24px;line-height:1;}
+.app-message p {margin:16px 0 20px;line-height:1.5;font-size:14px;overflow-wrap:anywhere;}.message-actions {display:flex;justify-content:flex-end;gap:10px;}.message-actions button {min-height:44px;flex:1;}.app-message textarea {width:100%;min-height:180px;font-size:16px;margin-bottom:12px;}

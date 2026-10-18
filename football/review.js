@@ -157,7 +157,7 @@ function combineDrafts() {
   if (selected.length < 2) return;
   const ids = selected.map((t) => t.legs[0].gameId);
   if (new Set(ids).size !== ids.length) {
-    alert(
+    appAlert(
       "Choose one selection per game for a combo. Opposing selections can stay as separate singles.",
     );
     return;

@@ -13,11 +13,7 @@ const { chromium } = require("playwright"),
       permissions: ["clipboard-read", "clipboard-write"],
     });
     const page = await context.newPage();
-    let dialogs = [];
-    page.on("dialog", async (d) => {
-      dialogs.push(d.message());
-      await d.accept();
-    });
+    page.on("dialog", async d => { throw Error("Unexpected browser dialog: "+d.message()); });
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(
@@ -33,6 +29,9 @@ const { chromium } = require("playwright"),
     );
     await page.locator("[data-pool]").first().click();
     await page.locator("[data-action=copyPool]").click();
+    await page.locator("[data-message-ok]").click();
+    await page.locator("#appMessageTitle").filter({hasText:"Done"}).waitFor();
+    await page.locator("[data-message-ok]").click();
     let clip = await page.evaluate(() => navigator.clipboard.readText());
     assert.ok(clip.includes("\n\nMY PICKS TO WIN:"));
     assert.ok(!clip.includes("\\n"));
@@ -70,6 +69,12 @@ const { chromium } = require("playwright"),
     await page.locator(`[id="sale-${id}"]`).fill("1.8");
     await page.locator(`[id="sale-fee-${id}"]`).fill(".1");
     await page.locator(`[data-sale="${id}"]`).click();
+    await page.locator("[data-message-cancel]").click();
+    await page.waitForFunction(()=>!document.querySelector("#appMessage"));
+    assert.equal(await page.evaluate(()=>tickets[0].events.filter(e=>e.kind==="sale").length),0);
+    await page.locator(`[data-sale="${id}"]`).click();
+    await page.locator("[data-message-ok]").click();
+    await page.waitForFunction(()=>tickets[0].events.some(e=>e.kind==="sale"));
     assert.ok(
       Math.abs((await page.evaluate(() => realizedNet(tickets[0]))) - 0.7) <
         1e-8,
@@ -80,6 +85,8 @@ const { chromium } = require("playwright"),
       .click();
     await page.locator(`[id="settle-${id}"]`).fill("1");
     await page.locator(`[data-settle="${id}"]`).click();
+    await page.locator("[data-message-ok]").click();
+    await page.waitForFunction(()=>tickets[0].status==="won");
     await page.locator("[data-kalshi-stage=close]").click();
     assert.match(await page.locator("#view").innerText(), /\$0.70/);
     assert.equal(await page.locator("[data-del]").count(), 0);
@@ -89,7 +96,8 @@ const { chromium } = require("playwright"),
     await page.locator("[data-tab=kalshi]").first().click();
     assert.equal(await page.locator(".ticket").count(), 0);
     assert.match(await page.locator("#view").innerText(), /Week 7/);
-    await page.locator("[data-action=settings]").click();
+    await page.locator("[data-action=calendar]").first().click();
+    await page.locator("[data-season-mode=summary]").click();
     await page.locator("[data-action=results]").click();
     assert.match(await page.locator("#view").innerText(), /\$0.70/);
     await page.locator("[data-action=calendar]").first().click();
@@ -121,6 +129,7 @@ const { chromium } = require("playwright"),
     const path = await download.path();
     const backup = JSON.parse(fs.readFileSync(path));
     assert.equal(backup.tickets.length, 2);
+    assert.deepEqual(backup.preferences,await page.evaluate(()=>preferences));
     await page
       .locator("#settingsImport")
       .setInputFiles({
@@ -128,6 +137,7 @@ const { chromium } = require("playwright"),
         mimeType: "application/json",
         buffer: Buffer.from(JSON.stringify(backup)),
       });
+    await page.locator("[data-message-ok]").click();
     await page.waitForTimeout(300);
     assert.equal(await page.evaluate(() => tickets.length), 2);
     assert.equal(
@@ -157,7 +167,8 @@ const { chromium } = require("playwright"),
         fullPage: true,
       });
     }
-    await page.locator("[data-action=settings]").click();
+    await page.locator("[data-action=calendar]").first().click();
+    await page.locator("[data-season-mode=summary]").click();
     await page.locator("[data-action=results]").click();
     await page.screenshot({
       path: "football/test-artifacts/390-performance.png",

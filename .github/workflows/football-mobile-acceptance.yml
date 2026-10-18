@@ -1,7 +1,7 @@
 name: Football mobile acceptance
 on:
   push:
-    branches: [football-screen-by-screen-implementation, football-contextual-review, football-ticket-builder, football-week6-research, football-research-briefings, football-fixed-ticket-dock, football-drawer-polish, football-update-indicators, main]
+    branches: [football-screen-by-screen-implementation, football-contextual-review, football-ticket-builder, football-week6-research, football-research-briefings, football-fixed-ticket-dock, football-drawer-polish, football-update-indicators, football-settings-modals, main]
     paths:
       - 'football/**'
       - '.github/workflows/football-mobile-acceptance.yml'
@@ -49,6 +49,9 @@ jobs:
 
       - name: Verify change-only research badges
         run: node football/tests/research-updates.cjs
+
+      - name: Verify preferences and custom modals
+        run: node football/tests/preferences-modals.cjs
 
       - name: Upload mobile screenshots
         if: always()

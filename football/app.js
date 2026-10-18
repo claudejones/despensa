@@ -1,7 +1,7 @@
 let kalshiStage = "build",
   showBuilder = false,
   data = null,
-  tab = "weeks",
+  tab = preferences.startScreen,
   sub = "",
   plan = "",
   planTab = "tickets",
@@ -19,10 +19,13 @@ const $ = (s) => document.querySelector(s),
   dateFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone:"America/Cancun",weekday:"long",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"
   }),
+  dateFormatter24 = new Intl.DateTimeFormat("en-US", {
+    timeZone:"America/Cancun",weekday:"long",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23"
+  }),
   hourFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone:"America/Cancun",hour:"numeric",hourCycle:"h23"
   }),
-  date = (s) => Number.isNaN(new Date(s).getTime()) ? "Invalid Date" : dateFormatter.format(new Date(s));
+  date = (s) => Number.isNaN(new Date(s).getTime()) ? "Invalid Date" : (preferences.timeFormat==='24'?dateFormatter24:dateFormatter).format(new Date(s));
 const codes = [
     "hou",
     "jax",
@@ -364,7 +367,7 @@ function saveCustom() {
     !(stake > 0) ||
     !(payout >= 0)
   ) {
-    alert("Enter a name, positive stake and nonnegative payout.");
+    appAlert("Enter a name, positive stake and nonnegative payout.");
     return;
   }
   let legs = [...document.querySelectorAll(".build-leg")].map((row) => {
@@ -395,17 +398,17 @@ function saveCustom() {
             l.marketPercent > 100)),
     )
   ) {
-    alert(
+    appAlert(
       "Enter a player prop description and valid percentages from 0 to 100.",
     );
     return;
   }
   if (!legs.length) {
-    alert("Add at least one selection.");
+    appAlert("Add at least one selection.");
     return;
   }
   if (type === "Single Game Bet" && legs.length !== 1) {
-    alert("Single game bets require one selection.");
+    appAlert("Single game bets require one selection.");
     return;
   }
   tickets.push({
@@ -545,6 +548,7 @@ function ticketJournal(t) {
 }
 let perfMode = "season";
 function icons() {
+  applyPreferences();
   syncReviewUI();
   syncResearchUpdates();
   // Lucide retains data-lucide on rendered SVGs; do not replace those again.
@@ -560,7 +564,8 @@ function render() {
     render.route = route;
   }
   let v = $("#view");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.3";
+  $("#status").hidden = sub === "settings";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.4";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -586,8 +591,7 @@ function render() {
     return;
   }
   if (sub === "settings") {
-    v.innerHTML =
-      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.3.3 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
+    v.innerHTML = settingsScreen();
     icons();
     return;
   }
@@ -692,6 +696,7 @@ function render() {
       ) +
       "</h2></div></div>";
   }
+  applyPreferences();
 }
 let loadSequence = 0;
 async function load() {
@@ -753,6 +758,7 @@ function exportData() {
               bankroll: funding,
               learning,
               officePool: pool,
+              preferences,
               selectedWeek: $("#week").value,
               exportedAt: new Date().toISOString(),
             },
@@ -768,7 +774,7 @@ function exportData() {
   a.click();
   setTimeout(() => URL.revokeObjectURL(u), 1000);
 }
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
   let b = e.target.closest("button");
   if (!b) return;
   if (b.dataset.tab) {
@@ -847,10 +853,10 @@ document.addEventListener("click", (e) => {
     let chosen = data.games.filter(
       (g) => pool[data.season + "-" + data.week + "-" + g.id],
     );
-    if (!chosen.length) return alert("Select a team first.");
+    if (!chosen.length) return appAlert("Select a team first.");
     if (
       chosen.length < data.games.length &&
-      !confirm(
+      !await appConfirm(
         chosen.length +
           " of " +
           data.games.length +
@@ -888,8 +894,8 @@ document.addEventListener("click", (e) => {
       data.games.length;
     navigator.clipboard
       .writeText(txt)
-      .then(() => alert("Copied"))
-      .catch(() => prompt("Copy picks:", txt));
+      .then(() => appAlert("Copied"))
+      .catch(() => appCopyFallback(txt));
   }
   if (b.id === "custom") {
     showBuilder = !showBuilder;
@@ -920,8 +926,8 @@ document.addEventListener("click", (e) => {
       !Number.isFinite(cost) ||
       cost < 0
     )
-      return alert("Enter valid settlement proceeds and fee.");
-    if (!confirm("Record final settlement and close remaining position?"))
+      return appAlert("Enter valid settlement proceeds and fee.");
+    if (!await appConfirm("Record final settlement and close remaining position?"))
       return;
     t.events ??= [];
     t.events.push({
@@ -949,7 +955,7 @@ document.addEventListener("click", (e) => {
       raw === "" ||
       !Number.isFinite(amount) ||
       amount < 0 ||
-      !confirm(
+      !await appConfirm(
         "Record an executed sale of " + pct + "% for " + money(amount) + "?",
       )
     )
@@ -957,7 +963,7 @@ document.addEventListener("click", (e) => {
     let rawFee = document.getElementById("sale-fee-" + t.id)?.value,
       fee = Number(rawFee);
     if (rawFee === "" || !Number.isFinite(fee) || fee < 0)
-      return alert("Enter a valid sale fee.");
+      return appAlert("Enter a valid sale fee.");
     let remaining = t.remainingFraction ?? 1,
       portion = (remaining * pct) / 100;
     t.events ??= [];
@@ -996,7 +1002,7 @@ document.addEventListener("change", async (e) => {
     if (field === "status") {
       if (value === "purchased" && t.status === "draft") {
         if (!(Number(t.stake) > 0 && Number(t.payout) > 0)) {
-          alert(
+          appAlert(
             "Enter a valid stake and gross payout before recording purchase.",
           );
           render();
@@ -1011,7 +1017,7 @@ document.addEventListener("change", async (e) => {
         });
         t.remainingFraction = 1;
       } else if (t.status === "draft" && value !== "draft") {
-        alert("Record purchase first.");
+        appAlert("Record purchase first.");
         render();
         return;
       } else if (
@@ -1019,7 +1025,7 @@ document.addEventListener("change", async (e) => {
         value === "sold" &&
         (t.remainingFraction ?? 1) > 0
       ) {
-        alert("Record an executed sale to close this position.");
+        appAlert("Record an executed sale to close this position.");
         render();
         return;
       }
@@ -1027,7 +1033,7 @@ document.addEventListener("change", async (e) => {
         value !== t.status &&
         !(t.status === "draft" && value === "purchased")
       ) {
-        alert(
+        appAlert(
           "Use executed sale or final settlement to close a purchased position.",
         );
         render();
@@ -1037,7 +1043,7 @@ document.addEventListener("change", async (e) => {
     } else {
       let n = value === "" ? null : Number(value);
       if (n !== null && (!Number.isFinite(n) || n < 0 || (field === "market" && n > 100))) {
-        alert("Enter a valid nonnegative amount.");
+        appAlert("Enter a valid nonnegative amount.");
         render();
         return;
       }
@@ -1045,7 +1051,7 @@ document.addEventListener("change", async (e) => {
         t.status !== "draft" &&
         ["stake", "payout", "fee", "proceeds"].includes(field)
       ) {
-        alert("Original purchased terms cannot be changed.");
+        appAlert("Original purchased terms cannot be changed.");
         render();
         return;
       }
@@ -1061,13 +1067,15 @@ document.addEventListener("change", async (e) => {
       let backup = JSON.parse(await file.text());
       if (backup.schemaVersion !== 1 || !Array.isArray(backup.tickets))
         throw Error("Invalid backup format");
+      validateBackup(backup);
+      const importedPreferences=backup.preferences===undefined?preferences:validatedPreferences(backup.preferences);
       if (
-        !confirm(
+        !await appConfirm(
           "Replace locally stored ticket records and office-pool selections with this backup?",
         )
       )
         return;
-      validateBackup(backup);
+      preferences=importedPreferences;savePreferences();
       tickets = backup.tickets;
       funding = backup.bankroll || [];
       learning = backup.learning || {};
@@ -1090,7 +1098,7 @@ document.addEventListener("change", async (e) => {
         await load();
       } else render();
     } catch (err) {
-      alert("Import failed: " + err.message);
+      appAlert("Import failed: " + err.message);
     }
     return;
   }
@@ -1099,14 +1107,14 @@ document.addEventListener("change", async (e) => {
       let x = JSON.parse(await e.target.files[0].text());
       if (x.schemaVersion !== 1 || !Array.isArray(x.tickets))
         throw Error("Invalid backup");
-      if (confirm("Replace local ticket records?")) {
+      if (await appConfirm("Replace local ticket records?")) {
         validateBackup(x);
         tickets = x.tickets;
         save();
         render();
       }
     } catch (err) {
-      alert(err.message);
+      appAlert(err.message);
     }
   }
 });
