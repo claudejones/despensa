@@ -840,3 +840,20 @@ button svg {vertical-align:middle;}
 .ticket .edit-selections+button {margin-inline-start:10px;}
 
 .leg-quote {margin:12px 0 4px;}.leg-quote small {display:block;font-size:11px;line-height:1.45;margin-top:6px;}.quote-estimate {margin:12px 0;}.quote-estimate .row {align-items:flex-start;}.quote-estimate b {white-space:nowrap;}
+
+/* Kalshi views and compact ticket summaries */
+.workspace-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:#edf4f5;padding:4px;border-radius:16px;margin:16px 0 10px}
+.workspace-tabs button{padding:12px 3px;border:0;background:transparent;font-size:13px;min-height:44px}
+.workspace-tabs button.active{background:white;color:#167f84;font-weight:700;box-shadow:0 2px 8px #19334b0d}
+.workspace-performance{margin:0 0 16px}
+.ticket-fold>summary{list-style:none;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.ticket-fold>summary::-webkit-details-marker{display:none}
+.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main>.row{gap:8px;align-items:flex-start}
+.ticket-summary-main>small{display:block;margin:8px 0;color:#6c8191}
+.ticket-summary>.chev{width:20px;height:20px;flex:none;margin-top:3px}
+.ticket-fold[open]>summary>.chev{transform:rotate(180deg)}
+.ticket-summary-teams{display:grid;gap:8px;margin:12px 0}.ticket-summary-teams .team{margin:0}.ticket-summary-teams small{display:block;color:#6c8191;margin-left:30px}
+.ticket-summary-money{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:12px}.ticket-summary-money b{display:block;font-size:17px;margin-top:3px}
+.ticket-content{border-top:1px solid #dce5eb;margin-top:16px;padding-top:16px}
+.ticket-content>.research-acc{margin-top:12px}.ticket-content>div>.pill{display:none}
+.ticket-fold[open] .ticket-summary-teams{display:none}

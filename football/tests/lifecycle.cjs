@@ -58,14 +58,14 @@ const { chromium } = require("playwright"),
     let id = await page.evaluate(() => tickets[0].id);
     await page
       .locator(".ticket summary")
-      .filter({ hasText: "Monitor & cash out" })
+      .filter({ hasText: "Market observations" })
       .click();
     await page.locator(`[id="offer-${id}"]`).fill("3");
     await page.locator(`[data-observe="${id}"]`).click();
     assert.equal(await page.evaluate(() => realizedNet(tickets[0])), 0);
     await page
       .locator(".ticket summary")
-      .filter({ hasText: "Monitor & cash out" })
+      .filter({ hasText: "Cash out" })
       .click();
     await page.locator(`[id="qty-${id}"]`).fill("50");
     await page.locator(`[id="sale-${id}"]`).fill("1.8");
@@ -83,7 +83,7 @@ const { chromium } = require("playwright"),
     );
     await page
       .locator(".ticket summary")
-      .filter({ hasText: "Monitor & cash out" })
+      .filter({ hasText: "Settlement" })
       .click();
     await page.locator(`[id="settle-${id}"]`).fill("1");
     await page.locator(`[data-settle="${id}"]`).click();

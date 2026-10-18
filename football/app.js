@@ -552,6 +552,7 @@ function icons() {
   }
 }
 function render() {
+  captureTicketState();
   const route = [tab, sub, plan, planTab, kalshiStage, perfMode, picksView, performanceView].join(":");
   if (render.route !== route) {
     window.scrollTo(0, 0);
@@ -560,7 +561,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.5";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.5.0";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -602,6 +603,7 @@ function render() {
   }
   if (tab === "kalshi") {
     v.innerHTML = workspaceScreen();
+    restoreTicketState();
     icons();
     return;
   }

@@ -95,7 +95,7 @@ function exposureView(rows) {
   const priced = rows.filter((t) => Number(t.payout) > 0 && t.legs?.length),
     keys = [...new Set(priced.flatMap((t) => t.legs.map((l) => l.gameId)))];
   let html =
-    '<h3>Portfolio evaluation</h3><p class="muted small">Selected week · draft and remaining purchased positions. Shared games settle together.</p>';
+    '<h3>Portfolio evaluation</h3><p class="muted small">Selected week · drafts and remaining open bets. Tickets containing the same game depend on the same result.</p>';
   const eligible =
     priced.length &&
     keys.length <= 16 &&
@@ -118,26 +118,24 @@ function exposureView(rows) {
     let a = analyzePlan(adjusted);
     html +=
       '<div class="grid2">' +
-      metric("Best settlement net", money(a.best)) +
-      metric("Worst settlement net", money(a.worst)) +
+      metric("Best-case profit", money(a.best)) +
+      metric("Worst-case result", money(a.worst)) +
       '</div><p class="small muted">' +
       a.outcomes.length +
       " win/loss combinations · includes entry fees, excludes future exit fees. Tie/void contracts require their market settlement rules; these scenarios assume a winner.</p>";
   } else
     html +=
       '<p class="muted">Exact joint outcomes require priced game-winner legs from this week. Player props require their own joint probability model.</p>';
-  const shared = keys.filter(
-    (k) => priced.filter((t) => t.legs.some((l) => l.gameId === k)).length > 1,
-  );
-  html += shared.length
-    ? shared
+  html += `<h3>Exposure by game</h3><p class="small muted">Includes priced tickets only. A combo appears under each of its games; these amounts overlap and must not be added together.</p>`;
+  html += keys.length
+    ? keys
         .map((k) => {
           let g = data?.games.find((g) => g.id === k),
             matches = priced.filter((t) => t.legs.some((l) => l.gameId === k));
-          return `<div class="leg-row"><b>${esc(g ? g.away.name + " vs. " + g.home.name : k)}</b><p class="muted small">${matches.length} tickets share this game · ${money(matches.reduce((n, t) => n + (t.status === "purchased" ? basis(t) : Number(t.stake || 0) + Number(t.fee || 0)), 0))} exposed</p></div>`;
+          return `<div class="leg-row"><b>${esc(g ? g.away.name + " vs. " + g.home.name : k)}</b><p class="muted small">Included in ${matches.length} ${matches.length===1?"ticket":"tickets"} · ${money(matches.reduce((n, t) => n + (t.status === "purchased" ? basis(t) : Number(t.stake || 0) + Number(t.fee || 0)), 0))} at risk</p><p class="small">${matches.map(t=>esc(t.title)+" · "+(t.status==='draft'?'Draft':'Open')).join("<br>")}</p>${matches.length>1?'<p class="muted small">This game affects each of these tickets.</p>':''}</div>`;
         })
         .join("")
-    : '<p class="muted small">No overlapping games in the priced tickets.</p>';
+    : '<p class="muted small">No priced games to show yet.</p>';
   return '<div class="card">' + html + "</div>";
 }
 function ticketView(t) {
@@ -161,15 +159,10 @@ function ticketView(t) {
     Number(t.payout) > 0
       ? (100 * (Number(t.stake || 0) + Number(t.fee || 0))) / Number(t.payout)
       : null;
-  let monitor = active
-    ? accordion(
-        "Monitor & cash out",
-        `${(remaining(t) * 100).toFixed(1)}% remaining · ${money(basis(t))} open cost basis`,
-        `<label>Observed cash-out offer ($)<input id="offer-${t.id}" type="number" min="0" step=".01"></label><label>Decision<select id="decision-${t.id}"><option>Hold</option><option>Consider sale</option></select></label><label>Decision note<textarea id="note-${t.id}" rows="2"></textarea></label><button data-observe="${t.id}">Record observation</button><p class="muted small">An observation does not change your position or realized P&L.</p><div class="divider"></div><div class="grid2"><label>Sell % of remaining<input id="qty-${t.id}" type="number" min="1" max="100" value="100"></label><label>Executed proceeds ($)<input id="sale-${t.id}" type="number" min="0" step=".01"></label><label>Sale fee ($)<input id="sale-fee-${t.id}" type="number" min="0" step=".01" value="0"></label></div><button data-sale="${t.id}">Record executed sale</button><div class="divider"></div><h3>Final settlement</h3><div class="grid2"><label>Final proceeds ($)<input id="settle-${t.id}" type="number" min="0" step=".01"></label><label>Settlement fee ($)<input id="settle-fee-${t.id}" type="number" min="0" step=".01" value="0"></label></div><button data-settle="${t.id}">Record final settlement</button>`,
-        "activity",
-      )
-    : "";
-  return `<article class="card ticket"><div class="row between"><div><span class="eyebrow">${esc(t.type || ((t.legs || []).length > 1 ? "Combo" : "Single game bet"))} · WEEK ${weekOf(t)}</span><h3>${esc(t.title)}</h3></div><span class="pill">${esc(t.status)}</span></div>${draftChoice(t)}${draft ? reviewOverlap(t) : ""}${legs}${draft ? `<button class="edit-selections" data-review-edit="${esc(t.id)}"><i data-lucide="pencil"></i> Edit selections</button>${t.pricingNeedsRefresh ? `<p class="muted small">Selections changed · enter a fresh quote.</p>` : ""}` : ""}${t.status === "draft" && t.originalDrafts ? `<button data-undo-combo="${t.id}">Restore separate singles</button>` : ""}${accordion("Ticket pricing", draft ? "Enter your actual stake, gross payout and fees" : "Purchased terms · protected", `<div class="grid2">${fields}</div>`, "receipt", draft && !t.source?.includes("review"))}<div data-pricing-totals="${esc(t.id)}">${ticketPricingTotals(t)}</div>${draft ? `<div class="row actions"><button class="primary" data-purchase="${t.id}">Record purchase</button><button data-del="${t.id}">Remove draft</button></div>` : ""}${monitor}${ticketJournal(t)}</article>`;
+  let monitor = active ? accordion("Market observations", "Save an offer or note without changing your bet", `<label>Observed cash-out offer ($)<input id="offer-${t.id}" type="number" min="0" step=".01"></label><label>Decision<select id="decision-${t.id}"><option>Hold</option><option>Consider sale</option></select></label><label>Decision note<textarea id="note-${t.id}" rows="2"></textarea></label><button data-observe="${t.id}">Record observation</button>`, "activity")
+    + accordion("Cash out", `${(remaining(t)*100).toFixed(1)}% remaining · ${money(basis(t))} at risk`, `<p class="small muted">Record a sale you already completed in Kalshi. This does not place a trade.</p><div class="grid2"><label>Sell % of remaining<input id="qty-${t.id}" type="number" min="1" max="100" value="100"></label><label>Executed proceeds ($)<input id="sale-${t.id}" type="number" min="0" step=".01"></label><label>Sale fee ($)<input id="sale-fee-${t.id}" type="number" min="0" step=".01" value="0"></label></div><button data-sale="${t.id}">Record cash-out</button>`, "wallet")
+    + accordion("Settlement", "Record the final proceeds for the remaining position", `<div class="grid2"><label>Final proceeds ($)<input id="settle-${t.id}" type="number" min="0" step=".01"></label><label>Settlement fee ($)<input id="settle-fee-${t.id}" type="number" min="0" step=".01" value="0"></label></div><button data-settle="${t.id}">Record final settlement</button>`, "check-circle") : "";
+  return `<article class="card ticket" data-ticket-id="${esc(t.id)}"><details class="ticket-fold" ${ticketExpanded(t)?"open":""}><summary class="ticket-summary">${ticketSummary(t)}</summary><div class="ticket-content"><div class="row between"><div><span class="eyebrow">${esc(t.type || ((t.legs || []).length > 1 ? "Combo" : "Single game bet"))} · WEEK ${weekOf(t)}</span><h3>${esc(t.title)}</h3></div><span class="pill">${esc(t.status)}</span></div>${draftChoice(t)}${draft ? reviewOverlap(t) : ""}${legs}${draft ? `<button class="edit-selections" data-review-edit="${esc(t.id)}"><i data-lucide="pencil"></i> Edit selections</button>${t.pricingNeedsRefresh ? `<p class="muted small">Selections changed · enter a fresh quote.</p>` : ""}` : ""}${t.status === "draft" && t.originalDrafts ? `<button data-undo-combo="${t.id}">Restore separate singles</button>` : ""}${accordion("Ticket pricing", draft ? "Enter your actual stake, gross payout and fees" : "Purchased terms · protected", `<div class="grid2">${fields}</div>`, "receipt", draft && !t.source?.includes("review"))}<div data-pricing-totals="${esc(t.id)}">${ticketPricingTotals(t)}</div>${draft ? `<div class="row actions"><button class="primary" data-purchase="${t.id}">Record purchase</button><button data-del="${t.id}">Remove draft</button></div>` : ""}${monitor}${ticketJournal(t)}</div></details></article>`;
 }
 function workspaceScreen() {
   const rows = scopeTickets(),
@@ -184,7 +177,7 @@ function workspaceScreen() {
           : kalshiStage === "monitor"
             ? opened
             : closed;
-  return `<div class="grid3">${metric("Draft stake", money(drafts.reduce((n, t) => n + Number(t.stake || 0), 0)))}${metric("Open exposure", money(opened.reduce((n, t) => n + basis(t), 0)))}${metric("Realized net", money(rows.reduce((n, t) => n + realizedNet(t), 0)))}</div>${workspaceSteps()}${kalshiStage === "build" ? `<div class="card"><h3>Build your tickets</h3><p class="muted small">Add selections while reading Games, AI Picks or Combos. Build singles or numbered combos as you research, then review selections and pricing here.</p><div class="grid2"><button class="primary" data-tab="games">Find picks in Games</button><button id="custom">Manual ticket / prop</button></div></div>${showBuilder ? builder() : ""}` : ""}${kalshiStage === "build" ? reviewCombineBar(drafts) : ""}${kalshiStage === "evaluate" ? exposureView(shown) : ""}${kalshiStage === "close" ? `<div class="card"><h3>Week ${Number($("#week").value)} closeout</h3><p class="muted">${opened.length ? opened.length + " open positions still need a recorded sale or settlement." : "All purchased positions are closed."}</p><div class="button-group"><button data-close-week ${opened.length ? "disabled" : ""}>Save weekly review</button><button id="export">Export for ChatGPT</button></div></div>` : ""}${shown.length ? shown.map(ticketView).join("") : `<div class="card empty"><i data-lucide="${kalshiStage === "monitor" ? "activity" : "inbox"}"></i><h3>${{ build: "No draft tickets", evaluate: "No tickets to evaluate", monitor: "No open positions", close: "No closed tickets" }[kalshiStage]}</h3><p class="muted">Week ${Number($("#week").value)} · Your records stay saved when you switch weeks.</p></div>`}`;
+  return `<div class="grid3">${metric("Draft stake", money(drafts.reduce((n, t) => n + Number(t.stake || 0), 0)))}${metric("Amount at risk", money(opened.reduce((n, t) => n + basis(t), 0)))}${metric("Realized P&L", money(rows.reduce((n, t) => n + realizedNet(t), 0)))}</div>${workspaceSteps()}${kalshiStage === "build" ? `<div class="card"><h3>Build your tickets</h3><p class="muted small">Add selections while reading Games, AI Picks or Combos. Build singles or numbered combos as you research, then review selections and pricing here.</p><div class="grid2"><button class="primary" data-tab="games">Find picks in Games</button><button id="custom">Manual ticket / prop</button></div></div>${showBuilder ? builder() : ""}` : ""}${kalshiStage === "build" ? reviewCombineBar(drafts) : ""}${kalshiStage === "evaluate" ? exposureView(shown) : ""}${kalshiStage === "close" ? `<div class="card"><h3>Week ${Number($("#week").value)} closeout</h3><p class="muted">${opened.length ? opened.length + " open positions still need a recorded sale or settlement." : "All purchased positions are closed."}</p><div class="button-group"><button data-close-week ${opened.length ? "disabled" : ""}>Save weekly review</button><button id="export">Export for ChatGPT</button></div></div>` : ""}${shown.length ? shown.map(ticketView).join("") : `<div class="card empty"><i data-lucide="${kalshiStage === "monitor" ? "activity" : "inbox"}"></i><h3>${{ build: "No draft tickets", evaluate: "No tickets to evaluate", monitor: "No open positions", close: "No closed tickets" }[kalshiStage]}</h3><p class="muted">Week ${Number($("#week").value)} · Your records stay saved when you switch weeks.</p></div>`}`;
 }
 function performanceScreen() {
   const rows = (perfMode === "season" ? tickets : scopeTickets()).filter(
@@ -388,7 +381,6 @@ function weeklyChart(rows = tickets) {
 function picksScreen(){return poolTabs()+(picksView==='pool'?myPoolScreen():aiAnalysisScreen());}
 
 function workspaceSteps() {
-  const steps=[['build','Build','Create tickets and enter pricing.'],['evaluate','Evaluate','Review scenarios and shared exposure.'],['monitor','Monitor','Track purchased positions and cash-outs.'],['close','Closeout','Record settlements and review results.']];
-  const index=steps.findIndex(([key])=>key===kalshiStage);
-  return `<div class="workspace-flow"><ol class="workspace-steps" aria-label="Kalshi workflow">${steps.map(([key,label],i)=>`<li><button data-kalshi-stage="${key}" class="${kalshiStage===key?'active':''}" ${kalshiStage===key?'aria-current="step"':''}><span class="step-number" aria-hidden="true">${i+1}</span><span>${label}</span></button></li>`).join('')}</ol><p class="small muted workflow-hint">Step ${index+1} of 4 · ${steps[index][2]}</p></div>`;
+ const views=[['build','Drafts'],['evaluate','Analysis'],['monitor','Open bets'],['close','History']];
+ return `<div role="navigation" class="workspace-tabs" aria-label="Kalshi views">${views.map(([key,label])=>`<button data-kalshi-stage="${key}" class="${kalshiStage===key?'active':''}" ${kalshiStage===key?'aria-current="page"':''}>${label}</button>`).join('')}</div><button class="destination-cta workspace-performance" data-action="results">View performance <i data-lucide="arrow-right"></i></button>`;
 }
