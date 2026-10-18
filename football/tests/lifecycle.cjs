@@ -23,6 +23,7 @@ const { chromium } = require("playwright"),
       () => typeof data !== "undefined" && data?.games?.length,
     );
     await page.locator("[data-tab=picks]").first().click();
+    await page.locator("[data-picks-view=pool]").click();
     assert.equal(
       await page.locator("[data-action=copyPool]").isDisabled(),
       true,
@@ -39,6 +40,7 @@ const { chromium } = require("playwright"),
     await page.reload();
     await page.waitForFunction(() => data?.games?.length);
     await page.locator("[data-tab=picks]").first().click();
+    await page.locator("[data-picks-view=pool]").click();
     assert.equal(await page.locator("[data-pool].selected").count(), 1);
     await page.locator("[data-tab=combos]").first().click();
     await page.locator("[data-plan=A]").click();

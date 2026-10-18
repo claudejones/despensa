@@ -11,7 +11,7 @@ function singleInReview(gameId, name) {
   );
 }
 function reviewActions(g) {
-  return `<details class="research-acc context-review"><summary><i data-lucide="list-plus"></i><span><b>Add to ticket</b><div class="muted small">Choose an outcome · single or combo</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${[
+  return `<details class="research-acc context-review" data-game="${esc(g.id)}"><summary><i data-lucide="list-plus"></i><span><b>Choose a pick</b><div class="muted small">My Pool or Kalshi ticket</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${poolChoiceStatus(g)}<h3 class="destination-heading">Kalshi ticket</h3><p class="small muted">Choose an outcome for a single or combo.</p>${[
     g.away,
     g.home,
   ]
