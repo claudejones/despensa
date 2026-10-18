@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  const page=await browser.newPage({viewport:{width,height:700}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
  const click=async s=>page.locator(s).first().click();
- await click('nav [data-tab=games]');await click('.context-review summary');await click('[data-review-game]');await click('[data-review-new=combo]');await click('[data-review-toast-close]');await click('nav [data-tab=weeks]');
+ await click('nav [data-tab=games]');await click('[data-kalshi-choose]');await click('[data-review-game]');await click('[data-review-new=combo]');await click('[data-review-toast-close]');await click('nav [data-tab=weeks]');
  const saved=await page.evaluate(()=>JSON.stringify(tickets));
  for(const height of [700,844,760,650,844]){
   await page.setViewportSize({width,height});

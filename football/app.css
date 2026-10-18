@@ -859,3 +859,5 @@ button svg {vertical-align:middle;}
 .ticket-fold[open] .ticket-summary-teams{display:none}
 
 .exposure-selection .row{gap:8px}.exposure-selection svg,.rename-ticket svg{width:20px;height:20px;flex-shrink:0}.rename-ticket{display:inline-flex;align-items:center;gap:8px;margin:12px 0}.home-performance .grid3 b{overflow-wrap:anywhere;font-size:20px}[data-close-final][hidden],[data-close-sale][hidden]{display:none}
+
+.direct-pick-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:16px}.direct-pick-actions button{display:flex;align-items:center;gap:10px;text-align:left;min-height:44px}.direct-pick-actions svg{width:20px;height:20px;flex:none}.direct-pick-actions p{margin:0}

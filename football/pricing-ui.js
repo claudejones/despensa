@@ -31,10 +31,12 @@ function ticketPricingTotals(t){const draft=t.status==="draft",closed=isClosed(t
 let ticketExpansion = null;
 let ticketInnerState = new Map();
 function captureTicketState(){
+ ticketAnalysisEntering=tab==='kalshi'&&kalshiStage==='evaluate'&&ticketPreviousView!=='analysis';ticketPreviousView=tab==='kalshi'&&kalshiStage==='evaluate'?'analysis':'';
  if(!ticketExpansion)ticketExpansion=new Map(tickets.map(t=>[t.id,false]));
  document.querySelectorAll('[data-ticket-id]').forEach(el=>{const id=el.dataset.ticketId;ticketExpansion.set(id,el.querySelector('.ticket-fold').open);ticketInnerState.set(id,[...el.querySelectorAll('.ticket-content details')].map(d=>d.open));});
 }
-function ticketExpanded(t){return ticketExpansion?.has(t.id)?ticketExpansion.get(t.id):t.status==='draft';}
+function ticketExpanded(t){if(kalshiStage==='evaluate'&&ticketAnalysisEntering)return false;return ticketExpansion?.has(t.id)?ticketExpansion.get(t.id):t.status==='draft';}
+let ticketAnalysisEntering=false,ticketPreviousView='';
 function restoreTicketState(){document.querySelectorAll('[data-ticket-id]').forEach(el=>{const states=ticketInnerState.get(el.dataset.ticketId);if(states)el.querySelectorAll('.ticket-content details').forEach((d,i)=>{if(i<states.length)d.open=states[i]});});}
 function ticketPotentialProfit(t){return t.status==='draft'?Number(t.payout||0)-Number(t.stake||0)-Number(t.fee||0):realizedNet(t)+Number(t.payout||0)*remaining(t)-basis(t);}
 function ticketSummary(t){
@@ -47,3 +49,9 @@ function ticketSummary(t){
 document.addEventListener('change',e=>{if(!e.target.hasAttribute('data-close-choice'))return;const root=e.target.closest('.details'),final=e.target.value==='final';root.querySelector('[data-close-sale]').hidden=final;root.querySelector('[data-close-final]').hidden=!final;});
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-rename-ticket')){const t=tickets.find(t=>t.id===b.dataset.renameTicket);if(t)openReviewSheet('Rename ticket',`<label>Ticket name<input id="renameTicketName" maxlength="100" value="${esc(t.title)}"></label><p class="small muted">Only the name changes. Selections, prices and transaction history stay the same.</p><button class="primary" data-save-ticket-name="${esc(t.id)}">Save name</button>`);}if(b.hasAttribute('data-save-ticket-name')){const t=tickets.find(t=>t.id===b.dataset.saveTicketName),input=document.querySelector('#renameTicketName'),name=input?.value.trim();if(!t||!input)return;if(!name){input.setCustomValidity('Enter a ticket name.');input.reportValidity();return;}t.title=name;save();closeReviewSheet();render();icons();}});
 document.addEventListener('input',e=>{if(e.target.id==='renameTicketName')e.target.setCustomValidity('')});
+
+let purchaseCorrection=null;
+document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.hasAttribute('data-correct-purchase')){const t=tickets.find(t=>t.id===b.dataset.correctPurchase);if(!t||t.status!=='purchased')return;purchaseCorrection={id:t.id,payout:t.payout};openReviewSheet('Correct purchase details',`<p>Fix the original gross payout entered for <b>${esc(t.title)}</b>.</p><label>Correct gross payout ($)<input id="correctGrossPayout" required type="number" min="0.01" step=".01" value="${Number(t.payout||0)}"></label><p class="small muted">Use the full original ticket payout, including your stake. This updates the recorded purchase, not the live market quote. Any partial cash-outs stay unchanged.</p><button class="primary" data-save-purchase-correction>Save correction</button>`);}
+ if(b.hasAttribute('data-save-purchase-correction')){const pending=purchaseCorrection,t=tickets.find(t=>t.id===pending?.id),input=document.querySelector('#correctGrossPayout');if(!t||t.status!=='purchased'||!input)return;const value=Number(input.value);if(!input.checkValidity()||!Number.isFinite(value)||value<=0){input.reportValidity();return;}if(t.payout!==pending.payout){await appAlert('This ticket changed. Reopen the correction form.');return;}if(value===Number(t.payout)){closeReviewSheet();return;}const before=t.payout;t.payout=value;t.events??=[];t.events.push({kind:'purchase correction',time:new Date().toISOString(),field:'payout',before,after:value,note:'Gross payout corrected from '+money(before)+' to '+money(value)+'.'});save();purchaseCorrection=null;closeReviewSheet();render();icons();}
+});
