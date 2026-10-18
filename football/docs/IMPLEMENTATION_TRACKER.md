@@ -114,3 +114,10 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 - Added new automated DOM-level design assertions for season summary, game logos, kickoff pills, independent research accordion, equal-width pool controls, and removal of dark/swipe settings.
 - New assertions are running in CI; this is a supplement to, not a replacement for, manual visual review.
 - v1.0 publication remains blocked until full visual verification and remaining functionality gaps are resolved.
+
+## v0.5.5 screenshot review checkpoint
+- Retrieved and directly inspected generated 390px screenshots for Home, Season, Games, AI Picks, Combos, Kalshi, and Settings.
+- Found a material visual bug: sticky Office Pool summary obscured pick controls on the AI Picks screen. Changed summary to normal document flow and added regression assertion.
+- Confirmed Games has compact matchup cards and independent accordions; some research summaries appear semantically miscategorized and need data-quality review.
+- Full pixel comparison to the original approved mockups remains incomplete; do not claim visual signoff.
+- Browser tests for the new fix have been queued; no production deployment.
