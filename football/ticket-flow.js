@@ -76,7 +76,7 @@ syncReviewUI = function() {
   const drafts=reviewDrafts(),active=drafts.find(t=>t.id===activeReviewId);
   let bar=document.querySelector('#activeTicketBar');if(!bar){bar=document.createElement('div');bar.id='activeTicketBar';document.querySelector('#bottomDock').prepend(bar);observeTicketBar(bar)}
   bar.hidden=!active||tab==='kalshi'||!!sub;
-  bar.innerHTML=active?`<button class="active-ticket-name" data-review-tickets><b>${esc(active.title)} <i data-lucide="chevron-down"></i></b><small>${active.legs.length} ${active.legs.length===1?'selection':'legs'} · Active draft</small></button><button data-review-edit="${esc(active.id)}">View ticket</button>`:'';
+  bar.innerHTML=active?`<button class="active-ticket-name" data-review-tickets><b>${esc(active.title)} <i data-lucide="chevron-down"></i></b><small>${active.legs.length} ${active.legs.length===1?'selection':'legs'} · Active draft</small></button><button data-review-edit="${esc(active.id)}">Review ticket</button>`:'';
   document.body.classList.toggle('has-active-ticket',!bar.hidden);
   document.documentElement.style.setProperty('--active-ticket-height',bar.getBoundingClientRect().height+'px');
   document.querySelectorAll('[data-review-game]').forEach(b=>{

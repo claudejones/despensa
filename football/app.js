@@ -560,7 +560,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.2";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.3";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -669,7 +669,7 @@ function render() {
             info[1] +
             '</span><div style="margin-top:7px;font-size:12px;font-weight:700">' +
             data.comboCandidates.filter((t) => t.strategy === id).length +
-            ' candidate tickets · View plan</div></span><i data-lucide="chevron-right"></i></div></button>',
+            ' candidate tickets · View strategy details</div></span><i data-lucide="chevron-right"></i></div></button>',
         )
         .join("");
   if (tab === "results") {

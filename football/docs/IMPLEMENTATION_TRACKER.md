@@ -130,3 +130,7 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Kalshi uses four connected, numbered, directly accessible Build / Evaluate / Monitor / Close steps, current-step highlighting, accessible aria-current and a concise explanation. No completion state is inferred from navigation.
 - Season Summary Performance action uses a full-width flex layout with a consistently sized and centered arrow.
 - Existing mobile smoke, briefing, navigation and ticket/backup lifecycle checks passed. Focused mobile checks cover summary destinations, all workflow steps and arrow alignment at 320/375/430px; screenshots inspected before publication. No research or personal-data changes.
+
+## v1.4.3 — consistent sentence-case actions (2026-10-18)
+- Applied View game research, View combo strategies, View strategy details, Review ticket, Find picks in Games and Closeout. Pool actions use Copy my picks and View AI analysis. AI/NFL abbreviations and named navigation destinations retain their capitalization.
+- Retained Save weekly review: this saves the weekly review record and does not independently settle tickets. Labels only; routing, calculations, research and user data unchanged.
