@@ -298,11 +298,11 @@ document.addEventListener("click", (e) => {
     alert("Weekly review saved.");
   }
 });
-function researchSources() {
+function researchSources(ids) {
   return (
     '<p class="small">' +
     (data.sources || [])
-      .filter((s) => /^https:\/\//.test(s.url))
+      .filter((s) => (!ids || ids.includes(s.id)) && /^https:\/\//.test(s.url))
       .map(
         (s) =>
           `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`,
@@ -343,16 +343,19 @@ function forecast(g) {
       p.probability <= 1,
   );
 }
+function researchLean(g) {
+  return (data?.predictions || []).find(p => p.gameId === g.id && p.kind === 'qualitative-research-lean' && p.researchReviewed === true && p.frozenAt && new Date(p.frozenAt) < new Date(g.kickoff) && [g.away.name,g.home.name].includes(p.winner));
+}
 function picksScreen() {
   const count = data.games.filter(
       (g) => pool[data.season + "-" + data.week + "-" + g.id],
     ).length,
     validated = data.games.filter(forecast).length;
   return (
-    `<div class="card"><h3>Independent AI Predictions</h3><p class="muted">${validated ? validated + " validated forecasts published." : "AI forecasts are awaiting validation."} Your office-pool selections stay independent.</p></div>` +
+    `<div class="card"><h3>Independent AI Predictions</h3><p class="muted">${validated ? validated + " validated forecasts published." : data.games.filter(researchLean).length + " qualitative research leans published; win probabilities are not calibrated."} Your office-pool selections stay independent.</p></div>` +
     data.games
       .map((g) => {
-        let p = forecast(g),
+        let validatedForecast = forecast(g), p = validatedForecast || researchLean(g),
           k = data.season + "-" + data.week + "-" + g.id,
           pick = pool[k];
         const details = p
@@ -364,7 +367,7 @@ function picksScreen() {
               .map((x) => "<li>" + esc(x) + "</li>")
               .join("") +
             '</ul><p class="muted small">Research context only; no validated forecast.</p>';
-        return `<article class="card pick-card">${kickoff(g.kickoff)}${team(g.away.name, g.away.record)}${team(g.home.name, g.home.record)}<div class="divider"></div><div class="grid2"><div><small>AI PREDICTED WINNER</small><div><b>${p ? esc(p.winner) : "Pending validation"}</b></div></div><div><small>AI WIN PROBABILITY</small><div><b>${p ? (100 * p.probability).toFixed(1) + "%" : "Not published"}</b></div></div></div>${accordion("Why this selection?", p ? esc(p.summary || "Evidence behind this forecast") : "Research available; forecast pending.", details, "brain")}<p class="eyebrow">MY OFFICE POOL PICK</p><div class="grid2">${[g.away, g.home].map((t) => `<button class="pick-btn ${pick === t.name ? "selected" : ""}" aria-pressed="${pick === t.name}" aria-label="Pick ${esc(t.name)} to win" data-pool="${g.id}" data-team="${esc(t.name)}"><img alt="" src="assets/teams/${teamCode(t.name)}.png" onerror="this.style.display='none'">${teamAbbr(t.name)}${pick === t.name ? '<i data-lucide="check"></i>' : ""}</button>`).join("")}</div>${reviewActions(g)}</article>`;
+        return `<article class="card pick-card">${kickoff(g.kickoff)}${team(g.away.name, g.away.record)}${team(g.home.name, g.home.record)}<div class="divider"></div><div class="grid2"><div><small>${validatedForecast ? "AI PREDICTED WINNER" : "AI RESEARCH LEAN"}</small><div><b>${p ? esc(p.winner) : "Pending validation"}</b></div></div><div><small>AI WIN PROBABILITY</small><div><b>${validatedForecast ? (100 * p.probability).toFixed(1) + "%" : "Not published"}</b></div></div></div>${accordion("Why this selection?", p ? esc(p.summary || "Evidence behind this forecast") : "Research available; forecast pending.", details + researchSources(p?.sourceIds || g.sourceIds), "brain")}<p class="eyebrow">MY OFFICE POOL PICK</p><div class="grid2">${[g.away, g.home].map((t) => `<button class="pick-btn ${pick === t.name ? "selected" : ""}" aria-pressed="${pick === t.name}" aria-label="Pick ${esc(t.name)} to win" data-pool="${g.id}" data-team="${esc(t.name)}"><img alt="" src="assets/teams/${teamCode(t.name)}.png" onerror="this.style.display='none'">${teamAbbr(t.name)}${pick === t.name ? '<i data-lucide="check"></i>' : ""}</button>`).join("")}</div>${reviewActions(g)}</article>`;
       })
       .join("") +
     `<div class="card copybar"><div class="row between"><b>My Office Pool</b><span>${count} of ${data.games.length}</span></div><p><button class="primary" data-action="copyPool" ${count ? "" : "disabled"}>Copy My Picks</button></p></div>`

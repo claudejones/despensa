@@ -61,3 +61,12 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Published through PR #9 at application commit `06bcd6926b8e84e6d3c5baa50e227a501837586e`. Development acceptance 39094894245, main acceptance 39094963741 and Pages deployment 39094963315 succeeded.
 - Live shared-ticket flow passed 320/375/430px, including contextual additions, Undo, editing suggestions, quote invalidation/restoration, persistence, switching and overlap. Live index, CSS and all four application scripts matched tested files byte-for-byte.
 - Production: https://claudejones.github.io/despensa/football/?v=1.2
+
+
+## v1.2.1 Week 6 research refresh
+
+- Research snapshot: October 17, 2026, 11:00 PM America/Cancun. All 13 upcoming matchups refreshed across form, injuries, matchup, markets and history, with source links per category. Thursday final recorded separately.
+- 13 qualitative AI leans include supporting/opposing evidence and pregame timestamps. No calibrated probabilities or numeric EV are claimed.
+- 26 Kalshi side snapshots include bid/ask, retrieval time, fee/depth limitations and settlement rules. API metadata updated_time is stored separately from retrieval time.
+- All 15 existing strategy tickets retain original legs and historical quote values; each has a new research review. Final inactives, weather and fresh combo quotes remain unverified.
+- Original saved tickets, pool selections, financial arithmetic and ledger are unchanged. JSON schema, source references and historical quote preservation verified; mobile, financial, lifecycle and shared-ticket suites passed locally. Research display screenshots inspected at 375px.
