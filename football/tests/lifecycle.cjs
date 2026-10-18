@@ -44,6 +44,7 @@ const { chromium } = require("playwright"),
     await page.locator("[data-tab=combos]").first().click();
     await page.locator("[data-plan=A]").click();
     await page.locator("[data-add]").first().click();
+    await page.locator("[data-open-review]").first().click();
     assert.equal(
       await page.locator("[data-kalshi-stage=build].active").count(),
       1,
