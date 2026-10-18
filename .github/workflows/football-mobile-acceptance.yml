@@ -29,6 +29,8 @@ jobs:
         run: |
           python3 -m unittest discover -s football/tests -p test_ai_archive.py -v
           node football/tests/ai-paper.cjs
+      - name: Verify detail drawers and preserved edits
+        run: node football/tests/detail-drawers.cjs
       - name: Verify consistent disclosure controls
         run: node football/tests/disclosure-pattern.cjs
       - name: Run financial acceptance

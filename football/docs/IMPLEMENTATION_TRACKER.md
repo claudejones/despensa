@@ -196,3 +196,10 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Shared native summary styling suppresses browser markers, right-aligns a single 20px Lucide chevron, and rotates only the owning summary on open. Minimum 44px header target; reduced-motion support and native keyboard controls retained.
 - Research summary styles now target direct children so nested source disclosures do not inherit unintended layouts.
 - Verified closed/open chevrons, alignment, Enter/Space, independent nested state and mobile screenshots at 320/375/430px. No personal data or financial logic changes.
+
+## v1.8.0 — Summary cards with detail drawers
+- Game research, AI rationale, Kalshi ticket details and AI paper results now open with one right chevron in the shared drawer. Main cards retain team/status/financial summaries; short help, source and calculation disclosures keep the down/up chevron.
+- Drawer heading and Close stay fixed. New detail views start at the top; closing restores the originating page position and focus. Replacing a view uses the same dialog.
+- Ticket pricing is saved without rebuilding inputs; pending valid pricing edits also save on Escape, Close or replacement. Closed forms are removed to prevent stale controls. Purchase/removal/restore actions close the old ticket view.
+- Combining single drafts remains available on summary cards. Drawer selections retain team logos, records and outcome labels.
+- No storage keys, research records, fee accounting or reconciliation rules changed. Updated browser journeys for drawer navigation; new regression covers context, scroll/focus restoration, one-dialog replacement and pricing persistence at 320/375/430px.

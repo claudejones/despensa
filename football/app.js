@@ -542,6 +542,7 @@ function ticketJournal(t) {
 }
 let perfMode = "season";
 function icons() {
+  prepareDetailDrawers();
   applyPreferences();
   syncReviewUI();
   syncResearchUpdates();
@@ -561,7 +562,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.7.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.0";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -980,6 +981,7 @@ document.addEventListener("click", async (e) => {
   if (b.dataset.del) {
     if (tickets.find((t) => t.id === b.dataset.del)?.status !== "draft") return;
     tickets = tickets.filter((t) => t.id !== b.dataset.del);
+    closeReviewSheet();
     save();
     render();
   }

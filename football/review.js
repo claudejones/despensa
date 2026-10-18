@@ -188,6 +188,7 @@ function undoCombo(id) {
   tickets = tickets.filter((x) => x.id !== id);
   for (const original of t.originalDrafts)
     if (!tickets.some((x) => x.id === original.id)) tickets.push(original);
+  closeReviewSheet();
   save();
   render();
   icons();

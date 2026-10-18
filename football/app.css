@@ -875,3 +875,22 @@ details > summary::marker {content:""}
 details > summary > .chev {width:20px;height:20px;flex:0 0 20px;margin-left:auto;margin-top:0;align-self:center;transform:none;transition:transform .15s ease;pointer-events:none}
 details[open] > summary > .chev {transform:rotate(180deg)}
 @media(prefers-reduced-motion:reduce){details > summary > .chev{transition:none}}
+
+/* Long content opens in a drawer; short disclosures retain the down/up pattern. */
+.detail-link{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;text-align:left;font:inherit;color:var(--ink);background:transparent;border:0;padding:12px 0;cursor:pointer}
+.detail-link > :first-child:not(svg){flex:1;min-width:0}
+.detail-link > span{flex:1;min-width:0}
+.detail-link .detail-chevron{width:20px;height:20px;flex:0 0 20px;margin-left:auto}
+.detail-link > svg:not(.detail-chevron){width:20px;height:20px;flex:0 0 20px}
+.detail-link small{display:block}
+.research-detail-link,.pick-card .detail-link{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px}
+.detail-sheet{height:calc(100dvh - 12px - env(safe-area-inset-top))}
+.drawer-ticket .ticket-content{padding:0}
+.detail-sheet .research-sections{padding:0}
+.detail-link:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.drawer-ticket .ticket-content{margin:0;border:0}
+.drawer-ticket .ticket-section:first-child{margin-top:0;padding-top:0;border:0}
+.drawer-ticket .ticket-section h3{padding:0;border:0}
+.paper-ticket .detail-link .row{gap:10px;flex-wrap:wrap}
+.paper-ticket .detail-link .pill{font-size:12px}
+.drawer-ticket .leg-team .team{margin:0 0 6px}

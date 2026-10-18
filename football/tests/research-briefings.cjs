@@ -14,7 +14,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  }
  await click('[data-briefing=games]');await click('[data-briefing-go=games]');assert.equal(await page.locator('.game-research').count(),13);
  assert.equal(await page.locator('.game-research>.market-strip').count(),13);
- const card=page.locator('.game-research').first();await card.locator('[data-research-group]>summary').click();await card.locator('[data-research=injuries]>summary').click();
+ await page.locator('.research-detail-link').first().click();const card=page.locator('#ticketSheet');await card.locator('[data-research=injuries]>summary').click();
  assert.match(await card.locator('.player-row').first().innerText(),/David Montgomery[\s\S]*Running back \(RB\)[\s\S]*Out/);
  await card.locator('[data-research=injuries]').scrollIntoViewIfNeeded();await page.screenshot({path:`football/test-artifacts/${width}-player-availability.png`});
  await card.locator('[data-research=form]>summary').click();assert.ok(await card.locator('[data-research=injuries]').getAttribute('open')!==null);
@@ -25,6 +25,6 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  await card.locator('[data-research=market]').scrollIntoViewIfNeeded();await page.screenshot({path:`football/test-artifacts/${width}-market-comparison.png`});
  assert.equal(await page.evaluate(()=>JSON.stringify({tickets,pool})),original);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
- await click('nav [data-tab=picks]');assert.equal(await page.locator('.pick-card>.market-strip').count(),13);assert.equal(await page.evaluate(()=>data.games.filter(forecast).length),0);
+ await click('[data-review-close]');await click('nav [data-tab=picks]');assert.equal(await page.locator('.pick-card>.market-strip').count(),13);assert.equal(await page.evaluate(()=>data.games.filter(forecast).length),0);
  assert.deepEqual(errors,[]);await page.close();console.log('PASS research briefings and player/market display '+width);
 }}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});
