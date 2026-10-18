@@ -23,6 +23,8 @@ jobs:
         run: python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/football-server.log 2>&1 &
       - name: Run mobile smoke
         run: node football/tests/mobile-smoke.cjs
+      - name: Verify all-in pricing
+        run: node football/tests/all-in-pricing.cjs
       - name: Run financial acceptance
         run: node football/tests/financial-acceptance.cjs
 

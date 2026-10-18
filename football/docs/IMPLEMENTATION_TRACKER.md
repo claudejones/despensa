@@ -179,3 +179,8 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Preserves previous cash-outs, fees, quotes and original records; adds source-backed Activity event and reversible automatic result. Undo opts that ticket out of automatic closing. Repeated loads do not duplicate events.
 - Scores are published snapshots, not a continuous live feed. Reconciliation applies to the loaded season/week on the user's device; no Kalshi account access or personal ledger publication.
 - Regression covers NO outcomes, partial proceeds, manual records, scope, repeat loads and undo at 320/375/430 px.
+
+## v1.6.1 — All-in ticket amounts
+- Removed separate entry fee input and purchase-detail fee row. Total paid includes trading costs; cash-outs use actual credited amounts.
+- Legacy saved fees remain in accounting. Editing a legacy draft total folds its old fee into the new all-in amount; reloads leave stored records unchanged.
+- Verified financial acceptance, all-in pricing, and update preservation at 320/375/430px.
