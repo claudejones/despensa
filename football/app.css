@@ -829,3 +829,12 @@ button, summary, a {touch-action:manipulation;}
 .workspace-steps .active {color:var(--teal);font-weight:700;background:var(--soft);}
 .workspace-steps .active .step-number {background:var(--teal);border-color:var(--teal);color:white;}
 .workflow-hint {margin:8px 0 0;text-align:center;min-height:32px;}
+
+/* Action spacing stays separate from navigation and segmented controls. */
+button {vertical-align:middle;}
+button svg {vertical-align:middle;}
+.button-group,.actions {display:flex;flex-wrap:wrap;gap:10px;}
+.button-group {margin-top:12px;}
+.ticket .edit-selections {display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;}
+.ticket .edit-selections svg {width:20px;height:20px;flex:none;}
+.ticket .edit-selections+button {margin-inline-start:10px;}
