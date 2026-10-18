@@ -65,7 +65,7 @@ function drawReviewEditor() {
 function saveReviewEditor() {
   const current=reviewDrafts().find(t=>t.id===reviewEditor?.id);if(!current)return false;
   const title=document.querySelector('#reviewTitle').value.trim();
-  if(!title||!reviewEditor.legs.length){alert('Enter a ticket name and keep at least one selection.');return false}
+  if(!title||!reviewEditor.legs.length){appAlert('Enter a ticket name and keep at least one selection.');return false}
   rememberReview(current);
   const changed=JSON.stringify(current.legs)!==JSON.stringify(reviewEditor.legs);
   if(changed)clearReviewPricing(reviewEditor);
@@ -105,7 +105,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.reviewCandidateEdit){let t=reviewDrafts().find(t=>t.candidateId===b.dataset.reviewCandidateEdit);if(!t){addCandidateReview({dataset:{add:b.dataset.reviewCandidateEdit},parentElement:b.parentElement,after:el=>b.after(el)});t=tickets[tickets.length-1]}if(t)editReviewTicket(t.id)}
   if(b.dataset.reviewNew||b.dataset.reviewAppend){
     const l={...reviewPending,side:document.querySelector('#reviewOutcome').value};let t;
-    if(b.dataset.reviewNew){if(b.dataset.reviewNew==='single'&&reviewDrafts().some(t=>t.type!=='Combo'&&t.legs?.length===1&&t.legs[0].gameId===l.gameId&&t.legs[0].team===l.team&&t.legs[0].side===l.side)){alert('This single is already in your drafts.');return}t=newReviewTicket(b.dataset.reviewNew,[l]);}
+    if(b.dataset.reviewNew){if(b.dataset.reviewNew==='single'&&reviewDrafts().some(t=>t.type!=='Combo'&&t.legs?.length===1&&t.legs[0].gameId===l.gameId&&t.legs[0].team===l.team&&t.legs[0].side===l.side)){appAlert('This single is already in your drafts.');return}t=newReviewTicket(b.dataset.reviewNew,[l]);}
     else {t=reviewDrafts().find(t=>t.id===b.dataset.reviewAppend);if(!t||t.legs.some(x=>x.gameId===l.gameId))return;rememberReview(t);t.legs.push(l);clearReviewPricing(t);setActiveReview(t.id)}
     closeReviewSheet();refreshReviewFlow();reviewToast('Added to '+t.title+'.');
   }

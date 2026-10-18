@@ -50,7 +50,7 @@ function accordion(
   icon = "clipboard-list",
   open = false,
 ) {
-  return `<details class="research-acc" ${open ? "open" : ""}><summary><i data-lucide="${icon}"></i><span><b>${title}</b><div class="muted small">${summary}</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${body}</div></details>`;
+  return `<details class="research-acc" ${["Why this selection?","Research review"].includes(title)?'data-research-detail':''} ${open ? "open" : ""}><summary><i data-lucide="${icon}"></i><span><b>${title}</b><div class="muted small">${summary}</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${body}</div></details>`;
 }
 function validateBackup(x) {
   if (!Array.isArray(x.tickets)) throw Error("Tickets must be an array");
@@ -234,9 +234,9 @@ document.addEventListener("click", (e) => {
   if (b.dataset.purchase) {
     const t = tickets.find((t) => t.id === b.dataset.purchase);
     if (!t || t.status !== "draft") return;
-    if (t.type === "Combo" && t.legs.length < 2) return alert("Add at least two selections to this combo before recording purchase.");
+    if (t.type === "Combo" && t.legs.length < 2) return appAlert("Add at least two selections to this combo before recording purchase.");
     if (!(Number(t.stake) > 0 && Number(t.payout) > 0))
-      return alert("Enter positive stake and gross payout first.");
+      return appAlert("Enter positive stake and gross payout first.");
     t.status = "purchased";
     t.remainingFraction = 1;
     t.events ??= [];
@@ -256,7 +256,7 @@ document.addEventListener("click", (e) => {
       raw = document.getElementById("offer-" + t.id).value,
       n = Number(raw);
     if (raw === "" || !Number.isFinite(n) || n < 0)
-      return alert("Enter a valid observed offer.");
+      return appAlert("Enter a valid observed offer.");
     t.events ??= [];
     t.events.push({
       kind: "observation",
@@ -273,7 +273,7 @@ document.addEventListener("click", (e) => {
   if (b.hasAttribute("data-fund")) {
     const n = Number($("#fundAmount").value);
     if (!Number.isFinite(n) || n <= 0)
-      return alert("Enter a positive transfer amount.");
+      return appAlert("Enter a positive transfer amount.");
     funding.push({
       time: new Date().toISOString(),
       amount: n * Number($("#fundType").value),
@@ -295,7 +295,7 @@ document.addEventListener("click", (e) => {
         : {}),
     };
     persistExtras();
-    alert("Weekly review saved.");
+    appAlert("Weekly review saved.");
   }
 });
 function researchSources(ids) {
