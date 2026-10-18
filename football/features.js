@@ -354,7 +354,7 @@ function aiAnalysisScreen() {
       .map((g) => {
         let validatedForecast = forecast(g), p = validatedForecast || researchLean(g);
         const details = p
-          ? `<p class="small muted">Frozen ${esc(date(p.frozenAt))} · Confidence: ${esc(p.confidence || "Not supplied")}</p><b>Supporting evidence</b><ul>${(p.supportingEvidence || []).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul><b>Opposing evidence</b><ul>${(p.opposingEvidence || []).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul>`
+          ? `<p class="small muted">Pick recorded ${esc(date(p.frozenAt))} · Confidence: ${esc(p.confidence || "Not supplied")}</p><b>Supporting evidence</b><ul>${(p.supportingEvidence || []).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul><b>Opposing evidence</b><ul>${(p.opposingEvidence || []).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul>`
           : "<ul>" +
             g.insights
               .flatMap((i) => i.details)
