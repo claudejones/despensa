@@ -1,0 +1,382 @@
+let catalog = { weeks: {}, loaded: false };
+function currentNFLWeek() {
+  return Math.max(
+    1,
+    Math.min(
+      18,
+      1 +
+        Math.floor(
+          (Date.now() - Date.parse("2026-09-10T00:00:00-05:00")) / 604800000,
+        ),
+    ),
+  );
+}
+/* UI completion. Existing ledger and office-pool storage keys remain stable. */
+function readStore(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+let funding = readStore("football-bankroll-v1", []),
+  learning = readStore("football-learning-v1", {});
+const persistExtras = () => {
+  localStorage.setItem("football-bankroll-v1", JSON.stringify(funding));
+  localStorage.setItem("football-learning-v1", JSON.stringify(learning));
+};
+function record(r) {
+  return /^\d+-\d+$/.test(r || "") ? r + "-0" : r || "—";
+}
+function teamAbbr(n) {
+  return teamCode(n) === "wsh" ? "WAS" : teamCode(n).toUpperCase();
+}
+function weekOf(t) {
+  return Number(t.week || 6);
+}
+function scopeTickets() {
+  return tickets.filter((t) => weekOf(t) === Number($("#week").value));
+}
+function basis(t) {
+  return (Number(t.stake || 0) + Number(t.fee || 0)) * remaining(t);
+}
+function metric(label, value) {
+  return `<div class="metric"><small>${label}</small><b>${value}</b></div>`;
+}
+function accordion(
+  title,
+  summary,
+  body,
+  icon = "clipboard-list",
+  open = false,
+) {
+  return `<details class="research-acc" ${open ? "open" : ""}><summary><i data-lucide="${icon}"></i><span><b>${title}</b><div class="muted small">${summary}</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details">${body}</div></details>`;
+}
+function validateBackup(x) {
+  if (!Array.isArray(x.tickets)) throw Error("Tickets must be an array");
+  const ids = new Set();
+  for (const t of x.tickets) {
+    if (
+      !/^[a-zA-Z0-9_.:-]+$/.test(t.id || "") ||
+      ids.has(t.id) ||
+      !["draft", "purchased", "sold", "won", "lost"].includes(t.status)
+    )
+      throw Error("Invalid or duplicate ticket");
+    ids.add(t.id);
+    for (const k of [
+      "stake",
+      "payout",
+      "fee",
+      "proceeds",
+      "settlementProceeds",
+      "settlementFee",
+    ])
+      if (t[k] != null && (!Number.isFinite(Number(t[k])) || Number(t[k]) < 0))
+        throw Error("Invalid ticket amounts");
+    if (
+      t.remainingFraction != null &&
+      (t.remainingFraction < 0 || t.remainingFraction > 1)
+    )
+      throw Error("Invalid remaining quantity");
+    if (t.legs != null && !Array.isArray(t.legs)) throw Error("Invalid legs");
+    if (t.events != null && !Array.isArray(t.events))
+      throw Error("Invalid event history");
+  }
+  if (
+    x.bankroll != null &&
+    (!Array.isArray(x.bankroll) ||
+      x.bankroll.some((e) => !Number.isFinite(e.amount)))
+  )
+    throw Error("Invalid bankroll transfers");
+}
+function exposureView(rows) {
+  const priced = rows.filter((t) => Number(t.payout) > 0 && t.legs?.length),
+    keys = [...new Set(priced.flatMap((t) => t.legs.map((l) => l.gameId)))];
+  let html =
+    '<h3>Portfolio evaluation</h3><p class="muted small">Selected week · draft and remaining purchased positions. Shared games settle together.</p>';
+  const eligible =
+    priced.length &&
+    keys.length <= 16 &&
+    priced.every((t) =>
+      t.legs.every(
+        (l) => l.side !== "PROP" && data?.games.some((g) => g.id === l.gameId),
+      ),
+    );
+  if (eligible) {
+    let adjusted = priced.map((t) => ({
+      ...t,
+      quoteSnapshot: {
+        stake:
+          (Number(t.stake || 0) + Number(t.fee || 0)) *
+          (t.status === "purchased" ? remaining(t) : 1),
+        grossPayout:
+          Number(t.payout) * (t.status === "purchased" ? remaining(t) : 1),
+      },
+    }));
+    let a = analyzePlan(adjusted);
+    html +=
+      '<div class="grid2">' +
+      metric("Best settlement net", money(a.best)) +
+      metric("Worst settlement net", money(a.worst)) +
+      '</div><p class="small muted">' +
+      a.outcomes.length +
+      " win/loss combinations · includes entry fees, excludes future exit fees. Tie/void contracts require their market settlement rules; these scenarios assume a winner.</p>";
+  } else
+    html +=
+      '<p class="muted">Exact joint outcomes require priced game-winner legs from this week. Player props require their own joint probability model.</p>';
+  const shared = keys.filter(
+    (k) => priced.filter((t) => t.legs.some((l) => l.gameId === k)).length > 1,
+  );
+  html += shared.length
+    ? shared
+        .map((k) => {
+          let g = data?.games.find((g) => g.id === k),
+            matches = priced.filter((t) => t.legs.some((l) => l.gameId === k));
+          return `<div class="leg-row"><b>${esc(g ? g.away.name + " vs. " + g.home.name : k)}</b><p class="muted small">${matches.length} tickets share this game · ${money(matches.reduce((n, t) => n + (t.status === "purchased" ? basis(t) : Number(t.stake || 0) + Number(t.fee || 0)), 0))} exposed</p></div>`;
+        })
+        .join("")
+    : '<p class="muted small">No overlapping games in the priced tickets.</p>';
+  return '<div class="card">' + html + "</div>";
+}
+function ticketView(t) {
+  const draft = t.status === "draft",
+    closed = isClosed(t),
+    active = t.status === "purchased";
+  const fields = ["stake", "payout", "fee", "market"]
+    .map(
+      (k) =>
+        `<label>${{ stake: "Stake ($)", payout: "Gross payout ($)", fee: "Entry fee ($)", market: "Quoted probability (%)" }[k]}<input type="number" min="0" step=".01" data-id="${esc(t.id)}" data-field="${k}" value="${t[k] == null && k === "market" ? "" : Number(t[k] || 0)}" ${draft ? "" : "disabled"}></label>`,
+    )
+    .join("");
+  const legs = (t.legs || [])
+    .map((l) => {
+      let g = data?.games.find((g) => g.id === l.gameId);
+      return `<div class="leg-row">${g ? kickoff(g.kickoff) : ""}${l.side === "PROP" ? "<b>" + esc(l.prop || "Player prop") + "</b>" : team(l.team, g?.away.name === l.team ? g.away.record : g?.home.record)}<small>${esc(l.side)} · ${l.marketPercent == null ? "Quote not supplied" : "Historical / entered Kalshi " + esc(l.marketPercent) + "%"}</small></div>`;
+    })
+    .join("");
+  const be =
+    Number(t.payout) > 0
+      ? (100 * (Number(t.stake || 0) + Number(t.fee || 0))) / Number(t.payout)
+      : null;
+  let monitor = active
+    ? accordion(
+        "Monitor & cash out",
+        `${(remaining(t) * 100).toFixed(1)}% remaining · ${money(basis(t))} open cost basis`,
+        `<label>Observed cash-out offer ($)<input id="offer-${t.id}" type="number" min="0" step=".01"></label><label>Decision<select id="decision-${t.id}"><option>Hold</option><option>Consider sale</option></select></label><label>Decision note<textarea id="note-${t.id}" rows="2"></textarea></label><button data-observe="${t.id}">Record observation</button><p class="muted small">An observation does not change your position or realized P&L.</p><div class="divider"></div><div class="grid2"><label>Sell % of remaining<input id="qty-${t.id}" type="number" min="1" max="100" value="100"></label><label>Executed proceeds ($)<input id="sale-${t.id}" type="number" min="0" step=".01"></label><label>Sale fee ($)<input id="sale-fee-${t.id}" type="number" min="0" step=".01" value="0"></label></div><button data-sale="${t.id}">Record executed sale</button><div class="divider"></div><h3>Final settlement</h3><div class="grid2"><label>Final proceeds ($)<input id="settle-${t.id}" type="number" min="0" step=".01"></label><label>Settlement fee ($)<input id="settle-fee-${t.id}" type="number" min="0" step=".01" value="0"></label></div><button data-settle="${t.id}">Record final settlement</button>`,
+        "activity",
+      )
+    : "";
+  return `<article class="card ticket"><div class="row between"><div><span class="eyebrow">${esc(t.type || ((t.legs || []).length > 1 ? "Combo" : "Single game bet"))} · WEEK ${weekOf(t)}</span><h3>${esc(t.title)}</h3></div><span class="pill">${esc(t.status)}</span></div>${legs}${accordion("Ticket pricing", draft ? "Enter your actual stake, gross payout and fees" : "Purchased terms · protected", `<div class="grid2">${fields}</div>`, "receipt", draft)}<div class="soft"><div class="row between"><span>Break-even</span><b>${be === null ? "—" : be.toFixed(1) + "%"}</b></div><div class="row between"><span>${closed ? "Realized net" : "Potential net at full payout"}</span><b>${money(closed ? realizedNet(t) : Number(t.payout || 0) - Number(t.stake || 0) - Number(t.fee || 0))}</b></div><p class="small muted">${t.validatedProbability != null ? "Validated probability: " + (100 * t.validatedProbability).toFixed(1) + "% · Expected net " + money(t.validatedProbability * Number(t.payout) - Number(t.stake) - Number(t.fee || 0)) : "Expected net unavailable · independent probability not validated."}</p></div>${draft ? `<div class="row actions"><button class="primary" data-purchase="${t.id}">Record purchase</button><button data-del="${t.id}">Remove draft</button></div>` : ""}${monitor}${ticketJournal(t)}</article>`;
+}
+function workspaceScreen() {
+  const rows = scopeTickets(),
+    drafts = rows.filter((t) => t.status === "draft"),
+    opened = rows.filter((t) => t.status === "purchased"),
+    closed = rows.filter(isClosed),
+    shown =
+      kalshiStage === "build"
+        ? drafts
+        : kalshiStage === "evaluate"
+          ? [...drafts, ...opened]
+          : kalshiStage === "monitor"
+            ? opened
+            : closed;
+  return `<div class="grid3">${metric("Draft stake", money(drafts.reduce((n, t) => n + Number(t.stake || 0), 0)))}${metric("Open exposure", money(opened.reduce((n, t) => n + basis(t), 0)))}${metric("Realized net", money(rows.reduce((n, t) => n + realizedNet(t), 0)))}</div><div class="plan-tabs">${["build", "evaluate", "monitor", "close"].map((x) => `<button data-kalshi-stage="${x}" class="${kalshiStage === x ? "active" : ""}">${x[0].toUpperCase() + x.slice(1)}</button>`).join("")}</div>${kalshiStage === "build" ? `<div class="card"><h3>Build your tickets</h3><p class="muted small">Create a single, combo or player prop. Imported strategies stay drafts until you record a purchase.</p><div class="grid2"><button class="primary" id="custom">Create ticket</button><button data-tab="combos">Import strategy</button></div></div>${showBuilder ? builder() : ""}` : ""}${kalshiStage === "evaluate" ? exposureView(shown) : ""}${kalshiStage === "close" ? `<div class="card"><h3>Week ${Number($("#week").value)} closeout</h3><p class="muted">${opened.length ? opened.length + " open positions still need a recorded sale or settlement." : "All purchased positions are closed."}</p><button data-close-week ${opened.length ? "disabled" : ""}>Save weekly review</button><button id="export">Export for ChatGPT</button></div>` : ""}${shown.length ? shown.map(ticketView).join("") : `<div class="card empty"><i data-lucide="${kalshiStage === "monitor" ? "activity" : "inbox"}"></i><h3>${{ build: "No draft tickets", evaluate: "No tickets to evaluate", monitor: "No open positions", close: "No closed tickets" }[kalshiStage]}</h3><p class="muted">Week ${Number($("#week").value)} · Your records stay saved when you switch weeks.</p></div>`}`;
+}
+function performanceScreen() {
+  const rows = (perfMode === "season" ? tickets : scopeTickets()).filter(
+      (t) => t.status !== "draft",
+    ),
+    cost = rows.reduce((n, t) => n + realizedBasis(t), 0),
+    net = rows.reduce((n, t) => n + realizedNet(t), 0),
+    proceeds = rows.reduce((n, t) => n + realizedProceeds(t), 0),
+    open = rows.reduce((n, t) => n + basis(t), 0),
+    allOpen = tickets.reduce((n, t) => n + basis(t), 0),
+    allNet = tickets.reduce((n, t) => n + realizedNet(t), 0),
+    funds = funding.reduce((n, e) => n + e.amount, 0);
+  const groups = [
+    ...Object.keys(planNames).map((k) => [
+      "Plan " + k,
+      rows.filter(
+        (t) => (t.strategy || t.source?.match(/^AI ([A-E])/i)?.[1]) === k,
+      ),
+    ]),
+    ["Singles", rows.filter((t) => t.legs?.length === 1)],
+    ["Combos", rows.filter((t) => t.legs?.length > 1)],
+  ];
+  const table = groups
+    .map(([name, ts]) => {
+      let c = ts.reduce((n, t) => n + realizedBasis(t), 0),
+        p = ts.reduce((n, t) => n + realizedNet(t), 0);
+      return `<tr><td>${name}</td><td>${ts.length}</td><td>${money(p)}</td><td>${c ? ((p / c) * 100).toFixed(1) + "%" : "—"}</td></tr>`;
+    })
+    .join("");
+  const weekly = Array.from({ length: 18 }, (_, i) => ({
+    w: i + 1,
+    n: rows
+      .filter((t) => weekOf(t) === i + 1)
+      .reduce((n, t) => n + realizedNet(t), 0),
+  }));
+  let cumulative = 0;
+  const history = weekly
+    .filter((x) => rows.some((t) => weekOf(t) === x.w))
+    .map((x) => {
+      cumulative += x.n;
+      return `<tr><td>Week ${x.w}</td><td>${money(x.n)}</td><td>${money(cumulative)}</td></tr>`;
+    })
+    .join("");
+  return `<div class="plan-tabs"><button data-perf-mode="season" class="${perfMode === "season" ? "active" : ""}">Season</button><button data-perf-mode="week" class="${perfMode === "week" ? "active" : ""}">Selected Week</button></div><div class="card"><div class="eyebrow">${perfMode === "season" ? "2026 SEASON" : "WEEK " + Number($("#week").value)} · REALIZED P&L</div><h2 class="hero-number">${money(net)}</h2><p class="muted">${cost ? ((100 * net) / cost).toFixed(1) + "% ROI" : "ROI available after a realized result"} · after recorded fees</p></div><div class="grid2">${metric("Realized cost basis", money(cost))}${metric("Realized proceeds", money(proceeds))}${metric("Open exposure", money(open))}${metric("Closed tickets", rows.filter(isClosed).length)}</div>${accordion("Bankroll", "Season cash and funded capital", `<div class="grid2">${metric("Net deposits", money(funds))}${metric("Cash available", funding.length ? money(funds + allNet - allOpen) : "—")}</div><p class="muted small">Cash = net deposits + realized P&L − remaining cost basis. Set your opening funding before interpreting the balance.</p><div class="grid2"><label>Transfer type<select id="fundType"><option value="1">Deposit / opening balance</option><option value="-1">Withdrawal</option></select></label><label>Amount ($)<input id="fundAmount" type="number" min=".01" step=".01"></label></div><button data-fund>Record transfer</button>`, "wallet")}${accordion("Trading Performance", "Strategy comparisons · singles and combos", `<div class="table-scroll"><table><thead><tr><th>Strategy</th><th>Tickets</th><th>Net</th><th>ROI</th></tr></thead><tbody>${table}</tbody></table></div>`, "layers", true)}${accordion("Weekly Results", "Weekly and cumulative realized returns", history ? weeklyChart(rows) + `<table><thead><tr><th>Week</th><th>Net</th><th>Cumulative</th></tr></thead><tbody>${history}</tbody></table>` : '<p class="muted">No recorded results yet.</p>', "chart-no-axes-combined")}${accordion("AI & Office Pool", "Independent forecasts and your selections", `<p>${Object.entries(pool).filter(([k, v]) => v && k.startsWith("2026-") && (perfMode === "season" || k.startsWith("2026-" + Number($("#week").value) + "-"))).length} saved pool picks in this view.</p><p class="muted">Accuracy and calibration are pending published final scores and frozen, validated predictions. No results are inferred from prices.</p>`, "brain")}${accordion("Historical Learning", "Weekly notes and recorded decisions", `<label>Week ${Number($("#week").value)} review<textarea id="learningNote" rows="4">${esc(learning[$("#week").value]?.note || "")}</textarea></label><button data-save-learning>Save review</button><button id="export">Export history</button>${rows.map((t) => `<p><b>${esc(t.title)}</b> · ${events(t).length} events</p>`).join("")}`, "history")}`;
+}
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.purchase) {
+    const t = tickets.find((t) => t.id === b.dataset.purchase);
+    if (!t || t.status !== "draft") return;
+    if (!(Number(t.stake) > 0 && Number(t.payout) > 0))
+      return alert("Enter positive stake and gross payout first.");
+    t.status = "purchased";
+    t.remainingFraction = 1;
+    t.events ??= [];
+    t.events.push({
+      kind: "purchase",
+      time: new Date().toISOString(),
+      stake: t.stake,
+      payout: t.payout,
+      fee: t.fee || 0,
+    });
+    save();
+    kalshiStage = "monitor";
+    render();
+  }
+  if (b.dataset.observe) {
+    const t = tickets.find((t) => t.id === b.dataset.observe),
+      raw = document.getElementById("offer-" + t.id).value,
+      n = Number(raw);
+    if (raw === "" || !Number.isFinite(n) || n < 0)
+      return alert("Enter a valid observed offer.");
+    t.events ??= [];
+    t.events.push({
+      kind: "observation",
+      time: new Date().toISOString(),
+      offer: n,
+      note:
+        document.getElementById("decision-" + t.id).value +
+        ": " +
+        document.getElementById("note-" + t.id).value,
+    });
+    save();
+    render();
+  }
+  if (b.hasAttribute("data-fund")) {
+    const n = Number($("#fundAmount").value);
+    if (!Number.isFinite(n) || n <= 0)
+      return alert("Enter a positive transfer amount.");
+    funding.push({
+      time: new Date().toISOString(),
+      amount: n * Number($("#fundType").value),
+    });
+    persistExtras();
+    render();
+  }
+  if (
+    b.hasAttribute("data-save-learning") ||
+    b.hasAttribute("data-close-week")
+  ) {
+    const k = $("#week").value;
+    learning[k] = {
+      ...learning[k],
+      note: $("#learningNote")?.value || learning[k]?.note || "",
+      updatedAt: new Date().toISOString(),
+      ...(b.hasAttribute("data-close-week")
+        ? { closedAt: new Date().toISOString() }
+        : {}),
+    };
+    persistExtras();
+    alert("Weekly review saved.");
+  }
+});
+function researchSources() {
+  return (
+    '<p class="small">' +
+    (data.sources || [])
+      .filter((s) => /^https:\/\//.test(s.url))
+      .map(
+        (s) =>
+          `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`,
+      )
+      .join(" · ") +
+    "</p>"
+  );
+}
+function scenarioTable(a) {
+  const groups = new Map();
+  for (const o of a.outcomes) {
+    const k = o.winners.join(", ") || "None";
+    const old = groups.get(k);
+    groups.set(k, { net: o.net, count: (old?.count || 0) + 1 });
+  }
+  return (
+    "<table><thead><tr><th>Winning tickets</th><th>Paths</th><th>Net</th></tr></thead><tbody>" +
+    [...groups]
+      .sort((a, b) => b[1].net - a[1].net)
+      .map(
+        ([k, o]) =>
+          `<tr><td>${esc(k)}</td><td>${o.count}</td><td>${money(o.net)}</td></tr>`,
+      )
+      .join("") +
+    "</tbody></table>"
+  );
+}
+function forecast(g) {
+  return (data?.predictions || []).find(
+    (p) =>
+      p.gameId === g.id &&
+      p.validated === true &&
+      p.frozenAt &&
+      new Date(p.frozenAt) < new Date(g.kickoff) &&
+      [g.away.name, g.home.name].includes(p.winner) &&
+      Number.isFinite(p.probability) &&
+      p.probability >= 0 &&
+      p.probability <= 1,
+  );
+}
+function picksScreen() {
+  const count = data.games.filter(
+      (g) => pool[data.season + "-" + data.week + "-" + g.id],
+    ).length,
+    validated = data.games.filter(forecast).length;
+  return (
+    `<div class="card"><h3>Independent AI Predictions</h3><p class="muted">${validated ? validated + " validated forecasts published." : "AI forecasts are awaiting validation."} Your office-pool selections stay independent.</p></div>` +
+    data.games
+      .map((g) => {
+        let p = forecast(g),
+          k = data.season + "-" + data.week + "-" + g.id,
+          pick = pool[k];
+        const details = p
+          ? `<p class="small muted">Frozen ${esc(date(p.frozenAt))} · Confidence: ${esc(p.confidence || "Not supplied")}</p><b>Supporting evidence</b><ul>${(p.supportingEvidence || []).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul><b>Opposing evidence</b><ul>${(p.opposingEvidence || []).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul>`
+          : "<ul>" +
+            g.insights
+              .flatMap((i) => i.details)
+              .filter((x) => !x.includes("No verified"))
+              .map((x) => "<li>" + esc(x) + "</li>")
+              .join("") +
+            '</ul><p class="muted small">Research context only; no validated forecast.</p>';
+        return `<article class="card pick-card">${kickoff(g.kickoff)}${team(g.away.name, g.away.record)}${team(g.home.name, g.home.record)}<div class="divider"></div><div class="grid2"><div><small>AI PREDICTED WINNER</small><div><b>${p ? esc(p.winner) : "Pending validation"}</b></div></div><div><small>AI WIN PROBABILITY</small><div><b>${p ? (100 * p.probability).toFixed(1) + "%" : "Not published"}</b></div></div></div>${accordion("Why this selection?", p ? esc(p.summary || "Evidence behind this forecast") : "Research available; forecast pending.", details, "brain")}<p class="eyebrow">MY OFFICE POOL PICK</p><div class="grid2">${[g.away, g.home].map((t) => `<button class="pick-btn ${pick === t.name ? "selected" : ""}" aria-pressed="${pick === t.name}" aria-label="Pick ${esc(t.name)} to win" data-pool="${g.id}" data-team="${esc(t.name)}"><img alt="" src="assets/teams/${teamCode(t.name)}.png" onerror="this.style.display='none'">${teamAbbr(t.name)}${pick === t.name ? '<i data-lucide="check"></i>' : ""}</button>`).join("")}</div></article>`;
+      })
+      .join("") +
+    `<div class="card copybar"><div class="row between"><b>My Office Pool</b><span>${count} of ${data.games.length}</span></div><p><button class="primary" data-action="copyPool" ${count ? "" : "disabled"}>Copy My Picks</button></p></div>`
+  );
+}
+function weeklyChart(rows=tickets) {
+  const points = Array.from({ length: 18 }, (_, i) =>
+    rows
+      .filter((t) => weekOf(t) === i + 1)
+      .reduce((n, t) => n + realizedNet(t), 0),
+  );
+  let total = 0;
+  const cumulative = points.map((x) => (total += x)),
+    range = Math.max(1, ...points.map(Math.abs), ...cumulative.map(Math.abs)),
+    y = (v) => 70 - (v / range) * 55;
+  return `<figure class="weekly-chart"><figcaption class="small muted">Weekly P&L bars · cumulative line · Weeks 1–18</figcaption><svg viewBox="0 0 320 145" role="img" aria-label="Weekly and cumulative realized profit and loss"><line x1="8" y1="70" x2="312" y2="70" stroke="#b6c8d4"/>${points.map((n, i) => `<rect x="${i * 17 + 8}" y="${Math.min(y(n), 70)}" width="10" height="${Math.max(1, Math.abs(y(n) - 70))}" rx="2" fill="${n < 0 ? "#b64b58" : "#167f84"}"><title>Week ${i + 1}: ${money(n)}</title></rect>`).join("")}<polyline fill="none" stroke="#19334b" stroke-width="2" points="${cumulative.map((n, i) => i * 17 + 13 + "," + y(n)).join(" ")}"/><text x="8" y="140" fill="#50677b" font-size="10">Week 1</text><text x="270" y="140" fill="#50677b" font-size="10">Week 18</text></svg></figure>`;
+}

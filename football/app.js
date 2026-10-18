@@ -1,0 +1,1200 @@
+let kalshiStage = "build",
+  showBuilder = false,
+  data = null,
+  tab = "weeks",
+  sub = "",
+  plan = "",
+  planTab = "tickets",
+  pool = readStore("football-pool-v03", {}),
+  theme = localStorage.getItem("football-theme-v03") || "light",
+  tickets = readStore("football-v1", []);
+const $ = (s) => document.querySelector(s),
+  save = () => localStorage.setItem("football-v1", JSON.stringify(tickets)),
+  money = (n) => "$" + Number(n || 0).toFixed(2),
+  esc = (s) =>
+    String(s ?? "").replace(
+      /[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+    ),
+  date = (s) =>
+    new Date(s).toLocaleString("en-US", {
+      timeZone: "America/Cancun",
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+const codes = [
+    "hou",
+    "jax",
+    "ten",
+    "ind",
+    "car",
+    "phi",
+    "pit",
+    "tb",
+    "bal",
+    "cle",
+    "no",
+    "nyg",
+    "chi",
+    "atl",
+    "nyj",
+    "ne",
+    "ari",
+    "lar",
+    "lac",
+    "kc",
+    "buf",
+    "lv",
+    "dal",
+    "gb",
+    "wsh",
+    "sf",
+    "cin",
+    "den",
+    "det",
+    "mia",
+    "min",
+    "sea",
+  ],
+  names = [
+    "Houston Texans",
+    "Jacksonville Jaguars",
+    "Tennessee Titans",
+    "Indianapolis Colts",
+    "Carolina Panthers",
+    "Philadelphia Eagles",
+    "Pittsburgh Steelers",
+    "Tampa Bay Buccaneers",
+    "Baltimore Ravens",
+    "Cleveland Browns",
+    "New Orleans Saints",
+    "New York Giants",
+    "Chicago Bears",
+    "Atlanta Falcons",
+    "New York Jets",
+    "New England Patriots",
+    "Arizona Cardinals",
+    "Los Angeles Rams",
+    "Los Angeles Chargers",
+    "Kansas City Chiefs",
+    "Buffalo Bills",
+    "Las Vegas Raiders",
+    "Dallas Cowboys",
+    "Green Bay Packers",
+    "Washington Commanders",
+    "San Francisco 49ers",
+    "Cincinnati Bengals",
+    "Denver Broncos",
+    "Detroit Lions",
+    "Miami Dolphins",
+    "Minnesota Vikings",
+    "Seattle Seahawks",
+  ];
+const teamCode = (n) => codes[names.indexOf(n)] || "NFL",
+  team = (n, r) =>
+    '<div class="team"><img alt="' +
+    esc(n) +
+    ' logo" src="assets/teams/' +
+    teamCode(n) +
+    '.png" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-flex\'"><span class="logo-fallback">' +
+    teamAbbr(n) +
+    "</span><b>" +
+    esc(n) +
+    " (" +
+    esc(record(r)) +
+    ")</b></div>",
+  gameHour = (s) =>
+    Number(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Cancun",
+        hour: "numeric",
+        hourCycle: "h23",
+      }).format(new Date(s)),
+    ),
+  gameWindow = (s) =>
+    gameHour(s) < 11
+      ? ["Morning", "sunrise"]
+      : gameHour(s) < 15
+        ? ["Afternoon", "sun"]
+        : gameHour(s) < 18
+          ? ["Late Afternoon", "sunset"]
+          : ["Evening", "moon"],
+  kickoff = (s) =>
+    '<div class="kickoff-row"><span class="time-pill"><i data-lucide="' +
+    gameWindow(s)[1] +
+    '"></i>' +
+    gameWindow(s)[0] +
+    '</span><span class="muted">' +
+    date(s) +
+    "</span></div>";
+const planNames = {
+  A: "Single + Combo",
+  B: "Simultaneous Games",
+  C: "Staggered Games",
+  D: "Undefeated Teams",
+  E: "Losing-Team Streaks",
+};
+function analyzePlan(arr) {
+  let stakes = arr.map((t) => Number(t.quoteSnapshot.stake)),
+    total = stakes.reduce((a, b) => a + b, 0),
+    keys = [...new Set(arr.flatMap((t) => t.legs.map((l) => l.gameId)))];
+  if (keys.length > 18) return null;
+  let outcomes = [];
+  for (let mask = 0; mask < 2 ** keys.length; mask++) {
+    let gross = 0,
+      winners = [];
+    for (let t of arr) {
+      let won = t.legs.every((l) => {
+        let g = data.games.find((g) => g.id === l.gameId);
+        if (!g) return false;
+        let teamWon = (mask & (1 << keys.indexOf(l.gameId))) !== 0;
+        let pickIsAway = g.away.name === l.team;
+        let selectionWon = pickIsAway ? teamWon : !teamWon;
+        return l.side === "NO" ? !selectionWon : selectionWon;
+      });
+      if (won) {
+        gross += Number(t.quoteSnapshot.grossPayout);
+        winners.push(t.id);
+      }
+    }
+    outcomes.push({ net: gross - total, winners });
+  }
+  let best = Math.max(...outcomes.map((x) => x.net)),
+    worst = Math.min(...outcomes.map((x) => x.net));
+  let shared = keys.filter(
+    (id) =>
+      arr.reduce((n, t) => n + Number(t.legs.some((l) => l.gameId === id)), 0) >
+      1,
+  );
+  return { total, best, worst, shared, keys, outcomes };
+}
+function planScreen() {
+  let arr = data.comboCandidates.filter((t) => t.strategy === plan),
+    a = analyzePlan(arr),
+    summary =
+      '<div class="card"><div class="eyebrow">PLAN ' +
+      plan +
+      "</div><h2>" +
+      planNames[plan] +
+      '</h2><p class="muted">Review these historical research candidates as a portfolio. No purchase recommendation is implied.</p></div><div class="grid3">' +
+      [
+        ["Total stake", a.total],
+        ["Best net", a.best],
+        ["Worst net", a.worst],
+      ]
+        .map(
+          (x) =>
+            '<div class="metric"><small>' +
+            x[0] +
+            "</small><b>" +
+            money(x[1]) +
+            "</b></div>",
+        )
+        .join("") +
+      '</div><div class="plan-tabs">' +
+      ["tickets", "outcomes", "timing"]
+        .map(
+          (x) =>
+            '<button data-plan-tab="' +
+            x +
+            '" class="' +
+            (planTab === x ? "active" : "") +
+            '">' +
+            x[0].toUpperCase() +
+            x.slice(1) +
+            "</button>",
+        )
+        .join("") +
+      "</div>";
+  let ticketCards = arr
+    .map(
+      (t) =>
+        '<div class="card"><div class="eyebrow">TICKET ' +
+        t.id +
+        " · " +
+        (t.legs.length === 1
+          ? "SINGLE GAME BET"
+          : t.legs.length + "-GAME COMBO") +
+        "</div><h3>" +
+        esc(t.title) +
+        "</h3>" +
+        t.legs
+          .map((l) => {
+            let g = data.games.find((g) => g.id === l.gameId);
+            return (
+              '<div class="leg-row">' +
+              kickoff(g.kickoff) +
+              team(
+                l.team,
+                g.away.name === l.team ? g.away.record : g.home.record,
+              ) +
+              '<div class="muted small">vs. ' +
+              esc(g.away.name === l.team ? g.home.name : g.away.name) +
+              " (" +
+              esc(
+                record(g.away.name === l.team ? g.home.record : g.away.record),
+              ) +
+              ") · " +
+              l.side +
+              " · Kalshi " +
+              (l.marketPercent ?? "—") +
+              "%</div></div>"
+            );
+          })
+          .join("") +
+        '<div class="soft"><div class="row" style="justify-content:space-between"><span>Historical $' +
+        Number(t.quoteSnapshot.stake).toFixed(2) +
+        " gross payout</span><b>" +
+        money(t.quoteSnapshot.grossPayout) +
+        '</b></div><div class="row" style="justify-content:space-between"><span>Break-even probability</span><b>' +
+        ((100 * t.quoteSnapshot.stake) / t.quoteSnapshot.grossPayout).toFixed(
+          1,
+        ) +
+        '%</b></div></div><p class="muted small">Historical quote, not currently executable.</p><button class="primary" data-add="' +
+        t.id +
+        '">Add to Kalshi drafts</button></div>',
+    )
+    .join("");
+  let outcomes =
+    '<div class="card"><h3>Combined settlement outcomes</h3><p>All ' +
+    a.outcomes.length +
+    " possible winner combinations for " +
+    a.keys.length +
+    ' distinct games were evaluated, preserving shared-game dependencies.</p><div class="row" style="justify-content:space-between"><b>Best net</b><b>' +
+    money(a.best) +
+    '</b></div><div class="row" style="justify-content:space-between"><b>Worst net</b><b>' +
+    money(a.worst) +
+    '</b></div><p class="muted small">Scenario outcomes are not probability forecasts. Fees and early-sale execution are excluded. Win/loss paths assume a game winner; tie and void rules depend on the contract.</p>' +
+    scenarioTable(a) +
+    '</div><div class="card"><h3>Shared exposure</h3>' +
+    (a.shared.length
+      ? a.shared
+          .map((id) => {
+            let g = data.games.find((g) => g.id === id);
+            return (
+              "<p>" +
+              esc(g.away.name) +
+              " vs. " +
+              esc(g.home.name) +
+              " · shared by " +
+              arr
+                .filter((t) => t.legs.some((l) => l.gameId === id))
+                .map((t) => t.id)
+                .join(", ") +
+              "</p>"
+            );
+          })
+          .join("")
+      : "<p>No game is shared by multiple tickets in this plan.</p>") +
+    "</div>";
+  let timing =
+    '<div class="card"><h3>Kickoff & exit checkpoints</h3>' +
+    a.keys
+      .map((id) => data.games.find((g) => g.id === id))
+      .sort((x, y) => new Date(x.kickoff) - new Date(y.kickoff))
+      .map(
+        (g) =>
+          '<div class="leg-row">' +
+          kickoff(g.kickoff) +
+          team(g.away.name, g.away.record) +
+          team(g.home.name, g.home.record) +
+          "</div>",
+      )
+      .join("") +
+    '<p class="muted small">Check actual Kalshi sale offers at each checkpoint. A profitable cash-out is never guaranteed.</p></div>';
+  let payout =
+    '<div class="card"><h3>Plan ' +
+    plan +
+    " — Payout Sheet</h3>" +
+    arr
+      .map(
+        (t) =>
+          '<div class="row" style="justify-content:space-between"><span>' +
+          t.id +
+          " · " +
+          (t.legs.length === 1 ? "Single" : "Combo") +
+          "</span><b>" +
+          money(t.quoteSnapshot.grossPayout) +
+          "</b></div>",
+      )
+      .join("") +
+    "</div>";
+  return (
+    '<button data-plan-back="1" class="row"><i data-lucide="arrow-left"></i> All strategies</button>' +
+    summary +
+    (planTab === "tickets"
+      ? ticketCards
+      : planTab === "outcomes"
+        ? outcomes
+        : timing) +
+    payout
+  );
+}
+function builder() {
+  if (!data)
+    return '<div class="card">Choose a week with published games to build a ticket.</div>';
+  return (
+    '<div class="card"><h3>Custom ticket builder</h3><label>Ticket name<input id="buildName" placeholder="My Sunday combo"></label><label>Ticket type<select id="buildType"><option value="Single Game Bet">Single Game Bet</option><option value="Combo">Combo</option><option value="Player Prop Combo">Player Prop Combo</option></select></label><div id="buildLegs">' +
+    legRow() +
+    '</div><button data-builder="addLeg">+ Add game selection</button><div class="grid2"><label>Stake ($)<input type="number" id="buildStake" min="0.01" step=".01" value="2"></label><label>Gross payout ($)<input type="number" id="buildPayout" min="0" step=".01" value="0"></label></div><button class="primary" data-builder="save">Save custom draft</button><button data-builder="cancel">Cancel</button><p class="muted">Player prop markets can be entered as custom selections. All quotes are entered manually.</p></div>'
+  );
+}
+function legRow() {
+  let opts = data.games
+    .map(
+      (g) =>
+        '<option value="' +
+        g.id +
+        '">' +
+        esc(g.away.name) +
+        " vs. " +
+        esc(g.home.name) +
+        "</option>",
+    )
+    .join("");
+  return (
+    '<div class="card build-leg"><label>Game<select class="legGame">' +
+    opts +
+    '</select></label><label>Outcome<select class="legSide"><option value="away">Away team YES</option><option value="home">Home team YES</option><option value="awayNo">Away team NO</option><option value="homeNo">Home team NO</option><option value="prop">Custom player prop</option></select></label><label>Player prop / notes<input class="legProp" placeholder="e.g. Player 1+ touchdowns"></label><label>Kalshi %<input class="legPct" type="number" min="0" max="100" step=".1" placeholder="Optional"></label><button data-builder="removeLeg">Remove leg</button></div>'
+  );
+}
+function saveCustom() {
+  let name = $("#buildName")?.value.trim(),
+    type = $("#buildType")?.value,
+    stake = Number($("#buildStake")?.value),
+    payout = Number($("#buildPayout")?.value);
+  if (
+    !name ||
+    !Number.isFinite(stake) ||
+    !Number.isFinite(payout) ||
+    !(stake > 0) ||
+    !(payout >= 0)
+  ) {
+    alert("Enter a name, positive stake and nonnegative payout.");
+    return;
+  }
+  let legs = [...document.querySelectorAll(".build-leg")].map((row) => {
+    let g = data.games.find(
+        (g) => g.id === row.querySelector(".legGame").value,
+      ),
+      side = row.querySelector(".legSide").value,
+      selected = side.startsWith("away") ? g.away : g.home,
+      custom = side === "prop";
+    return {
+      gameId: g.id,
+      team: custom ? "Player prop" : selected.name,
+      side: custom ? "PROP" : side.endsWith("No") ? "NO" : "YES",
+      marketPercent:
+        row.querySelector(".legPct").value === ""
+          ? null
+          : Number(row.querySelector(".legPct").value),
+      prop: custom ? row.querySelector(".legProp").value.trim() : null,
+    };
+  });
+  if (
+    legs.some(
+      (l) =>
+        (l.side === "PROP" && !l.prop) ||
+        (l.marketPercent !== null &&
+          (!Number.isFinite(l.marketPercent) ||
+            l.marketPercent < 0 ||
+            l.marketPercent > 100)),
+    )
+  ) {
+    alert(
+      "Enter a player prop description and valid percentages from 0 to 100.",
+    );
+    return;
+  }
+  if (!legs.length) {
+    alert("Add at least one selection.");
+    return;
+  }
+  if (type === "Single Game Bet" && legs.length !== 1) {
+    alert("Single game bets require one selection.");
+    return;
+  }
+  tickets.push({
+    id: "custom-" + Date.now(),
+    title: name,
+    type,
+    season: data.season,
+    week: data.week,
+    source: "My selection",
+    stake,
+    payout,
+    market: null,
+    proceeds: null,
+    fee: 0,
+    status: "draft",
+    legs,
+    events: [],
+  });
+  save();
+  showBuilder = false;
+  render();
+}
+let seasonMode = "weeks";
+function seasonScreen() {
+  let realized = tickets.reduce((sum, t) => sum + realizedNet(t), 0);
+  return (
+    '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><div><small>2026 NFL SEASON</small><h2>Season Overview</h2></div><button class="close-icon" data-action="calendar" aria-label="Close season overview"><i data-lucide="x"></i></button></div><div class="season-tabs"><button data-season-mode="weeks" class="' +
+    (seasonMode === "weeks" ? "active" : "") +
+    '">Weeks</button><button data-season-mode="summary" class="' +
+    (seasonMode === "summary" ? "active" : "") +
+    '">Season Summary</button></div>' +
+    (seasonMode === "weeks"
+      ? '<div class="season-weeks">' +
+        Array.from({ length: 18 }, (_, i) => {
+          let w = i + 1,
+            current = w === Number($("#week").value),
+            available = !!catalog.weeks?.[String(w).padStart(2, "0")];
+          return (
+            '<button data-week="' +
+            String(w).padStart(2, "0") +
+            '" class="week-card ' +
+            (current ? "active" : "") +
+            '"><b>Week ' +
+            w +
+            '</b><i data-lucide="' +
+            (available
+              ? "check-circle-2"
+              : w < currentNFLWeek()
+                ? "history"
+                : "clock") +
+            '"></i><span>' +
+            (available
+              ? "Research available"
+              : w < currentNFLWeek()
+                ? "Past week"
+                : "Upcoming") +
+            "</span></button>"
+          );
+        }).join("") +
+        '</div><div class="season-detail"><b>Week ' +
+        Number($("#week").value) +
+        '</b><p class="muted">' +
+        (catalog.weeks?.[$("#week").value]
+          ? "Research available for this week"
+          : "Research not yet published for this week") +
+        '</p><button class="primary" data-action="calendar">Open selected week <i data-lucide="arrow-right"></i></button></div>'
+      : '<div class="grid2"><div class="metric"><small>Weeks with research</small><b>' +
+        Object.keys(catalog.weeks || {}).length +
+        '</b></div><div class="metric"><small>Selected week</small><b>' +
+        Number($("#week").value) +
+        '</b></div><div class="metric"><small>Realized P&L</small><b>' +
+        money(realized) +
+        '</b></div><div class="metric"><small>AI accuracy</small><b>—</b></div></div><p class="muted">Season-wide performance uses only recorded results. Independent AI predictions are awaiting validation.</p><button data-action="results">Open Performance Dashboard <i data-lucide="arrow-right"></i></button>') +
+    "</div>"
+  );
+}
+const isClosed = (t) => ["sold", "won", "lost"].includes(t.status),
+  remaining = (t) =>
+    t.status === "purchased" ? (t.remainingFraction ?? 1) : 0,
+  events = (t) => t.events || [],
+  saleProceeds = (t) =>
+    events(t)
+      .filter((e) => e.kind === "sale")
+      .reduce((a, e) => a + Number(e.proceeds || 0), 0),
+  soldFraction = (t) =>
+    events(t)
+      .filter((e) => e.kind === "sale")
+      .reduce((a, e) => a + Number(e.portion || 0), 0),
+  realizedBasis = (t) =>
+    Number(t.stake || 0) * (isClosed(t) ? 1 : Math.min(1, soldFraction(t))),
+  realizedProceeds = (t) =>
+    isClosed(t)
+      ? t.status === "sold"
+        ? events(t).some((e) => e.kind === "sale")
+          ? saleProceeds(t)
+          : Number(t.proceeds || 0)
+        : saleProceeds(t) +
+          Number(
+            (t.settlementProceeds ?? (events(t).length ? 0 : t.proceeds)) || 0,
+          )
+      : saleProceeds(t),
+  realizedFees = (t) =>
+    Number(t.fee || 0) * (isClosed(t) ? 1 : Math.min(1, soldFraction(t))) +
+    events(t)
+      .filter((e) => e.kind === "sale")
+      .reduce((a, e) => a + Number(e.fee || 0), 0) +
+    Number(t.settlementFee || 0),
+  realizedNet = (t) => realizedProceeds(t) - realizedBasis(t) - realizedFees(t);
+function ticketJournal(t) {
+  return (
+    '<details class="research-acc"><summary><i data-lucide="history"></i><span><b>Decision history</b><div class="muted" style="font-size:12px">' +
+    events(t).length +
+    ' recorded events</div></span><i data-lucide="chevron-down" class="chev"></i></summary><div class="details">' +
+    (events(t).length
+      ? events(t)
+          .map(
+            (e) =>
+              "<p><b>" +
+              esc(e.kind) +
+              "</b> · " +
+              esc(e.time ? date(e.time) : "") +
+              " · " +
+              (e.proceeds != null
+                ? money(e.proceeds)
+                : e.offer != null
+                  ? "Offer " + money(e.offer)
+                  : "") +
+              (e.fee != null ? " · Fee " + money(e.fee) : "") +
+              " " +
+              (e.note ? esc(e.note) : "") +
+              "</p>",
+          )
+          .join("")
+      : "<p>No decisions recorded yet.</p>") +
+    "</div></details>"
+  );
+}
+let perfMode = "season";
+function icons() {
+  if (window.lucide) window.lucide.createIcons();
+}
+function render() {
+  const route = [tab, sub, plan, planTab, kalshiStage, perfMode].join(":");
+  if (render.route !== route) {
+    window.scrollTo(0, 0);
+    render.route = route;
+  }
+  let v = $("#view");
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.0";
+  $("#title").textContent =
+    sub === "calendar"
+      ? "Season Overview"
+      : sub === "settings"
+        ? "Settings"
+        : sub === "results"
+          ? "Performance"
+          : {
+              weeks: "Weekly Overview",
+              games: "Game Research",
+              picks: "AI Game Picks",
+              combos: "Combo Strategies",
+              kalshi: "My Kalshi",
+            }[tab];
+  document
+    .querySelectorAll("[data-tab]")
+    .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+  if (sub === "calendar") {
+    v.innerHTML = seasonScreen();
+    icons();
+    return;
+  }
+  if (sub === "settings") {
+    v.innerHTML =
+      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.0 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
+    icons();
+    return;
+  }
+  if (plan && data) {
+    v.innerHTML = planScreen();
+    icons();
+    return;
+  }
+  if (sub === "results") {
+    v.innerHTML = performanceScreen();
+    icons();
+    return;
+  }
+  if (tab === "kalshi") {
+    v.innerHTML = workspaceScreen();
+    icons();
+    return;
+  }
+  if (!data) {
+    v.innerHTML =
+      '<div class="card"><h2>Research not available</h2><p>Initial research planned Monday, refresh Saturday, Cancún time. Automated publication not activated.</p></div>';
+    return;
+  }
+  if (tab === "weeks")
+    v.innerHTML =
+      '<div class="card"><div class="eyebrow">CURRENT RESEARCH</div><h2>Week ' +
+      data.week +
+      " · " +
+      data.season +
+      '</h2><div class="grid3"><div class="metric"><small>Games</small><b>' +
+      data.games.length +
+      '</b></div><div class="metric"><small>AI picks</small><b>' +
+      data.games.filter(forecast).length +
+      '</b></div><div class="metric"><small>Candidates</small><b>' +
+      data.comboCandidates.length +
+      '</b></div></div><p class="muted">' +
+      esc(data.notes) +
+      '</p><div class="row" style="gap:7px"><i data-lucide="check-circle-2"></i><small>Research published · ' +
+      esc(data.researchVersion) +
+      '</small></div></div><h3 style="margin:18px 0 10px">This week’s intelligence</h3><div class="card"><details class="research-acc"><summary><i data-lucide="clipboard-list"></i><span><b>Weekly research</b><div class="muted" style="font-size:12px">' +
+      data.games.length +
+      ' games · Preliminary research published</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Team records, game times and preliminary research categories are available.</p><button data-tab="games">Review games</button></div></details><details class="research-acc"><summary><i data-lucide="brain"></i><span><b>AI predictions</b><div class="muted" style="font-size:12px">Awaiting validated probabilities</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Independent forecasts are not yet published. Office-pool selections are available separately.</p><button data-tab="picks">Open AI Picks</button></div></details><details class="research-acc"><summary><i data-lucide="layers"></i><span><b>Combo strategies</b><div class="muted" style="font-size:12px">' +
+      data.comboCandidates.length +
+      ' candidates across Plans A–E</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Historical Kalshi quotes, not current executable offers.</p><button data-tab="combos">Explore combos</button></div></details></div><div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
+      data.week +
+      '</small></div><p class="muted">' +
+      money(scopeTickets().reduce((n, t) => n + basis(t), 0)) +
+      " open exposure · " +
+      scopeTickets().filter((t) => t.status === "purchased").length +
+      " purchased positions recorded · " +
+      scopeTickets().filter((t) => ["sold", "won", "lost"].includes(t.status))
+        .length +
+      ' closed</p><div class="grid2"><button data-tab="kalshi">Review tickets</button><button class="primary" data-action="results">View Performance</button></div></div>';
+  if (tab === "games")
+    v.innerHTML =
+      "<h2>Game research</h2>" +
+      data.games
+        .map(
+          (g) =>
+            '<div class="card">' +
+            kickoff(g.kickoff) +
+            team(g.away.name, g.away.record) +
+            team(g.home.name, g.home.record) +
+            '<div style="border-top:1px solid #dce5ee;margin:12px 0"></div><h3>Research insights</h3>' +
+            g.insights
+              .map(
+                (i) =>
+                  '<details class="research-acc"><summary><i data-lucide="' +
+                  {
+                    form: "chart-no-axes-combined",
+                    injuries: "heart-pulse",
+                    matchup: "shield",
+                    market: "chart-line",
+                    history: "history",
+                  }[i.category] +
+                  '"></i><span><b>' +
+                  {
+                    form: "Team Form",
+                    injuries: "Injuries & Availability",
+                    matchup: "Matchup Analysis",
+                    market: "Market & Probability",
+                    history: "Historical Insights",
+                  }[i.category] +
+                  '</b><div class="muted" style="font-size:12px">' +
+                  esc(i.summary) +
+                  '</div></span><i data-lucide="chevron-down" class="chev"></i></summary><div class="details"><ul>' +
+                  i.details.map((x) => "<li>" + esc(x) + "</li>").join("") +
+                  '</ul><p class="muted small">Snapshot: ' +
+                  esc(date(data.researchedAt)) +
+                  " · Preliminary research</p>" +
+                  researchSources() +
+                  "</div></details>",
+              )
+              .join("") +
+            "</div>",
+        )
+        .join("");
+  if (tab === "picks") v.innerHTML = picksScreen();
+  if (tab === "combos")
+    v.innerHTML =
+      '<div class="soft" style="margin-bottom:13px"><b>Five portfolio strategies</b><p class="muted">Compare objectives, tickets, shared exposure and historical payouts. Research candidates, not live trade recommendations.</p></div>' +
+      Object.entries({
+        A: [
+          "Single + Combo",
+          "Pair a single-game position with a related combo.",
+          "git-branch",
+        ],
+        B: [
+          "Simultaneous Games",
+          "Group selections settling in the same window.",
+          "clock-3",
+        ],
+        C: [
+          "Staggered Games",
+          "Sequence games for potential cash-out checkpoints.",
+          "calendar-range",
+        ],
+        D: [
+          "Undefeated Teams",
+          "Evaluate whether unbeaten teams continue their streak.",
+          "trophy",
+        ],
+        E: [
+          "Losing-Team Streaks",
+          "Evaluate NO positions against struggling teams.",
+          "trending-down",
+        ],
+      })
+        .map(
+          ([id, info]) =>
+            '<button class="card" style="width:100%;text-align:left" data-plan="' +
+            id +
+            '"><div class="row"><i data-lucide="' +
+            info[2] +
+            '"></i><span style="flex:1;min-width:0"><span class="eyebrow">PLAN ' +
+            id +
+            '</span><h3 style="margin:3px 0">' +
+            info[0] +
+            '</h3><span class="muted" style="font-size:12px">' +
+            info[1] +
+            '</span><div style="margin-top:7px;font-size:12px;font-weight:700">' +
+            data.comboCandidates.filter((t) => t.strategy === id).length +
+            ' candidate tickets · View plan</div></span><i data-lucide="chevron-right"></i></div></button>',
+        )
+        .join("");
+  if (tab === "results") {
+    let c = tickets.filter((t) => ["won", "lost", "sold"].includes(t.status)),
+      cost = c.reduce((a, t) => a + Number(t.stake), 0),
+      returnValue = c.reduce((a, t) => a + Number(t.proceeds || 0), 0);
+    v.innerHTML =
+      '<div class="grid"><div class="card">Realized net<h2>' +
+      money(returnValue - cost) +
+      '</h2></div><div class="card">ROI<h2>' +
+      (cost ? (((returnValue - cost) / cost) * 100).toFixed(1) + "%" : "—") +
+      '</h2></div><div class="card">Closed<h2>' +
+      c.length +
+      '</h2></div><div class="card">Open stake<h2>' +
+      money(
+        tickets
+          .filter((t) => t.status === "purchased")
+          .reduce((a, t) => a + Number(t.stake), 0),
+      ) +
+      "</h2></div></div>";
+  }
+}
+let loadSequence = 0;
+async function load() {
+  const request = ++loadSequence,
+    week = $("#week").value;
+  data = null;
+  render();
+  try {
+    if (!catalog.loaded) {
+      try {
+        const r = await fetch("data/manifest.json", { cache: "no-store" });
+        catalog = { ...(await r.json()), loaded: true };
+      } catch {
+        catalog = { weeks: {}, loaded: true };
+      }
+    }
+    const r = await fetch("data/2026/week-" + week + ".json?" + Date.now(), {
+      cache: "no-store",
+    });
+    if (!r.ok) throw Error("not found");
+    const next = await r.json();
+    if (request !== loadSequence) return;
+    if (
+      !Array.isArray(next.games) ||
+      !Array.isArray(next.comboCandidates) ||
+      Number(next.week) !== Number(week)
+    )
+      throw Error("Invalid week data");
+    data = next;
+    data.games.sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
+    for (const g of data.games) {
+      const old = data.week + "-" + g.id,
+        k = data.season + "-" + old;
+      if (!(k in pool) && old in pool) pool[k] = pool[old];
+    }
+    localStorage.setItem("football-pool-v03", JSON.stringify(pool));
+    $("#status").textContent =
+      "Week " + data.week + " · " + data.status + " research · Times in Cancún";
+  } catch (e) {
+    if (request !== loadSequence) return;
+    data = null;
+    $("#status").textContent =
+      "Week " + Number(week) + " · Research not yet published";
+  }
+  render();
+  icons();
+}
+function exportData() {
+  let a = document.createElement("a"),
+    u = URL.createObjectURL(
+      new Blob(
+        [
+          JSON.stringify(
+            {
+              schemaVersion: 1,
+              tickets,
+              bankroll: funding,
+              learning,
+              officePool: pool,
+              selectedWeek: $("#week").value,
+              exportedAt: new Date().toISOString(),
+            },
+            null,
+            2,
+          ),
+        ],
+        { type: "application/json" },
+      ),
+    );
+  a.href = u;
+  a.download = "football-chatgpt-export.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(u), 1000);
+}
+document.addEventListener("click", (e) => {
+  let b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.tab) {
+    tab = b.dataset.tab;
+    sub = "";
+    plan = "";
+    render();
+    icons();
+  }
+  if (b.dataset.action === "calendar") {
+    sub = sub === "calendar" ? "" : "calendar";
+    plan = "";
+    seasonMode = "weeks";
+    render();
+  }
+  if (b.dataset.action === "settingsExport") {
+    exportData();
+    return;
+  }
+  if (b.dataset.action === "settings") {
+    sub = sub === "settings" ? "" : "settings";
+    plan = "";
+    render();
+  }
+  if (b.dataset.action === "results") {
+    sub = "results";
+    plan = "";
+    render();
+  }
+  if (b.dataset.week) {
+    $("#week").value = b.dataset.week;
+    localStorage.setItem("football-selected-week-2026", b.dataset.week);
+    sub = "";
+    plan = "";
+    load();
+  }
+  if (b.dataset.theme) {
+    theme = b.dataset.theme;
+    localStorage.setItem("football-theme-v03", theme);
+    render();
+  }
+  if (b.dataset.seasonMode) {
+    seasonMode = b.dataset.seasonMode;
+    render();
+  }
+  if (b.dataset.perfMode) {
+    perfMode = b.dataset.perfMode;
+    render();
+  }
+  if (b.dataset.kalshiStage) {
+    kalshiStage = b.dataset.kalshiStage;
+    render();
+  }
+  if (b.dataset.plan) {
+    plan = b.dataset.plan;
+    planTab = "tickets";
+    render();
+  }
+  if (b.dataset.planBack) {
+    plan = "";
+    render();
+  }
+  if (b.dataset.planTab) {
+    planTab = b.dataset.planTab;
+    render();
+  }
+  if (b.dataset.add) {
+    showBuilder = false;
+    kalshiStage = "build";
+    let t = data.comboCandidates.find((x) => x.id === b.dataset.add);
+    tickets.push({
+      id: String(Date.now()) + Math.random(),
+      title: t.title,
+      season: data.season,
+      week: data.week,
+      strategy: t.strategy,
+      type: t.type,
+      source: "AI " + t.id,
+      stake: t.quoteSnapshot.stake,
+      payout: t.quoteSnapshot.grossPayout,
+      market: null,
+      proceeds: null,
+      status: "draft",
+      legs: t.legs,
+    });
+    save();
+    tab = "kalshi";
+    plan = "";
+    sub = "";
+    render();
+  }
+  if (b.dataset.pool) {
+    let k = data.season + "-" + data.week + "-" + b.dataset.pool;
+    pool[k] = pool[k] === b.dataset.team ? null : b.dataset.team;
+    localStorage.setItem("football-pool-v03", JSON.stringify(pool));
+    render();
+  }
+  if (b.dataset.action === "copyPool") {
+    let chosen = data.games.filter(
+      (g) => pool[data.season + "-" + data.week + "-" + g.id],
+    );
+    if (!chosen.length) return alert("Select a team first.");
+    if (
+      chosen.length < data.games.length &&
+      !confirm(
+        chosen.length +
+          " of " +
+          data.games.length +
+          " games selected — copy anyway?",
+      )
+    )
+      return;
+    let lines = chosen.map((g, i) => {
+      let n = pool[data.season + "-" + data.week + "-" + g.id],
+        w = g.away.name === n ? g.away : g.home,
+        o = g.away.name === n ? g.home : g.away;
+      return (
+        i +
+        1 +
+        ". WINNER: " +
+        w.name +
+        " (" +
+        record(w.record) +
+        ")\n   Opponent: " +
+        o.name +
+        " (" +
+        record(o.record) +
+        ")\n   " +
+        date(g.kickoff)
+      );
+    });
+    let txt =
+      "NFL Office Pool — 2026 Week " +
+      data.week +
+      "\n\nMY PICKS TO WIN:\n\n" +
+      lines.join("\n\n") +
+      "\n\nTotal selections: " +
+      chosen.length +
+      " of " +
+      data.games.length;
+    navigator.clipboard
+      .writeText(txt)
+      .then(() => alert("Copied"))
+      .catch(() => prompt("Copy picks:", txt));
+  }
+  if (b.id === "custom") {
+    showBuilder = !showBuilder;
+    render();
+    if (showBuilder) $("#buildLegs").innerHTML = legRow();
+  }
+  if (b.dataset.builder === "addLeg")
+    $("#buildLegs").insertAdjacentHTML("beforeend", legRow());
+  if (b.dataset.builder === "removeLeg") b.closest(".build-leg").remove();
+  if (b.dataset.builder === "save") saveCustom();
+  if (b.dataset.builder === "cancel") {
+    showBuilder = false;
+    render();
+  }
+  if (b.id === "export") exportData();
+  if (b.dataset.settle) {
+    let t = tickets.find((x) => x.id === b.dataset.settle);
+    if (!t || t.status !== "purchased") return;
+    let p = document.getElementById("settle-" + t.id)?.value,
+      fee = document.getElementById("settle-fee-" + t.id)?.value,
+      amount = Number(p),
+      cost = Number(fee);
+    if (
+      p === "" ||
+      fee === "" ||
+      !Number.isFinite(amount) ||
+      amount < 0 ||
+      !Number.isFinite(cost) ||
+      cost < 0
+    )
+      return alert("Enter valid settlement proceeds and fee.");
+    if (!confirm("Record final settlement and close remaining position?"))
+      return;
+    t.events ??= [];
+    t.events.push({
+      kind: "settlement",
+      time: new Date().toISOString(),
+      proceeds: amount,
+      fee: cost,
+      portion: t.remainingFraction ?? 1,
+    });
+    t.settlementProceeds = amount;
+    t.settlementFee = cost;
+    t.remainingFraction = 0;
+    t.status = amount > 0 ? "won" : "lost";
+    save();
+    render();
+  }
+  if (b.dataset.sale) {
+    let t = tickets.find((x) => x.id === b.dataset.sale);
+    if (!t || t.status !== "purchased") return;
+    let pct = Number(document.getElementById("qty-" + t.id)?.value),
+      raw = document.getElementById("sale-" + t.id)?.value,
+      amount = Number(raw);
+    if (
+      !(pct > 0 && pct <= 100) ||
+      raw === "" ||
+      !Number.isFinite(amount) ||
+      amount < 0 ||
+      !confirm(
+        "Record an executed sale of " + pct + "% for " + money(amount) + "?",
+      )
+    )
+      return;
+    let rawFee = document.getElementById("sale-fee-" + t.id)?.value,
+      fee = Number(rawFee);
+    if (rawFee === "" || !Number.isFinite(fee) || fee < 0)
+      return alert("Enter a valid sale fee.");
+    let remaining = t.remainingFraction ?? 1,
+      portion = (remaining * pct) / 100;
+    t.events ??= [];
+    t.events.push({
+      kind: "sale",
+      time: new Date().toISOString(),
+      portion,
+      proceeds: amount,
+      fee,
+    });
+    t.proceeds = (Number(t.proceeds) || 0) + amount;
+    t.remainingFraction = Math.max(0, remaining - portion);
+    if (t.remainingFraction < 0.000001) t.status = "sold";
+    save();
+    render();
+  }
+  if (b.dataset.del) {
+    if (tickets.find((t) => t.id === b.dataset.del)?.status !== "draft") return;
+    tickets = tickets.filter((t) => t.id !== b.dataset.del);
+    save();
+    render();
+  }
+});
+document.addEventListener("change", async (e) => {
+  if (e.target.id === "week") {
+    localStorage.setItem("football-selected-week-2026", e.target.value);
+    load();
+  }
+  if (e.target.id === "swipePref")
+    localStorage.setItem("football-swipe-v04", e.target.checked ? "on" : "off");
+  if (e.target.dataset.id) {
+    let t = tickets.find((x) => x.id === e.target.dataset.id),
+      field = e.target.dataset.field;
+    if (!t) return;
+    let value = e.target.value;
+    if (field === "status") {
+      if (value === "purchased" && t.status === "draft") {
+        if (!(Number(t.stake) > 0 && Number(t.payout) > 0)) {
+          alert(
+            "Enter a valid stake and gross payout before recording purchase.",
+          );
+          render();
+          return;
+        }
+        t.events ??= [];
+        t.events.push({
+          kind: "purchase",
+          time: new Date().toISOString(),
+          stake: Number(t.stake),
+          payout: Number(t.payout),
+        });
+        t.remainingFraction = 1;
+      } else if (t.status === "draft" && value !== "draft") {
+        alert("Record purchase first.");
+        render();
+        return;
+      } else if (
+        t.status === "purchased" &&
+        value === "sold" &&
+        (t.remainingFraction ?? 1) > 0
+      ) {
+        alert("Record an executed sale to close this position.");
+        render();
+        return;
+      }
+      if (
+        value !== t.status &&
+        !(t.status === "draft" && value === "purchased")
+      ) {
+        alert(
+          "Use executed sale or final settlement to close a purchased position.",
+        );
+        render();
+        return;
+      }
+      t.status = value;
+    } else {
+      let n = value === "" ? null : Number(value);
+      if (n !== null && (!Number.isFinite(n) || n < 0 || (field === "market" && n > 100))) {
+        alert("Enter a valid nonnegative amount.");
+        render();
+        return;
+      }
+      if (
+        t.status !== "draft" &&
+        ["stake", "payout", "fee", "proceeds"].includes(field)
+      ) {
+        alert("Original purchased terms cannot be changed.");
+        render();
+        return;
+      }
+      t[field] = n;
+    }
+    save();
+    render();
+  }
+  if (e.target.id === "settingsImport") {
+    try {
+      let file = e.target.files?.[0];
+      if (!file) return;
+      let backup = JSON.parse(await file.text());
+      if (backup.schemaVersion !== 1 || !Array.isArray(backup.tickets))
+        throw Error("Invalid backup format");
+      if (
+        !confirm(
+          "Replace locally stored ticket records and office-pool selections with this backup?",
+        )
+      )
+        return;
+      validateBackup(backup);
+      tickets = backup.tickets;
+      funding = backup.bankroll || [];
+      learning = backup.learning || {};
+      persistExtras();
+      save();
+      if (
+        backup.officePool &&
+        typeof backup.officePool === "object" &&
+        !Array.isArray(backup.officePool)
+      ) {
+        pool = backup.officePool;
+        localStorage.setItem("football-pool-v03", JSON.stringify(pool));
+      }
+      if (/^(0[1-9]|1[0-8])$/.test(backup.selectedWeek || "")) {
+        localStorage.setItem(
+          "football-selected-week-2026",
+          backup.selectedWeek,
+        );
+        $("#week").value = backup.selectedWeek;
+        await load();
+      } else render();
+    } catch (err) {
+      alert("Import failed: " + err.message);
+    }
+    return;
+  }
+  if (e.target.id === "import") {
+    try {
+      let x = JSON.parse(await e.target.files[0].text());
+      if (x.schemaVersion !== 1 || !Array.isArray(x.tickets))
+        throw Error("Invalid backup");
+      if (confirm("Replace local ticket records?")) {
+        validateBackup(x);
+        tickets = x.tickets;
+        save();
+        render();
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+});
+window.addEventListener("load", icons);
+let savedWeek = localStorage.getItem("football-selected-week-2026");
+$("#week").value = /^(0[1-9]|1[0-8])$/.test(savedWeek || "")
+  ? savedWeek
+  : String(currentNFLWeek()).padStart(2, "0");
+load();
