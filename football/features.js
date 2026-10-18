@@ -212,6 +212,7 @@ document.addEventListener("click", (e) => {
     });
     save();
     kalshiStage = "monitor";
+    closeReviewSheet();
     render();
   }
   if (b.dataset.observe) {

@@ -3,18 +3,28 @@ let activeReviewId = localStorage.getItem('football-active-draft') || '', review
 const originalReviewSync = syncReviewUI;
 function reviewDrafts() { return scopeTickets().filter(t => t.status === 'draft'); }
 function setActiveReview(id) { activeReviewId = id; localStorage.setItem('football-active-draft', id); }
+function flushSheetPricing(){
+ document.querySelectorAll('#ticketSheet [data-pricing-dirty]').forEach(input=>input.dispatchEvent(new Event('change',{bubbles:true})));
+}
+document.addEventListener('input',e=>{if(e.target.matches('#ticketSheet [data-field], #ticketSheet [data-leg-quote]'))e.target.dataset.pricingDirty='true'});
+document.addEventListener('change',e=>{if(e.target.matches('[data-pricing-dirty]'))delete e.target.dataset.pricingDirty},true);
+let sheetOrigin=null;
 function reviewDialog() {
   let d = document.querySelector('#ticketSheet');
   if (!d) {
     d = document.createElement('dialog'); d.id = 'ticketSheet'; d.className = 'ticket-sheet';
-    d.addEventListener('close', () => { document.body.classList.remove('sheet-open'); });
-    d.addEventListener('click', e => { if (e.target === d) { const r=d.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close(); } });
+    d.addEventListener('cancel',flushSheetPricing);
+    d.addEventListener('close', () => { if(d.open)return;d.replaceChildren(); document.body.classList.remove('sheet-open'); const origin=sheetOrigin;sheetOrigin=null;if(origin&&origin.route===render.route){window.scrollTo(0,origin.y);if(origin.element?.isConnected)origin.element.focus({preventScroll:true});} });
+    d.addEventListener('click', e => { if (e.target === d) { const r=d.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeReviewSheet(); } });
     document.body.append(d);
   }
   return d;
 }
 function openReviewSheet(title, html) {
   const d = reviewDialog();
+  if(!d.open)sheetOrigin={element:document.activeElement,y:window.scrollY,route:render.route};
+  flushSheetPricing();
+  d.classList.remove('detail-sheet');
   d.innerHTML = `<div class="sheet-heading"><h2 id="ticketSheetTitle">${esc(title)}</h2><button data-review-close aria-label="Close ticket panel"><i data-lucide="x"></i></button></div><div class="sheet-content">${html}</div>`;
   d.setAttribute('aria-labelledby', 'ticketSheetTitle');
   const content=d.querySelector('.sheet-content'), footer=content.querySelector('.briefing-footer');
@@ -24,7 +34,7 @@ function openReviewSheet(title, html) {
   d.querySelector('[data-review-close]').focus({preventScroll:true});
   document.body.classList.add('sheet-open'); icons();
 }
-function closeReviewSheet() { reviewDialog().close(); }
+function closeReviewSheet() { const d=reviewDialog();flushSheetPricing();d.close();d.replaceChildren(); }
 function legPresentation(l) {
   const g = data?.games.find(g => g.id === l.gameId), t = g && [g.away,g.home].find(t=>t.name===l.team);
   return `${l.side === 'PROP' ? `<b>${esc(l.prop || 'Player prop')}</b>` : team(l.team, t?.record || l.record)}<div class="small muted">${l.side==='NO'?'Not to win':l.side==='PROP'?'Player prop':'To win'}${l.source ? ' · '+esc(l.source):''}</div>${selectionMarketBlock(l)}${g || l.kickoff ? kickoff(g?.kickoff || l.kickoff) : ''}`;

@@ -31,7 +31,7 @@ let ticketInnerState = new Map();
 function captureTicketState(){
  ticketAnalysisEntering=tab==='kalshi'&&kalshiStage==='evaluate'&&ticketPreviousView!=='analysis';ticketPreviousView=tab==='kalshi'&&kalshiStage==='evaluate'?'analysis':'';
  if(!ticketExpansion)ticketExpansion=new Map(tickets.map(t=>[t.id,false]));
- document.querySelectorAll('[data-ticket-id]').forEach(el=>{const id=el.dataset.ticketId;ticketExpansion.set(id,el.querySelector('.ticket-fold').open);ticketInnerState.set(id,[...el.querySelectorAll('.ticket-content details')].map(d=>d.open));});
+ document.querySelectorAll('[data-ticket-id]').forEach(el=>{const id=el.dataset.ticketId;ticketExpansion.set(id,el.querySelector('.ticket-fold')?.open || false);ticketInnerState.set(id,[...el.querySelectorAll('.ticket-content details')].map(d=>d.open));});
 }
 function ticketExpanded(t){if(kalshiStage==='evaluate'&&ticketAnalysisEntering)return false;return ticketExpansion?.has(t.id)?ticketExpansion.get(t.id):t.status==='draft';}
 let ticketAnalysisEntering=false,ticketPreviousView='';

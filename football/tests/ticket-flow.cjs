@@ -13,7 +13,7 @@ await page.screenshot({path:`football/test-artifacts/${width}-active-ticket.png`
 await click('[data-review-edit]');await page.locator('#reviewTitle').fill('Sunday mix');await click('[data-review-switch]');await click('[data-review-save]');await click('[data-review-toast-close]');assert.equal(await page.evaluate(()=>tickets[0].title),'Sunday mix');
 await page.reload();await page.waitForFunction(()=>data?.games?.length);await click('nav [data-tab=games]');assert.match(await page.locator('#activeTicketBar').innerText(),/Sunday mix/);
 await click('[data-kalshi-choose]');await click('[data-review-game]');assert.equal(await page.locator('[data-review-append]').isDisabled(),true);await click('[data-review-new=single]');await click('[data-review-toast-close]');
-await click('[data-review-tickets]');await click('[data-review-active]');await click('nav [data-tab=kalshi]');assert.equal(await page.locator('.ticket').count(),2);assert.ok(await page.locator('.review-overlap').count());
+await click('[data-review-tickets]');await click('[data-review-active]');await click('nav [data-tab=kalshi]');assert.equal(await page.locator('.ticket').count(),2);await page.locator('[data-ticket-details]').first().click();assert.ok(await page.locator('#ticketSheet .review-overlap').count());await click('[data-review-close]');
 await page.screenshot({path:`football/test-artifacts/${width}-ticket-final-review.png`});
 await click('nav [data-tab=combos]');await click('[data-plan=A]');await click('[data-review-candidate-edit]');
 const oldPrice=await page.evaluate(()=>tickets[tickets.length-1].payout);assert.ok(oldPrice>0);
