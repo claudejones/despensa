@@ -1,6 +1,6 @@
 # NFL Intelligence — implementation tracker
 
-Release candidate: **v1.0**. Branch: `football-screen-by-screen-implementation`.
+Published release: **v1.0**. Implementation merged from `football-screen-by-screen-implementation` to `main` via PR #7.
 
 ## Implemented and locally verified
 
@@ -30,6 +30,13 @@ Original approved screen images could not be recovered from project-history sear
 
 Only Week 6 preliminary research is published. Validated independent probabilities, frozen forecasts and official final-score history are not present; forecasts/calibration honestly remain pending. Historical Kalshi quotes are not executable live prices. Automated weekly research is not activated. Game-winner scenario tables model win/loss outcomes; ties/voids depend on individual contract rules. Player-prop joint probabilities are not fabricated.
 
-## Publication gate
+## Verified publication — October 17, 2026 (Cancún)
 
-Local checks passed. GitHub Actions acceptance, merge, Pages build, deployed asset/version verification and live browser tests must all pass before publication is recorded as complete below.
+- PR #7 merged; application release commit `740c527a1208dafad37df0860ae135d8a6ba40ba`.
+- Development acceptance run 39091192262: success.
+- Main acceptance run 39091267730: success.
+- Pages build/deployment run 39091267437: success, matching release commit.
+- Live production URL: https://claudejones.github.io/despensa/football/?v=1.0
+- Live browser suite passed all four mobile widths. Ten financial fixtures passed against the published app. Full live lifecycle, clipboard, reload persistence and backup round trip passed in isolated test browser storage.
+- Live index.html, app.js, features.js, app.css, Week 6 JSON, bundled Lucide and a team-logo asset matched the tested files byte-for-byte. Visible header and Settings show v1.0.
+- No private user tickets or selections were uploaded. Source and physical-device limitations above still apply.
