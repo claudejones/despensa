@@ -17,7 +17,11 @@ function openReviewSheet(title, html) {
   const d = reviewDialog();
   d.innerHTML = `<div class="sheet-heading"><h2 id="ticketSheetTitle">${esc(title)}</h2><button data-review-close aria-label="Close ticket panel"><i data-lucide="x"></i></button></div><div class="sheet-content">${html}</div>`;
   d.setAttribute('aria-labelledby', 'ticketSheetTitle');
+  const content=d.querySelector('.sheet-content'), footer=content.querySelector('.briefing-footer');
+  if(footer)d.append(footer);
   if (!d.open) d.showModal();
+  d.scrollTop=0; content.scrollTop=0;
+  d.querySelector('[data-review-close]').focus({preventScroll:true});
   document.body.classList.add('sheet-open'); icons();
 }
 function closeReviewSheet() { reviewDialog().close(); }

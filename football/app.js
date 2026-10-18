@@ -16,15 +16,13 @@ const $ = (s) => document.querySelector(s),
       /[&<>"]/g,
       (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
     ),
-  date = (s) =>
-    new Date(s).toLocaleString("en-US", {
-      timeZone: "America/Cancun",
-      weekday: "long",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
+  dateFormatter = new Intl.DateTimeFormat("en-US", {
+    timeZone:"America/Cancun",weekday:"long",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"
+  }),
+  hourFormatter = new Intl.DateTimeFormat("en-US", {
+    timeZone:"America/Cancun",hour:"numeric",hourCycle:"h23"
+  }),
+  date = (s) => Number.isNaN(new Date(s).getTime()) ? "Invalid Date" : dateFormatter.format(new Date(s));
 const codes = [
     "hou",
     "jax",
@@ -106,14 +104,7 @@ const teamCode = (n) => codes[names.indexOf(n)] || "NFL",
     " (" +
     esc(record(r)) +
     ")</b></div>",
-  gameHour = (s) =>
-    Number(
-      new Intl.DateTimeFormat("en-US", {
-        timeZone: "America/Cancun",
-        hour: "numeric",
-        hourCycle: "h23",
-      }).format(new Date(s)),
-    ),
+  gameHour = (s) => Number(hourFormatter.format(new Date(s))),
   gameWindow = (s) =>
     gameHour(s) < 11
       ? ["Morning", "sunrise"]
@@ -555,7 +546,11 @@ function ticketJournal(t) {
 let perfMode = "season";
 function icons() {
   syncReviewUI();
-  if (window.lucide) window.lucide.createIcons();
+  // Lucide retains data-lucide on rendered SVGs; do not replace those again.
+  if (window.lucide && document.querySelector('i[data-lucide]')) {
+    window.lucide.createIcons();
+    document.querySelectorAll('svg[data-lucide]').forEach(svg => svg.removeAttribute('data-lucide'));
+  }
 }
 function render() {
   const route = [tab, sub, plan, planTab, kalshiStage, perfMode].join(":");
@@ -564,7 +559,7 @@ function render() {
     render.route = route;
   }
   let v = $("#view");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.2";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -589,7 +584,7 @@ function render() {
   }
   if (sub === "settings") {
     v.innerHTML =
-      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.3.1 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
+      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.3.2 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
     icons();
     return;
   }
@@ -777,6 +772,7 @@ document.addEventListener("click", (e) => {
     plan = "";
     render();
     icons();
+    window.scrollTo({top:0,left:0,behavior:"instant"});
   }
   if (b.dataset.action === "calendar") {
     sub = sub === "calendar" ? "" : "calendar";
@@ -1109,6 +1105,8 @@ document.addEventListener("change", async (e) => {
     }
   }
 });
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('pageshow', () => window.scrollTo({top:0,left:0,behavior:'instant'}));
 window.addEventListener("load", icons);
 let savedWeek = localStorage.getItem("football-selected-week-2026");
 $("#week").value = /^(0[1-9]|1[0-8])$/.test(savedWeek || "")
