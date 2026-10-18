@@ -333,7 +333,7 @@ function builder() {
   return (
     '<div class="card"><h3>Custom ticket builder</h3><label>Ticket name<input id="buildName" placeholder="My Sunday combo"></label><label>Ticket type<select id="buildType"><option value="Single Game Bet">Single Game Bet</option><option value="Combo">Combo</option><option value="Player Prop Combo">Player Prop Combo</option></select></label><div id="buildLegs">' +
     legRow() +
-    '</div><button data-builder="addLeg">+ Add game selection</button><div class="grid2"><label>Stake ($)<input type="number" id="buildStake" min="0.01" step=".01" value="2"></label><label>Gross payout ($)<input type="number" id="buildPayout" min="0" step=".01" value="0"></label></div><button class="primary" data-builder="save">Save custom draft</button><button data-builder="cancel">Cancel</button><p class="muted">Player prop markets can be entered as custom selections. All quotes are entered manually.</p></div>'
+    '</div><button data-builder="addLeg">+ Add game selection</button><div class="grid2"><label>Stake ($)<input type="number" id="buildStake" min="0.01" step=".01" value="2"></label><label>Gross payout ($)<input type="number" id="buildPayout" min="0" step=".01" value="0"></label></div><div class="button-group"><button class="primary" data-builder="save">Save custom draft</button><button data-builder="cancel">Cancel</button></div><p class="muted">Player prop markets can be entered as custom selections. All quotes are entered manually.</p></div>'
   );
 }
 function legRow() {
@@ -560,7 +560,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.3";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.4";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -725,12 +725,14 @@ async function load() {
     rememberPoolResearch(data);
     trackResearchChanges(data);
     data.games.sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
+    pool = readStore("football-pool-v03", pool);
+    let poolMigrated = false;
     for (const g of data.games) {
       const old = data.week + "-" + g.id,
         k = data.season + "-" + old;
-      if (!(k in pool) && old in pool) pool[k] = pool[old];
+      if (!(k in pool) && old in pool) { pool[k] = pool[old]; poolMigrated = true; }
     }
-    localStorage.setItem("football-pool-v03", JSON.stringify(pool));
+    if (poolMigrated) localStorage.setItem("football-pool-v03", JSON.stringify(pool));
     $("#status").textContent =
       "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
   } catch (e) {

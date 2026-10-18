@@ -59,6 +59,9 @@ jobs:
       - name: Verify Pool choices and Performance
         run: node football/tests/pool-performance.cjs
 
+      - name: Verify update preservation and button spacing
+        run: node football/tests/update-preservation.cjs
+
       - name: Upload mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4

@@ -134,3 +134,8 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 ## v1.4.3 — consistent sentence-case actions (2026-10-18)
 - Applied View game research, View combo strategies, View strategy details, Review ticket, Find picks in Games and Closeout. Pool actions use Copy my picks and View AI analysis. AI/NFL abbreviations and named navigation destinations retain their capitalization.
 - Retained Save weekly review: this saves the weekly review record and does not independently settle tickets. Labels only; routing, calculations, research and user data unchanged.
+
+## v1.4.4 — action spacing and update preservation (2026-10-18)
+- Edit selections uses a 20px icon, flex centering, 8px label gap and 12px vertical separation from ticket legs and pricing. Shared wrapping action groups add 10px gaps to closeout, learning and manual-builder buttons; existing grid/navigation gaps retained.
+- Weekly research loading re-reads saved Pool choices and only writes when a legacy key actually needs migration. Ordinary updates no longer rewrite Pool storage; unreadable Pool storage is left intact on load. Stable ticket, Pool, bankroll, learning, preferences and active-draft keys retained. No data reset or version-key migration added.
+- Added raw-storage preservation checks covering saved drafts, a purchased position with partial sale, choices across weeks, funding, notes, preferences and active draft through reload/version-query changes and research reload. Also verifies unreadable Pool storage survives load and Edit button spacing at 320/375/430. Existing mobile and financial lifecycle tests gate publication.
