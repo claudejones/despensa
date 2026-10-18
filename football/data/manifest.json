@@ -13,7 +13,13 @@
     },
     "timezone": "America/Cancun"
   },
-  "weeks": {},
-  "lastSuccessfulPublication": null,
-  "notice": "Research is not yet published. Weekly schedules are planned and not yet activated."
+  "weeks": {
+    "06": {
+      "path": "2026/week-06.json",
+      "status": "preliminary",
+      "researchVersion": "2026-10-17-initial-1"
+    }
+  },
+  "lastSuccessfulPublication": "2026-10-17T09:35:00-05:00",
+  "notice": "Week 6 preliminary research available. Automated research publication is not active."
 }

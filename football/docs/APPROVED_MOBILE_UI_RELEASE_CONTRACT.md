@@ -3,8 +3,8 @@
 This document consolidates the user's approved design decisions. It is a **mandatory acceptance contract**, not a claim of implementation.
 
 ## Shared shell
-- Light-first near-white surfaces, navy text, restrained teal highlights; optional dark theme.
-- Five fixed, equal-width bottom tabs: Home, Games, AI Picks, Combos, Kalshi. No scrolling tab bar. Swipe navigation must not interfere with vertical scrolling or accordions.
+- Light-only near-white surfaces, navy text, restrained teal highlights. No dark theme.
+- Five fixed, equal-width bottom tabs: Home, Games, AI Picks, Combos, Kalshi. No scrolling tab bar. No swipe navigation.
 - Global week selector via calendar icon in the header. Season overview displays 18 weeks; tapping a week updates all sections and closes overview. No duplicate dropdown.
 - Automatically open current NFL week, preserving manually selected week within navigation.
 - Small consistent team logos with abbreviation fallback; full team names and W-L-T records always visible.

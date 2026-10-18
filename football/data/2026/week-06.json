@@ -25,16 +25,16 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Houston missing David Montgomery, Tank Dell and Jalen Pitre.",
+          "summary": "Jacksonville's 4\u20131 record contrasts with Houston's 1\u20134 start.",
           "details": [
-            "Houston missing David Montgomery, Tank Dell and Jalen Pitre."
+            "Jacksonville's 4\u20131 record contrasts with Houston's 1\u20134 start."
           ]
         },
         {
           "category": "injuries",
-          "summary": "Jacksonville's 4–1 record contrasts with Houston's 1–4 start.",
+          "summary": "Houston missing David Montgomery, Tank Dell and Jalen Pitre.",
           "details": [
-            "Jacksonville's 4–1 record contrasts with Houston's 1–4 start."
+            "Houston missing David Montgomery, Tank Dell and Jalen Pitre."
           ]
         },
         {
@@ -295,15 +295,16 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Saints Alvin Kamara and Chris Olave were listed questionable.",
+          "summary": "Additional verified analysis pending.",
           "details": [
-            "Saints Alvin Kamara and Chris Olave were listed questionable."
+            "No verified detailed assessment published yet."
           ]
         },
         {
           "category": "injuries",
-          "summary": "Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable.",
+          "summary": "Saints Alvin Kamara and Chris Olave were listed questionable. Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable.",
           "details": [
+            "Saints Alvin Kamara and Chris Olave were listed questionable.",
             "Giants offensive linemen Andrew Thomas and Jermaine Eluemunor returned to full practice Friday but were questionable."
           ]
         },
@@ -349,15 +350,16 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Confirm quarterback availability before any prediction.",
+          "summary": "Additional verified analysis pending.",
           "details": [
-            "Confirm quarterback availability before any prediction."
+            "No verified detailed assessment published yet."
           ]
         },
         {
           "category": "injuries",
-          "summary": "Chicago quarterback Caleb Williams listed questionable with hamstring issue.",
+          "summary": "Confirm quarterback availability before any prediction. Chicago quarterback Caleb Williams listed questionable with hamstring issue.",
           "details": [
+            "Confirm quarterback availability before any prediction.",
             "Chicago quarterback Caleb Williams listed questionable with hamstring issue."
           ]
         },
@@ -471,9 +473,9 @@
         },
         {
           "category": "matchup",
-          "summary": "Rams are a possible later favorite, but their own 2–3 record warrants caution.",
+          "summary": "Rams are a possible later favorite, but their own 2\u20133 record warrants caution.",
           "details": [
-            "Rams are a possible later favorite, but their own 2–3 record warrants caution."
+            "Rams are a possible later favorite, but their own 2\u20133 record warrants caution."
           ]
         },
         {
@@ -511,15 +513,16 @@
       "insights": [
         {
           "category": "form",
-          "summary": "Chiefs receiver Rashee Rice ruled out; reassess receiving depth.",
+          "summary": "Additional verified analysis pending.",
           "details": [
-            "Chiefs receiver Rashee Rice ruled out; reassess receiving depth."
+            "No verified detailed assessment published yet."
           ]
         },
         {
           "category": "injuries",
-          "summary": "Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris.",
+          "summary": "Chiefs receiver Rashee Rice ruled out; reassess receiving depth. Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris.",
           "details": [
+            "Chiefs receiver Rashee Rice ruled out; reassess receiving depth.",
             "Chargers missing Joe Alt, Derwin James, Donte Jackson and Tre Harris."
           ]
         },
@@ -579,9 +582,9 @@
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Raiders have a winning record; this is not an automatic favorite anchor.",
           "details": [
-            "No verified detailed assessment published yet."
+            "Raiders have a winning record; this is not an automatic favorite anchor."
           ]
         },
         {
@@ -593,9 +596,9 @@
         },
         {
           "category": "history",
-          "summary": "Raiders have a winning record; this is not an automatic favorite anchor.",
+          "summary": "Additional verified analysis pending.",
           "details": [
-            "Raiders have a winning record; this is not an automatic favorite anchor."
+            "No verified detailed assessment published yet."
           ]
         }
       ],
@@ -687,9 +690,9 @@
         },
         {
           "category": "matchup",
-          "summary": "Additional verified analysis pending.",
+          "summary": "Sunday-to-Monday separation offers an exit review if earlier legs survive.",
           "details": [
-            "No verified detailed assessment published yet."
+            "Sunday-to-Monday separation offers an exit review if earlier legs survive."
           ]
         },
         {
@@ -701,9 +704,9 @@
         },
         {
           "category": "history",
-          "summary": "Sunday-to-Monday separation offers an exit review if earlier legs survive.",
+          "summary": "Additional verified analysis pending.",
           "details": [
-            "Sunday-to-Monday separation offers an exit review if earlier legs survive."
+            "No verified detailed assessment published yet."
           ]
         }
       ],
@@ -736,7 +739,7 @@
     {
       "id": "A2",
       "strategy": "A",
-      "type": "Two-Game Combo — Early Pick + Later Favorite",
+      "type": "Two-Game Combo \u2014 Early Pick + Later Favorite",
       "title": "New York Giants and Kansas City Chiefs to win",
       "legs": [
         {
@@ -784,7 +787,7 @@
     {
       "id": "A4",
       "strategy": "A",
-      "type": "Two-Game Combo — Early Pick + Later Favorite",
+      "type": "Two-Game Combo \u2014 Early Pick + Later Favorite",
       "title": "Carolina Panthers and Los Angeles Rams to win",
       "legs": [
         {
@@ -811,7 +814,7 @@
     {
       "id": "B1",
       "strategy": "B",
-      "type": "Two-Game Combo — Simultaneous Favorites",
+      "type": "Two-Game Combo \u2014 Simultaneous Favorites",
       "title": "New England Patriots and Indianapolis Colts to win",
       "legs": [
         {
@@ -838,7 +841,7 @@
     {
       "id": "B2",
       "strategy": "B",
-      "type": "Three-Game Combo — Simultaneous Favorites",
+      "type": "Three-Game Combo \u2014 Simultaneous Favorites",
       "title": "Patriots, Colts and Ravens to win",
       "legs": [
         {
@@ -871,7 +874,7 @@
     {
       "id": "B3",
       "strategy": "B",
-      "type": "Two-Game Combo — Competitive Matchups",
+      "type": "Two-Game Combo \u2014 Competitive Matchups",
       "title": "Giants and Panthers to win",
       "legs": [
         {
@@ -898,7 +901,7 @@
     {
       "id": "C1",
       "strategy": "C",
-      "type": "Three-Game Combo — Multiple Kickoff Windows",
+      "type": "Three-Game Combo \u2014 Multiple Kickoff Windows",
       "title": "Jaguars, Chiefs and Packers to win",
       "legs": [
         {
@@ -931,7 +934,7 @@
     {
       "id": "C2",
       "strategy": "C",
-      "type": "Three-Game Combo — Midday and Afternoon",
+      "type": "Three-Game Combo \u2014 Midday and Afternoon",
       "title": "Patriots, Colts and Rams to win",
       "legs": [
         {
@@ -964,7 +967,7 @@
     {
       "id": "C3",
       "strategy": "C",
-      "type": "Four-Game Combo — Four Kickoff Windows",
+      "type": "Four-Game Combo \u2014 Four Kickoff Windows",
       "title": "Jaguars, Ravens, Bills and Packers to win",
       "legs": [
         {
@@ -1003,7 +1006,7 @@
     {
       "id": "D1",
       "strategy": "D",
-      "type": "Single Game Bet — Undefeated Team",
+      "type": "Single Game Bet \u2014 Undefeated Team",
       "title": "Kansas City Chiefs to win",
       "legs": [
         {
@@ -1024,7 +1027,7 @@
     {
       "id": "D2",
       "strategy": "D",
-      "type": "Two-Game Combo — Undefeated Teams",
+      "type": "Two-Game Combo \u2014 Undefeated Teams",
       "title": "Chiefs and 49ers to win",
       "legs": [
         {
@@ -1051,7 +1054,7 @@
     {
       "id": "E1",
       "strategy": "E",
-      "type": "Two-Game Combo — Winless Teams Lose",
+      "type": "Two-Game Combo \u2014 Winless Teams Lose",
       "title": "Tennessee Titans NO and Los Angeles Chargers NO",
       "legs": [
         {
@@ -1078,7 +1081,7 @@
     {
       "id": "E2",
       "strategy": "E",
-      "type": "Three-Game Combo — Struggling Teams Lose",
+      "type": "Three-Game Combo \u2014 Struggling Teams Lose",
       "title": "Titans NO, Cardinals NO and Chargers NO",
       "legs": [
         {
@@ -1111,7 +1114,7 @@
     {
       "id": "E3",
       "strategy": "E",
-      "type": "Two-Game Combo — One-Win Teams Lose",
+      "type": "Two-Game Combo \u2014 One-Win Teams Lose",
       "title": "Texans NO and Cardinals NO",
       "legs": [
         {

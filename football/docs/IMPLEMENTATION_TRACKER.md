@@ -1,123 +1,35 @@
 # NFL Intelligence — implementation tracker
 
-**Target release:** v1.0 (not yet complete)  
-**Current development build identifier:** v0.5.4  
-**Development branch:** `football-screen-by-screen-implementation`  
-**Published production:** prior v0.4.x build; this branch is NOT published.
+Release candidate: **v1.0**. Branch: `football-screen-by-screen-implementation`.
 
-Status legend: **Implemented (unverified)** means code committed but not browser-tested. **Pending** means incomplete. **Approved** means design approved by user, not implemented.
+## Implemented and locally verified
 
-| Screen / system | Approved design | Implementation status | User review |
-|---|---|---|---|
-| Shared shell and bottom navigation | Approved: five tabs, light-only, no swipe | Existing implementation, not acceptance-tested | **Do not review yet** |
-| Home weekly overview | Approved | **Implemented (unverified)** in this branch: summary metrics, independent intelligence accordions, Kalshi summary, Performance link | **Do not review yet** |
-| Season Overview | Approved | **Implemented (unverified)**: Weeks/Season Summary, 18-week cards, close button, global week persisted on selection | **Do not review yet** |
-| Games and research | Approved | **Implemented (unverified)**: independent research accordions, small logos with fallback, time-window pills; source-category mapping and browser tests still pending | **Do not review yet** |
-| AI Picks and Office Pool | Approved | **Implemented (unverified)**: compact cards, small logos, time pills, equal-width buttons, toggle selections and copy action; clipboard and browser tests still pending | **Do not review yet** |
-| Combo overview Plans A–E | Approved | Existing overview implemented, needs visual/browser validation | **Do not review yet** |
-| Plan Detail / payout sheets / scenario economics | Approved | **Implemented (unverified)**: tickets, kickoff order, payout sheets, exact enumerated settlement scenarios with shared-game outcomes; still needs browser tests and portfolio editing | **Do not review yet** |
-| Kalshi Build/Evaluate/Monitor/Close | Approved | **Implemented (unverified)** stage filtering, event journal and partial-sale calculations; validation and safeguards still incomplete | **Do not review yet** |
-| Performance Dashboard | Approved | **Implemented (unverified)** season/selected-week metrics, realized P&L, weekly bars, singles vs combos; detailed strategy/AI calibration pending | **Do not review yet** |
-| Settings | Approved: light only, no swipe | **Implemented (unverified)**: light-only design, game presentation, calendar/Performance routes, ticket and pool backup export/import | **Do not review yet** |
-| Weekly research + prediction engine | Approved concept | Existing JSON and reusable workflow instructions; scheduled research and validated AI probabilities NOT active | **Do not review yet** |
-| Automated iPhone-width/browser acceptance tests | Required | **Pending** | **Do not review yet** |
-| Verified GitHub Pages release | Required | **Pending** | **Do not review yet** |
+| Screen | Delivered behavior | Verification |
+|---|---|---|
+| Shared shell | Light-only; five fixed tabs; bundled Lucide; bundled 32 team logos; no swipe; safe areas; calendar toggle | 320/375/390/430px browser checks and screenshots |
+| Home | Selected-week research, AI availability, candidates, open exposure and Performance | Screenshot inspection, navigation tests |
+| Season Overview | 18-week grid, selected state, manifest availability, Weeks/Season Summary, integrated close | Mobile browser checks and screenshot inspection |
+| Games | Full names, normalized W–L–T, Cancún kickoff windows and dates, five independent research accordions, snapshot/source links | Mobile browser checks, category placement corrected without deleting claims |
+| AI Picks / Office Pool | Validated forecast renderer with supporting/opposing evidence; honest pending state; equal buttons; selection/deselection; season/week persistence; actual multiline copy | Clipboard, reload and narrow viewport tests |
+| Combos / Plan Detail | Plans A–E, tickets, historical prices, payout sheets, joint outcome table, shared exposure, chronological checkpoints, draft import | Financial fixtures, navigation tests, three detail screenshots |
+| Kalshi | Custom singles/combos/player props, pricing, purchase, joint evaluation, observed offers separate from executed sales, partial sales, fees, settlements, journals, weekly closeout | End-to-end lifecycle test; protected purchased terms; week isolation |
+| Performance | Realized net/ROI, cost/proceeds/open exposure, bankroll transfers, strategy and ticket-type comparison, weekly/cumulative chart and table, saved learning | Financial fixtures, screenshot inspection |
+| Settings / backups | Light-only conventions, Cancún, version, complete tickets/picks/bankroll/learning export and validated import | Actual downloaded JSON re-import tested |
 
-## Version rules
-- `v0.5.4`: development checkpoint, not a published or complete release.
-- `v1.0`: reserve for the fully implemented and verified release.
-- Update this tracker in every subsequent development change. Never mark a screen done solely from a JavaScript syntax check.
+## Validation evidence
 
-## Next work queue
-1. Verify Season Overview and Home against the actual approved mockups, including header calendar toggle and global week state.
-2. Validate Games and AI Picks at iPhone widths, verify accurate research category mapping, and test office-pool clipboard and persistence.
-3. Implement Combo / Plan Detail full financial and overlapping-outcome analysis.
-4. Complete Kalshi ticket lifecycle, cash-out event ledger and accurate partial sale accounting.
-5. Finish Performance and historical dashboard.
-6. Add automated interaction and visual checks; only then publish for iPhone testing.
+- Mobile browser suite: 320, 375, 390 and 430px. Navigation, independent accordions, equal-width buttons, icon presence, horizontal overflow checks.
+- Financial suite: winnings/losses, partial sales, entry/exit fees, final settlement, legacy sold-ticket compatibility, shared-game settlement dependencies.
+- Lifecycle suite: clipboard text, reload persistence, candidate import, purchase, observed offer, partial sale, settlement, unavailable-week ledger access, player prop, backup round trip.
+- Screenshots inspected locally for all nine requested screen groups and the Plan Detail / Kalshi subviews. Tests generate screenshots as GitHub Actions artifacts.
+- Browser engine: headless Chromium at mobile widths. These are not physical iPhone Safari tests.
 
-## v0.5.4 checkpoint
-- Games and AI Picks now share Cancún-local kickoff-window pills, compact team logo treatment, and image fallbacks.
-- Office-pool buttons expose selection state to accessibility tools and retain tap-to-deselect behavior.
-- JavaScript syntax checked. **No browser or visual acceptance tests performed yet.**
+## Source and data limitations
 
-## v0.5.4 checkpoint
-- Plan Detail now enumerates possible game winner combinations, rather than assuming ticket independence.
-- Best and worst settlement net reflect shared underlying games and actual supplied historical ticket stakes and gross payouts.
-- Plans A–E show tickets, outcomes, timing, overlap and plan-specific payout sheets.
-- Historical quote status is explicit. No live prices or validated expected value are claimed.
-- JavaScript syntax passed; browser and financial fixture tests still pending.
+Original approved screen images could not be recovered from project-history search. Visual review used the user's locked written requirements and actual rendered screens; **pixel-for-pixel equivalence to inaccessible originals is not claimed**. The HTML gallery was not treated as complete artwork.
 
-## v0.5.4 checkpoint
-- Performance now includes season/selected-week switch, realized cost basis/proceeds/ROI/open risk, weekly P&L bars, and singles vs combos.
-- Kalshi workflow stages and partial-sale event helpers from previous checkpoint remain implemented but unverified.
-- Remaining: purchased-ticket immutability, settlement verification, precise partial-sale fees, bankroll transfers, full strategy breakdown, AI accuracy, historical learning and browser tests.
-- Do not mark release ready based on syntax validation.
+Only Week 6 preliminary research is published. Validated independent probabilities, frozen forecasts and official final-score history are not present; forecasts/calibration honestly remain pending. Historical Kalshi quotes are not executable live prices. Automated weekly research is not activated. Game-winner scenario tables model win/loss outcomes; ties/voids depend on individual contract rules. Player-prop joint probabilities are not fabricated.
 
-## v0.5.4 checkpoint
-- Purchase status transition now checks positive stake and payout and records a timestamped purchase event.
-- Original stake and gross payout are protected after a purchase is recorded.
-- A draft cannot jump straight to sold/won/lost; an open position cannot be marked sold while quantity remains.
-- Partial sale input now rejects empty proceeds, invalid percentages and nonfinite/negative proceeds; sale events record fee field for future extension.
-- JavaScript syntax verified; browser tests and full accounting validation remain pending.
+## Publication gate
 
-## v0.5.4 checkpoint
-- Added visible Kalshi Build / Evaluate / Monitor / Close tab controls, wired to existing stage state.
-- Ticket filtering by stage has now been wired, but remains unverified in a browser.
-- Browser interaction and financial tests remain pending. No production publication.
-
-## v0.5.4 checkpoint
-- Kalshi stage controls now filter draft, evaluation, purchased monitoring, and closed ticket lists.
-- No browser interaction test yet; ticket accounting and full closeout remain unverified.
-- Development branch only; not published.
-
-## v0.5.4 checkpoint
-- Development version label synchronized in HTML to v0.5.4.
-- Added financial acceptance fixture specification with shared-outcome, partial-sale, fees, invalid inputs, week persistence and office-pool cases.
-- Adjusted closed-ticket proceeds helper to avoid omitting recorded sale proceeds when the total is greater than the stored proceeds field. **This is not a substitute for a fully specified settlement ledger.**
-- Full financial test execution and browser tests are still pending. Not ready to publish.
-
-## v0.5.4 checkpoint
-- Separated recorded partial-sale proceeds from final settlement proceeds in realized P&L calculation.
-- Preserved a compatibility fallback for older closed tickets without event histories.
-- Known gap: settlement entry UI and fee allocation still need implementation; calculation behavior has not been fixture-tested or browser-tested.
-- No publication; do not review yet.
-
-## v0.5.4 checkpoint
-- Added final settlement proceeds and settlement fee inputs for purchased positions.
-- Added fee input for executed partial sales, and timestamped settlement events.
-- Final settlement closes remaining exposure, preserving prior partial-sale event proceeds separately.
-- JavaScript syntax validated, but financial acceptance fixtures and browser tests remain unexecuted.
-- Development branch only, not published; no user review yet.
-
-## v0.5.4 checkpoint
-- Completed Settings screen implementation: light-only, no swipe control, season/timezone, presentation rules, personal data backup and version display.
-- Backup export now includes tickets, office-pool selections and selected week; Settings import validates schema and confirms replacement.
-- Calendar and Performance actions are linked from Settings.
-- JavaScript syntax passed. **Browser interaction, accessibility and import/export round-trip tests are not yet complete.**
-
-## v0.5.4 checkpoint
-- Fixed conflicting CSS that reverted the approved fixed five-tab navigation to a horizontally scrolling flex bar.
-- Added executable Playwright smoke test covering 320/375/390/430px layouts, calendar open/close, research accordions, office-pool selection/deselection, Plan A, Kalshi stage controls and Settings.
-- Added GitHub Actions browser acceptance workflow. Initial CI run is queued/running; **no test pass is claimed until results are inspected**.
-- Version label updated to v0.5.4. No production deployment.
-
-## Financial acceptance CI milestone
-- Added executable Playwright fixtures for winning/losing singles, partial-sale basis and fees, final settlement, multiple sales, and correlated Plan A scenarios.
-- Financial tests are now mandatory in GitHub Actions alongside the mobile smoke suite.
-- CI run started; do not mark financial tests passed until the run concludes successfully.
-- Detailed screenshot comparison with approved mockups and production deployment remain pending.
-
-## Visual contract acceptance checkpoint (October 17, 2026)
-- Latest mobile layout geometry suite passed in CI (run 39084890101).
-- Screenshot artifact exists (28 captures), but screenshots have NOT been visually compared to original approved mockups; do not mark visual fidelity approved.
-- Added new automated DOM-level design assertions for season summary, game logos, kickoff pills, independent research accordion, equal-width pool controls, and removal of dark/swipe settings.
-- New assertions are running in CI; this is a supplement to, not a replacement for, manual visual review.
-- v1.0 publication remains blocked until full visual verification and remaining functionality gaps are resolved.
-
-## v0.5.5 screenshot review checkpoint
-- Retrieved and directly inspected generated 390px screenshots for Home, Season, Games, AI Picks, Combos, Kalshi, and Settings.
-- Found a material visual bug: sticky Office Pool summary obscured pick controls on the AI Picks screen. Changed summary to normal document flow and added regression assertion.
-- Confirmed Games has compact matchup cards and independent accordions; some research summaries appear semantically miscategorized and need data-quality review.
-- Full pixel comparison to the original approved mockups remains incomplete; do not claim visual signoff.
-- Browser tests for the new fix have been queued; no production deployment.
+Local checks passed. GitHub Actions acceptance, merge, Pages build, deployed asset/version verification and live browser tests must all pass before publication is recorded as complete below.
