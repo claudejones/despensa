@@ -33,6 +33,28 @@ const fs = require('node:fs');
   await page.locator('[data-kalshi-stage=monitor]').click();
   await page.locator('[data-action=settings]').first().click();
   assert.match(await page.locator('#view').innerText(),/Personal data/);
+  // Approved design contract: light-only Settings, compact matchup presentation,
+  // independent research accordions, season summary and accessible Office Pool controls.
+  await page.locator('[data-action=calendar]').first().click();
+  await page.locator('[data-season-mode=summary]').click();
+  assert.match(await page.locator('#view').innerText(),/Season Summary|Realized P&L|Performance Dashboard/);
+  await page.locator('[data-action=calendar]').first().click();
+  await page.locator('[data-tab=games]').first().click();
+  assert.ok(await page.locator('.team img').count()>=2,'team logos rendered');
+  assert.ok(await page.locator('.time-pill').count()>=1,'game time pill');
+  const accordions=page.locator('.research-acc');
+  assert.ok(await accordions.count()>=2,'research categories independently expandable');
+  await accordions.first().locator('summary').click();
+  assert.ok(await accordions.first().getAttribute('open')!==null,'research accordion expands');
+  await page.locator('[data-tab=picks]').first().click();
+  const pair=page.locator('.pick-card').first().locator('[data-pool]');
+  assert.equal(await pair.count(),2,'two equal-choice buttons');
+  const sizes=await pair.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().width));
+  assert.ok(Math.abs(sizes[0]-sizes[1])<3,'equal width office pool controls');
+  await page.locator('[data-action=settings]').first().click();
+  const settingsText=await page.locator('#view').innerText();
+  assert.doesNotMatch(settingsText,/Dark mode|Swipe between|Enable swipe/i,'no removed settings');
+  assert.match(settingsText,/Export my data|Import backup/i,'backup controls visible');
   const layout=await page.evaluate(()=>{const nav=document.querySelector('nav'),buttons=[...nav.querySelectorAll('[data-tab]')],r=nav.getBoundingClientRect(),rects=buttons.map(b=>b.getBoundingClientRect());return {position:getComputedStyle(nav).position,columns:getComputedStyle(nav).gridTemplateColumns.split(' ').length,navWidth:r.width,viewport:innerWidth,minTouch:Math.min(...rects.map(x=>x.height)),overlap:rects.some((x,i)=>rects.some((y,j)=>j>i&&x.left<y.right-1&&x.right>y.left+1)),visible:rects.every(x=>x.left>=-1&&x.right<=innerWidth+1)}});assert.equal(layout.position,'fixed','bottom nav fixed');assert.equal(layout.columns,5,'five equal nav columns');assert.ok(layout.minTouch>=43,'touch target at least 43px');assert.equal(layout.overlap,false,'no overlapping tab targets');assert.equal(layout.visible,true,'all tabs visible');
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
   assert.equal(overflow,false,'no horizontal overflow at '+width);
