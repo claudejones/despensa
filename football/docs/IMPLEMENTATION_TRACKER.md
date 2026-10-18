@@ -107,3 +107,10 @@ Status legend: **Implemented (unverified)** means code committed but not browser
 - Financial tests are now mandatory in GitHub Actions alongside the mobile smoke suite.
 - CI run started; do not mark financial tests passed until the run concludes successfully.
 - Detailed screenshot comparison with approved mockups and production deployment remain pending.
+
+## Visual contract acceptance checkpoint (October 17, 2026)
+- Latest mobile layout geometry suite passed in CI (run 39084890101).
+- Screenshot artifact exists (28 captures), but screenshots have NOT been visually compared to original approved mockups; do not mark visual fidelity approved.
+- Added new automated DOM-level design assertions for season summary, game logos, kickoff pills, independent research accordion, equal-width pool controls, and removal of dark/swipe settings.
+- New assertions are running in CI; this is a supplement to, not a replacement for, manual visual review.
+- v1.0 publication remains blocked until full visual verification and remaining functionality gaps are resolved.
