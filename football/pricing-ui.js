@@ -25,8 +25,6 @@ document.addEventListener('change',e=>{const input=e.target;if(!input.hasAttribu
 });
 document.addEventListener('input',e=>{if(e.target.hasAttribute('data-leg-quote')||e.target.hasAttribute('data-field'))e.target.setCustomValidity('')});
 
-function ticketPricingTotals(t){const draft=t.status==="draft",closed=isClosed(t),be=Number(t.payout)>0?100*(Number(t.stake||0)+Number(t.fee||0))/Number(t.payout):null;return quoteEstimateBlock(t)+`<div class="soft"><div class="row between"><span>Break-even</span><b>${be === null ? "—" : be.toFixed(1) + "%"}</b></div><div class="row between"><span>${closed ? "Realized P&L" : "Potential profit"}</span><b>${draft && !(Number(t.payout) > 0) ? "—" : money(closed ? realizedNet(t) : ticketPotentialProfit(t))}</b></div><p class="small muted">Profit is after stake and recorded fees. ${!draft&&!closed?"Includes realized cash-outs plus the remaining payout if all selections win. Future exit fees are excluded. ":""}${t.validatedProbability != null ? "Validated probability: " + (100 * t.validatedProbability).toFixed(1) + "% · Expected net " + money(t.validatedProbability * Number(t.payout) - Number(t.stake) - Number(t.fee || 0)) : "Expected net unavailable · independent probability not validated."}</p></div>`;}
-
 // UI state is memory-only. No save keys, financial records or migrations change.
 let ticketExpansion = null;
 let ticketInnerState = new Map();
@@ -39,13 +37,6 @@ function ticketExpanded(t){if(kalshiStage==='evaluate'&&ticketAnalysisEntering)r
 let ticketAnalysisEntering=false,ticketPreviousView='';
 function restoreTicketState(){document.querySelectorAll('[data-ticket-id]').forEach(el=>{const states=ticketInnerState.get(el.dataset.ticketId);if(states)el.querySelectorAll('.ticket-content details').forEach((d,i)=>{if(i<states.length)d.open=states[i]});});}
 function ticketPotentialProfit(t){return t.status==='draft'?Number(t.payout||0)-Number(t.stake||0)-Number(t.fee||0):realizedNet(t)+Number(t.payout||0)*remaining(t)-basis(t);}
-function ticketSummary(t){
- const closed=isClosed(t),draft=t.status==='draft',legs=t.legs||[];
- const profit=closed?realizedNet(t):ticketPotentialProfit(t);
- const times=legs.map(l=>data?.games.find(g=>g.id===l.gameId)?.kickoff||l.kickoff).filter(Boolean).sort();
- return `<div class="ticket-summary-main"><div class="row between"><b>${esc(t.title)}</b><span class="pill">${draft?'Draft':closed?'Closed':'Open bet'}</span></div><small>${legs.length} ${legs.length===1?'selection':'selections'} · ${esc(t.type||'Ticket')}</small><div class="ticket-summary-teams">${legs.map(l=>{const g=data?.games.find(g=>g.id===l.gameId);return `<span>${l.side==='PROP'?esc(l.prop||'Player prop'):team(l.team,g?.away.name===l.team?g.away.record:g?.home.record)}<small>${l.side==='NO'?'Not to win':l.side==='YES'?'To win':''}</small></span>`}).join('')}</div><div class="ticket-summary-money"><span>Stake <b>${money(Number(t.stake||0))}</b></span><span>${closed?'Realized P&L':'Potential profit'} <b>${!closed&&!(Number(t.payout)>0)?'—':money(profit)}</b></span></div>${times.length?`<small>First kickoff · ${esc(date(times[0]))}</small>`:''}</div><i class="chev" data-lucide="chevron-down"></i>`;
-}
-
 document.addEventListener('change',e=>{if(!e.target.hasAttribute('data-close-choice'))return;const root=e.target.closest('.details'),final=e.target.value==='final';root.querySelector('[data-close-sale]').hidden=final;root.querySelector('[data-close-final]').hidden=!final;});
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-rename-ticket')){const t=tickets.find(t=>t.id===b.dataset.renameTicket);if(t)openReviewSheet('Rename ticket',`<label>Ticket name<input id="renameTicketName" maxlength="100" value="${esc(t.title)}"></label><p class="small muted">Only the name changes. Selections, prices and transaction history stay the same.</p><button class="primary" data-save-ticket-name="${esc(t.id)}">Save name</button>`);}if(b.hasAttribute('data-save-ticket-name')){const t=tickets.find(t=>t.id===b.dataset.saveTicketName),input=document.querySelector('#renameTicketName'),name=input?.value.trim();if(!t||!input)return;if(!name){input.setCustomValidity('Enter a ticket name.');input.reportValidity();return;}t.title=name;save();closeReviewSheet();render();icons();}});
 document.addEventListener('input',e=>{if(e.target.id==='renameTicketName')e.target.setCustomValidity('')});

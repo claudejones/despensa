@@ -14,13 +14,15 @@
         "id": "houston-texans",
         "name": "Houston Texans",
         "record": "1-4-0",
-        "logo": null
+        "logo": null,
+        "score": 34
       },
       "home": {
         "id": "jacksonville-jaguars",
         "name": "Jacksonville Jaguars",
         "record": "4-1-0",
-        "logo": null
+        "logo": null,
+        "score": 31
       },
       "insights": [
         {
@@ -92,7 +94,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "final",
       "sourceIds": [
         "hou",
         "hou-preview",
@@ -224,7 +226,19 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Houston loses a runner, receiver and safety. Jacksonville is short at cornerback and long snapper; Murray’s return helps the secondary but does not replace Brown."
+      "availabilityImpact": "Houston loses a runner, receiver and safety. Jacksonville is short at cornerback and long snapper; Murray’s return helps the secondary but does not replace Brown.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872996",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-18T12:14:38-05:00",
+        "sources": [
+          "https://www.jaguars.com/news/game-report-2026-week-6-texans-34-jaguars-31",
+          "https://www.espn.com/nfl/game/_/gameId/401872996"
+        ]
+      }
     },
     {
       "id": "ten-ind",
@@ -233,13 +247,15 @@
         "id": "tennessee-titans",
         "name": "Tennessee Titans",
         "record": "0-5-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "home": {
         "id": "indianapolis-colts",
         "name": "Indianapolis Colts",
         "record": "2-3-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -309,7 +325,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "ind",
         "ten",
@@ -427,7 +443,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Tennessee’s running-back rotation depends on Spears’ availability. Indianapolis loses receiver and linebacker depth; verify the final active list before settling a ticket."
+      "availabilityImpact": "Tennessee’s running-back rotation depends on Spears’ availability. Indianapolis loses receiver and linebacker depth; verify the final active list before settling a ticket.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "10:47 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873003"
     },
     {
       "id": "car-phi",
@@ -436,13 +455,15 @@
         "id": "carolina-panthers",
         "name": "Carolina Panthers",
         "record": "2-2-0",
-        "logo": null
+        "logo": null,
+        "score": 3
       },
       "home": {
         "id": "philadelphia-eagles",
         "name": "Philadelphia Eagles",
         "record": "2-3-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -512,7 +533,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "phi-preview",
         "jax",
@@ -659,7 +680,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Philadelphia changes both its starting quarterback and lead runner. Returning receivers help, but Carolina also has uncertainty at offensive tackle."
+      "availabilityImpact": "Philadelphia changes both its starting quarterback and lead runner. Returning receivers help, but Carolina also has uncertainty at offensive tackle.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "10:50 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872998"
     },
     {
       "id": "pit-tb",
@@ -668,13 +692,15 @@
         "id": "pittsburgh-steelers",
         "name": "Pittsburgh Steelers",
         "record": "3-2-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "home": {
         "id": "tampa-bay-buccaneers",
         "name": "Tampa Bay Buccaneers",
         "record": "1-4-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -745,7 +771,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "tb",
         "pit",
@@ -824,7 +850,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Pittsburgh loses receiver depth and may be without its tight end. Tampa Bay continues with a rookie quarterback and without a key safety."
+      "availabilityImpact": "Pittsburgh loses receiver depth and may be without its tight end. Tampa Bay continues with a rookie quarterback and without a key safety.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "11:50 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873002"
     },
     {
       "id": "bal-cle",
@@ -833,13 +862,15 @@
         "id": "baltimore-ravens",
         "name": "Baltimore Ravens",
         "record": "4-1-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "home": {
         "id": "cleveland-browns",
         "name": "Cleveland Browns",
         "record": "3-2-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -907,7 +938,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "bal",
         "kalshi"
@@ -1064,7 +1095,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Baltimore’s backup quarterback operates behind an unsettled interior line. Cleveland’s uncertain defensive leaders could change both pressure and run defense."
+      "availabilityImpact": "Baltimore’s backup quarterback operates behind an unsettled interior line. Cleveland’s uncertain defensive leaders could change both pressure and run defense.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "11:21 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872997"
     },
     {
       "id": "no-nyg",
@@ -1073,13 +1107,15 @@
         "id": "new-orleans-saints",
         "name": "New Orleans Saints",
         "record": "1-4-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "home": {
         "id": "new-york-giants",
         "name": "New York Giants",
         "record": "3-1-1",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -1148,7 +1184,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "no",
         "nyg",
@@ -1282,7 +1318,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "New York has absences in the secondary and uncertainty at both tackles. New Orleans’ Kamara and Olave decisions matter for its offensive options."
+      "availabilityImpact": "New York has absences in the secondary and uncertainty at both tackles. New Orleans’ Kamara and Olave decisions matter for its offensive options.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "11:58 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873000"
     },
     {
       "id": "chi-atl",
@@ -1291,13 +1330,15 @@
         "id": "chicago-bears",
         "name": "Chicago Bears",
         "record": "3-2-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "home": {
         "id": "atlanta-falcons",
         "name": "Atlanta Falcons",
         "record": "2-3-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -1367,7 +1408,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "chi",
         "chi-qb",
@@ -1485,7 +1526,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Chicago’s lean is conditional on Williams’ return. Both teams are missing defenders; Atlanta’s cornerback depth and Chicago’s front warrant attention."
+      "availabilityImpact": "Chicago’s lean is conditional on Williams’ return. Both teams are missing defenders; Atlanta’s cornerback depth and Chicago’s front warrant attention.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "10:17 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872999"
     },
     {
       "id": "nyj-ne",
@@ -1494,13 +1538,15 @@
         "id": "new-york-jets",
         "name": "New York Jets",
         "record": "2-3-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "home": {
         "id": "new-england-patriots",
         "name": "New England Patriots",
         "record": "3-2-0",
-        "logo": null
+        "logo": null,
+        "score": 0
       },
       "insights": [
         {
@@ -1571,7 +1617,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "ne",
         "ne-injury",
@@ -1703,7 +1749,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "The Jets lose their lead runner and a receiving option. Brown’s activation helps New England’s options, but does not confirm game-day availability."
+      "availabilityImpact": "The Jets lose their lead runner and a receiving option. Brown’s activation helps New England’s options, but does not confirm game-day availability.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "8:41 - 1st Quarter",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873001"
     },
     {
       "id": "ari-lar",
@@ -1888,7 +1937,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Arizona loses a running option and two safeties. Los Angeles also has uncertain defensive backs, making final availability important on both sides."
+      "availabilityImpact": "Arizona loses a running option and two safeties. Los Angeles also has uncertain defensive backs, making final availability important on both sides.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "Sun, October 18th at 4:05 PM EDT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873004"
     },
     {
       "id": "lac-kc",
@@ -2068,7 +2120,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Los Angeles is missing two starting linemen and multiple passing-game contributors. Kansas City also loses a receiver and tackle; protection matters for both."
+      "availabilityImpact": "Los Angeles is missing two starting linemen and multiple passing-game contributors. Kansas City also loses a receiver and tackle; protection matters for both.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "Sun, October 18th at 4:25 PM EDT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873006"
     },
     {
       "id": "buf-lv",
@@ -2285,7 +2340,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Buffalo’s receiver and defensive-line availability remains unsettled. Las Vegas loses receiving and defensive-line depth; check the final active lists."
+      "availabilityImpact": "Buffalo’s receiver and defensive-line availability remains unsettled. Las Vegas loses receiving and defensive-line depth; check the final active lists.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "Sun, October 18th at 4:25 PM EDT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873005"
     },
     {
       "id": "dal-gb",
@@ -2517,7 +2575,10 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "availabilityImpact": "Dallas loses another linebacker. Green Bay’s defensive-tackle absences and cornerback uncertainty create openings despite the home-team lean."
+      "availabilityImpact": "Dallas loses another linebacker. Green Bay’s defensive-tackle absences and cornerback uncertainty create openings despite the home-team lean.",
+      "scoreCheckedAt": "2026-10-18T12:14:38-05:00",
+      "scoreDetail": "Sun, October 18th at 8:20 PM EDT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873007"
     },
     {
       "id": "was-sf",
@@ -4682,5 +4743,7 @@
     "comboQuotesRefreshed": false,
     "marketResponseDate": "Sun, 18 Oct 2026 04:00:11 GMT",
     "nextReview": "Game-day inactives, weather and executable order ticket before purchase; Monday status recheck separately."
-  }
+  },
+  "scoresCheckedAt": "2026-10-18T12:14:38-05:00",
+  "resultsVersion": "2026-10-18-scores-1"
 }

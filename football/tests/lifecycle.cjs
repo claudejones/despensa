@@ -56,17 +56,11 @@ const { chromium } = require("playwright"),
       1,
     );
     let id = await page.evaluate(() => tickets[0].id);
-    await page
-      .locator(".ticket summary")
-      .filter({ hasText: "Market observations" })
-      .click();
+    await page.locator("[data-observe-ticket]").click();
     await page.locator(`[id="offer-${id}"]`).fill("3");
     await page.locator(`[data-observe="${id}"]`).click();
     assert.equal(await page.evaluate(() => realizedNet(tickets[0])), 0);
-    await page
-      .locator(".ticket summary")
-      .filter({ hasText: "Close or reduce bet" })
-      .click();
+    await page.locator("[data-close-ticket]").click();
     await page.locator(`[id="qty-${id}"]`).fill("50");
     await page.locator(`[id="sale-${id}"]`).fill("1.7");
     await page.locator(`[data-sale="${id}"]`).click();
@@ -80,6 +74,7 @@ const { chromium } = require("playwright"),
       Math.abs((await page.evaluate(() => realizedNet(tickets[0]))) - 0.7) <
         1e-8,
     );
+    await page.locator("[data-close-ticket]").click();
     await page.locator(`[data-close-choice="${id}"]`).selectOption("final");
     await page.locator(`[id="settle-${id}"]`).fill("1");
     await page.locator(`[data-settle="${id}"]`).click();

@@ -74,6 +74,9 @@ jobs:
       - name: Verify direct actions and purchase correction
         run: node football/tests/direct-actions-correction.cjs
 
+      - name: Verify automatic final loss reconciliation
+        run: node football/tests/result-reconciliation.cjs
+
       - name: Upload mobile screenshots
         if: always()
         uses: actions/upload-artifact@v4
