@@ -70,3 +70,12 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - 26 Kalshi side snapshots include bid/ask, retrieval time, fee/depth limitations and settlement rules. API metadata updated_time is stored separately from retrieval time.
 - All 15 existing strategy tickets retain original legs and historical quote values; each has a new research review. Final inactives, weather and fresh combo quotes remain unverified.
 - Original saved tickets, pool selections, financial arithmetic and ledger are unchanged. JSON schema, source references and historical quote preservation verified; mobile, financial, lifecycle and shared-ticket suites passed locally. Research display screenshots inspected at 375px.
+
+## v1.3 research briefings and readable evidence
+
+- User-approved Home consolidation: three full-width cards with accurate Games / AI research leans / Combo candidate counts. Each opens a native mobile briefing sheet with supporting details, Close, and a direct action to the corresponding tab. Closing restores focus and the Home position.
+- Games: team-grouped availability with 115 sourced player entries, full names, spelled-out positions, status badges and matchup implications. Selected key updates are explicitly distinguished from a complete final inactive list.
+- Expanded form and historical cards now add distinct sourced facts and context instead of repeating records and summary text. Sources are tucked into independent disclosures with correct chevrons.
+- Compact Kalshi YES ask snapshots appear in Games, AI Picks and plan ticket details. Expanded market details separate bid/ask, snapshot time, AI lean comparison and price/settlement explanations. Historical candidate quotes and pregame forecast records are unchanged.
+- Research version `2026-10-17-detail-3`. Existing October 17 11:00 PM market captures retain their timestamps; expanded research has its own check time. No new numerical forecast or combo payout is invented.
+- Local checks: weekly schema, unchanged predictions/market snapshots/candidates, player and insight source references; four-width smoke; 10 financial fixtures; lifecycle/backup; contextual/sticky navigation; shared ticket builder; three-width briefing and research display checks. Mobile screenshots inspected. Physical iPhone Safari remains part of user acceptance.

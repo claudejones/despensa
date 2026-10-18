@@ -239,9 +239,9 @@ function planScreen() {
               ) +
               ") · " +
               l.side +
-              " · Kalshi " +
+              " · Historical Kalshi " +
               (l.marketPercent ?? "—") +
-              "%</div></div>"
+              "%</div>" + (g ? marketStrip(g) : "") + "</div>"
             );
           })
           .join("") +
@@ -564,7 +564,7 @@ function render() {
     render.route = route;
   }
   let v = $("#view");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.2.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -589,7 +589,7 @@ function render() {
   }
   if (sub === "settings") {
     v.innerHTML =
-      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.2.1 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
+      '<div class="settings-head"><div class="eyebrow">APPLICATION PREFERENCES</div><h2>Settings</h2><p class="muted">Simple, consistent controls for your NFL research and tickets.</p></div><div class="card settings-card"><div class="row"><i data-lucide="sun"></i><div><b>Appearance</b><p class="muted">Light theme · Always on</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="calendar-days"></i><div><b>Season & game times</b><p class="muted">2026 NFL season · Cancún local time (UTC−5)</p></div></div><button data-action="calendar" class="settings-link">Choose NFL week <i data-lucide="chevron-right"></i></button></div><div class="card settings-card"><div class="row"><i data-lucide="shield"></i><div><b>Team presentation</b><p class="muted">Small team logos, full names, W–L–T records and kickoff time pills are always displayed.</p></div></div></div><div class="card settings-card"><div class="row"><i data-lucide="database"></i><div><b>Personal data & backups</b><p class="muted">Your ticket history and office-pool selections are stored on this device, separate from weekly research updates.</p></div></div><button class="primary settings-link" data-action="settingsExport"><i data-lucide="download"></i> Export my data</button><label for="settingsImport" class="settings-file-label">Import backup JSON</label><input type="file" accept=".json,application/json" id="settingsImport" aria-label="Import backup JSON"><p class="muted small">Importing replaces locally stored tickets and pool selections after confirmation. Keep a backup first.</p></div><div class="card settings-card"><div class="row"><i data-lucide="info"></i><div><b>About NFL Intelligence</b><p class="muted">Version 1.3 · Light-only mobile experience</p></div></div><button data-action="results" class="settings-link">Open Performance <i data-lucide="chevron-right"></i></button></div>';
     icons();
     return;
   }
@@ -614,26 +614,8 @@ function render() {
     return;
   }
   if (tab === "weeks")
-    v.innerHTML =
-      '<div class="card"><div class="eyebrow">CURRENT RESEARCH</div><h2>Week ' +
-      data.week +
-      " · " +
-      data.season +
-      '</h2><div class="grid3"><div class="metric"><small>Games</small><b>' +
-      data.games.length +
-      '</b></div><div class="metric"><small>AI picks</small><b>' +
-      data.games.filter(forecast).length +
-      '</b></div><div class="metric"><small>Candidates</small><b>' +
-      data.comboCandidates.length +
-      '</b></div></div><p class="muted">' +
-      esc(data.notes) +
-      '</p><div class="row" style="gap:7px"><i data-lucide="check-circle-2"></i><small>Research published · ' +
-      esc(data.researchVersion) +
-      '</small></div></div><h3 style="margin:18px 0 10px">This week’s intelligence</h3><div class="card"><details class="research-acc"><summary><i data-lucide="clipboard-list"></i><span><b>Weekly research</b><div class="muted" style="font-size:12px">' +
-      data.games.length +
-      ' games · Research refreshed</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Updated team records, injuries, game times and market snapshots are available.</p><button data-tab="games">Review games</button></div></details><details class="research-acc"><summary><i data-lucide="brain"></i><span><b>AI predictions</b><div class="muted" style="font-size:12px">Awaiting validated probabilities</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Qualitative research leans include supporting and opposing evidence. Numerical win probabilities remain unvalidated. Office-pool selections stay independent.</p><button data-tab="picks">Open AI Picks</button></div></details><details class="research-acc"><summary><i data-lucide="layers"></i><span><b>Combo strategies</b><div class="muted" style="font-size:12px">' +
-      data.comboCandidates.length +
-      ' candidates across Plans A–E</div></span><i class="chev" data-lucide="chevron-down"></i></summary><div class="details"><p>Historical Kalshi quotes, not current executable offers.</p><button data-tab="combos">Explore combos</button></div></details></div><div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
+    v.innerHTML = homeBriefings() +
+      '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
       data.week +
       '</small></div><p class="muted">' +
       money(scopeTickets().reduce((n, t) => n + basis(t), 0)) +
@@ -644,50 +626,7 @@ function render() {
         .length +
       ' closed</p><div class="grid2"><button data-tab="kalshi">Review tickets</button><button class="primary" data-action="results">View Performance</button></div></div>';
   if (tab === "games")
-    v.innerHTML =
-      "<h2>Game research</h2>" +
-      data.games
-        .map(
-          (g) =>
-            '<div class="card">' +
-            kickoff(g.kickoff) +
-            team(g.away.name, g.away.record) +
-            team(g.home.name, g.home.record) +
-            reviewActions(g) +
-            '<div style="border-top:1px solid #dce5ee;margin:12px 0"></div><h3>Research insights</h3>' +
-            g.insights
-              .map(
-                (i) =>
-                  '<details class="research-acc"><summary><i data-lucide="' +
-                  {
-                    form: "chart-no-axes-combined",
-                    injuries: "heart-pulse",
-                    matchup: "shield",
-                    market: "chart-line",
-                    history: "history",
-                  }[i.category] +
-                  '"></i><span><b>' +
-                  {
-                    form: "Team Form",
-                    injuries: "Injuries & Availability",
-                    matchup: "Matchup Analysis",
-                    market: "Market & Probability",
-                    history: "Historical Insights",
-                  }[i.category] +
-                  '</b><div class="muted" style="font-size:12px">' +
-                  esc(i.summary) +
-                  '</div></span><i data-lucide="chevron-down" class="chev"></i></summary><div class="details"><ul>' +
-                  i.details.map((x) => "<li>" + esc(x) + "</li>").join("") +
-                  '</ul><p class="muted small">Snapshot: ' +
-                  esc(date(data.researchedAt)) +
-                  " · " + esc(data.status) + " research</p>" +
-                  researchSources(i.sourceIds || g.sourceIds) +
-                  "</div></details>",
-              )
-              .join("") +
-            "</div>",
-        )
-        .join("");
+    v.innerHTML = data.games.map(researchGame).join("");
   if (tab === "picks") v.innerHTML = picksScreen();
   if (tab === "combos")
     v.innerHTML =
