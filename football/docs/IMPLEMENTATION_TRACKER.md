@@ -209,3 +209,9 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Shared action groups use 12px gaps, aligned button heights, consistent icon spacing and mobile wrapping. Pool Clear/AI analysis actions use the same layout; ticket-editor choices and form actions align consistently.
 - Audited Home, Games, AI/Pool, Plans A–E, calendar, Settings, all Kalshi views, Performance, ticket editing, manual builder and confirmation controls at 320/375/430px. Added geometry regression for gaps, alignment, touch targets and overflow; inspected actual mobile screenshots.
 - No personal storage or financial calculation changes. Existing update-preservation test passed.
+
+## October 18, 17:28 Cancún — Score and market data refresh
+- ESPN score snapshot at 17:27:56: eight Sunday finals, three live games and two scheduled games; Thursday remains in completedGames. All eight finals corroborated against both teams' finalized Kalshi contracts.
+- Ten active YES/NO bid/ask snapshots refreshed at 17:28–17:29. Prior active snapshots archived in marketSnapshotHistory. Sixteen finalized contracts stored separately; closed empty books never replace historical pregame prices.
+- Original research, forecasts, combo quote snapshots, team records at research time and AI paper archive remain unchanged. No personal ticket data included in publication.
+- Refresh regression verifies all eight losing selections close at $0 remaining payout exactly once, while winning selections stay open for actual proceeds. Engine: 13 tests passed; AI archive: 3 tests passed.
