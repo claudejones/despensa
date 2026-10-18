@@ -124,3 +124,9 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 ## v1.4.1 — season grid cleanup (2026-10-18)
 - Removed the duplicate selected-week box beneath the Season Overview grid; selection and availability remain visible on the week buttons.
 - Changed the AI snapshot label from Frozen to Pick recorded. This is the stored pre-game prediction timestamp, not a live market timestamp. Confidence remains a qualitative assessment, not a numeric win probability. Research and user data unchanged.
+
+## v1.4.2 — clear summary actions and connected Kalshi steps (2026-10-18)
+- Home intelligence cards explicitly say View summary; drawer titles describe summaries and onward buttons use View game details, View AI analysis and Explore combo strategies. The AI destination always opens AI Analysis even after My Pool was used.
+- Kalshi uses four connected, numbered, directly accessible Build / Evaluate / Monitor / Close steps, current-step highlighting, accessible aria-current and a concise explanation. No completion state is inferred from navigation.
+- Season Summary Performance action uses a full-width flex layout with a consistently sized and centered arrow.
+- Existing mobile smoke, briefing, navigation and ticket/backup lifecycle checks passed. Focused mobile checks cover summary destinations, all workflow steps and arrow alignment at 320/375/430px; screenshots inspected before publication. No research or personal-data changes.
