@@ -733,7 +733,7 @@ nav [data-tab="kalshi"] {
 .sheet-destinations small { display:block; margin-top:4px; color:var(--muted); }
 .ticket-sheet .leg-row .actions { flex-wrap:wrap; }
 .ticket-sheet input,.ticket-sheet select { font-size:16px; }
-#activeTicketBar { position:fixed; bottom:var(--bottom-nav-height,84px); left:0; right:0; margin:auto; max-width:800px; z-index:9; display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--selected); border-top:1px solid var(--line); box-shadow:0 -3px 14px #19334b08; }
+#activeTicketBar { position:relative; width:100%; margin:0; display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--selected); border-top:1px solid var(--line); box-shadow:0 -3px 14px #19334b08; }
 #activeTicketBar[hidden] { display:none; }
 .active-ticket-name { flex:1; min-width:0; text-align:left; background:transparent; border:0; padding:2px; }
 .active-ticket-name b { display:flex; align-items:center; gap:6px; overflow-wrap:anywhere; }
@@ -757,3 +757,8 @@ nav [data-tab="kalshi"] {
 .availability-group {margin:16px 0}.availability-group>.team {font-size:13px}.player-row {display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:8px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}.player-row>svg {width:16px;height:18px;color:var(--muted)}.player-row small {display:block;font-size:11px;line-height:1.5;margin-top:3px}.availability-status {border-radius:7px;padding:4px 6px;font-size:10px;white-space:nowrap}.status-out {background:#f9ebec;color:#983e4a}.status-watch {background:#fff4da;color:#775417}.status-ready {background:#e4f2ef;color:#20695b}
 .quote-table {font-size:12px;margin:14px 0}.quote-table>div {display:grid;grid-template-columns:minmax(0,1fr) 42px 42px;gap:7px;border-bottom:1px solid var(--line);padding:9px 0}.quote-table b:not(:first-child) {text-align:right}
 .source-disclosure {border-top:1px solid var(--line);margin-top:12px;font-size:12px}.source-disclosure>summary {display:flex;justify-content:space-between;align-items:center;min-height:44px;cursor:pointer;color:var(--teal,#167f84);list-style:none}.source-disclosure>summary::-webkit-details-marker{display:none}.source-disclosure>summary svg {width:16px;height:16px}.source-disclosure[open]>summary .chev {transform:rotate(180deg)}.source-disclosure a {display:block;margin:8px 0;overflow-wrap:anywhere}.research-acc .details {overflow-wrap:anywhere}.research-acc .details li {margin-bottom:10px}
+
+/* Keep the draft bar and tabs in one fixed layer during Safari toolbar changes. */
+#bottomDock {position:fixed;bottom:0;left:0;right:0;max-width:800px;margin:0 auto;z-index:10;display:flex;flex-direction:column;}
+#bottomDock>nav {position:relative;inset:auto;transform:none;max-width:none;width:100%;flex:none;}
+#bottomDock>#activeTicketBar {flex:none;}
