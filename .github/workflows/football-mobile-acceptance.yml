@@ -25,3 +25,11 @@ jobs:
         run: node football/tests/mobile-smoke.cjs
       - name: Run financial acceptance
         run: node football/tests/financial-acceptance.cjs
+
+      - name: Upload mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: football-mobile-screenshots
+          path: football/test-artifacts/*.png
+          if-no-files-found: warn
