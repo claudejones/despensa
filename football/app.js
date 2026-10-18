@@ -235,7 +235,7 @@ function planScreen() {
               l.side +
               " · Historical Kalshi " +
               (l.marketPercent ?? "—") +
-              "%</div>" + (g ? marketStrip(g) : "") + "</div>"
+              "%</div>" + (g ? marketStrip(g)+`<button class="pool-from-combo" data-pool-choose="${esc(g.id)}">Choose Pool winner for this game</button>` : "") + "</div>"
             );
           })
           .join("") +
@@ -558,7 +558,7 @@ function icons() {
   }
 }
 function render() {
-  const route = [tab, sub, plan, planTab, kalshiStage, perfMode].join(":");
+  const route = [tab, sub, plan, planTab, kalshiStage, perfMode, picksView, performanceView].join(":");
   if (render.route !== route) {
     window.scrollTo(0, 0);
     render.route = route;
@@ -566,7 +566,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún";
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.3.5";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.4.0";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
@@ -577,7 +577,7 @@ function render() {
           : {
               weeks: "Weekly Overview",
               games: "Game Research",
-              picks: "AI Game Picks",
+              picks: picksView === "pool" ? "My Pool" : "AI Game Picks",
               combos: "Combo Strategies",
               kalshi: "My Kalshi",
             }[tab];
@@ -602,7 +602,7 @@ function render() {
     return;
   }
   if (sub === "results") {
-    v.innerHTML = performanceScreen();
+    v.innerHTML = performanceTabs()+(performanceView==='pool'?poolPerformanceScreen():performanceScreen());
     icons();
     return;
   }
@@ -613,11 +613,11 @@ function render() {
   }
   if (!data) {
     v.innerHTML =
-      '<div class="card"><h2>Research not available</h2><p>Initial research planned Monday, refresh Saturday, Cancún time. Automated publication not activated.</p></div>';
+      (tab==='weeks'?homePerformanceCard():'') + '<div class="card"><h2>Research not available</h2><p>Initial research planned Monday, refresh Saturday, Cancún time. Automated publication not activated.</p></div>';
     return;
   }
   if (tab === "weeks")
-    v.innerHTML = homeBriefings() +
+    v.innerHTML = homeBriefings() + homePerformanceCard() +
       '<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span><i data-lucide="wallet"></i> <b>My Kalshi portfolio</b></span><small>Week ' +
       data.week +
       '</small></div><p class="muted">' +
@@ -627,7 +627,7 @@ function render() {
       " purchased positions recorded · " +
       scopeTickets().filter((t) => ["sold", "won", "lost"].includes(t.status))
         .length +
-      ' closed</p><div class="grid2"><button data-tab="kalshi">Review tickets</button><button class="primary" data-action="results">View Performance</button></div></div>';
+      ' closed</p><div class="grid2"><button data-tab="kalshi">Review tickets</button><button data-open-pool>My Pool</button></div></div>';
   if (tab === "games")
     v.innerHTML = data.games.map(researchGame).join("");
   if (tab === "picks") v.innerHTML = picksScreen();
@@ -728,6 +728,7 @@ async function load() {
     )
       throw Error("Invalid week data");
     data = next;
+    rememberPoolResearch(data);
     trackResearchChanges(data);
     data.games.sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
     for (const g of data.games) {
@@ -805,6 +806,7 @@ document.addEventListener("click", async (e) => {
     sub = "results";
     plan = "";
     render();
+    if(performanceView === "pool") loadPoolResults();
   }
   if (b.dataset.week) {
     $("#week").value = b.dataset.week;
@@ -845,10 +847,8 @@ document.addEventListener("click", async (e) => {
   }
   if (b.dataset.add) addCandidateReview(b);
   if (b.dataset.pool) {
-    let k = data.season + "-" + data.week + "-" + b.dataset.pool;
-    pool[k] = pool[k] === b.dataset.team ? null : b.dataset.team;
-    localStorage.setItem("football-pool-v03", JSON.stringify(pool));
-    render();
+    const g=data.games.find(g=>g.id===b.dataset.pool);
+    if(g)setPoolChoice(g.id,poolChoice(g)===b.dataset.team?null:b.dataset.team);
   }
   if (b.dataset.action === "copyPool") {
     let chosen = data.games.filter(

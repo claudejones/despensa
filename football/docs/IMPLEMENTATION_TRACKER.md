@@ -1,6 +1,6 @@
 # NFL Intelligence — implementation tracker
 
-Published release: **v1.1**. Implementation merged from `football-screen-by-screen-implementation` to `main` via PR #7; contextual review follow-up via PR #8.
+Release history: original implementation merged via PR #7; subsequent releases are recorded below. Current update: **v1.4.0**, publication gated by mobile acceptance and Pages verification.
 
 ## Implemented and locally verified
 
@@ -113,3 +113,10 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Resolver prefers the latest exact-team/side Kalshi ask, then latest sourced researchMarketEstimates entry, otherwise Unavailable. No opposite-team substitution, inferred NO price, multiplied combo probability, AI-confidence substitution or ticket-quote mutation. Scope checks prevent another week's price being used on a ticket.
 - Optional researchMarketEstimates schema: gameId, full team name, side YES/NO, probability 0–1, capturedAt ISO timestamp, sourceName and HTTPS sourceUrl. Publishers must verify the estimate matches that outcome, including settlement semantics. Current research has no non-Kalshi estimates; no fallback values were invented. Meaningful update detection includes new/changed/removed estimates without flagging empty-schema additions.
 - Added 320/375/430 mobile acceptance for nested disclosure, preference migration, newest fallback, unavailable/invalid/NO handling, week isolation and ticket preservation. Screenshots inspected; existing preference, briefing and regression tests gate publication.
+
+## v1.4.0 — visible Performance and a dedicated My Pool flow (2026-10-18)
+- Home now has a standalone Performance card after weekly intelligence, with selected-week realized P&L, open exposure and Pool results. Dashboard views separate Kalshi from Office Pool, retaining Season / Selected Week. Performance remains reachable when the selected week has no research.
+- AI Picks separates AI Analysis / My Pool. My Pool shows completion for the published slate, All / Missing filters, equal-width team controls, change/clear and Copy My Picks. Games and AI research share a Choose a pick section with independent Pool and Kalshi destinations. Combo details offer an individual game winner chooser; no strategy-wide Pool import or NO-to-opponent inference.
+- Fill missing picks from AI previews every addition with team/logo/context and explicitly preserves existing selections. Cancellation does not save; unavailable AI stays missing. Existing football-pool-v03 choices and all Kalshi storage/financial behavior are preserved.
+- Office Pool comparisons grade only published final scores, keep unfinished/unavailable games Pending, and separate ties. AI comparison requires a recorded pre-kickoff frozen choice. No market-based result inference or claimed verified submission history. Current published coverage is Week 6; upcoming games have no final results.
+- Added mobile acceptance at 320/375/430 for Pool choose/change/clear, persistence, missing filters, preview/cancel/confirm, preservation of existing choices and Kalshi tickets, individual combo-game chooser, final/tie/late-AI handling and week isolation. Updated existing mobile and lifecycle selectors for the dedicated Pool view. Full local regression suite passed; Home, My Pool, preview and Performance mobile screenshots inspected. CI gates merge; deployed assets and live interaction checks gate delivery.
