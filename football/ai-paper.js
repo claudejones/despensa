@@ -12,7 +12,7 @@ function paperResult(entry,week){
  const outcomes=entry.legs.map(l=>{const g=games.find(g=>g.id===l.gameId),r=g?.result;
   if(![g?.away?.name,g?.home?.name].includes(l.team)||g?.status!=='final'||r?.verified!==true||r.marketScope!=='full-game-winner'||!r.sources?.length||!Number.isInteger(g.away?.score)||!Number.isInteger(g.home?.score)||g.away.score<0||g.home.score<0)return 'open';
   if(g.away.score===g.home.score)return 'review';const winner=g.away.score>g.home.score?g.away.name:g.home.name;return (l.side==='YES'?winner===l.team:winner!==l.team)?'won':'lost';});
- const status=outcomes.includes('lost')?'lost':outcomes.includes('review')?'review':outcomes.every(x=>x==='won')?'won':'open';
+ const status=outcomes.includes('review')?'review':outcomes.includes('lost')?'lost':outcomes.every(x=>x==='won')?'won':'open';
  const priced=Number.isFinite(entry.quote?.payout)&&entry.quote.payout>0;
  return {entry,status,priced,net:priced&&['won','lost'].includes(status)?(status==='won'?entry.quote.payout:0)-entry.stake:null};
 }
