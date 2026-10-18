@@ -79,3 +79,9 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Compact Kalshi YES ask snapshots appear in Games, AI Picks and plan ticket details. Expanded market details separate bid/ask, snapshot time, AI lean comparison and price/settlement explanations. Historical candidate quotes and pregame forecast records are unchanged.
 - Research version `2026-10-17-detail-3`. Existing October 17 11:00 PM market captures retain their timestamps; expanded research has its own check time. No new numerical forecast or combo payout is invented.
 - Local checks: weekly schema, unchanged predictions/market snapshots/candidates, player and insight source references; four-width smoke; 10 financial fixtures; lifecycle/backup; contextual/sticky navigation; shared ticket builder; three-width briefing and research display checks. Mobile screenshots inspected. Physical iPhone Safari remains part of user acceptance.
+
+## v1.3.1 active ticket bar positioning
+
+- Fixes the reported active combo bar slipping behind the tabs during iPhone Safari toolbar changes. The bar and navigation now share one fixed container and stack in normal layout, eliminating independent bottom offsets.
+- Container/bar resize observation maintains content clearance and toast offsets. Existing visibility rules, drafts, selections and storage are unchanged.
+- Added scroll/viewport-height/safe-area regression coverage at 320/375/430px, asserting adjacency, viewport anchoring, unobscured View ticket hit targets, working sheet opening and unchanged ticket data. Shared ticket flow passed at all three widths; screenshot inspected. These simulations do not reproduce the physical iPhone browser toolbar itself.

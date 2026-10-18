@@ -70,7 +70,7 @@ function saveReviewEditor() {
 syncReviewUI = function() {
   originalReviewSync();
   const drafts=reviewDrafts(),active=drafts.find(t=>t.id===activeReviewId);
-  let bar=document.querySelector('#activeTicketBar');if(!bar){bar=document.createElement('div');bar.id='activeTicketBar';document.body.append(bar)}
+  let bar=document.querySelector('#activeTicketBar');if(!bar){bar=document.createElement('div');bar.id='activeTicketBar';document.querySelector('#bottomDock').prepend(bar);observeTicketBar(bar)}
   bar.hidden=!active||tab==='kalshi'||!!sub;
   bar.innerHTML=active?`<button class="active-ticket-name" data-review-tickets><b>${esc(active.title)} <i data-lucide="chevron-down"></i></b><small>${active.legs.length} ${active.legs.length===1?'selection':'legs'} · Active draft</small></button><button data-review-edit="${esc(active.id)}">View ticket</button>`:'';
   document.body.classList.toggle('has-active-ticket',!bar.hidden);
@@ -116,6 +116,16 @@ document.addEventListener('click',e=>{
   if(b.hasAttribute('data-review-save')||b.hasAttribute('data-review-more')||b.hasAttribute('data-review-finish')){if(!saveReviewEditor())return;closeReviewSheet();if(b.hasAttribute('data-review-finish')){tab='kalshi';kalshiStage='build';sub='';plan='';}if(b.hasAttribute('data-review-more')){tab='games';sub='';plan='';render()}refreshReviewFlow();reviewToast('Draft updated.');}
   if(b.hasAttribute('data-review-undo')&&reviewUndo){const u=reviewUndo,t=tickets.find(t=>t.id===u.id);if(!t||t.status!=='draft'){reviewUndo=null;reviewToast('This ticket changed. Undo is no longer available.');return}if(u.before)tickets=tickets.map(t=>t.id===u.id?u.before:t);else tickets=tickets.filter(t=>t.id!==u.id);reviewUndo=null;refreshReviewFlow();reviewToast('Change undone.');}
 });
-window.addEventListener('load',()=>{const nav=document.querySelector('nav');new ResizeObserver(()=>document.documentElement.style.setProperty('--bottom-nav-height',nav.getBoundingClientRect().height+'px')).observe(nav)});
+// The ticket bar and navigation share one fixed containing block. Safari toolbar
+// changes cannot move independently positioned layers over one another.
+function measureBottomDock() {
+  const root=document.documentElement,nav=document.querySelector('#bottomDock nav'),bar=document.querySelector('#activeTicketBar');
+  if(nav)root.style.setProperty('--bottom-nav-height',nav.getBoundingClientRect().height+'px');
+  root.style.setProperty('--active-ticket-height',bar&&!bar.hidden?bar.getBoundingClientRect().height+'px':'0px');
+}
+function observeTicketBar(bar) { new ResizeObserver(measureBottomDock).observe(bar); }
+window.addEventListener('load',()=>{new ResizeObserver(measureBottomDock).observe(document.querySelector('#bottomDock'));measureBottomDock()});
+window.addEventListener('pageshow',measureBottomDock);
+
 
 document.addEventListener("change", e => { if(e.target.dataset.field || e.target.id === "week") { reviewUndo=null;document.querySelector("#ticketToast")?.remove(); } });
