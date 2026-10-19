@@ -215,3 +215,12 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Ten active YES/NO bid/ask snapshots refreshed at 17:28–17:29. Prior active snapshots archived in marketSnapshotHistory. Sixteen finalized contracts stored separately; closed empty books never replace historical pregame prices.
 - Original research, forecasts, combo quote snapshots, team records at research time and AI paper archive remain unchanged. No personal ticket data included in publication.
 - Refresh regression verifies all eight losing selections close at $0 remaining payout exactly once, while winning selections stay open for actual proceeds. Engine: 13 tests passed; AI archive: 3 tests passed.
+
+## v1.8.2 — Preliminary Week 7 preparation
+- Added all 14 games, entering records, Cancún kickoffs, international venue context, recent results and an explicitly preliminary availability watch.
+- Published 14 independent qualitative leans, 28 sourced Kalshi team snapshots and six unpriced candidate structures across Plans A–E. No calibrated probabilities or combo payouts invented.
+- Archived Week 7 AI singles automatically with captured price benchmarks; unquoted AI combos retain unavailable financial results.
+- Corrected unpriced strategy rendering so null payouts cannot appear as zero or infinite break-even percentages.
+- Week 6 JSON and all existing AI archive entries remain unchanged; no local-storage schema or personal ticket mutation added.
+- Added mobile acceptance for Week 7 selection, research, all five strategies, unknown pricing and preserved storage.
+- Limitations: Week 7 final injury designations, weather and head-to-head analysis are pending. San Francisco’s entering record is provisional until Monday’s Week 6 final. This is an early release, not final game-day research.

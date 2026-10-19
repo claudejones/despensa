@@ -101,7 +101,7 @@ syncReviewUI = function() {
   });
 };
 const originalCandidateAdd=addCandidateReview;
-addCandidateReview=function(b){const before=tickets.length;originalCandidateAdd(b);if(tickets.length>before){const t=tickets[tickets.length-1];setActiveReview(t.id);reviewUndo={id:t.id,before:null};reviewToast('Saved your copy. Historical quote retained.');}};
+addCandidateReview=function(b){const before=tickets.length;originalCandidateAdd(b);if(tickets.length>before){const t=tickets[tickets.length-1];setActiveReview(t.id);reviewUndo={id:t.id,before:null};reviewToast(t.payout > 0 ? 'Saved your copy. Historical quote retained.' : 'Saved your copy. Ticket quote still needed.');}};
 function reviewOverlap(t){
   const shared=(t.legs||[]).filter(l=>reviewDrafts().some(other=>other.id!==t.id&&other.legs?.some(x=>x.gameId===l.gameId)));
   return shared.length?`<p class="review-overlap"><i data-lucide="layers"></i> Shared games across drafts: ${esc([...new Set(shared.map(l=>teamAbbr(l.team)))].join(', '))}. Review combined exposure.</p>`:'';

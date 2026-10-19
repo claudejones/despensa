@@ -20,10 +20,16 @@
       "researchVersion": "2026-10-17-detail-3",
       "resultsVersion": "20261019T0535090500-scores",
       "dataVersion": "20261019T0535090500-markets"
+    },
+    "07": {
+      "path": "2026/week-07.json",
+      "status": "preliminary",
+      "researchVersion": "2026-10-19-week7-preliminary-1",
+      "dataVersion": "2026-10-19-week7-preliminary-1"
     }
   },
-  "lastSuccessfulPublication": "2026-10-19T05:35:09-05:00",
-  "notice": "Week 6: 12 Sunday finals, 0 live, 1 scheduled. Original research and personal records preserved.",
+  "lastSuccessfulPublication": "2026-10-19T06:05:05-05:00",
+  "notice": "Week 7 preliminary research available: 14 games. Week 6 remains open pending Monday night.",
   "scoresCheckedAt": "2026-10-19T05:35:08-05:00",
   "marketsCheckedAt": "2026-10-19T05:35:09-05:00"
 }
