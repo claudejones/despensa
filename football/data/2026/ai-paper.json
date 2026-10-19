@@ -391,6 +391,588 @@
       "archivedAt": "2026-10-18T19:08:45.358403+00:00",
       "archiveMode": "reconstructed-pregame",
       "researchVersion": "2026-10-17-detail-3"
+    },
+    {
+      "id": "2026:7:single:ne-chi",
+      "kind": "single",
+      "title": "Chicago Bears",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Chicago has won three of its last four and is 2\u20131 at home.",
+      "legs": [
+        {
+          "gameId": "ne-chi",
+          "team": "Chicago Bears",
+          "side": "YES",
+          "kickoff": "2026-10-22T19:15:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-CHI",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.61,
+        "payout": 3.278688524590164,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:pit-no",
+      "kind": "single",
+      "title": "Pittsburgh Steelers",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Pittsburgh has consecutive wins over Indianapolis and Tampa Bay.",
+      "legs": [
+        {
+          "gameId": "pit-no",
+          "team": "Pittsburgh Steelers",
+          "side": "YES",
+          "kickoff": "2026-10-25T08:30:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-PIT",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.57,
+        "payout": 3.5087719298245617,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:sf-atl",
+      "kind": "single",
+      "title": "San Francisco 49ers",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "San Francisco is unbeaten through five completed games; Atlanta has lost two straight.",
+      "legs": [
+        {
+          "gameId": "sf-atl",
+          "team": "San Francisco 49ers",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-SF",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.69,
+        "payout": 2.8985507246376816,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:cle-ten",
+      "kind": "single",
+      "title": "Cleveland Browns",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Cleveland has won four of its last five, including a 13\u201310 win over Baltimore.",
+      "legs": [
+        {
+          "gameId": "cle-ten",
+          "team": "Cleveland Browns",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-CLE",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.54,
+        "payout": 3.7037037037037033,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:ind-min",
+      "kind": "single",
+      "title": "Minnesota Vikings",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Minnesota is 5\u20130 and has allowed 16 or fewer points in each of its last four games.",
+      "legs": [
+        {
+          "gameId": "ind-min",
+          "team": "Minnesota Vikings",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-MIN",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.7,
+        "payout": 2.857142857142857,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:mia-nyj",
+      "kind": "single",
+      "title": "New York Jets",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Miami is winless and scored 13 or fewer in four of its five games.",
+      "legs": [
+        {
+          "gameId": "mia-nyj",
+          "team": "New York Jets",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "2-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-NYJ",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.68,
+        "payout": 2.941176470588235,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:tb-car",
+      "kind": "single",
+      "title": "Carolina Panthers",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Carolina has consecutive wins over Detroit and Philadelphia and is 3\u20132.",
+      "legs": [
+        {
+          "gameId": "tb-car",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-CAR",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.62,
+        "payout": 3.2258064516129035,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:cin-bal",
+      "kind": "single",
+      "title": "Baltimore Ravens",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Baltimore has won three of its last four and has a home divisional matchup.",
+      "legs": [
+        {
+          "gameId": "cin-bal",
+          "team": "Baltimore Ravens",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-BAL",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.58,
+        "payout": 3.4482758620689657,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:nyg-hou",
+      "kind": "single",
+      "title": "Houston Texans",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Houston has won twice in succession, scoring 26 and 34 points.",
+      "legs": [
+        {
+          "gameId": "nyg-hou",
+          "team": "Houston Texans",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "2-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-HOU",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.79,
+        "payout": 2.531645569620253,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:den-ari",
+      "kind": "single",
+      "title": "Denver Broncos",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Denver has won four of five and held its last two opponents to 17 and 14 points.",
+      "legs": [
+        {
+          "gameId": "den-ari",
+          "team": "Denver Broncos",
+          "side": "YES",
+          "kickoff": "2026-10-25T15:05:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-DEN",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.67,
+        "payout": 2.9850746268656714,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:gb-det",
+      "kind": "single",
+      "title": "Detroit Lions",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Detroit is unbeaten at home and scored 45 in its last game before the bye.",
+      "legs": [
+        {
+          "gameId": "gb-det",
+          "team": "Detroit Lions",
+          "side": "YES",
+          "kickoff": "2026-10-25T15:25:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-DET",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.59,
+        "payout": 3.3898305084745766,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:lar-lv",
+      "kind": "single",
+      "title": "Las Vegas Raiders",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Las Vegas scored 30 against Buffalo and returns home against a Rams team that just scored 16.",
+      "legs": [
+        {
+          "gameId": "lar-lv",
+          "team": "Las Vegas Raiders",
+          "side": "YES",
+          "kickoff": "2026-10-25T15:25:00-05:00",
+          "record": "3-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LV",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.32,
+        "payout": 6.25,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:kc-sea",
+      "kind": "single",
+      "title": "Kansas City Chiefs",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Kansas City is 5\u20130 and held the Chargers to six points in its latest win.",
+      "legs": [
+        {
+          "gameId": "kc-sea",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-10-25T19:20:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25KCSEA-KC",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.46,
+        "payout": 4.3478260869565215,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:single:dal-phi",
+      "kind": "single",
+      "title": "Dallas Cowboys",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Dallas has two wins in its last five while Philadelphia has lost four straight.",
+      "legs": [
+        {
+          "gameId": "dal-phi",
+          "team": "Dallas Cowboys",
+          "side": "YES",
+          "kickoff": "2026-10-26T19:15:00-05:00",
+          "record": "2-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT26DALPHI-DAL",
+        "capturedAt": "2026-10-19T06:05:05-05:00",
+        "price": 0.67,
+        "payout": 2.9850746268656714,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:combo:A2",
+      "kind": "combo",
+      "title": "Carolina Panthers + Kansas City Chiefs to win",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "A",
+      "legs": [
+        {
+          "gameId": "tb-car",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "3-2-0"
+        },
+        {
+          "gameId": "kc-sea",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-10-25T19:20:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:combo:B1",
+      "kind": "combo",
+      "title": "Cleveland Browns to win + Carolina Panthers to win",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "B",
+      "legs": [
+        {
+          "gameId": "cle-ten",
+          "team": "Cleveland Browns",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "4-2-0"
+        },
+        {
+          "gameId": "tb-car",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "3-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:combo:C1",
+      "kind": "combo",
+      "title": "Pittsburgh Steelers to win + Denver Broncos to win + Kansas City Chiefs to win",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "C",
+      "legs": [
+        {
+          "gameId": "pit-no",
+          "team": "Pittsburgh Steelers",
+          "side": "YES",
+          "kickoff": "2026-10-25T08:30:00-05:00",
+          "record": "4-2-0"
+        },
+        {
+          "gameId": "den-ari",
+          "team": "Denver Broncos",
+          "side": "YES",
+          "kickoff": "2026-10-25T15:05:00-05:00",
+          "record": "4-2-0"
+        },
+        {
+          "gameId": "kc-sea",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-10-25T19:20:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:combo:D1",
+      "kind": "combo",
+      "title": "Minnesota Vikings to win + Kansas City Chiefs to win",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "D",
+      "legs": [
+        {
+          "gameId": "ind-min",
+          "team": "Minnesota Vikings",
+          "side": "YES",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "5-0-0"
+        },
+        {
+          "gameId": "kc-sea",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-10-25T19:20:00-05:00",
+          "record": "5-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:7:combo:E1",
+      "kind": "combo",
+      "title": "Miami Dolphins \u2014 NO + Tampa Bay Buccaneers \u2014 NO",
+      "publishedAt": "2026-10-19T06:05:00-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "E",
+      "legs": [
+        {
+          "gameId": "mia-nyj",
+          "team": "Miami Dolphins",
+          "side": "NO",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "0-5-0"
+        },
+        {
+          "gameId": "tb-car",
+          "team": "Tampa Bay Buccaneers",
+          "side": "NO",
+          "kickoff": "2026-10-25T12:00:00-05:00",
+          "record": "1-5-0"
+        }
+      ],
+      "season": 2026,
+      "week": 7,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-19T11:05:36.575060+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-19-week7-preliminary-1"
     }
   ]
 }

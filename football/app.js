@@ -131,6 +131,14 @@ const planNames = {
   D: "Undefeated Teams",
   E: "Losing-Team Streaks",
 };
+function hasTicketQuote(t) {
+  return Number.isFinite(t.quoteSnapshot?.grossPayout) && t.quoteSnapshot.grossPayout > 0;
+}
+function planAmount(value) { return value == null ? '—' : money(value); }
+function ticketQuoteSummary(t) {
+  if (!hasTicketQuote(t)) return '<div class="soft"><strong>Ticket quote unavailable</strong><p class="muted small">$2 baseline · Individual team prices do not establish a combo payout. Review the selections; financial outcomes require a ticket quote.</p></div>';
+  return '<div class="soft"><div class="row" style="justify-content:space-between"><span>Historical $' + Number(t.quoteSnapshot.stake).toFixed(2) + ' gross payout</span><b>' + money(t.quoteSnapshot.grossPayout) + '</b></div><div class="row" style="justify-content:space-between"><span>Break-even probability</span><b>' + (100*t.quoteSnapshot.stake/t.quoteSnapshot.grossPayout).toFixed(1) + '%</b></div></div>';
+}
 function analyzePlan(arr) {
   let stakes = arr.map((t) => Number(t.quoteSnapshot.stake)),
     total = stakes.reduce((a, b) => a + b, 0),
@@ -163,7 +171,8 @@ function analyzePlan(arr) {
       arr.reduce((n, t) => n + Number(t.legs.some((l) => l.gameId === id)), 0) >
       1,
   );
-  return { total, best, worst, shared, keys, outcomes };
+  const priced = arr.every(hasTicketQuote);
+  return { total, best: priced ? best : null, worst: priced ? worst : null, shared, keys, outcomes: priced ? outcomes : [], priced };
 }
 function planScreen() {
   let arr = data.comboCandidates.filter((t) => t.strategy === plan),
@@ -173,9 +182,9 @@ function planScreen() {
       plan +
       "</div><h2>" +
       planNames[plan] +
-      '</h2><p class="muted">Review these historical research candidates as a portfolio. No purchase recommendation is implied.</p></div><div class="grid3">' +
+      '</h2><p class="muted">Review these research candidates as a portfolio. No purchase recommendation is implied.</p></div><div class="grid3">' +
       [
-        ["Total stake", a.total],
+        ["Baseline stake", a.total],
         ["Best net", a.best],
         ["Worst net", a.worst],
       ]
@@ -184,7 +193,7 @@ function planScreen() {
             '<div class="metric"><small>' +
             x[0] +
             "</small><b>" +
-            money(x[1]) +
+            planAmount(x[1]) +
             "</b></div>",
         )
         .join("") +
@@ -239,15 +248,7 @@ function planScreen() {
             );
           })
           .join("") +
-        '<div class="soft"><div class="row" style="justify-content:space-between"><span>Historical $' +
-        Number(t.quoteSnapshot.stake).toFixed(2) +
-        " gross payout</span><b>" +
-        money(t.quoteSnapshot.grossPayout) +
-        '</b></div><div class="row" style="justify-content:space-between"><span>Break-even probability</span><b>' +
-        ((100 * t.quoteSnapshot.stake) / t.quoteSnapshot.grossPayout).toFixed(
-          1,
-        ) +
-        '%</b></div></div>' + (t.researchReview ? accordion('Research review', t.researchReview.summary, '<p>' + esc(t.researchReview.pricing) + '</p><p>' + esc(t.researchReview.sharedRisk) + '</p><p>' + esc(t.researchReview.settlement) + '</p>', 'clipboard-list') : '') + '<p class="muted small">Historical quote, not currently executable.</p><button class="primary" data-add="' +
+        ticketQuoteSummary(t) + (t.researchReview ? accordion('Research review', t.researchReview.summary, '<p>' + esc(t.researchReview.pricing) + '</p><p>' + esc(t.researchReview.sharedRisk) + '</p><p>' + esc(t.researchReview.settlement) + '</p>', 'clipboard-list') : '') + '<p class="muted small">Research snapshot; verify pricing before purchase.</p><button class="primary" data-add="' +
         t.id +
         '">Add to Kalshi drafts</button></div>',
     )
@@ -258,11 +259,11 @@ function planScreen() {
     " possible winner combinations for " +
     a.keys.length +
     ' distinct games were evaluated, preserving shared-game dependencies.</p><div class="row" style="justify-content:space-between"><b>Best net</b><b>' +
-    money(a.best) +
+    planAmount(a.best) +
     '</b></div><div class="row" style="justify-content:space-between"><b>Worst net</b><b>' +
-    money(a.worst) +
+    planAmount(a.worst) +
     '</b></div><p class="muted small">Scenario outcomes are not probability forecasts. Fees and early-sale execution are excluded. Win/loss paths assume a game winner; tie and void rules depend on the contract.</p>' +
-    scenarioTable(a) +
+    (a.priced ? scenarioTable(a) : '<p class="muted">Financial scenarios are unavailable until every ticket has a quote. Review shared exposure and timing below.</p>') +
     '</div><div class="card"><h3>Shared exposure</h3>' +
     (a.shared.length
       ? a.shared
@@ -284,6 +285,7 @@ function planScreen() {
           .join("")
       : "<p>No game is shared by multiple tickets in this plan.</p>") +
     "</div>";
+  if (!a.priced) outcomes = '<div class="card"><h3>Combined settlement outcomes</h3><p>Ticket quotes are not available yet. Best and worst financial outcomes will appear when every ticket is priced.</p></div>' + outcomes.slice(outcomes.indexOf('<div class="card"><h3>Shared exposure')) ;
   let timing =
     '<div class="card"><h3>Kickoff & exit checkpoints</h3>' +
     a.keys
@@ -311,7 +313,7 @@ function planScreen() {
           " · " +
           (t.legs.length === 1 ? "Single" : "Combo") +
           "</span><b>" +
-          money(t.quoteSnapshot.grossPayout) +
+          (hasTicketQuote(t) ? money(t.quoteSnapshot.grossPayout) : "Unavailable") +
           "</b></div>",
       )
       .join("") +
@@ -562,7 +564,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.1";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.2";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
