@@ -5,7 +5,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  await p.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await p.waitForFunction(()=>data?.week===6);
  await p.evaluate(()=>localStorage.setItem('week7-preservation-sentinel','keep'));
  await p.locator('[data-action=calendar]').first().click();await p.locator('[data-week="07"]').click();await p.waitForFunction(()=>data?.week===7);
- assert.equal(await p.evaluate(()=>data.games.length),14);assert.equal(await p.evaluate(()=>data.predictions.length),14);assert.equal(await p.evaluate(()=>data.marketSnapshots.length),28);
+ assert.match(await p.locator('#view').innerText(),/Combo quotes not yet available/);assert.equal(await p.evaluate(()=>data.games.length),14);assert.equal(await p.evaluate(()=>data.predictions.length),14);assert.equal(await p.evaluate(()=>data.marketSnapshots.length),28);
  await p.locator('nav [data-tab=games]').click();assert.ok(await p.locator('.team img').count()>=28);
  await p.locator('.research-detail-link').first().click();assert.match(await p.locator('#ticketSheet').innerText(),/Week 7|designations pending|Early availability/);await p.keyboard.press('Escape');
  await p.locator('nav [data-tab=combos]').click();
