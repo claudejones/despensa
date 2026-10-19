@@ -5,7 +5,7 @@
   "researchVersion": "2026-10-17-detail-3",
   "researchedAt": "2026-10-17T23:44:52-05:00",
   "status": "refreshed",
-  "notes": "Scores and Kalshi market snapshots refreshed October 18. Original pregame research, AI leans and combo ticket quotes remain historical and unchanged. Final game outcomes are corroborated by Kalshi finalized markets. Closed-market empty order books are not treated as probabilities; pregame quotes remain visible for completed games. Active quotes are snapshots, not guaranteed executable prices.",
+  "notes": "Scores and Kalshi market snapshots refreshed October 18. Original pregame research, AI leans and combo ticket quotes remain historical and unchanged. Final game outcomes are corroborated by Kalshi finalized markets. Closed-market empty order books are not treated as probabilities; last valid historical quotes remain visible for completed games. Active quotes are snapshots, not guaranteed executable prices.",
   "games": [
     {
       "id": "hou-jax",
@@ -227,13 +227,13 @@
         }
       ],
       "availabilityImpact": "Houston loses a runner, receiver and safety. Jacksonville is short at cornerback and long snapper; Murray’s return helps the secondary but does not replace Brown.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872996",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872996",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-HOU",
@@ -445,13 +445,13 @@
         }
       ],
       "availabilityImpact": "Tennessee’s running-back rotation depends on Spears’ availability. Indianapolis loses receiver and linebacker depth; verify the final active list before settling a ticket.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873003",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873003",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-TEN",
@@ -692,13 +692,13 @@
         }
       ],
       "availabilityImpact": "Philadelphia changes both its starting quarterback and lead runner. Returning receivers help, but Carolina also has uncertainty at offensive tackle.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872998",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872998",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-CAR",
@@ -872,13 +872,13 @@
         }
       ],
       "availabilityImpact": "Pittsburgh loses receiver depth and may be without its tight end. Tampa Bay continues with a rookie quarterback and without a key safety.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final/OT",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873002",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873002",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-PIT",
@@ -1127,13 +1127,13 @@
         }
       ],
       "availabilityImpact": "Baltimore’s backup quarterback operates behind an unsettled interior line. Cleveland’s uncertain defensive leaders could change both pressure and run defense.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872997",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872997",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-BAL",
@@ -1360,13 +1360,13 @@
         }
       ],
       "availabilityImpact": "New York has absences in the secondary and uncertainty at both tackles. New Orleans’ Kamara and Olave decisions matter for its offensive options.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873000",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873000",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NO",
@@ -1578,13 +1578,13 @@
         }
       ],
       "availabilityImpact": "Chicago’s lean is conditional on Williams’ return. Both teams are missing defenders; Atlanta’s cornerback depth and Chicago’s front warrant attention.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401872999",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872999",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-CHI",
@@ -1811,13 +1811,13 @@
         }
       ],
       "availabilityImpact": "The Jets lose their lead runner and a receiving option. Brown’s activation helps New England’s options, but does not confirm game-day availability.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Final",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873001",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-18T17:29:42-05:00",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873001",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NYJ",
@@ -1833,14 +1833,14 @@
         "name": "Arizona Cardinals",
         "record": "1-4-0",
         "logo": null,
-        "score": 15
+        "score": 18
       },
       "home": {
         "id": "los-angeles-rams",
         "name": "Los Angeles Rams",
         "record": "2-3-0",
         "logo": null,
-        "score": 9
+        "score": 16
       },
       "insights": [
         {
@@ -1910,7 +1910,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "live",
+      "status": "final",
       "sourceIds": [
         "lar-preview",
         "lv",
@@ -2011,9 +2011,19 @@
         }
       ],
       "availabilityImpact": "Arizona loses a running option and two safeties. Los Angeles also has uncertain defensive backs, making final availability important on both sides.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
-      "scoreDetail": "7:10 - 4th Quarter",
-      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873004"
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873004",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873004",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-ARI",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-LAR"
+        ]
+      }
     },
     {
       "id": "lac-kc",
@@ -2030,7 +2040,7 @@
         "name": "Kansas City Chiefs",
         "record": "4-0-0",
         "logo": null,
-        "score": 19
+        "score": 22
       },
       "insights": [
         {
@@ -2098,7 +2108,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "live",
+      "status": "final",
       "sourceIds": [
         "kc",
         "kalshi"
@@ -2196,9 +2206,19 @@
         }
       ],
       "availabilityImpact": "Los Angeles is missing two starting linemen and multiple passing-game contributors. Kansas City also loses a receiver and tackle; protection matters for both.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
-      "scoreDetail": "4:24 - 3rd Quarter",
-      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873006"
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873006",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873006",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-LAC",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-KC"
+        ]
+      }
     },
     {
       "id": "buf-lv",
@@ -2208,14 +2228,14 @@
         "name": "Buffalo Bills",
         "record": "4-1-0",
         "logo": null,
-        "score": 23
+        "score": 33
       },
       "home": {
         "id": "las-vegas-raiders",
         "name": "Las Vegas Raiders",
         "record": "3-2-0",
         "logo": null,
-        "score": 13
+        "score": 30
       },
       "insights": [
         {
@@ -2285,7 +2305,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "live",
+      "status": "final",
       "sourceIds": [
         "lv",
         "buf",
@@ -2418,9 +2438,19 @@
         }
       ],
       "availabilityImpact": "Buffalo’s receiver and defensive-line availability remains unsettled. Las Vegas loses receiving and defensive-line depth; check the final active lists.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
-      "scoreDetail": "6:22 - 3rd Quarter",
-      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873005"
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873005",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-18T20:32:28-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873005",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-BUF",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-LV"
+        ]
+      }
     },
     {
       "id": "dal-gb",
@@ -2437,7 +2467,7 @@
         "name": "Green Bay Packers",
         "record": "3-2-0",
         "logo": null,
-        "score": 0
+        "score": 10
       },
       "insights": [
         {
@@ -2509,7 +2539,7 @@
           "asOf": "2026-10-17T23:44:52-05:00"
         }
       ],
-      "status": "scheduled",
+      "status": "live",
       "sourceIds": [
         "chi",
         "dal",
@@ -2655,8 +2685,8 @@
         }
       ],
       "availabilityImpact": "Dallas loses another linebacker. Green Bay’s defensive-tackle absences and cornerback uncertainty create openings despite the home-team lean.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
-      "scoreDetail": "Sun, October 18th at 8:20 PM EDT",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
+      "scoreDetail": "3:04 - 2nd Quarter",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873007"
     },
     {
@@ -2892,7 +2922,7 @@
         }
       ],
       "availabilityImpact": "Washington must redistribute rushing work. San Francisco is missing Bosa and Samuel, with additional receivers uncertain; Monday’s active list matters.",
-      "scoreCheckedAt": "2026-10-18T17:27:56-05:00",
+      "scoreCheckedAt": "2026-10-18T20:32:03-05:00",
       "scoreDetail": "Mon, October 19th at 8:15 PM EDT",
       "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873008"
     }
@@ -4359,7 +4389,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-HOU",
       "rulesPrimary": "If Houston wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:53-05:00"
     },
     {
       "gameId": "hou-jax",
@@ -4376,7 +4408,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-JAC",
       "rulesPrimary": "If Jacksonville wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the HOU Texans vs JAC Jaguars Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:53-05:00"
     },
     {
       "gameId": "ten-ind",
@@ -4393,7 +4427,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-TEN",
       "rulesPrimary": "If Tennessee wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:53-05:00"
     },
     {
       "gameId": "ten-ind",
@@ -4410,7 +4446,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-IND",
       "rulesPrimary": "If Indianapolis wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the TEN Titans vs IND Colts Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:53-05:00"
     },
     {
       "gameId": "car-phi",
@@ -4427,7 +4465,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-CAR",
       "rulesPrimary": "If Carolina wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:53-05:00"
     },
     {
       "gameId": "car-phi",
@@ -4444,7 +4484,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-PHI",
       "rulesPrimary": "If Philadelphia wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the CAR Panthers vs PHI Eagles Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:53-05:00"
     },
     {
       "gameId": "pit-tb",
@@ -4461,7 +4503,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-PIT",
       "rulesPrimary": "If Pittsburgh wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:56-05:00"
     },
     {
       "gameId": "pit-tb",
@@ -4478,7 +4522,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-TB",
       "rulesPrimary": "If Tampa Bay wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the PIT Steelers vs TB Buccaneers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:56-05:00"
     },
     {
       "gameId": "bal-cle",
@@ -4495,7 +4541,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-BAL",
       "rulesPrimary": "If Baltimore wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:56-05:00"
     },
     {
       "gameId": "bal-cle",
@@ -4512,7 +4560,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-CLE",
       "rulesPrimary": "If Cleveland wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the BAL Ravens vs CLE Browns Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:56-05:00"
     },
     {
       "gameId": "no-nyg",
@@ -4529,7 +4579,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NO",
       "rulesPrimary": "If New Orleans wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:56-05:00"
     },
     {
       "gameId": "no-nyg",
@@ -4546,7 +4598,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NYG",
       "rulesPrimary": "If New York G wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the NOLA Saints vs NY Giants Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:56-05:00"
     },
     {
       "gameId": "chi-atl",
@@ -4563,7 +4617,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-CHI",
       "rulesPrimary": "If Chicago wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:59-05:00"
     },
     {
       "gameId": "chi-atl",
@@ -4580,7 +4636,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-ATL",
       "rulesPrimary": "If Atlanta wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the CHI Bears vs ATL Falcons Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:59-05:00"
     },
     {
       "gameId": "nyj-ne",
@@ -4597,7 +4655,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NYJ",
       "rulesPrimary": "If New York J wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:59-05:00"
     },
     {
       "gameId": "nyj-ne",
@@ -4614,7 +4674,9 @@
       "feesIncluded": false,
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NE",
       "rulesPrimary": "If New England wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
-      "rulesSecondary": "The following market refers to the team who wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+      "rulesSecondary": "The following market refers to the team who wins the NY Jets vs NE Patriots Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:59-05:00"
     },
     {
       "gameId": "ari-lar",
@@ -4632,7 +4694,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-ARI",
       "rulesPrimary": "If Arizona wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:59-05:00"
     },
     {
       "gameId": "ari-lar",
@@ -4650,7 +4713,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-LAR",
       "rulesPrimary": "If Los Angeles R wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the ARI Cardinals vs LA Rams Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:31:59-05:00"
     },
     {
       "gameId": "lac-kc",
@@ -4668,7 +4732,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-LAC",
       "rulesPrimary": "If Los Angeles C wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:32:03-05:00"
     },
     {
       "gameId": "lac-kc",
@@ -4686,7 +4751,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-KC",
       "rulesPrimary": "If Kansas City wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the LA Chargers vs KC Chiefs Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:32:03-05:00"
     },
     {
       "gameId": "buf-lv",
@@ -4704,7 +4770,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-BUF",
       "rulesPrimary": "If Buffalo wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:32:03-05:00"
     },
     {
       "gameId": "buf-lv",
@@ -4722,18 +4789,19 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-LV",
       "rulesPrimary": "If Las Vegas wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the BUF Bills vs LV Raiders Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-18T20:32:03-05:00"
     },
     {
       "gameId": "dal-gb",
       "team": "Dallas Cowboys",
       "ticker": "KXNFLGAME-26OCT18DALGB-DAL",
-      "retrievedAt": "2026-10-18T17:28:43-05:00",
+      "retrievedAt": "2026-10-18T20:32:03-05:00",
       "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
-      "yesBid": 0.5,
-      "yesAsk": 0.51,
-      "noBid": 0.49,
-      "noAsk": 0.5,
+      "yesBid": 0.3,
+      "yesAsk": 0.31,
+      "noBid": 0.69,
+      "noAsk": 0.7,
       "executableNow": false,
       "depthVerified": false,
       "feesIncluded": false,
@@ -4746,12 +4814,12 @@
       "gameId": "dal-gb",
       "team": "Green Bay Packers",
       "ticker": "KXNFLGAME-26OCT18DALGB-GB",
-      "retrievedAt": "2026-10-18T17:28:43-05:00",
+      "retrievedAt": "2026-10-18T20:32:03-05:00",
       "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
-      "yesBid": 0.49,
-      "yesAsk": 0.5,
-      "noBid": 0.5,
-      "noAsk": 0.51,
+      "yesBid": 0.69,
+      "yesAsk": 0.7,
+      "noBid": 0.3,
+      "noAsk": 0.31,
       "executableNow": false,
       "depthVerified": false,
       "feesIncluded": false,
@@ -4764,7 +4832,7 @@
       "gameId": "was-sf",
       "team": "Washington Commanders",
       "ticker": "KXNFLGAME-26OCT19WASSF-WAS",
-      "retrievedAt": "2026-10-18T17:28:45-05:00",
+      "retrievedAt": "2026-10-18T20:32:06-05:00",
       "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
       "yesBid": 0.21,
       "yesAsk": 0.22,
@@ -4782,7 +4850,7 @@
       "gameId": "was-sf",
       "team": "San Francisco 49ers",
       "ticker": "KXNFLGAME-26OCT19WASSF-SF",
-      "retrievedAt": "2026-10-18T17:28:45-05:00",
+      "retrievedAt": "2026-10-18T20:32:06-05:00",
       "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
       "yesBid": 0.78,
       "yesAsk": 0.79,
@@ -4799,8 +4867,8 @@
   ],
   "coverage": {
     "totalWeekGames": 14,
-    "upcomingGames": 2,
-    "completedGames": 9,
+    "upcomingGames": 1,
+    "completedGames": 12,
     "byeTeams": [
       "Cincinnati Bengals",
       "Detroit Lions",
@@ -4808,7 +4876,7 @@
       "Minnesota Vikings"
     ],
     "scope": "All 13 Sunday/Monday games retained in games; Thursday result in completedGames. Original pregame research retained. No retrospective prediction.",
-    "liveGames": 3
+    "liveGames": 1
   },
   "completedGames": [
     {
@@ -4836,13 +4904,13 @@
     "qualitativeLeans": 13,
     "marketSnapshotCount": 26,
     "comboQuotesRefreshed": false,
-    "marketResponseDate": "Sun, 18 Oct 2026 22:28:45 GMT",
+    "marketResponseDate": "Mon, 19 Oct 2026 01:32:06 GMT",
     "nextReview": "Quotes and in-progress scores are timestamped snapshots. Recheck the actual Kalshi order ticket before any trade. Monday availability remains subject to a fresh check.",
-    "activeQuotesRefreshed": 10,
-    "finalizedMarketsVerified": 16
+    "activeQuotesRefreshed": 4,
+    "finalizedMarketsVerified": 22
   },
-  "scoresCheckedAt": "2026-10-18T17:27:56-05:00",
-  "resultsVersion": "2026-10-18-scores-2",
+  "scoresCheckedAt": "2026-10-18T20:32:03-05:00",
+  "resultsVersion": "2026-10-18-scores-3",
   "marketSnapshotHistory": [
     {
       "gameId": "ari-lar",
@@ -5013,6 +5081,78 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-SF",
       "rulesPrimary": "If San Francisco wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners."
+    },
+    {
+      "gameId": "dal-gb",
+      "team": "Dallas Cowboys",
+      "ticker": "KXNFLGAME-26OCT18DALGB-DAL",
+      "retrievedAt": "2026-10-18T17:28:43-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.5,
+      "yesAsk": 0.51,
+      "noBid": 0.49,
+      "noAsk": 0.5,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18DALGB-DAL",
+      "rulesPrimary": "If Dallas wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active"
+    },
+    {
+      "gameId": "dal-gb",
+      "team": "Green Bay Packers",
+      "ticker": "KXNFLGAME-26OCT18DALGB-GB",
+      "retrievedAt": "2026-10-18T17:28:43-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.49,
+      "yesAsk": 0.5,
+      "noBid": 0.5,
+      "noAsk": 0.51,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18DALGB-GB",
+      "rulesPrimary": "If Green Bay wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the DAL Cowboys vs GB Packers Pro Football game originally scheduled for Oct 18, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active"
+    },
+    {
+      "gameId": "was-sf",
+      "team": "Washington Commanders",
+      "ticker": "KXNFLGAME-26OCT19WASSF-WAS",
+      "retrievedAt": "2026-10-18T17:28:45-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.21,
+      "yesAsk": 0.22,
+      "noBid": 0.78,
+      "noAsk": 0.79,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-WAS",
+      "rulesPrimary": "If Washington wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active"
+    },
+    {
+      "gameId": "was-sf",
+      "team": "San Francisco 49ers",
+      "ticker": "KXNFLGAME-26OCT19WASSF-SF",
+      "retrievedAt": "2026-10-18T17:28:45-05:00",
+      "apiUpdatedTime": "2026-10-06T04:06:00.764221Z",
+      "yesBid": 0.78,
+      "yesAsk": 0.79,
+      "noBid": 0.21,
+      "noAsk": 0.22,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-SF",
+      "rulesPrimary": "If San Francisco wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the WAS Commanders vs SF 49ers Pro Football game originally scheduled for Oct 19, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active"
     }
   ],
   "marketSettlements": [
@@ -5023,7 +5163,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:33-05:00",
+      "verifiedAt": "2026-10-18T20:31:53-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-HOU"
     },
     {
@@ -5033,7 +5173,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:33-05:00",
+      "verifiedAt": "2026-10-18T20:31:53-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18HOUJAC-JAC"
     },
     {
@@ -5043,7 +5183,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:33-05:00",
+      "verifiedAt": "2026-10-18T20:31:53-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-TEN"
     },
     {
@@ -5053,7 +5193,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:33-05:00",
+      "verifiedAt": "2026-10-18T20:31:53-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18TENIND-IND"
     },
     {
@@ -5063,7 +5203,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:33-05:00",
+      "verifiedAt": "2026-10-18T20:31:53-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-CAR"
     },
     {
@@ -5073,7 +5213,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:33-05:00",
+      "verifiedAt": "2026-10-18T20:31:53-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CARPHI-PHI"
     },
     {
@@ -5083,7 +5223,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:37-05:00",
+      "verifiedAt": "2026-10-18T20:31:56-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-PIT"
     },
     {
@@ -5093,7 +5233,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:37-05:00",
+      "verifiedAt": "2026-10-18T20:31:56-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18PITTB-TB"
     },
     {
@@ -5103,7 +5243,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:37-05:00",
+      "verifiedAt": "2026-10-18T20:31:56-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-BAL"
     },
     {
@@ -5113,7 +5253,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:37-05:00",
+      "verifiedAt": "2026-10-18T20:31:56-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-CLE"
     },
     {
@@ -5123,7 +5263,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:37-05:00",
+      "verifiedAt": "2026-10-18T20:31:56-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NO"
     },
     {
@@ -5133,7 +5273,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:37-05:00",
+      "verifiedAt": "2026-10-18T20:31:56-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NYG"
     },
     {
@@ -5143,7 +5283,7 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:39-05:00",
+      "verifiedAt": "2026-10-18T20:31:59-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-CHI"
     },
     {
@@ -5153,7 +5293,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:39-05:00",
+      "verifiedAt": "2026-10-18T20:31:59-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-ATL"
     },
     {
@@ -5163,7 +5303,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-18T17:28:39-05:00",
+      "verifiedAt": "2026-10-18T20:31:59-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NYJ"
     },
     {
@@ -5173,10 +5313,70 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-18T17:28:39-05:00",
+      "verifiedAt": "2026-10-18T20:31:59-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NE"
+    },
+    {
+      "gameId": "ari-lar",
+      "team": "Arizona Cardinals",
+      "ticker": "KXNFLGAME-26OCT18ARILAR-ARI",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-18T20:31:59-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-ARI"
+    },
+    {
+      "gameId": "ari-lar",
+      "team": "Los Angeles Rams",
+      "ticker": "KXNFLGAME-26OCT18ARILAR-LAR",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-18T20:31:59-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-LAR"
+    },
+    {
+      "gameId": "lac-kc",
+      "team": "Los Angeles Chargers",
+      "ticker": "KXNFLGAME-26OCT18LACKC-LAC",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-18T20:32:03-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-LAC"
+    },
+    {
+      "gameId": "lac-kc",
+      "team": "Kansas City Chiefs",
+      "ticker": "KXNFLGAME-26OCT18LACKC-KC",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-18T20:32:03-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-KC"
+    },
+    {
+      "gameId": "buf-lv",
+      "team": "Buffalo Bills",
+      "ticker": "KXNFLGAME-26OCT18BUFLV-BUF",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-18T20:32:03-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-BUF"
+    },
+    {
+      "gameId": "buf-lv",
+      "team": "Las Vegas Raiders",
+      "ticker": "KXNFLGAME-26OCT18BUFLV-LV",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-18T20:32:03-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-LV"
     }
   ],
-  "marketsCheckedAt": "2026-10-18T17:28:45-05:00",
-  "dataVersion": "2026-10-18-market-scores-2"
+  "marketsCheckedAt": "2026-10-18T20:32:06-05:00",
+  "dataVersion": "2026-10-18-market-scores-3"
 }
