@@ -18,12 +18,12 @@
       "path": "2026/week-06.json",
       "status": "refreshed",
       "researchVersion": "2026-10-17-detail-3",
-      "resultsVersion": "2026-10-18-scores-3",
-      "dataVersion": "2026-10-18-market-scores-3"
+      "resultsVersion": "20261019T0535090500-scores",
+      "dataVersion": "20261019T0535090500-markets"
     }
   },
-  "lastSuccessfulPublication": "2026-10-18T20:32:28-05:00",
-  "notice": "Week 6 refresh: 11 Sunday finals, 1 in progress, 1 scheduled. Active market quotes refreshed; pregame research and completed-game quotes retain their original timestamps.",
-  "scoresCheckedAt": "2026-10-18T20:32:03-05:00",
-  "marketsCheckedAt": "2026-10-18T20:32:06-05:00"
+  "lastSuccessfulPublication": "2026-10-19T05:35:09-05:00",
+  "notice": "Week 6: 12 Sunday finals, 0 live, 1 scheduled. Original research and personal records preserved.",
+  "scoresCheckedAt": "2026-10-19T05:35:08-05:00",
+  "marketsCheckedAt": "2026-10-19T05:35:09-05:00"
 }
