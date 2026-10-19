@@ -1,0 +1,22 @@
+name: Prepare football data refresh
+on:
+  workflow_dispatch:
+  push:
+    branches: [football-pool-performance]
+    paths: ['football/scripts/refresh_scores_markets.py', '.github/workflows/football-data-refresh.yml']
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and validate public data
+        run: python3 football/scripts/refresh_scores_markets.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: refreshed-football-json
+          path: |
+            football/data/2026/week-06.json
+            football/data/manifest.json
