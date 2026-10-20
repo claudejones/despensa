@@ -101,7 +101,7 @@ const { chromium } = require("playwright"),
     await page.locator("#custom").click();
     await page.locator("#buildName").fill("Test prop");
     await page.locator("#buildType").selectOption("Player Prop Combo");
-    await page.locator(".legSide").selectOption("prop");
+    await page.locator('[data-outcome-choice="prop"]').click();
     await page.locator(".legProp").fill("Player over 50 receiving yards");
     await page.locator("#buildPayout").fill("5");
     await page.locator("[data-builder=save]").click();

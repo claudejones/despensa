@@ -907,3 +907,14 @@ details[open] > summary > .chev {transform:rotate(180deg)}
 @media(max-width:380px){.candidate-actions>button{flex-basis:100%}}
 
 .candidate-actions + .candidate-feedback{margin-top:12px}
+
+/* Compact team choices share the Pool logo/abbreviation convention. */
+.outcome-choices{border:0;padding:0;margin:14px 0;min-width:0}
+.outcome-choices legend{padding:0;margin-bottom:8px}
+.outcome-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.outcome-choice{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;min-height:76px;width:100%;margin:0!important;padding:12px;font-size:14px}
+.outcome-choice.selected{border-color:#147e84;background:#e1f1f0;box-shadow:inset 0 0 0 1px #147e84}
+.outcome-choice[data-outcome-choice="prop"]{grid-column:1/-1;min-height:44px}
+.team-choice-identity{display:inline-flex;align-items:center;gap:9px;min-width:0}
+.team-choice-identity img{width:26px;height:26px;object-fit:contain;flex-shrink:0}
+.outcome-choice:focus-visible{outline:3px solid #147e84;outline-offset:2px}

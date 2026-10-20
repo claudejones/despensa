@@ -25,6 +25,8 @@ jobs:
         run: node football/tests/mobile-smoke.cjs
       - name: Verify Week 7 preparation
         run: node football/tests/week7-preparation.cjs
+      - name: Verify team logo selections
+        run: node football/tests/team-choices.cjs
       - name: Verify all-in pricing
         run: node football/tests/all-in-pricing.cjs
       - name: Verify automatic AI paper portfolio

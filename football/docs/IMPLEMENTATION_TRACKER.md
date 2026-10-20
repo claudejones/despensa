@@ -224,3 +224,8 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Week 6 JSON and all existing AI archive entries remain unchanged; no local-storage schema or personal ticket mutation added.
 - Added mobile acceptance for Week 7 selection, research, all five strategies, unknown pricing and preserved storage.
 - Limitations: Week 7 final injury designations, weather and head-to-head analysis are pending. San Francisco’s entering record is provisional until Monday’s Week 6 final. This is an early release, not final game-day research.
+
+## v1.8.3 — Team-first selection controls
+- Custom ticket outcomes and contextual Kalshi outcome choices use logos, abbreviations and explicit To win / Not to win buttons. Pool already follows this pattern. Full team names remain in accessible labels and saved tickets.
+- Game changes refresh outcome choices and clear the prior game quote without resetting ticket name or amounts.
+- No research, local-storage keys, existing tickets or transaction logic changed. Mobile acceptance covers correct YES/NO persistence and 320/375/430px layouts.
