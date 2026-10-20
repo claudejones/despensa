@@ -19,7 +19,7 @@
       "status": "closed",
       "researchVersion": "2026-10-17-detail-3",
       "resultsVersion": "20261020T0603200500-scores",
-      "dataVersion": "20261020T0603200500-markets",
+      "dataVersion": "20261020T0603210500-markets",
       "closedAt": "2026-10-20T06:04:51-05:00"
     },
     "07": {
@@ -32,5 +32,5 @@
   "lastSuccessfulPublication": "2026-10-20T06:04:51-05:00",
   "notice": "Week 6 closed: all 14 games final and 28 team-win settlements verified. Week 7 preliminary preparation remains available; final availability, updated records and refreshed quotes still required.",
   "scoresCheckedAt": "2026-10-20T06:03:20-05:00",
-  "marketsCheckedAt": "2026-10-20T06:03:20-05:00"
+  "marketsCheckedAt": "2026-10-20T06:03:21-05:00"
 }

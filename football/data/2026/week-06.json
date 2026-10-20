@@ -1137,7 +1137,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872997",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BALCLE-BAL",
@@ -1371,7 +1371,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873000",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NONYG-NO",
@@ -1590,7 +1590,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872999",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18CHIATL-CHI",
@@ -1824,7 +1824,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873001",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18NYJNE-NYJ",
@@ -2025,7 +2025,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873004",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18ARILAR-ARI",
@@ -2221,7 +2221,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873006",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18LACKC-LAC",
@@ -2454,7 +2454,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873005",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18BUFLV-BUF",
@@ -2702,7 +2702,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873007",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT18DALGB-DAL",
@@ -2950,7 +2950,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401873008",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-WAS",
@@ -4984,7 +4984,7 @@
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-20T06:03:20-05:00",
+        "verifiedAt": "2026-10-20T06:03:21-05:00",
         "sources": [
           "https://www.espn.com/nfl/game/_/gameId/401872995",
           "https://www.nfl.com/schedules/2026/by-week/week-6",
@@ -5514,8 +5514,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT19WASSF-SF"
     }
   ],
-  "marketsCheckedAt": "2026-10-20T06:03:20-05:00",
-  "dataVersion": "20261020T0603200500-markets",
+  "marketsCheckedAt": "2026-10-20T06:03:21-05:00",
+  "dataVersion": "20261020T0603210500-markets",
   "closedAt": "2026-10-20T06:04:51-05:00",
   "closeout": {
     "verifiedAt": "2026-10-20T06:04:51-05:00",
