@@ -7,6 +7,36 @@ def fetch(url):
     req=urllib.request.Request(url,headers={'User-Agent':'NFLIntelligence/1.8.1'})
     with urllib.request.urlopen(req,timeout=45) as response:
         return json.load(response)
+def refresh_final_records(game, competitors, captured_at, source_url):
+    """Use sourced overall records after a final; retain the original pregame snapshot."""
+    if game['status'] != 'final':
+        raise ValueError('Records require a final game')
+    updates = []
+    for side in ('away', 'home'):
+        team, competitor = game[side], competitors[side]
+        if competitor['team']['displayName'] != team['name']:
+            raise ValueError('Record team mismatch')
+        records = [r['summary'] for r in competitor.get('records', []) if r.get('type') == 'total']
+        if len(records) != 1:
+            raise ValueError('Missing or ambiguous overall record')
+        parts = records[0].split('-')
+        if len(parts) not in (2, 3) or not all(v.isdigit() for v in parts):
+            raise ValueError('Invalid overall record')
+        values = list(map(int, parts)) + ([0] if len(parts) == 2 else [])
+        prior = team.get('pregameRecord', team.get('record'))
+        if prior:
+            expected = list(map(int, prior.split('-')))
+            if len(expected) == 2: expected.append(0)
+            other = 'home' if side == 'away' else 'away'
+            index = 0 if team['score'] > game[other]['score'] else 1 if team['score'] < game[other]['score'] else 2
+            expected[index] += 1
+            if expected != values:
+                raise ValueError('Overall record does not match pregame record and final score')
+        updates.append((team, prior, '-'.join(map(str, values))))
+    for team, prior, record in updates:
+        if prior: team.setdefault('pregameRecord', prior)
+        team.update(record=record, recordAsOf=captured_at, recordSource=source_url)
+
 def main():
     path=Path('football/data/2026/week-06.json')
     data=json.loads(path.read_text()); original=copy.deepcopy(data)
@@ -26,6 +56,7 @@ def main():
         game.update(scoreCheckedAt=score_at,scoreDetail=status['detail'],scoreSource='https://www.espn.com/nfl/game/_/gameId/'+event['id'])
         for side in ['away','home']: game[side]['score']=int(competitors[side]['score'])
         if game['status']=='final':
+            refresh_final_records(game, competitors, score_at, game['scoreSource'])
             assert game['away']['score']!=game['home']['score'], 'Tie requires manual market review'
             winner=max(['away','home'],key=lambda s:game[s]['score'])
             quotes=[q for q in data['marketSnapshots'] if q['gameId']==game['id']]
