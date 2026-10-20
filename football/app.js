@@ -338,25 +338,29 @@ function builder() {
     '</div><button data-builder="addLeg">+ Add game selection</button><div class="grid2"><label>Total paid ($)<input type="number" id="buildStake" min="0.01" step=".01" value="2"></label><label>Gross payout ($)<input type="number" id="buildPayout" min="0" step=".01" value="0"></label></div><div class="button-group"><button class="primary" data-builder="save">Save custom draft</button><button data-builder="cancel">Cancel</button></div><p class="muted">Player prop markets can be entered as custom selections. Enter the full amount charged by Kalshi, including any trading costs. All quotes are entered manually.</p></div>'
   );
 }
-function legRow() {
-  let opts = data.games
-    .map(
-      (g) =>
-        '<option value="' +
-        g.id +
-        '">' +
-        esc(g.away.name) +
-        " vs. " +
-        esc(g.home.name) +
-        "</option>",
-    )
-    .join("");
-  return (
-    '<div class="card build-leg"><label>Game<select class="legGame">' +
-    opts +
-    '</select></label><label>Outcome<select class="legSide"><option value="away">Away team YES</option><option value="home">Home team YES</option><option value="awayNo">Away team NO</option><option value="homeNo">Home team NO</option><option value="prop">Custom player prop</option></select></label><label>Player prop / notes<input class="legProp" placeholder="e.g. Player 1+ touchdowns"></label><label>Kalshi %<input class="legPct" type="number" min="0" max="100" step=".1" placeholder="Optional"></label><button data-builder="removeLeg">Remove leg</button></div>'
-  );
+function compactTeamChoice(name) {
+  return `<span class="team-choice-identity"><img src="assets/teams/${teamCode(name)}.png" alt=""><b>${esc(teamAbbr(name))}</b></span>`;
 }
+function outcomeChoices(g, value='away', selectedTeam=null) {
+ const options = selectedTeam ? [['YES',selectedTeam,'To win'],['NO',selectedTeam,'Not to win']] : [['away',g.away.name,'To win'],['home',g.home.name,'To win'],['awayNo',g.away.name,'Not to win'],['homeNo',g.home.name,'Not to win'],['prop',null,'Custom player prop']];
+ return `<fieldset class="outcome-choices"><legend>Outcome</legend><input type="hidden" ${selectedTeam?'id="reviewOutcome"':'class="legSide"'} value="${value}"><div class="outcome-choice-grid">${options.map(([key,name,label])=>`<button type="button" data-outcome-choice="${key}" aria-pressed="${value===key}" aria-label="${esc(name ? name+' — '+label : label)}" class="outcome-choice ${value===key?'selected':''}">${name?compactTeamChoice(name):''}<span>${label}</span></button>`).join('')}</div></fieldset>`;
+}
+function legRow() {
+ const opts=data.games.map(g=>`<option value="${esc(g.id)}">${esc(teamAbbr(g.away.name))} vs. ${esc(teamAbbr(g.home.name))}</option>`).join('');
+ return `<div class="card build-leg"><label>Game<select class="legGame">${opts}</select></label>${outcomeChoices(data.games[0])}<label>Player prop / notes<input class="legProp" placeholder="e.g. Player 1+ touchdowns"></label><label>Kalshi %<input class="legPct" type="number" min="0" max="100" step=".1" placeholder="Optional"></label><button data-builder="removeLeg">Remove leg</button></div>`;
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-outcome-choice]');if(!b)return;
+ const group=b.closest('.outcome-choices'), input=group.querySelector('input');input.value=b.dataset.outcomeChoice;
+ group.querySelectorAll('[data-outcome-choice]').forEach(x=>{const on=x===b;x.classList.toggle('selected',on);x.setAttribute('aria-pressed',String(on));});
+ input.dispatchEvent(new Event('change',{bubbles:true}));
+});
+document.addEventListener('change',e=>{
+ if(!e.target.matches('.legGame'))return;
+ const row=e.target.closest('.build-leg'),g=data.games.find(g=>g.id===e.target.value);
+ row.querySelector('.outcome-choices').outerHTML=outcomeChoices(g);
+ row.querySelector('.legPct').value='';
+});
 function saveCustom() {
   let name = $("#buildName")?.value.trim(),
     type = $("#buildType")?.value,
@@ -564,7 +568,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.2";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.3";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"

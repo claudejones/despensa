@@ -14,7 +14,7 @@ function reviewActions(g) {
  const chosen=poolChoice(g);
  return `<div class="context-review direct-pick-actions" data-game="${esc(g.id)}"><button data-pool-choose="${esc(g.id)}"><i data-lucide="clipboard-list"></i> Pick for My Pool</button><button data-kalshi-choose="${esc(g.id)}"><i data-lucide="wallet"></i> Add to Kalshi ticket</button>${chosen?`<p class="small muted pool-current">Your Pool pick: ${esc(chosen)}</p>`:''}</div>`;
 }
-function openKalshiChooser(id){const g=data?.games.find(g=>g.id===id);if(!g)return;openReviewSheet('Add to Kalshi ticket',`${kickoff(g.kickoff)}<p>Choose the team for your ticket.</p><div class="sheet-destinations">${[g.away,g.home].map(t=>`<button class="context-choice" data-review-game="${esc(g.id)}" data-review-team="${esc(t.name)}">${team(t.name,t.record)}<span class="review-choice-state">Select outcome</span></button>`).join('')}</div>`);}
+function openKalshiChooser(id){const g=data?.games.find(g=>g.id===id);if(!g)return;openReviewSheet('Add to Kalshi ticket',`${kickoff(g.kickoff)}<p>Choose the team for your ticket.</p><div class="sheet-destinations">${[g.away,g.home].map(t=>`<button class="context-choice" aria-label="${esc(t.name)} — select outcome" data-review-game="${esc(g.id)}" data-review-team="${esc(t.name)}">${compactTeamChoice(t.name)}<span class="review-choice-state">Select outcome</span></button>`).join('')}</div>`);}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-kalshi-choose]');if(b)openKalshiChooser(b.dataset.kalshiChoose)});
 function addContextSelection(b) {
   const g = data?.games.find((g) => g.id === b.dataset.reviewGame),
