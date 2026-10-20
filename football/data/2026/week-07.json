@@ -5,7 +5,7 @@
   "researchVersion": "2026-10-19-week7-preliminary-1",
   "researchedAt": "2026-10-19T06:05:00-05:00",
   "status": "preliminary",
-  "notes": "Early Week 7 preparation: full 14-game slate, qualitative leans and market snapshots. Week 7 final injury reports are not yet available. San Francisco plays its Week 6 Monday game tonight. Combo candidates are unpriced research structures, not purchase recommendations.",
+  "notes": "Early Week 7 preparation: full 14-game slate, qualitative leans and market snapshots. Week 7 final injury reports are not yet available. San Francisco finished Week 6 at 6-0 with a 23-17 Monday win over Washington. Records corrected after the final; original frozen predictions remain the October 19 baseline. Combo candidates are unpriced research structures, not purchase recommendations.",
   "games": [
     {
       "id": "ne-chi",
@@ -217,8 +217,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Soldier Field",
       "neutralSite": false,
@@ -436,8 +435,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Stade de France",
       "neutralSite": true,
@@ -450,8 +448,11 @@
       "away": {
         "id": "san-francisco-49ers",
         "name": "San Francisco 49ers",
-        "record": "5-0-0",
-        "logo": null
+        "record": "6-0-0",
+        "logo": null,
+        "previousPublishedRecord": "5-0-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "atlanta-falcons",
@@ -468,15 +469,16 @@
       "insights": [
         {
           "category": "form",
-          "summary": "San Francisco is unbeaten through five completed games; Atlanta has lost two straight.",
+          "summary": "San Francisco is 6-0 after its 23-17 Monday win over Washington; Atlanta has lost two straight.",
           "details": [
             "Atlanta Falcons: 2–3–0 in its last 5 completed games. W vs New Orleans Saints (45-24); L vs Baltimore Ravens (30-23 OT); L vs Chicago Bears (31-23).",
-            "San Francisco 49ers: 5–0–0 in its last 5 completed games. W vs Arizona Cardinals (36-30); W vs Denver Broncos (24-14); W vs Seattle Seahawks (32-29)."
+            "San Francisco 49ers: 6-0 overall after defeating Washington 23-17 on October 19."
           ],
           "sourceIds": [
-            "espn-401873017"
+            "espn-401873017",
+            "espn-week6-final-records"
           ],
-          "asOf": "2026-10-19T06:05:00-05:00"
+          "asOf": "2026-10-20T06:03:20-05:00"
         },
         {
           "category": "injuries",
@@ -493,14 +495,15 @@
           "category": "matchup",
           "summary": "Preliminary lean: San Francisco 49ers",
           "details": [
-            "San Francisco is unbeaten through five completed games; Atlanta has lost two straight.",
-            "San Francisco still plays Monday before this road game. Its record and availability must be refreshed afterward.",
+            "San Francisco is 6-0 after its 23-17 Monday win over Washington; Atlanta has lost two straight.",
+            "San Francisco completed Week 6 on Monday with a 23-17 win over Washington. Week 7 availability still requires new reports.",
             "Analysis is qualitative; no calibrated win probability or market-edge claim."
           ],
           "sourceIds": [
-            "espn-401873017"
+            "espn-401873017",
+            "espn-week6-final-records"
           ],
-          "asOf": "2026-10-19T06:05:00-05:00"
+          "asOf": "2026-10-20T06:03:20-05:00"
         },
         {
           "category": "market",
@@ -521,13 +524,14 @@
           "summary": "Recent results provide context; head-to-head analysis pending",
           "details": [
             "Atlanta Falcons: 2026-09-20 — L against Carolina Panthers, 34-3; 2026-09-25 — W against Green Bay Packers, 35-14; 2026-10-06 — W against New Orleans Saints, 45-24; 2026-10-12 — L against Baltimore Ravens, 30-23 OT; 2026-10-18 — L against Chicago Bears, 31-23.",
-            "San Francisco 49ers: 2026-09-11 — W against Los Angeles Rams, 27-7; 2026-09-20 — W against Miami Dolphins, 35-13; 2026-09-27 — W against Arizona Cardinals, 36-30; 2026-10-04 — W against Denver Broncos, 24-14; 2026-10-11 — W against Seattle Seahawks, 32-29.",
+            "San Francisco 49ers: 2026-09-11 — W against Los Angeles Rams, 27-7; 2026-09-20 — W against Miami Dolphins, 35-13; 2026-09-27 — W against Arizona Cardinals, 36-30; 2026-10-04 — W against Denver Broncos, 24-14; 2026-10-11 — W against Seattle Seahawks, 32-29. 2026-10-19 — W against Washington Commanders, 23-17.",
             "These are recent games, not a head-to-head trend or an opponent-adjusted forecast."
           ],
           "sourceIds": [
-            "espn-401873017"
+            "espn-401873017",
+            "espn-week6-final-records"
           ],
-          "asOf": "2026-10-19T06:05:00-05:00"
+          "asOf": "2026-10-20T06:03:20-05:00"
         }
       ],
       "availability": [
@@ -654,9 +658,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final",
-        "San Francisco record is provisional until its Week 6 Monday game is final."
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Mercedes-Benz Stadium",
       "neutralSite": false,
@@ -873,8 +875,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Nissan Stadium",
       "neutralSite": false,
@@ -1091,8 +1092,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "U.S. Bank Stadium",
       "neutralSite": false,
@@ -1309,8 +1309,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "MetLife Stadium",
       "neutralSite": false,
@@ -1527,8 +1526,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Bank of America Stadium",
       "neutralSite": false,
@@ -1745,8 +1743,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "M&T Bank Stadium",
       "neutralSite": false,
@@ -1963,8 +1960,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Reliant Stadium",
       "neutralSite": false,
@@ -2181,8 +2177,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "State Farm Stadium",
       "neutralSite": false,
@@ -2399,8 +2394,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Ford Field",
       "neutralSite": false,
@@ -2617,8 +2611,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Allegiant Stadium",
       "neutralSite": false,
@@ -2835,8 +2828,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Lumen Field",
       "neutralSite": false,
@@ -3053,8 +3045,7 @@
       ],
       "researchLimitations": [
         "Week 7 official final injury designations pending",
-        "Weather and opponent-adjusted efficiency not verified",
-        "San Francisco record pending Week 6 Monday final"
+        "Weather and opponent-adjusted efficiency not verified"
       ],
       "venue": "Lincoln Financial Field",
       "neutralSite": false,
@@ -3783,6 +3774,12 @@
       "title": "Kalshi NFL game market snapshots",
       "url": "https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXNFLGAME&limit=1000&status=open",
       "retrievedAt": "2026-10-19T06:05:05-05:00"
+    },
+    {
+      "id": "espn-week6-final-records",
+      "name": "ESPN Week 6 final scoreboard and overall records",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000",
+      "retrievedAt": "2026-10-20T06:03:20-05:00"
     }
   ],
   "marketSnapshots": [
@@ -4337,10 +4334,82 @@
     "limitations": [
       "Week 7 official final injury designations pending",
       "Weather and opponent-adjusted efficiency not verified",
-      "San Francisco record pending Week 6 Monday final",
       "No calibrated AI probabilities or executable combo quotes"
     ]
   },
   "marketsCheckedAt": "2026-10-19T06:05:05-05:00",
-  "dataVersion": "2026-10-19-week7-preliminary-1"
+  "dataVersion": "20261020T0631490500-records",
+  "researchRevisions": [
+    {
+      "revisedAt": "2026-10-20T06:31:49-05:00",
+      "reason": "Correct Monday-final record and factual context; original forecasts and prices preserved.",
+      "previousNotes": "Early Week 7 preparation: full 14-game slate, qualitative leans and market snapshots. Week 7 final injury reports are not yet available. San Francisco plays its Week 6 Monday game tonight. Combo candidates are unpriced research structures, not purchase recommendations.",
+      "previousSfInsights": [
+        {
+          "category": "form",
+          "summary": "San Francisco is unbeaten through five completed games; Atlanta has lost two straight.",
+          "details": [
+            "Atlanta Falcons: 2–3–0 in its last 5 completed games. W vs New Orleans Saints (45-24); L vs Baltimore Ravens (30-23 OT); L vs Chicago Bears (31-23).",
+            "San Francisco 49ers: 5–0–0 in its last 5 completed games. W vs Arizona Cardinals (36-30); W vs Denver Broncos (24-14); W vs Seattle Seahawks (32-29)."
+          ],
+          "sourceIds": [
+            "espn-401873017"
+          ],
+          "asOf": "2026-10-19T06:05:00-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Week 7 designations pending · early injury watch",
+          "details": [
+            "Early availability watch only. Prior-week OUT or questionable listings do not establish Week 7 eligibility; check the new practice reports and final inactives."
+          ],
+          "sourceIds": [
+            "espn-401873017"
+          ],
+          "asOf": "2026-10-19T06:05:00-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Preliminary lean: San Francisco 49ers",
+          "details": [
+            "San Francisco is unbeaten through five completed games; Atlanta has lost two straight.",
+            "San Francisco still plays Monday before this road game. Its record and availability must be refreshed afterward.",
+            "Analysis is qualitative; no calibrated win probability or market-edge claim."
+          ],
+          "sourceIds": [
+            "espn-401873017"
+          ],
+          "asOf": "2026-10-19T06:05:00-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Kalshi bid/ask snapshot · verify before trading",
+          "details": [
+            "San Francisco 49ers: YES bid 68¢ / ask 69¢ per $1 contract.",
+            "Atlanta Falcons: YES bid 32¢ / ask 33¢ per $1 contract.",
+            "Snapshot prices are market signals, not independent AI win probabilities. Liquidity and execution have not been verified.",
+            "A combo requires its own quote. These game contracts settle at $0.50 per team on a tie; NO is not identical to opposing YES in that case."
+          ],
+          "sourceIds": [
+            "kalshi-week7"
+          ],
+          "asOf": "2026-10-19T06:05:05-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Recent results provide context; head-to-head analysis pending",
+          "details": [
+            "Atlanta Falcons: 2026-09-20 — L against Carolina Panthers, 34-3; 2026-09-25 — W against Green Bay Packers, 35-14; 2026-10-06 — W against New Orleans Saints, 45-24; 2026-10-12 — L against Baltimore Ravens, 30-23 OT; 2026-10-18 — L against Chicago Bears, 31-23.",
+            "San Francisco 49ers: 2026-09-11 — W against Los Angeles Rams, 27-7; 2026-09-20 — W against Miami Dolphins, 35-13; 2026-09-27 — W against Arizona Cardinals, 36-30; 2026-10-04 — W against Denver Broncos, 24-14; 2026-10-11 — W against Seattle Seahawks, 32-29.",
+            "These are recent games, not a head-to-head trend or an opponent-adjusted forecast."
+          ],
+          "sourceIds": [
+            "espn-401873017"
+          ],
+          "asOf": "2026-10-19T06:05:00-05:00"
+        }
+      ]
+    }
+  ],
+  "recordsCheckedAt": "2026-10-20T06:03:20-05:00"
 }

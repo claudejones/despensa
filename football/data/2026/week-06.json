@@ -13,16 +13,22 @@
       "away": {
         "id": "houston-texans",
         "name": "Houston Texans",
-        "record": "1-4-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 34
+        "score": 34,
+        "pregameRecord": "1-4-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "jacksonville-jaguars",
         "name": "Jacksonville Jaguars",
-        "record": "4-1-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 31
+        "score": 31,
+        "pregameRecord": "4-1-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -248,16 +254,22 @@
       "away": {
         "id": "tennessee-titans",
         "name": "Tennessee Titans",
-        "record": "0-5-0",
+        "record": "1-5-0",
         "logo": null,
-        "score": 26
+        "score": 26,
+        "pregameRecord": "0-5-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "indianapolis-colts",
         "name": "Indianapolis Colts",
-        "record": "2-3-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 20
+        "score": 20,
+        "pregameRecord": "2-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -467,16 +479,22 @@
       "away": {
         "id": "carolina-panthers",
         "name": "Carolina Panthers",
-        "record": "2-2-0",
+        "record": "3-2-0",
         "logo": null,
-        "score": 25
+        "score": 25,
+        "pregameRecord": "2-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "philadelphia-eagles",
         "name": "Philadelphia Eagles",
-        "record": "2-3-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 14
+        "score": 14,
+        "pregameRecord": "2-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -715,16 +733,22 @@
       "away": {
         "id": "pittsburgh-steelers",
         "name": "Pittsburgh Steelers",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 26
+        "score": 26,
+        "pregameRecord": "3-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "tampa-bay-buccaneers",
         "name": "Tampa Bay Buccaneers",
-        "record": "1-4-0",
+        "record": "1-5-0",
         "logo": null,
-        "score": 19
+        "score": 19,
+        "pregameRecord": "1-4-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -896,16 +920,22 @@
       "away": {
         "id": "baltimore-ravens",
         "name": "Baltimore Ravens",
-        "record": "4-1-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 10
+        "score": 10,
+        "pregameRecord": "4-1-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "cleveland-browns",
         "name": "Cleveland Browns",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 13
+        "score": 13,
+        "pregameRecord": "3-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -1152,16 +1182,22 @@
       "away": {
         "id": "new-orleans-saints",
         "name": "New Orleans Saints",
-        "record": "1-4-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 34
+        "score": 34,
+        "pregameRecord": "1-4-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "new-york-giants",
         "name": "New York Giants",
-        "record": "3-1-1",
+        "record": "3-2-1",
         "logo": null,
-        "score": 27
+        "score": 27,
+        "pregameRecord": "3-1-1",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -1386,16 +1422,22 @@
       "away": {
         "id": "chicago-bears",
         "name": "Chicago Bears",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 31
+        "score": 31,
+        "pregameRecord": "3-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "atlanta-falcons",
         "name": "Atlanta Falcons",
-        "record": "2-3-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 23
+        "score": 23,
+        "pregameRecord": "2-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -1605,16 +1647,22 @@
       "away": {
         "id": "new-york-jets",
         "name": "New York Jets",
-        "record": "2-3-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 19
+        "score": 19,
+        "pregameRecord": "2-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "new-england-patriots",
         "name": "New England Patriots",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 26
+        "score": 26,
+        "pregameRecord": "3-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -1839,16 +1887,22 @@
       "away": {
         "id": "arizona-cardinals",
         "name": "Arizona Cardinals",
-        "record": "1-4-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 18
+        "score": 18,
+        "pregameRecord": "1-4-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "los-angeles-rams",
         "name": "Los Angeles Rams",
-        "record": "2-3-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 16
+        "score": 16,
+        "pregameRecord": "2-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -2040,16 +2094,22 @@
       "away": {
         "id": "los-angeles-chargers",
         "name": "Los Angeles Chargers",
-        "record": "0-5-0",
+        "record": "0-6-0",
         "logo": null,
-        "score": 6
+        "score": 6,
+        "pregameRecord": "0-5-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "kansas-city-chiefs",
         "name": "Kansas City Chiefs",
-        "record": "4-0-0",
+        "record": "5-0-0",
         "logo": null,
-        "score": 22
+        "score": 22,
+        "pregameRecord": "4-0-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -2236,16 +2296,22 @@
       "away": {
         "id": "buffalo-bills",
         "name": "Buffalo Bills",
-        "record": "4-1-0",
+        "record": "5-1-0",
         "logo": null,
-        "score": 33
+        "score": 33,
+        "pregameRecord": "4-1-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "las-vegas-raiders",
         "name": "Las Vegas Raiders",
-        "record": "3-2-0",
+        "record": "3-3-0",
         "logo": null,
-        "score": 30
+        "score": 30,
+        "pregameRecord": "3-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -2469,16 +2535,22 @@
       "away": {
         "id": "dallas-cowboys",
         "name": "Dallas Cowboys",
-        "record": "2-3-0",
+        "record": "2-4-0",
         "logo": null,
-        "score": 13
+        "score": 13,
+        "pregameRecord": "2-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "green-bay-packers",
         "name": "Green Bay Packers",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "score": 23
+        "score": 23,
+        "pregameRecord": "3-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -2717,16 +2789,22 @@
       "away": {
         "id": "washington-commanders",
         "name": "Washington Commanders",
-        "record": "1-3-1",
+        "record": "1-4-1",
         "logo": null,
-        "score": 17
+        "score": 17,
+        "pregameRecord": "1-3-1",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "id": "san-francisco-49ers",
         "name": "San Francisco 49ers",
-        "record": "5-0-0",
+        "record": "6-0-0",
         "logo": null,
-        "score": 23
+        "score": 23,
+        "pregameRecord": "5-0-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "insights": [
         {
@@ -4945,11 +5023,17 @@
       "kickoff": "2026-10-15T19:15:00-05:00",
       "away": {
         "name": "Seattle Seahawks",
-        "score": 14
+        "score": 14,
+        "record": "3-3-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "home": {
         "name": "Denver Broncos",
-        "score": 17
+        "score": 17,
+        "record": "4-2-0",
+        "recordAsOf": "2026-10-20T06:03:20-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=6&limit=1000"
       },
       "status": "final",
       "sourceIds": [
@@ -5515,7 +5599,7 @@
     }
   ],
   "marketsCheckedAt": "2026-10-20T06:03:21-05:00",
-  "dataVersion": "20261020T0603210500-markets",
+  "dataVersion": "20261020T0631490500-records",
   "closedAt": "2026-10-20T06:04:51-05:00",
   "closeout": {
     "verifiedAt": "2026-10-20T06:04:51-05:00",
@@ -5540,12 +5624,13 @@
       "internationalKickoff": "2026-10-25T08:30:00-05:00",
       "uncoveredScheduleWindows": [],
       "needs": [
-        "Refresh San Francisco entering record to 6-0 after Monday final; retain original Week 7 as-of records and archived picks.",
         "Verify official Week 7 injuries, quarterback availability and final game-day inactives.",
         "Refresh weather, recent form and matchup evidence; calibrated probabilities remain unavailable.",
         "Refresh exact game-market snapshots and obtain independently sourced combo ticket quotes; never derive combo payouts from leg prices.",
         "Prioritize Thursday New England at Chicago on October 22 and Sunday Pittsburgh at New Orleans in France on October 25 at 08:30 Cancun."
-      ]
+      ],
+      "recordsUpdatedAt": "2026-10-20T06:31:49-05:00"
     }
-  }
+  },
+  "recordsCheckedAt": "2026-10-20T06:03:20-05:00"
 }
