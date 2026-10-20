@@ -16,10 +16,11 @@
   "weeks": {
     "06": {
       "path": "2026/week-06.json",
-      "status": "refreshed",
+      "status": "closed",
       "researchVersion": "2026-10-17-detail-3",
-      "resultsVersion": "20261019T0535090500-scores",
-      "dataVersion": "20261019T0535090500-markets"
+      "resultsVersion": "20261020T0603200500-scores",
+      "dataVersion": "20261020T0603210500-markets",
+      "closedAt": "2026-10-20T06:04:51-05:00"
     },
     "07": {
       "path": "2026/week-07.json",
@@ -28,8 +29,8 @@
       "dataVersion": "2026-10-19-week7-preliminary-1"
     }
   },
-  "lastSuccessfulPublication": "2026-10-19T06:05:05-05:00",
-  "notice": "Week 7 preliminary research available: 14 games. Week 6 remains open pending Monday night.",
-  "scoresCheckedAt": "2026-10-19T05:35:08-05:00",
-  "marketsCheckedAt": "2026-10-19T05:35:09-05:00"
+  "lastSuccessfulPublication": "2026-10-20T06:04:51-05:00",
+  "notice": "Week 6 closed: all 14 games final and 28 team-win settlements verified. Week 7 preliminary preparation remains available; final availability, updated records and refreshed quotes still required.",
+  "scoresCheckedAt": "2026-10-20T06:03:20-05:00",
+  "marketsCheckedAt": "2026-10-20T06:03:21-05:00"
 }
