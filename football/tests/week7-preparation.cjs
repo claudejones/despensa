@@ -2,6 +2,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
 (async()=>{const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{
  for(const width of [320,375,430]){
  const p=await b.newPage({viewport:{width,height:844}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
+ await require('./select-week-fixture.cjs')(p);
  await p.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await p.waitForFunction(()=>data?.week===6);
  assert.equal(await p.evaluate(()=>data.games.find(g=>g.home.name==='San Francisco 49ers').home.record),'6-0-0');
  await p.evaluate(()=>localStorage.setItem('week7-preservation-sentinel','keep'));

@@ -1,6 +1,7 @@
 const{chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{for(const width of [320,375,430]){
- const page=await browser.newPage({viewport:{width,height:800}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
+ const page=await browser.newPage({viewport:{width,height:800}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await require('./select-week-fixture.cjs')(page);
+ await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
  await page.locator('nav [data-tab=games]').click();assert.equal(await page.locator('.research-detail-link').count(),13);assert.equal(await page.locator('[data-research-group][open]').count(),0);
  await page.screenshot({path:`football/test-artifacts/${width}-progressive-games.png`});
  await page.locator('.research-detail-link').first().click();const group=page.locator('#ticketSheet');assert.equal(await group.locator('[data-research][open]').count(),0);await group.locator('[data-research=form]>summary').click();await group.locator('[data-research=injuries]>summary').click();assert.equal(await group.locator('[data-research][open]').count(),2);

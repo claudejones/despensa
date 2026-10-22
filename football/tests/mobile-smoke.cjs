@@ -5,13 +5,22 @@ const fs = require('node:fs');
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
  const errors=[];let passed=0;fs.mkdirSync('football/test-artifacts',{recursive:true});
  try{
+ // Preserve coverage of the actual default independently of historical fixtures.
+ const fresh=await browser.newPage({viewport:{width:375,height:844}});
+ await fresh.clock.setFixedTime(new Date('2026-10-22T08:00:00-05:00'));
+ await fresh.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');
+ await fresh.waitForFunction(()=>data?.week===7);
+ assert.equal(await fresh.locator('#week').inputValue(),'07','Thursday current-week default');
+ assert.equal(await fresh.evaluate(()=>localStorage.getItem('football-selected-week-2026')),null,'default needs no saved preference');
+ await fresh.close();
  for(const width of [320,375,390,430]){
   const page=await browser.newPage({viewport:{width,height:844},deviceScaleFactor:1});
   page.on('pageerror',e=>errors.push(width+': '+e.message));
-  await page.goto((process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/'),{waitUntil:'domcontentloaded'});
+  await require('./select-week-fixture.cjs')(page);
+ await page.goto((process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/'),{waitUntil:'domcontentloaded'});
   await page.waitForTimeout(700);
   assert.equal(await page.locator('nav [data-tab]').count(),5,'five bottom tabs');
-  assert.equal(await page.locator('#week').inputValue(),'06','default week');
+  assert.equal(await page.locator('#week').inputValue(),'06','explicit historical fixture week');
   assert.ok(await page.locator('#view').innerText(),'home rendered');assert.equal(await page.locator('header svg').count(),2,'bundled header icons');
   await page.locator('[data-action=calendar]').first().click();
   assert.match(await page.locator('#view').innerText(),/Season Overview/);

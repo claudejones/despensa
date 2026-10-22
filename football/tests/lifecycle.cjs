@@ -16,7 +16,8 @@ const { chromium } = require("playwright"),
     page.on("dialog", async d => { throw Error("Unexpected browser dialog: "+d.message()); });
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto(
+    await require('./select-week-fixture.cjs')(page);
+ await page.goto(
       process.env.FOOTBALL_URL || "http://127.0.0.1:8765/football/",
     );
     await page.waitForFunction(

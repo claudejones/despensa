@@ -1,7 +1,8 @@
 const{chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{for(const width of [320,375,430]){
 const page=await browser.newPage({viewport:{width,height:780}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
+await require('./select-week-fixture.cjs')(page);
+ await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
 const original=await page.evaluate(()=>JSON.stringify({tickets,pool}));
 assert.equal(await page.locator('.update-pill').count(),0,'First visit establishes baseline');
 await page.evaluate(()=>{const copy=structuredClone(data);copy.researchedAt=new Date().toISOString();copy.researchVersion='test';copy.games[0].verifiedAt='test';copy.games[0].insights.forEach(i=>i.asOf='test');copy.predictions[0].frozenAt='test';copy.marketSnapshots.forEach(q=>{q.retrievedAt='test';q.apiUpdatedTime='test'});trackResearchChanges(copy);render();icons()});

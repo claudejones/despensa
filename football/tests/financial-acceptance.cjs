@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:390,height:844}});
  try{
+ await require('./select-week-fixture.cjs')(page);
  await page.goto((process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/'),{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>typeof analyzePlan==='function'&&typeof realizedNet==='function'&&typeof data!=='undefined'&&data?.comboCandidates?.length>0);
  const results=await page.evaluate(()=>{

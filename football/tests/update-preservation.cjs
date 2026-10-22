@@ -1,5 +1,6 @@
 const{chromium}=require('playwright'),assert=require('node:assert/strict');
-(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{const page=await browser.newPage({viewport:{width:375,height:844}});const base=process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/';await page.goto(base);await page.waitForFunction(()=>data?.games?.length);
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{const page=await browser.newPage({viewport:{width:375,height:844}});const base=process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/';await require('./select-week-fixture.cjs')(page);
+ await page.goto(base);await page.waitForFunction(()=>data?.games?.length);
 // Seed representative existing user records, then reload as a new app version.
 const before=await page.evaluate(()=>{const g=data.games[0];const values={
  'football-v1':JSON.stringify([{id:'preserved-draft',title:'My saved combo',week:6,season:2026,status:'draft',stake:2,payout:8,fee:0,legs:[{gameId:g.id,team:g.home.name,side:'YES',kickoff:g.kickoff,source:'Games research'}]},{id:'preserved-purchased',title:'My recorded purchase',week:6,season:2026,status:'purchased',stake:3,payout:7,fee:.05,remainingFraction:.5,legs:[{gameId:g.id,team:g.away.name,side:'YES'}],events:[{kind:'sale',portion:.5,proceeds:2,fee:.02,at:'2026-10-17T23:01:00-05:00'}]}]),
