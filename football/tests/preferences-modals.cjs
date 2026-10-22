@@ -1,7 +1,8 @@
 const{chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{for(const width of [320,375,430]){
 const page=await browser.newPage({viewport:{width,height:780}}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',async d=>{errors.push('Native dialog: '+d.message());await d.dismiss()});
-await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
+await require('./select-week-fixture.cjs')(page);
+ await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
 const original=await page.evaluate(()=>JSON.stringify({tickets,pool,funding,learning}));await page.locator('[data-action=settings]').click();
 assert.doesNotMatch(await page.locator('#view').innerText(),/Team presentation|Choose NFL week|Open Performance/);
 await page.locator('#prefStart').selectOption('picks');await page.locator('#prefResearch').selectOption('all');await page.locator('#prefPulse').uncheck();await page.locator('#prefTime').selectOption('24');

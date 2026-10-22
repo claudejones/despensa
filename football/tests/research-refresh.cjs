@@ -1,7 +1,8 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{
 const page=await browser.newPage({viewport:{width:375,height:844}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
+await require('./select-week-fixture.cjs')(page);
+ await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
 const d=await page.evaluate(()=>data),ids=new Set(d.sources.map(s=>s.id));
 assert.equal(d.games.length,13);assert.equal(d.completedGames.length,1);assert.equal(d.marketSnapshots.length,26);
 for(const g of d.games){assert.equal(g.insights.length,5);for(const i of g.insights)for(const id of i.sourceIds)assert.ok(ids.has(id));}

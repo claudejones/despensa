@@ -12,7 +12,8 @@ const { chromium } = require("playwright"),
       const page = await browser.newPage({ viewport: { width, height: 844 } }),
         errors = [];
       page.on("pageerror", (e) => errors.push(e.message));
-      await page.goto(
+      await require('./select-week-fixture.cjs')(page);
+ await page.goto(
         process.env.FOOTBALL_URL || "http://127.0.0.1:8765/football/",
         { waitUntil: "domcontentloaded" },
       );

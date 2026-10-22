@@ -1,7 +1,8 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,args:['--no-sandbox']});try{for(const width of [320,375,430]){
 const page=await browser.newPage({viewport:{width,height:740},isMobile:true,hasTouch:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
+await require('./select-week-fixture.cjs')(page);
+ await page.goto(process.env.FOOTBALL_URL||'http://127.0.0.1:8765/football/');await page.waitForFunction(()=>data?.games?.length);
 const saved=await page.evaluate(()=>JSON.stringify({tickets,pool}));
 for(const kind of ['games','picks','combos','games']){
  await page.locator('[data-briefing='+kind+']').click();
