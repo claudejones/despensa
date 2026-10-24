@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 jobs:
   browser-smoke:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -104,3 +104,4 @@ jobs:
           name: football-mobile-screenshots
           path: football/test-artifacts/*.png
           if-no-files-found: warn
+
