@@ -3222,14 +3222,14 @@
           "category": "injuries",
           "summary": "Monday final designations pending",
           "details": [
-            "Monday final game designations are pending; prior feed entries remain an availability watch, not final status.",
-            "Dallas Cowboys: DeMarvion Overshown Watch, Drew Shelton Watch, Cobie Durant Watch, KaVontae Turpin Watch, Dee Winters Watch",
-            "Philadelphia Eagles: AJ Epenesa Watch, Jalyx Hunt Watch, Saquon Barkley Watch, Michael Carter II Watch, Jalen Hurts Watch"
+            "Current availability watch refreshed; Monday final game report remains pending.",
+            "Dallas Cowboys: Cobie Durant (watch), P.J. Locke (watch), Broderick Jones (watch), Marist Liufau (watch), KaVontae Turpin (watch)",
+            "Philadelphia Eagles: Willie Lampkin (watch), Tyler Steen (watch), Landon Dickerson (watch), Fred Johnson (watch), Dontayvion Wicks (watch)"
           ],
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
         },
         {
           "category": "matchup",
@@ -3275,87 +3275,63 @@
       "availability": [
         {
           "team": "Philadelphia Eagles",
-          "name": "AJ Epenesa",
-          "position": "DE",
-          "positionName": "Defensive End",
+          "name": "Willie Lampkin",
+          "position": "C",
+          "positionName": "Center",
           "status": "Watch",
-          "note": "Current feed listing: Questionable (Back); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
+          "note": "Current ESPN listing: Questionable (Illness); reported 2026-10-24T02:22Z. Monday final designation not independently verified.",
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
         },
         {
           "team": "Philadelphia Eagles",
-          "name": "Jalyx Hunt",
-          "position": "LB",
-          "positionName": "Linebacker",
+          "name": "Tyler Steen",
+          "position": "G",
+          "positionName": "Guard",
           "status": "Watch",
-          "note": "Current feed listing: Questionable (Ankle); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
+          "note": "Current ESPN listing: Questionable (Shoulder); reported 2026-10-24T02:19Z. Monday final designation not independently verified.",
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
         },
         {
           "team": "Philadelphia Eagles",
-          "name": "Saquon Barkley",
-          "position": "RB",
-          "positionName": "Running Back",
+          "name": "Landon Dickerson",
+          "position": "G",
+          "positionName": "Guard",
           "status": "Watch",
-          "note": "Current feed listing: Questionable (Hamstring); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
+          "note": "Current ESPN listing: Injured Reserve (Knee); reported 2026-10-24T02:17Z. Monday final designation not independently verified.",
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
         },
         {
           "team": "Philadelphia Eagles",
-          "name": "Michael Carter II",
-          "position": "CB",
-          "positionName": "Cornerback",
-          "status": "Watch",
-          "note": "Current feed listing: Questionable (Abdomen); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
-          "sourceIds": [
-            "thursday-summary-dal-phi"
-          ],
-          "asOf": "2026-10-22T07:58:24-05:00"
-        },
-        {
-          "team": "Philadelphia Eagles",
-          "name": "Jalen Hurts",
-          "position": "QB",
-          "positionName": "Quarterback",
-          "status": "Watch",
-          "note": "Current feed listing: Injured Reserve (Calf); reported 2026-10-19T14:18Z. Not a verified final Week 7 designation or inactive.",
-          "sourceIds": [
-            "thursday-summary-dal-phi"
-          ],
-          "asOf": "2026-10-22T07:58:24-05:00"
-        },
-        {
-          "team": "Dallas Cowboys",
-          "name": "DeMarvion Overshown",
-          "position": "LB",
-          "positionName": "Linebacker",
-          "status": "Watch",
-          "note": "Current feed listing: Questionable (Hamstring); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
-          "sourceIds": [
-            "thursday-summary-dal-phi"
-          ],
-          "asOf": "2026-10-22T07:58:24-05:00"
-        },
-        {
-          "team": "Dallas Cowboys",
-          "name": "Drew Shelton",
+          "name": "Fred Johnson",
           "position": "OT",
           "positionName": "Offensive Tackle",
           "status": "Watch",
-          "note": "Current feed listing: Questionable (Hamstring); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
+          "note": "Current ESPN listing: Questionable (Illness); reported 2026-10-23T22:21Z. Monday final designation not independently verified.",
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Dontayvion Wicks",
+          "position": "WR",
+          "positionName": "Wide Receiver",
+          "status": "Watch",
+          "note": "Current ESPN listing: Questionable (Ankle); reported 2026-10-23T22:16Z. Monday final designation not independently verified.",
+          "sourceIds": [
+            "weekend-dal-phi"
+          ],
+          "asOf": "2026-10-24T08:03:02-05:00"
         },
         {
           "team": "Dallas Cowboys",
@@ -3363,11 +3339,47 @@
           "position": "CB",
           "positionName": "Cornerback",
           "status": "Watch",
-          "note": "Current feed listing: Questionable (Hamstring); reported 2026-10-20T16:10Z. Not a verified final Week 7 designation or inactive.",
+          "note": "Current ESPN listing: Questionable (Hamstring); reported 2026-10-24T02:06Z. Monday final designation not independently verified.",
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "P.J. Locke",
+          "position": "S",
+          "positionName": "Safety",
+          "status": "Watch",
+          "note": "Current ESPN listing: Injured Reserve (Foot); reported 2026-10-24T01:37Z. Monday final designation not independently verified.",
+          "sourceIds": [
+            "weekend-dal-phi"
+          ],
+          "asOf": "2026-10-24T08:03:02-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Broderick Jones",
+          "position": "OT",
+          "positionName": "Offensive Tackle",
+          "status": "Watch",
+          "note": "Current ESPN listing: Questionable (Wrist); reported 2026-10-23T20:39Z. Monday final designation not independently verified.",
+          "sourceIds": [
+            "weekend-dal-phi"
+          ],
+          "asOf": "2026-10-24T08:03:02-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Marist Liufau",
+          "position": "LB",
+          "positionName": "Linebacker",
+          "status": "Watch",
+          "note": "Current ESPN listing: Injured Reserve (Forearm); reported 2026-10-23T01:22Z. Monday final designation not independently verified.",
+          "sourceIds": [
+            "weekend-dal-phi"
+          ],
+          "asOf": "2026-10-24T08:03:02-05:00"
         },
         {
           "team": "Dallas Cowboys",
@@ -3375,23 +3387,11 @@
           "position": "WR",
           "positionName": "Wide Receiver",
           "status": "Watch",
-          "note": "Current feed listing: Questionable (Ribs); reported 2026-10-20T00:07Z. Not a verified final Week 7 designation or inactive.",
+          "note": "Current ESPN listing: Questionable (Ribs); reported 2026-10-23T00:47Z. Monday final designation not independently verified.",
           "sourceIds": [
-            "thursday-summary-dal-phi"
+            "weekend-dal-phi"
           ],
-          "asOf": "2026-10-22T07:58:24-05:00"
-        },
-        {
-          "team": "Dallas Cowboys",
-          "name": "Dee Winters",
-          "position": "LB",
-          "positionName": "Linebacker",
-          "status": "Watch",
-          "note": "Current feed listing: Doubtful (Achilles); reported 2026-10-19T23:31Z. Not a verified final Week 7 designation or inactive.",
-          "sourceIds": [
-            "thursday-summary-dal-phi"
-          ],
-          "asOf": "2026-10-22T07:58:24-05:00"
+          "asOf": "2026-10-24T08:03:02-05:00"
         }
       ],
       "researchLimitations": [
