@@ -24,14 +24,14 @@
     },
     "07": {
       "path": "2026/week-07.json",
-      "status": "preliminary",
-      "researchVersion": "2026-10-22-week7-thursday-1",
-      "dataVersion": "2026-10-22-week7-thursday-1"
+      "status": "refreshed-open",
+      "researchVersion": "2026-10-24-week7-weekend-1",
+      "dataVersion": "2026-10-24-week7-weekend-1"
     }
   },
-  "lastSuccessfulPublication": "2026-10-22T08:02:33-05:00",
-  "notice": "Week 7 Thursday research updated: NE at CHI, October 22 at 19:15 Cancun. All 14 games remain scheduled. Final Thursday inactives and full Sunday/Monday research still pending. Week 6 remains closed; original AI picks and prices preserved.",
-  "scoresCheckedAt": "2026-10-20T06:03:20-05:00",
-  "marketsCheckedAt": "2026-10-22T07:58:15-05:00",
+  "lastSuccessfulPublication": "2026-10-24T08:05:03-05:00",
+  "notice": "Week 7 weekend research refreshed: 13 upcoming games; Thursday CHI 30–NE 24 final. Week remains open. Final inactives and Monday designations pending.",
+  "scoresCheckedAt": "2026-10-24T08:02:48-05:00",
+  "marketsCheckedAt": "2026-10-24T08:02:58-05:00",
   "recordsCheckedAt": "2026-10-22T07:58:03-05:00"
 }

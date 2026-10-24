@@ -10,14 +10,14 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  assert.match(await p.locator('#view').innerText(),/Combo quotes not yet available/);assert.equal(await p.evaluate(()=>data.games.length),14);assert.equal(await p.evaluate(()=>data.predictions.length),14);assert.equal(await p.evaluate(()=>data.marketSnapshots.length),28);
  await p.locator('nav [data-tab=games]').click();assert.ok(await p.locator('.team img').count()>=28);
  const current=await p.evaluate(()=>data),tnf=current.games.find(g=>g.id==='ne-chi'),lean=current.predictions.find(x=>x.gameId==='ne-chi');
- assert.equal(tnf.status,'scheduled');assert.notEqual(current.status,'closed');assert.equal(lean.winner,'Chicago Bears');assert.equal(lean.probability,null);
+ assert.equal(tnf.status,'final');assert.equal(tnf.away.score,24);assert.equal(tnf.home.score,30);assert.equal(tnf.result.verified,true);assert.equal(current.coverage.upcomingGames,13);assert.equal(current.marketSettlements.length,2);for(const q of current.marketSettlements){assert.equal(q.status,'finalized');assert.equal(q.result,q.team==='Chicago Bears'?'yes':'no');assert.equal(q.settlementValue,q.team==='Chicago Bears'?1:0);}assert.notEqual(current.status,'closed');assert.equal(lean.winner,'Chicago Bears');assert.equal(lean.probability,null);
  for(const name of ['Ben Brown','Alijah Vera-Tucker','Carlton Davis III','Kyle Monangai','Jack Sanborn'])assert.equal(tnf.availability.find(x=>x.name===name).status,'Out');
  assert.equal(tnf.availability.find(x=>x.name==='T.J. Edwards').status,'Doubtful');assert.match(tnf.researchLimitations.join(' '),/inactive/i);
  assert.ok(new Date(lean.frozenAt)<new Date(tnf.kickoff));assert.equal(current.marketSnapshots.length,28);assert.ok(current.marketSnapshotHistory.length>=28);
- const revision=current.researchRevisions.at(-1);assert.ok(revision.previousSnapshotPath);
+ const revision=current.researchRevisions.find(r=>r.previousSnapshotPath==='2026/history/week-07-before-20261022-thursday.json');assert.ok(revision.previousSnapshotPath);
  const baseline=await p.evaluate(async path=>(await fetch('./data/'+path)).json(),revision.previousSnapshotPath);
  assert.equal(baseline.predictions.find(x=>x.gameId==='ne-chi').frozenAt,'2026-10-19T06:05:00-05:00');
- assert.deepEqual(current.comboCandidates,baseline.comboCandidates);
+ assert.deepEqual(current.comboCandidates.map(({id,legs,quoteSnapshot,generatedAt})=>({id,legs,quoteSnapshot,generatedAt})),baseline.comboCandidates.map(({id,legs,quoteSnapshot,generatedAt})=>({id,legs,quoteSnapshot,generatedAt})));for(const g of current.games.filter(g=>g.status==='scheduled')){assert.ok(g.researchReviewedAt);assert.ok(g.sourceIds.includes('weekend-injuries'));assert.ok(current.predictions.find(p=>p.gameId===g.id).opposingEvidence.length);}
  const ledger=await p.evaluate(async()=>(await fetch('./data/2026/ai-paper.json')).json());
  const archived=ledger.entries.find(x=>x.id==='2026:7:single:ne-chi');assert.equal(archived.publishedAt,'2026-10-19T06:05:00-05:00');assert.equal(archived.quote.price,0.61);
 
