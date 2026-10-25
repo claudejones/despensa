@@ -1,284 +1,282 @@
 {
- "syncId": 2,
- "producedAt": "2026-10-15T02:48:02Z",
- "note": "Corrections to the 2026-10-14 reconciliation: the Granny Smith line was a till mis-ring for Anjou pears, and the reusable bags move to One-offs. The receipt still ties at 2,442.82.",
- "trips": {
-  "trip-1792001220015": {
-   "id": "trip-1792001220015",
-   "shop": "chedraui",
-   "shopName": "Chedraui Puerto Aventuras",
-   "date": "2026-10-14T12:00",
-   "fx": 18.2028,
-   "note": "Parents visiting — Cointreau, extra prosecco and beer, potatoes",
-   "budgetUSD": null,
-   "lines": [
-    {
-     "id": "oroweat-multigrano",
-     "es": "Oroweat Multigrano",
-     "en": "Multigrain bread",
-     "cat": "bakery",
-     "q": 1,
-     "unitMXN": 92.0,
-     "lineMXN": 92.0,
-     "state": "bought"
-    },
-    {
-     "id": "tortilla-blanca-45-pz",
-     "es": "Tortilla Blanca 45 pz",
-     "en": "White corn tortillas, 45-pack",
-     "cat": "bakery",
-     "q": 1,
-     "unitMXN": 31.0,
-     "lineMXN": 31.0,
-     "state": "bought"
-    },
-    {
-     "id": "aceituna-serpis-kalamata",
-     "es": "Aceituna Serpis Kalamata",
-     "en": "Kalamata olives",
-     "cat": "pantry",
-     "q": 1,
-     "unitMXN": 78.0,
-     "lineMXN": 78.0,
-     "state": "bought"
-    },
-    {
-     "id": "garbanzo-en-salmuera",
-     "es": "Garbanzo en Salmuera",
-     "en": "Chickpeas in brine",
-     "cat": "protein",
-     "q": 1,
-     "unitMXN": 25.0,
-     "lineMXN": 25.0,
-     "state": "bought"
-    },
-    {
-     "id": "licor-cointreau",
-     "es": "Licor Cointreau",
-     "en": "Cointreau liqueur, 700 ml",
-     "cat": "drinks",
-     "q": 1,
-     "unitMXN": 739.0,
-     "lineMXN": 739.0,
-     "state": "bought"
-    },
-    {
-     "id": "prosecco-maschio-750",
-     "es": "Prosecco Maschio 750",
-     "en": "Prosecco",
-     "cat": "drinks",
-     "q": 2,
-     "unitMXN": 258.0,
-     "lineMXN": 516.0,
-     "state": "bought"
-    },
-    {
-     "id": "cerveza-barrilito",
-     "es": "Cerveza Barrilito",
-     "en": "Barrilito beer, 6-pack",
-     "cat": "drinks",
-     "q": 2,
-     "unitMXN": 64.0,
-     "lineMXN": 128.0,
-     "state": "bought"
-    },
-    {
-     "id": "cacahuate-garapinado",
-     "es": "Cacahuate Garapiñado",
-     "en": "Candied peanuts",
-     "cat": "pantry",
-     "q": 1,
-     "unitMXN": 37.5,
-     "lineMXN": 37.5,
-     "state": "bought",
-     "rate": 150.0,
-     "kg": 0.25
-    },
-    {
-     "id": "calabaza-italiana",
-     "es": "Calabaza Italiana",
-     "en": "Zucchini",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 9.46,
-     "lineMXN": 9.46,
-     "state": "bought",
-     "rate": 24.9,
-     "kg": 0.38
-    },
-    {
-     "id": "tomate-saladette",
-     "es": "Tomate Saladette",
-     "en": "Roma tomato",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 15.9,
-     "lineMXN": 15.9,
-     "state": "bought",
-     "rate": 31.5,
-     "kg": 0.505
-    },
-    {
-     "id": "arandanos",
-     "es": "Arándanos",
-     "en": "Blueberries",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 58.5,
-     "lineMXN": 58.5,
-     "state": "bought"
-    },
-    {
-     "id": "pera-mantequilla-anjou",
-     "es": "Pera Mantequilla/Anjou",
-     "en": "Anjou pear",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 31.25,
-     "lineMXN": 31.25,
-     "state": "bought",
-     "note": "Rung up as Manz Granny Smith at 66.50/kg — a till mis-ring. The amount is right; the price is not the pear's, so it is left out of price history."
-    },
-    {
-     "id": "limon-s-semilla",
-     "es": "Limón s/semilla",
-     "en": "Seedless lime",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 12.74,
-     "lineMXN": 12.74,
-     "state": "bought",
-     "rate": 24.5,
-     "kg": 0.52
-    },
-    {
-     "id": "platano-chiapas-tabasco",
-     "es": "Plátano Chiapas/Tabasco",
-     "en": "Banana",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 18.34,
-     "lineMXN": 18.34,
-     "state": "bought",
-     "rate": 14.5,
-     "kg": 1.265
-    },
-    {
-     "id": "papa-blanca-alpha",
-     "es": "Papa Blanca Alpha",
-     "en": "White potatoes",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 94.49,
-     "lineMXN": 94.49,
-     "state": "bought",
-     "rate": 64.5,
-     "kg": 1.465
-    },
-    {
-     "id": "aguacate-hass",
-     "es": "Aguacate Hass",
-     "en": "Hass avocado",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 20.8,
-     "lineMXN": 20.8,
-     "state": "bought",
-     "rate": 28.5,
-     "kg": 0.73
-    },
-    {
-     "id": "pina-gota-de-miel",
-     "es": "Piña Gota de Miel",
-     "en": "Pineapple",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 51.94,
-     "lineMXN": 51.94,
-     "state": "bought",
-     "rate": 24.5,
-     "kg": 2.12
-    },
-    {
-     "id": "baby-spinach-organica-142-g",
-     "es": "Baby Spinach Orgánica 142 g",
-     "en": "Organic baby spinach",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": 124.9,
-     "lineMXN": 124.9,
-     "state": "bought"
-    },
-    {
-     "id": "bionda-manchego",
-     "es": "Bionda Manchego",
-     "en": "Manchego cheese",
-     "cat": "chilled",
-     "q": 1,
-     "unitMXN": 125.0,
-     "lineMXN": 125.0,
-     "state": "bought"
-    },
-    {
-     "id": "totopos",
-     "es": "Totopos",
-     "en": "Tortilla chips, 500 g",
-     "cat": "snacks",
-     "q": 3,
-     "unitMXN": 39.0,
-     "lineMXN": 117.0,
-     "state": "bought"
-    },
-    {
-     "id": "pollo-rostizado-jumbo",
-     "es": "Pollo Rostizado Jumbo",
-     "en": "Rotisserie chicken — jumbo",
-     "cat": "protein",
-     "q": 1,
-     "unitMXN": 149.0,
-     "lineMXN": 149.0,
-     "state": "bought"
-    },
-    {
-     "id": "bolsa-reutilizable",
-     "es": "Bolsa Reutilizable",
-     "en": "Reusable checkout bag",
-     "cat": "oneoff",
-     "q": 3,
-     "unitMXN": 2.0,
-     "lineMXN": 6.0,
-     "state": "bought"
-    },
-    {
-     "id": "3x2-en-totopos",
-     "es": "3x2 en Totopos",
-     "en": "3-for-2 promotion on tortilla chips",
-     "cat": "snacks",
-     "q": 1,
-     "unitMXN": -39.0,
-     "lineMXN": -39.0,
-     "state": "bought"
-    },
-    {
-     "id": "espinacas",
-     "es": "Espinacas",
-     "en": "Spinach, bunch",
-     "cat": "produce",
-     "q": 1,
-     "unitMXN": null,
-     "lineMXN": null,
-     "state": "skip"
+  "syncId": 3,
+  "producedAt": "2026-10-25T18:33:54Z",
+  "trips": {
+    "trip-1792941237088": {
+      "id": "trip-1792941237088",
+      "shop": "chedraui",
+      "shopName": "Chedraui Puerto Aventuras",
+      "date": "2026-10-25T12:36",
+      "fx": 18.631,
+      "note": "",
+      "budgetUSD": null,
+      "lines": [
+        {
+          "id": "oroweat-multigrano",
+          "es": "Oroweat Multigrano",
+          "en": "Multigrain bread",
+          "cat": "bakery",
+          "q": 1,
+          "unitMXN": 93.0,
+          "lineMXN": 93.0,
+          "state": "bought"
+        },
+        {
+          "id": "crema-de-cacahuate",
+          "es": "Crema de Cacahuate",
+          "en": "Peanut butter — the cheaper shelf one",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 69.0,
+          "lineMXN": 69.0,
+          "state": "bought"
+        },
+        {
+          "id": "jarabe-aires-del-campo-org-nico-236-ml",
+          "es": "Jarabe Aires del Campo Orgánico 236 ml",
+          "en": "Organic maple syrup, 236 ml",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 200.0,
+          "lineMXN": 200.0,
+          "state": "bought"
+        },
+        {
+          "id": "aceituna-serpis-kalamata",
+          "es": "Aceituna Serpis Kalamata",
+          "en": "Kalamata olives",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 78.0,
+          "lineMXN": 78.0,
+          "state": "bought"
+        },
+        {
+          "id": "limpiador-de-cocina",
+          "es": "Limpiador de Cocina",
+          "en": "Kitchen cleaner",
+          "cat": "home",
+          "q": 1,
+          "unitMXN": 73.0,
+          "lineMXN": 73.0,
+          "state": "bought"
+        },
+        {
+          "id": "pl-stico-autoadherible-20-m",
+          "es": "Plástico Autoadherible 20 m",
+          "en": "Cling film, 20 m",
+          "cat": "home",
+          "q": 1,
+          "unitMXN": 27.5,
+          "lineMXN": 27.5,
+          "state": "bought"
+        },
+        {
+          "id": "toallas-de-papel",
+          "es": "Toallas de Papel",
+          "en": "Paper towels",
+          "cat": "home",
+          "q": 1,
+          "unitMXN": 45.0,
+          "lineMXN": 45.0,
+          "state": "bought"
+        },
+        {
+          "id": "huevo-blanco-12-pz",
+          "es": "Huevo Blanco 12 pz",
+          "en": "Eggs, 12 ct — brand varies",
+          "cat": "protein",
+          "q": 1,
+          "unitMXN": 32.0,
+          "lineMXN": 32.0,
+          "state": "bought"
+        },
+        {
+          "id": "tomate-saladette",
+          "es": "Tomate Saladette",
+          "en": "Roma tomato",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 22.54,
+          "lineMXN": 22.54,
+          "state": "bought",
+          "kg": 0.565,
+          "rate": 39.9
+        },
+        {
+          "id": "baby-spinach-org-nica-142-g",
+          "es": "Baby Spinach Orgánica 142 g",
+          "en": "Organic baby spinach, 142 g tub",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 124.9,
+          "lineMXN": 124.9,
+          "state": "bought"
+        },
+        {
+          "id": "manzana",
+          "es": "Manzana",
+          "en": "Apple — whichever is good",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 65.59,
+          "lineMXN": 65.59,
+          "state": "bought",
+          "kg": 1.095,
+          "rate": 59.9
+        },
+        {
+          "id": "seta-montebello-250-g",
+          "es": "Seta Montebello 250 g",
+          "en": "Oyster mushrooms, 250 g tray",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 34.9,
+          "lineMXN": 34.9,
+          "state": "bought"
+        },
+        {
+          "id": "ar-ndanos",
+          "es": "Arándanos",
+          "en": "Blueberries",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 58.5,
+          "lineMXN": 58.5,
+          "state": "bought"
+        },
+        {
+          "id": "aguacate-hass",
+          "es": "Aguacate Hass",
+          "en": "Hass avocado",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 31.38,
+          "lineMXN": 31.38,
+          "state": "bought",
+          "kg": 0.675,
+          "rate": 46.5
+        },
+        {
+          "id": "pera-mantequilla-anjou",
+          "es": "Pera Mantequilla/Anjou",
+          "en": "Anjou pear",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 41.25,
+          "lineMXN": 41.25,
+          "state": "bought",
+          "kg": 0.51,
+          "rate": 80.9
+        },
+        {
+          "id": "pl-tano-chiapas-tabasco",
+          "es": "Plátano Chiapas/Tabasco",
+          "en": "Banana",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 27.45,
+          "lineMXN": 27.45,
+          "state": "bought",
+          "kg": 0.95,
+          "rate": 28.9
+        },
+        {
+          "id": "lim-n-s-semilla",
+          "es": "Limón s/semilla",
+          "en": "Seedless lime (green)",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 9.1,
+          "lineMXN": 9.1,
+          "state": "bought",
+          "kg": 0.28,
+          "rate": 32.5
+        },
+        {
+          "id": "ciruela-pasa-c-h",
+          "es": "Ciruela Pasa C/H",
+          "en": "Prunes, stone-in",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 42.0,
+          "lineMXN": 42.0,
+          "state": "bought",
+          "kg": 0.2,
+          "rate": 210.0
+        },
+        {
+          "id": "cacahuate-garapi-ado",
+          "es": "Cacahuate Garapiñado",
+          "en": "Candied peanuts",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 47.5,
+          "lineMXN": 47.5,
+          "state": "bought",
+          "kg": 0.25,
+          "rate": 190.0
+        },
+        {
+          "id": "hamburguesa-de-yaca",
+          "es": "Hamburguesa de Yaca",
+          "en": "Jackfruit burger, 440 g",
+          "cat": "protein",
+          "q": 1,
+          "unitMXN": 150.0,
+          "lineMXN": 150.0,
+          "state": "bought"
+        },
+        {
+          "id": "totopos",
+          "es": "Totopos",
+          "en": "Tortilla chips, 500 g",
+          "cat": "snacks",
+          "q": 3,
+          "unitMXN": 31.0,
+          "lineMXN": 93.0,
+          "state": "bought"
+        },
+        {
+          "id": "3x2-en-totopos-y-chips",
+          "es": "3x2 en totopos y chips",
+          "en": "3-for-2 promotion",
+          "cat": "snacks",
+          "q": 1,
+          "unitMXN": -31.0,
+          "lineMXN": -31.0,
+          "state": "bought"
+        },
+        {
+          "id": "pollo-rostizado",
+          "es": "Pollo Rostizado",
+          "en": "Rotisserie chicken",
+          "cat": "protein",
+          "q": 1,
+          "unitMXN": 99.9,
+          "lineMXN": 99.9,
+          "state": "bought"
+        },
+        {
+          "id": "tabla-para-picar-34-cm",
+          "es": "Tabla para Picar 34 cm",
+          "en": "Chopping board, 34 cm",
+          "cat": "oneoff",
+          "q": 1,
+          "unitMXN": 159.0,
+          "lineMXN": 159.0,
+          "state": "bought"
+        }
+      ],
+      "listed": 1593.51,
+      "receiptTotal": 1593.51,
+      "offList": 0,
+      "bought": 24,
+      "skipped": 0,
+      "planned": 24,
+      "totalUSD": 85.53
     }
-   ],
-   "listed": 2442.82,
-   "receiptTotal": 2442.82,
-   "offList": 0,
-   "bought": 23,
-   "skipped": 1,
-   "planned": 24,
-   "totalUSD": 134.2
-  }
- },
- "removeTrips": [],
- "catalogue": {}
+  },
+  "removeTrips": [],
+  "catalogue": {}
 }
