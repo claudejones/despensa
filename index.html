@@ -1035,7 +1035,7 @@ var CAT_FP  = "69eefbf3";
 var SEED_FP = "49f6f833";
 
 "use strict";
-var APP_VERSION = "4.24.0";
+var APP_VERSION = "4.25.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -3456,12 +3456,25 @@ function saveTrip(dt, fx, receiptTotal){
   var t=S.active, T=tripTotals(), lines=[], date=(dt||"").slice(0,10)||todayISO();
   Object.keys(t.lines).forEach(function(id){
     var L=t.lines[id], it=S.items[id]; if(!it) return;
-    var unit = (L.paid!==null&&L.paid!==undefined&&!isNaN(L.paid)) ? L.paid : it.p;
+    /* `typed` is the whole distinction: a figure entered at the till is an
+       observation, the catalogue price is a guess carried forward. */
+    var typed = (L.paid!==null && L.paid!==undefined && !isNaN(L.paid));
+    var unit = typed ? L.paid : it.p;
     lines.push({id:id, es:it.es, en:it.en, cat:it.cat, q:L.q,
       unitMXN:(unit===null||unit===undefined||isNaN(unit))?null:unit,
       lineMXN:lineTotal(it,L), state:L.state});
-    /* a bought line with a real price becomes a price point */
-    if(L.state==="bought" && unit!==null && unit!==undefined && !isNaN(unit)){
+    /* Only an observed price becomes a price point. This used to fall back
+       to it.p, so a line ticked off without typing anything wrote the
+       catalogue's own price back into history dated today — a point nobody
+       ever saw, indistinguishable afterwards from one off a receipt.
+
+       It is not self-correcting either. A catalogue rebuild overwrites p,
+       ref, cat and hint unconditionally, but takes the shipped history only
+       when it is at least as long as the phone's. A phone that has
+       accumulated invented points keeps them, and they go on feeding the
+       sparkline and the "more than usual" card. Sparse and true beats dense
+       and invented. */
+    if(L.state==="bought" && typed){
       if(!it.hist) it.hist=[];
       it.hist.push({d:date, p:unit, shop:t.shop});
       if(it.hist.length>40) it.hist=it.hist.slice(-40);
