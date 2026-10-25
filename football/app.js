@@ -568,7 +568,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.3";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.4";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"

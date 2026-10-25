@@ -918,3 +918,11 @@ details[open] > summary > .chev {transform:rotate(180deg)}
 .team-choice-identity{display:inline-flex;align-items:center;gap:9px;min-width:0}
 .team-choice-identity img{width:26px;height:26px;object-fit:contain;flex-shrink:0}
 .outcome-choice:focus-visible{outline:3px solid #147e84;outline-offset:2px}
+
+/* Ticket → game research navigation retains one dialog and one scroll area. */
+.ticket-research-link{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:12px;gap:10px}
+.ticket-research-link b{font-size:14px;color:var(--teal)}
+.ticket-research-link small{font-size:12px;line-height:1.5;margin-top:4px;overflow-wrap:anywhere}
+.sheet-returnbar{flex:none;padding:4px 14px;border-bottom:1px solid var(--line)}
+.sheet-returnbar button{display:flex;align-items:center;gap:8px;min-height:44px;border:0;background:transparent;color:var(--teal);padding:8px 0}
+.sheet-returnbar svg{width:20px;height:20px;flex:none}

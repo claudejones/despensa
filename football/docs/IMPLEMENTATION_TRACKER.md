@@ -229,3 +229,8 @@ Only Week 6 preliminary research is published. Validated independent probabiliti
 - Custom ticket outcomes and contextual Kalshi outcome choices use logos, abbreviations and explicit To win / Not to win buttons. Pool already follows this pattern. Full team names remain in accessible labels and saved tickets.
 - Game changes refresh outcome choices and clear the prior game quote without resetting ticket name or amounts.
 - No research, local-storage keys, existing tickets or transaction logic changed. Mobile acceptance covers correct YES/NO persistence and 320/375/430px layouts.
+
+## v1.8.4 — Game research from Kalshi tickets
+- Each matched selection in Draft, Open and History tickets links to the published game research with a Cancún timestamp. Singles and each combo leg use the same entry point. Missing or mismatched-week games explicitly show unavailable research.
+- Reuses the shared drawer, with a fixed Back to ticket action. Retains the ticket DOM, expanded sections, inputs, focus and scroll position; closing research returns to the original wallet view.
+- Purchase quotes, events and research data are unchanged. Mobile regression covers singles/combos in all three states, draft price preservation, missing games, one-dialog navigation and touch targets.

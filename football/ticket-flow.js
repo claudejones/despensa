@@ -14,7 +14,7 @@ function reviewDialog() {
   if (!d) {
     d = document.createElement('dialog'); d.id = 'ticketSheet'; d.className = 'ticket-sheet';
     d.addEventListener('cancel',flushSheetPricing);
-    d.addEventListener('close', () => { if(d.open)return;d.replaceChildren(); document.body.classList.remove('sheet-open'); const origin=sheetOrigin;sheetOrigin=null;if(origin&&origin.route===render.route){window.scrollTo(0,origin.y);if(origin.element?.isConnected)origin.element.focus({preventScroll:true});} });
+    d.addEventListener('close', () => { if(d.open)return;d.replaceChildren(); d._ticketResearchReturn=null; document.body.classList.remove('sheet-open'); const origin=sheetOrigin;sheetOrigin=null;if(origin&&origin.route===render.route){window.scrollTo(0,origin.y);if(origin.element?.isConnected)origin.element.focus({preventScroll:true});} });
     d.addEventListener('click', e => { if (e.target === d) { const r=d.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeReviewSheet(); } });
     document.body.append(d);
   }
@@ -24,6 +24,7 @@ function openReviewSheet(title, html) {
   const d = reviewDialog();
   if(!d.open)sheetOrigin={element:document.activeElement,y:window.scrollY,route:render.route};
   flushSheetPricing();
+  d._ticketResearchReturn=null;
   d.classList.remove('detail-sheet');
   d.innerHTML = `<div class="sheet-heading"><h2 id="ticketSheetTitle">${esc(title)}</h2><button data-review-close aria-label="Close ticket panel"><i data-lucide="x"></i></button></div><div class="sheet-content">${html}</div>`;
   d.setAttribute('aria-labelledby', 'ticketSheetTitle');

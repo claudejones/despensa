@@ -39,6 +39,8 @@ jobs:
         run: node football/tests/button-layout.cjs
       - name: Verify detail drawers and preserved edits
         run: node football/tests/detail-drawers.cjs
+      - name: Verify ticket to game research navigation
+        run: node football/tests/ticket-research.cjs
       - name: Verify consistent disclosure controls
         run: node football/tests/disclosure-pattern.cjs
       - name: Run financial acceptance
