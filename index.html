@@ -1035,7 +1035,7 @@ var CAT_FP  = "69eefbf3";
 var SEED_FP = "49f6f833";
 
 "use strict";
-var APP_VERSION = "4.23.0";
+var APP_VERSION = "4.24.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1342,11 +1342,28 @@ function itemsByCat(){
   });
   return out;
 }
+/* Item times price times quantity is only arithmetic if the price and the
+   quantity are in the same unit. For a jar of olives they are: 78.00 is a
+   jar, two jars is 156.00. For the 18 items sold by weight they are NOT.
+   `p` there is the LAST BAG'S TOTAL — apples at 74.87 is 1.25 kg at
+   59.90/kg, not one apple — while `q` is a count of fruit. Multiplying
+   them made six ticked apples read as 449.22 against the 65.59 that
+   1.095 kg actually cost, and put the 25 Oct estimate 31% over a
+   MX$1,593.51 receipt on five produce lines alone.
+
+   So a weighed item does not multiply. The estimate is the last bag,
+   which is the only honest figure available without a weight: still
+   approximate — it moves with how much went in the bag last time — and
+   the row says so, with the shelf rate beside it. `q` survives as what
+   it always really was, a note to self about how much to get.
+
+   A price typed at the till (L.paid) needs no special case: for a
+   weighed line that IS what the bag cost, so it passes through too. */
 function lineTotal(it, L){
   var q = (L && L.q!==undefined) ? L.q : it.q;
   var p = (L && L.paid!==null && L.paid!==undefined && !isNaN(L.paid)) ? L.paid : it.p;
   if(p===null||p===undefined||isNaN(p)) return null;
-  return p*q;
+  return byWeight(it) ? p : p*q;
 }
 function tripTotals(){
   var t=S.active, listed=0, bought=0, nb=0, nn=0, ns=0, missing=0;
@@ -2382,9 +2399,21 @@ function tripRow(it, L, planning, shop){
     ctrl = '<button class="box" data-got="'+it.id+'" aria-label="Mark bought"></button>';
   }
 
+  /* A weighed row must not print "Qty 6 × MX$74.87": that multiplication
+     is exactly the thing that is wrong, and showing the sum makes the
+     wrong number look derived. It gets the shelf rate instead, which is
+     the figure the till will actually use, and the count reads as the
+     instruction it is. */
+  var wt = byWeight(it);
   var bits=[];
-  if(q>1) bits.push("Qty "+q+" × "+mx(shown));
-  if(it.ref) bits.push("ref "+it.ref);
+  if(wt){
+    if(q>1) bits.push("get "+q);
+    if(it.ref) bits.push(it.ref);
+    if(paid===null) bits.push("last bag "+mx(shown));
+  } else {
+    if(q>1) bits.push("Qty "+q+" × "+mx(shown));
+    if(it.ref) bits.push("ref "+it.ref);
+  }
   if(it.hint && it.hint!==shop) bits.push("usually "+shopName(it.hint).split(" ")[0]);
   var meta=bits.join(" · ");
 
@@ -2397,8 +2426,12 @@ function tripRow(it, L, planning, shop){
     +'<div class="en">'+esc(it.en)+'</div>'
     +(meta?'<div class="meta">'+esc(meta)+'</div>':'')+'</div>'
     + chart
+    /* "≈" is the whole claim this figure can honestly make: a weighed
+       item's estimate is last trip's bag, not a quote. Once a price is
+       typed at the till it is exact, and the mark goes. */
     +'<button class="amt'+(paid!==null?" paid":"")+'" data-price="'+it.id+'">'
-    +'<span class="mx">'+mx(tot)+'</span><span class="us">'+usd(tot)+'</span></button></div>';
+    +'<span class="mx">'+((wt && paid===null && tot!==null)?"≈":"")+mx(tot)+'</span>'
+    +'<span class="us">'+usd(tot)+'</span></button></div>';
 }
 
 /* tiny inline price sparkline */
@@ -3149,7 +3182,10 @@ function dropSession(id){
 }
 function qtySheet(id){
   var L=S.active.lines[id], it=S.items[id];
-  openSheet('<h2>Quantity</h2><p class="hint">'+esc(it.es)+'</p>'
+  openSheet('<h2>Quantity</h2><p class="hint">'+esc(it.es)
+    +(byWeight(it) ? ' — sold by weight ('+esc(it.ref)+'), so this is a note'
+        + ' to yourself about how much to get. It does not multiply the estimate.' : '')
+    +'</p>'
     +'<input class="field mono" id="qIn" type="number" inputmode="decimal" step="1" min="0" value="'+L.q+'">'
     +'<button class="mbtn primary" id="qSave">Save</button>');
   document.getElementById("qSave").onclick=function(){
@@ -3188,8 +3224,17 @@ function priceSheet(id){
   var it=S.items[id], t=S.active, L=t?t.lines[id]:null;
   var cur = (L && L.paid!==null && L.paid!==undefined) ? L.paid : it.p;
   var q = L ? L.q : it.q;
-  openSheet('<h2>Price for one</h2><p class="hint">'+esc(it.es)+' — what it cost today. The reference price stays as it is unless you change it in the catalogue.</p>'
-    +'<label class="lbl">Price each · MXN</label>'
+  /* The same unit mismatch, on the way in. A weighed line on the receipt
+     prints one figure — what the bag cost — so asking for a "price each"
+     and multiplying it by the count would re-create the defect at the
+     point of entry, from a number copied correctly off the receipt. */
+  var wt = byWeight(it);
+  openSheet('<h2>'+(wt?"What the bag cost":"Price for one")+'</h2>'
+    +'<p class="hint">'+esc(it.es)+' — '
+    +(wt ? 'sold by weight, so the receipt prints one figure for the whole bag. Enter that.'
+         : 'what it cost today.')
+    +' The reference price stays as it is unless you change it in the catalogue.</p>'
+    +'<label class="lbl">'+(wt?"Line total":"Price each")+' · MXN</label>'
     +'<input class="field mono" id="pIn" type="number" inputmode="decimal" step="0.01" value="'+(cur===null?"":cur)+'">'
     +'<p class="hint mono" id="pCalc"></p>'
     +'<button class="mbtn primary" id="pSave">Save</button>'
@@ -3197,7 +3242,9 @@ function priceSheet(id){
   var inp=document.getElementById("pIn"), out=document.getElementById("pCalc");
   function sync(){
     var v=parseFloat(inp.value);
-    out.textContent = isNaN(v) ? "" : (q>1 ? q+" × "+mx(v)+" = "+mx(v*q)+"  ·  "+usd(v*q) : "≈ "+usd(v));
+    out.textContent = isNaN(v) ? ""
+      : (wt ? "≈ "+usd(v)
+            : (q>1 ? q+" × "+mx(v)+" = "+mx(v*q)+"  ·  "+usd(v*q) : "≈ "+usd(v)));
   }
   inp.addEventListener("input", sync); sync();
   setTimeout(function(){ inp.focus(); inp.select(); }, 120);
