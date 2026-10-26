@@ -5,7 +5,7 @@
   "researchVersion": "2026-10-24-week7-weekend-1",
   "researchedAt": "2026-10-24T08:05:03-05:00",
   "status": "refreshed-open",
-  "notes": "Weekend Week 7 research: 13 upcoming games reviewed, 12 Sunday final injury reports checked; Monday final designations and all game-day inactives pending. Thursday final verified. Original picks and prices retained in history; no calibrated probabilities or executable combo quotes.",
+  "notes": "Verified score and settlement refresh; Monday injury designations updated. Original AI predictions, archived paper prices and combo baselines preserved. Week remains open.",
   "games": [
     {
       "id": "ne-chi",
@@ -15,7 +15,7 @@
         "name": "New England Patriots",
         "record": "4-3-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
         "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
         "score": 24,
         "pregameRecord": "4-2-0"
@@ -25,7 +25,7 @@
         "name": "Chicago Bears",
         "record": "5-2-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
         "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
         "score": 30,
         "pregameRecord": "4-2-0"
@@ -326,15 +326,15 @@
         "summary": "Mostly Clear"
       },
       "researchReviewedAt": "2026-10-22T08:02:33-05:00",
-      "scoreCheckedAt": "2026-10-24T08:02:48-05:00",
-      "scoreSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873010",
       "scoreDetail": "Final",
       "result": {
         "verified": true,
         "marketScope": "full-game-winner",
-        "verifiedAt": "2026-10-24T08:02:48-05:00",
+        "verifiedAt": "2026-10-25T19:10:46-05:00",
         "sources": [
-          "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+          "https://www.espn.com/nfl/game/_/gameId/401873010",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-NE",
           "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-CHI"
         ]
@@ -346,20 +346,24 @@
       "away": {
         "id": "pittsburgh-steelers",
         "name": "Pittsburgh Steelers",
-        "record": "4-2-0",
+        "record": "5-2-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 16,
+        "pregameRecord": "4-2-0"
       },
       "home": {
         "id": "new-orleans-saints",
         "name": "New Orleans Saints",
-        "record": "2-4-0",
+        "record": "2-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 10,
+        "pregameRecord": "2-4-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873011",
@@ -522,7 +526,20 @@
       "espnEventId": "401873011",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873011",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:46-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873011",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-PIT",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-NO"
+        ]
+      }
     },
     {
       "id": "sf-atl",
@@ -530,21 +547,25 @@
       "away": {
         "id": "san-francisco-49ers",
         "name": "San Francisco 49ers",
-        "record": "6-0-0",
+        "record": "6-1-0",
         "logo": null,
         "previousPublishedRecord": "5-0-0",
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 20,
+        "pregameRecord": "6-0-0"
       },
       "home": {
         "id": "atlanta-falcons",
         "name": "Atlanta Falcons",
-        "record": "2-4-0",
+        "record": "3-4-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 29,
+        "pregameRecord": "2-4-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873017",
@@ -900,7 +921,20 @@
       "espnEventId": "401873017",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873017",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:49-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873017",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-SF",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-ATL"
+        ]
+      }
     },
     {
       "id": "cle-ten",
@@ -908,20 +942,24 @@
       "away": {
         "id": "cleveland-browns",
         "name": "Cleveland Browns",
-        "record": "4-2-0",
+        "record": "5-2-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 27,
+        "pregameRecord": "4-2-0"
       },
       "home": {
         "id": "tennessee-titans",
         "name": "Tennessee Titans",
-        "record": "1-5-0",
+        "record": "1-6-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 24,
+        "pregameRecord": "1-5-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873013",
@@ -1168,7 +1206,20 @@
       "espnEventId": "401873013",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873013",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:49-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873013",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-TEN",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-CLE"
+        ]
+      }
     },
     {
       "id": "ind-min",
@@ -1176,20 +1227,24 @@
       "away": {
         "id": "indianapolis-colts",
         "name": "Indianapolis Colts",
-        "record": "2-4-0",
+        "record": "2-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 10,
+        "pregameRecord": "2-4-0"
       },
       "home": {
         "id": "minnesota-vikings",
         "name": "Minnesota Vikings",
-        "record": "5-0-0",
+        "record": "6-0-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 16,
+        "pregameRecord": "5-0-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873014",
@@ -1376,7 +1431,20 @@
       "espnEventId": "401873014",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873014",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:49-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873014",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-MIN",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-IND"
+        ]
+      }
     },
     {
       "id": "mia-nyj",
@@ -1384,20 +1452,24 @@
       "away": {
         "id": "miami-dolphins",
         "name": "Miami Dolphins",
-        "record": "0-5-0",
+        "record": "1-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 28,
+        "pregameRecord": "0-5-0"
       },
       "home": {
         "id": "new-york-jets",
         "name": "New York Jets",
-        "record": "2-4-0",
+        "record": "2-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 25,
+        "pregameRecord": "2-4-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873015",
@@ -1608,7 +1680,20 @@
       "espnEventId": "401873015",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873015",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:52-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873015",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-NYJ",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-MIA"
+        ]
+      }
     },
     {
       "id": "tb-car",
@@ -1616,20 +1701,24 @@
       "away": {
         "id": "tampa-bay-buccaneers",
         "name": "Tampa Bay Buccaneers",
-        "record": "1-5-0",
+        "record": "2-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 43,
+        "pregameRecord": "1-5-0"
       },
       "home": {
         "id": "carolina-panthers",
         "name": "Carolina Panthers",
-        "record": "3-2-0",
+        "record": "3-3-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 13,
+        "pregameRecord": "3-2-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873018",
@@ -1816,7 +1905,20 @@
       "espnEventId": "401873018",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873018",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:52-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873018",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-TB",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-CAR"
+        ]
+      }
     },
     {
       "id": "cin-bal",
@@ -1824,20 +1926,24 @@
       "away": {
         "id": "cincinnati-bengals",
         "name": "Cincinnati Bengals",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 35,
+        "pregameRecord": "3-2-0"
       },
       "home": {
         "id": "baltimore-ravens",
         "name": "Baltimore Ravens",
-        "record": "4-2-0",
+        "record": "4-3-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 13,
+        "pregameRecord": "4-2-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873012",
@@ -1988,7 +2094,20 @@
       "espnEventId": "401873012",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873012",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:52-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873012",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-CIN",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-BAL"
+        ]
+      }
     },
     {
       "id": "nyg-hou",
@@ -1996,20 +2115,24 @@
       "away": {
         "id": "new-york-giants",
         "name": "New York Giants",
-        "record": "3-2-1",
+        "record": "4-2-1",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 27,
+        "pregameRecord": "3-2-1"
       },
       "home": {
         "id": "houston-texans",
         "name": "Houston Texans",
-        "record": "2-4-0",
+        "record": "2-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 21,
+        "pregameRecord": "2-4-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873016",
@@ -2256,7 +2379,20 @@
       "espnEventId": "401873016",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final/OT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873016",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:55-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873016",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-NYG",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-HOU"
+        ]
+      }
     },
     {
       "id": "den-ari",
@@ -2264,20 +2400,24 @@
       "away": {
         "id": "denver-broncos",
         "name": "Denver Broncos",
-        "record": "4-2-0",
+        "record": "5-2-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 30,
+        "pregameRecord": "4-2-0"
       },
       "home": {
         "id": "arizona-cardinals",
         "name": "Arizona Cardinals",
-        "record": "2-4-0",
+        "record": "2-5-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 16,
+        "pregameRecord": "2-4-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873019",
@@ -2524,7 +2664,20 @@
       "espnEventId": "401873019",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873019",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:55-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873019",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-DEN",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-ARI"
+        ]
+      }
     },
     {
       "id": "gb-det",
@@ -2532,20 +2685,24 @@
       "away": {
         "id": "green-bay-packers",
         "name": "Green Bay Packers",
-        "record": "4-2-0",
+        "record": "4-3-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 17,
+        "pregameRecord": "4-2-0"
       },
       "home": {
         "id": "detroit-lions",
         "name": "Detroit Lions",
-        "record": "3-2-0",
+        "record": "4-2-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 20,
+        "pregameRecord": "3-2-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873020",
@@ -2720,7 +2877,20 @@
       "espnEventId": "401873020",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873020",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:10:55-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873020",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-GB",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-DET"
+        ]
+      }
     },
     {
       "id": "lar-lv",
@@ -2728,20 +2898,24 @@
       "away": {
         "id": "los-angeles-rams",
         "name": "Los Angeles Rams",
-        "record": "2-4-0",
+        "record": "3-4-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 35,
+        "pregameRecord": "2-4-0"
       },
       "home": {
         "id": "las-vegas-raiders",
         "name": "Las Vegas Raiders",
-        "record": "3-3-0",
+        "record": "3-4-0",
         "logo": null,
-        "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordAsOf": "2026-10-25T19:10:46-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 21,
+        "pregameRecord": "3-3-0"
       },
-      "status": "scheduled",
+      "status": "final",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
       "sourceIds": [
         "espn-401873021",
@@ -2904,7 +3078,20 @@
       "espnEventId": "401873021",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Final",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873021",
+      "result": {
+        "verified": true,
+        "marketScope": "full-game-winner",
+        "verifiedAt": "2026-10-25T19:11:01-05:00",
+        "sources": [
+          "https://www.espn.com/nfl/game/_/gameId/401873021",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LV",
+          "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LAR"
+        ]
+      }
     },
     {
       "id": "kc-sea",
@@ -2915,7 +3102,8 @@
         "record": "5-0-0",
         "logo": null,
         "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 0
       },
       "home": {
         "id": "seattle-seahawks",
@@ -2923,7 +3111,8 @@
         "record": "3-3-0",
         "logo": null,
         "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 0
       },
       "status": "scheduled",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
@@ -3172,7 +3361,10 @@
       "espnEventId": "401873022",
       "availabilityImpact": "Official Sunday game designations checked. Questionable does not mean inactive; final game-day lists remain pending.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-24T08:05:03-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Sun, October 25th at 8:20 PM EDT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873022"
     },
     {
       "id": "dal-phi",
@@ -3183,7 +3375,8 @@
         "record": "2-4-0",
         "logo": null,
         "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 0
       },
       "home": {
         "id": "philadelphia-eagles",
@@ -3191,7 +3384,8 @@
         "record": "2-4-0",
         "logo": null,
         "recordAsOf": "2026-10-24T08:02:48-05:00",
-        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000"
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+        "score": 0
       },
       "status": "scheduled",
       "verifiedAt": "2026-10-24T08:02:48-05:00",
@@ -3203,7 +3397,8 @@
         "thursday-summary-dal-phi",
         "weekend-dal-phi",
         "weekend-injuries",
-        "weekend-scoreboard"
+        "weekend-scoreboard",
+        "oct25-monday-injury"
       ],
       "insights": [
         {
@@ -3220,16 +3415,16 @@
         },
         {
           "category": "injuries",
-          "summary": "Monday final designations pending",
+          "summary": "Monday final injury designations verified; inactives pending",
           "details": [
-            "Current availability watch refreshed; Monday final game report remains pending.",
-            "Dallas Cowboys: Cobie Durant (watch), P.J. Locke (watch), Broderick Jones (watch), Marist Liufau (watch), KaVontae Turpin (watch)",
-            "Philadelphia Eagles: Willie Lampkin (watch), Tyler Steen (watch), Landon Dickerson (watch), Fred Johnson (watch), Dontayvion Wicks (watch)"
+            "Philadelphia: DeVonta Smith and Dontayvion Wicks out; Saquon Barkley questionable.",
+            "Dallas: Drew Shelton, KaVontae Turpin and Dee Winters out.",
+            "Questionable players are not confirmed inactive; some require IR activation."
           ],
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
           "category": "matchup",
@@ -3275,137 +3470,341 @@
       "availability": [
         {
           "team": "Philadelphia Eagles",
-          "name": "Willie Lampkin",
-          "position": "C",
-          "positionName": "Center",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Illness); reported 2026-10-24T02:22Z. Monday final designation not independently verified.",
+          "status": "Out",
+          "position": "DB",
+          "positionName": "Defensive back",
+          "name": "Michael Carter II",
+          "note": "Abdomen; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
           "team": "Philadelphia Eagles",
-          "name": "Tyler Steen",
-          "position": "G",
-          "positionName": "Guard",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Shoulder); reported 2026-10-24T02:19Z. Monday final designation not independently verified.",
-          "sourceIds": [
-            "weekend-dal-phi"
-          ],
-          "asOf": "2026-10-24T08:03:02-05:00"
-        },
-        {
-          "team": "Philadelphia Eagles",
-          "name": "Landon Dickerson",
-          "position": "G",
-          "positionName": "Guard",
-          "status": "Watch",
-          "note": "Current ESPN listing: Injured Reserve (Knee); reported 2026-10-24T02:17Z. Monday final designation not independently verified.",
-          "sourceIds": [
-            "weekend-dal-phi"
-          ],
-          "asOf": "2026-10-24T08:03:02-05:00"
-        },
-        {
-          "team": "Philadelphia Eagles",
-          "name": "Fred Johnson",
-          "position": "OT",
-          "positionName": "Offensive Tackle",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Illness); reported 2026-10-23T22:21Z. Monday final designation not independently verified.",
-          "sourceIds": [
-            "weekend-dal-phi"
-          ],
-          "asOf": "2026-10-24T08:03:02-05:00"
-        },
-        {
-          "team": "Philadelphia Eagles",
-          "name": "Dontayvion Wicks",
+          "status": "Out",
           "position": "WR",
-          "positionName": "Wide Receiver",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Ankle); reported 2026-10-23T22:16Z. Monday final designation not independently verified.",
+          "positionName": "Wide receiver",
+          "name": "DeVonta Smith",
+          "note": "Hamstring; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
-          "team": "Dallas Cowboys",
-          "name": "Cobie Durant",
+          "team": "Philadelphia Eagles",
+          "status": "Out",
+          "position": "OLB",
+          "positionName": "Outside linebacker",
+          "name": "Nolan Smith",
+          "note": "Concussion; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Out",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "name": "Dontayvion Wicks",
+          "note": "Ankle; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
+          "position": "RB",
+          "positionName": "Running back",
+          "name": "Saquon Barkley",
+          "note": "Hamstring; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
           "position": "CB",
           "positionName": "Cornerback",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Hamstring); reported 2026-10-24T02:06Z. Monday final designation not independently verified.",
+          "name": "Jakorian Bennett",
+          "note": "Knee; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
+          "position": "TE",
+          "positionName": "Tight end",
+          "name": "Grant Calcaterra",
+          "note": "Back; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
+          "position": "G",
+          "positionName": "Guard",
+          "name": "Landon Dickerson",
+          "note": "Knee/Pectoral; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
+          "position": "OLB",
+          "positionName": "Outside linebacker",
+          "name": "Jonathan Greenard",
+          "note": "Ankle; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
+          "position": "OLB",
+          "positionName": "Outside linebacker",
+          "name": "Jalyx Hunt",
+          "note": "Knee/Ankle; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "status": "Questionable",
+          "position": "TE",
+          "positionName": "Tight end",
+          "name": "Eli Stowers",
+          "note": "Quad; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
           "team": "Dallas Cowboys",
-          "name": "P.J. Locke",
-          "position": "S",
-          "positionName": "Safety",
-          "status": "Watch",
-          "note": "Current ESPN listing: Injured Reserve (Foot); reported 2026-10-24T01:37Z. Monday final designation not independently verified.",
+          "status": "Out",
+          "position": "T",
+          "positionName": "Tackle",
+          "name": "Drew Shelton",
+          "note": "Hamstring; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
           "team": "Dallas Cowboys",
-          "name": "Broderick Jones",
-          "position": "OT",
-          "positionName": "Offensive Tackle",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Wrist); reported 2026-10-23T20:39Z. Monday final designation not independently verified.",
+          "status": "Out",
+          "position": "WR",
+          "positionName": "Wide receiver",
+          "name": "KaVontae Turpin",
+          "note": "Ribs; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
           "team": "Dallas Cowboys",
-          "name": "Marist Liufau",
+          "status": "Out",
           "position": "LB",
           "positionName": "Linebacker",
-          "status": "Watch",
-          "note": "Current ESPN listing: Injured Reserve (Forearm); reported 2026-10-23T01:22Z. Monday final designation not independently verified.",
+          "name": "Dee Winters",
+          "note": "Calf; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
         },
         {
           "team": "Dallas Cowboys",
-          "name": "KaVontae Turpin",
-          "position": "WR",
-          "positionName": "Wide Receiver",
-          "status": "Watch",
-          "note": "Current ESPN listing: Questionable (Ribs); reported 2026-10-23T00:47Z. Monday final designation not independently verified.",
+          "status": "Questionable",
+          "position": "OLB",
+          "positionName": "Outside linebacker",
+          "name": "Marist Liufau",
+          "note": "Forearm; final injury designation, not game-day inactive confirmation.",
           "sourceIds": [
-            "weekend-dal-phi"
+            "oct25-monday-injury"
           ],
-          "asOf": "2026-10-24T08:03:02-05:00"
+          "asOf": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "status": "Questionable",
+          "position": "S",
+          "positionName": "Safety",
+          "name": "P.J. Locke",
+          "note": "Foot; final injury designation, not game-day inactive confirmation.",
+          "sourceIds": [
+            "oct25-monday-injury"
+          ],
+          "asOf": "2026-10-25T19:10:46-05:00"
         }
       ],
       "researchLimitations": [
         "Final game-day inactives pending",
         "Weather, confirmed starting lineups and opponent-adjusted strength-of-schedule model not fully verified",
         "No calibrated probabilities or executable combo quotes",
-        "Monday final injury report pending"
+        "Monday final injury report pending",
+        "Monday game-day inactives and IR activations remain unconfirmed."
       ],
       "venue": "Lincoln Financial Field",
       "neutralSite": false,
       "espnEventId": "401873009",
-      "availabilityImpact": "Monday final game designations are pending; prior feed entries remain an availability watch, not final status.",
+      "availabilityImpact": "Analysis: Philadelphia is missing two receivers and has several questionable players. Dallas also has three players ruled out. Confirm activations and inactives before kickoff.",
       "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
-      "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+      "researchReviewedAt": "2026-10-25T19:10:46-05:00",
+      "scoreCheckedAt": "2026-10-25T19:10:46-05:00",
+      "scoreDetail": "Mon, October 26th at 8:15 PM EDT",
+      "scoreSource": "https://www.espn.com/nfl/game/_/gameId/401873009",
+      "availabilityHistory": [
+        {
+          "availability": [
+            {
+              "team": "Philadelphia Eagles",
+              "name": "Willie Lampkin",
+              "position": "C",
+              "positionName": "Center",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Illness); reported 2026-10-24T02:22Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Philadelphia Eagles",
+              "name": "Tyler Steen",
+              "position": "G",
+              "positionName": "Guard",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Shoulder); reported 2026-10-24T02:19Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Philadelphia Eagles",
+              "name": "Landon Dickerson",
+              "position": "G",
+              "positionName": "Guard",
+              "status": "Watch",
+              "note": "Current ESPN listing: Injured Reserve (Knee); reported 2026-10-24T02:17Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Philadelphia Eagles",
+              "name": "Fred Johnson",
+              "position": "OT",
+              "positionName": "Offensive Tackle",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Illness); reported 2026-10-23T22:21Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Philadelphia Eagles",
+              "name": "Dontayvion Wicks",
+              "position": "WR",
+              "positionName": "Wide Receiver",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Ankle); reported 2026-10-23T22:16Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Dallas Cowboys",
+              "name": "Cobie Durant",
+              "position": "CB",
+              "positionName": "Cornerback",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Hamstring); reported 2026-10-24T02:06Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Dallas Cowboys",
+              "name": "P.J. Locke",
+              "position": "S",
+              "positionName": "Safety",
+              "status": "Watch",
+              "note": "Current ESPN listing: Injured Reserve (Foot); reported 2026-10-24T01:37Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Dallas Cowboys",
+              "name": "Broderick Jones",
+              "position": "OT",
+              "positionName": "Offensive Tackle",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Wrist); reported 2026-10-23T20:39Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Dallas Cowboys",
+              "name": "Marist Liufau",
+              "position": "LB",
+              "positionName": "Linebacker",
+              "status": "Watch",
+              "note": "Current ESPN listing: Injured Reserve (Forearm); reported 2026-10-23T01:22Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            },
+            {
+              "team": "Dallas Cowboys",
+              "name": "KaVontae Turpin",
+              "position": "WR",
+              "positionName": "Wide Receiver",
+              "status": "Watch",
+              "note": "Current ESPN listing: Questionable (Ribs); reported 2026-10-23T00:47Z. Monday final designation not independently verified.",
+              "sourceIds": [
+                "weekend-dal-phi"
+              ],
+              "asOf": "2026-10-24T08:03:02-05:00"
+            }
+          ],
+          "availabilityImpact": "Monday final game designations are pending; prior feed entries remain an availability watch, not final status.",
+          "researchReviewedAt": "2026-10-24T08:05:03-05:00"
+        }
+      ]
     }
   ],
   "predictions": [
@@ -4824,6 +5223,138 @@
           "retrievedAt": "2026-10-24T08:02:58-05:00"
         }
       ]
+    },
+    {
+      "id": "oct25-scores",
+      "title": "ESPN 2026 Week 7 score and record snapshot",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=7&limit=1000",
+      "retrievedAt": "2026-10-25T19:10:46-05:00"
+    },
+    {
+      "id": "oct25-monday-injury",
+      "title": "Eagles and Cowboys final injury designations",
+      "url": "https://www.philadelphiaeagles.com/news/cowboys-vs-eagles-injury-report-2026-nfl-week-7-saquon-barkley-jalyx-hunt",
+      "retrievedAt": "2026-10-25T19:10:46-05:00"
+    },
+    {
+      "id": "oct25-markets",
+      "title": "Exact Kalshi market settlement and active quote captures",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-NE",
+      "retrievedAt": "2026-10-25T19:11:01-05:00",
+      "captures": [
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-NE",
+          "retrievedAt": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-CHI",
+          "retrievedAt": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-PIT",
+          "retrievedAt": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-NO",
+          "retrievedAt": "2026-10-25T19:10:46-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-SF",
+          "retrievedAt": "2026-10-25T19:10:49-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-ATL",
+          "retrievedAt": "2026-10-25T19:10:49-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-TEN",
+          "retrievedAt": "2026-10-25T19:10:49-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-CLE",
+          "retrievedAt": "2026-10-25T19:10:49-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-MIN",
+          "retrievedAt": "2026-10-25T19:10:49-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-IND",
+          "retrievedAt": "2026-10-25T19:10:49-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-NYJ",
+          "retrievedAt": "2026-10-25T19:10:52-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-MIA",
+          "retrievedAt": "2026-10-25T19:10:52-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-TB",
+          "retrievedAt": "2026-10-25T19:10:52-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-CAR",
+          "retrievedAt": "2026-10-25T19:10:52-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-CIN",
+          "retrievedAt": "2026-10-25T19:10:52-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-BAL",
+          "retrievedAt": "2026-10-25T19:10:52-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-NYG",
+          "retrievedAt": "2026-10-25T19:10:55-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-HOU",
+          "retrievedAt": "2026-10-25T19:10:55-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-DEN",
+          "retrievedAt": "2026-10-25T19:10:55-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-ARI",
+          "retrievedAt": "2026-10-25T19:10:55-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-GB",
+          "retrievedAt": "2026-10-25T19:10:55-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-DET",
+          "retrievedAt": "2026-10-25T19:10:55-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LV",
+          "retrievedAt": "2026-10-25T19:11:01-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LAR",
+          "retrievedAt": "2026-10-25T19:11:01-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25KCSEA-SEA",
+          "retrievedAt": "2026-10-25T19:11:01-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25KCSEA-KC",
+          "retrievedAt": "2026-10-25T19:11:01-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT26DALPHI-PHI",
+          "retrievedAt": "2026-10-25T19:11:01-05:00"
+        },
+        {
+          "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT26DALPHI-DAL",
+          "retrievedAt": "2026-10-25T19:11:01-05:00"
+        }
+      ]
     }
   ],
   "marketSnapshots": [
@@ -4844,7 +5375,7 @@
       "rulesPrimary": "If New England wins the New England vs Chicago Pro Football game originally scheduled for Oct 22, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the New England vs Chicago Pro Football game originally scheduled for Oct 22, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "finalized",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketCheckedAt": "2026-10-25T19:10:46-05:00"
     },
     {
       "gameId": "ne-chi",
@@ -4863,7 +5394,7 @@
       "rulesPrimary": "If Chicago wins the New England vs Chicago Pro Football game originally scheduled for Oct 22, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the New England vs Chicago Pro Football game originally scheduled for Oct 22, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "finalized",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketCheckedAt": "2026-10-25T19:10:46-05:00"
     },
     {
       "gameId": "pit-no",
@@ -4881,8 +5412,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-PIT",
       "rulesPrimary": "If Pittsburgh wins the Pittsburgh vs New Orleans Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Pittsburgh vs New Orleans Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:46-05:00"
     },
     {
       "gameId": "pit-no",
@@ -4900,8 +5431,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-NO",
       "rulesPrimary": "If New Orleans wins the Pittsburgh vs New Orleans Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Pittsburgh vs New Orleans Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:46-05:00"
     },
     {
       "gameId": "sf-atl",
@@ -4919,8 +5450,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-SF",
       "rulesPrimary": "If San Francisco wins the San Francisco vs Atlanta Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the San Francisco vs Atlanta Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:49-05:00"
     },
     {
       "gameId": "sf-atl",
@@ -4938,8 +5469,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-ATL",
       "rulesPrimary": "If Atlanta wins the San Francisco vs Atlanta Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the San Francisco vs Atlanta Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:49-05:00"
     },
     {
       "gameId": "cle-ten",
@@ -4957,8 +5488,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-TEN",
       "rulesPrimary": "If Tennessee wins the Cleveland vs Tennessee Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Cleveland vs Tennessee Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:49-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:49-05:00"
     },
     {
       "gameId": "cle-ten",
@@ -4976,8 +5507,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-CLE",
       "rulesPrimary": "If Cleveland wins the Cleveland vs Tennessee Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Cleveland vs Tennessee Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:49-05:00"
     },
     {
       "gameId": "ind-min",
@@ -4995,8 +5526,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-MIN",
       "rulesPrimary": "If Minnesota wins the Indianapolis vs Minnesota Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Indianapolis vs Minnesota Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:49-05:00"
     },
     {
       "gameId": "ind-min",
@@ -5014,8 +5545,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-IND",
       "rulesPrimary": "If Indianapolis wins the Indianapolis vs Minnesota Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Indianapolis vs Minnesota Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:49-05:00"
     },
     {
       "gameId": "mia-nyj",
@@ -5033,8 +5564,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-NYJ",
       "rulesPrimary": "If New York J wins the Miami vs New York J Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Miami vs New York J Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:52-05:00"
     },
     {
       "gameId": "mia-nyj",
@@ -5052,8 +5583,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-MIA",
       "rulesPrimary": "If Miami wins the Miami vs New York J Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Miami vs New York J Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:52-05:00"
     },
     {
       "gameId": "tb-car",
@@ -5071,8 +5602,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-TB",
       "rulesPrimary": "If Tampa Bay wins the Tampa Bay vs Carolina Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Tampa Bay vs Carolina Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:52-05:00"
     },
     {
       "gameId": "tb-car",
@@ -5090,8 +5621,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-CAR",
       "rulesPrimary": "If Carolina wins the Tampa Bay vs Carolina Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Tampa Bay vs Carolina Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:52-05:00"
     },
     {
       "gameId": "cin-bal",
@@ -5109,8 +5640,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-CIN",
       "rulesPrimary": "If Cincinnati wins the Cincinnati vs Baltimore Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Cincinnati vs Baltimore Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:52-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:52-05:00"
     },
     {
       "gameId": "cin-bal",
@@ -5128,8 +5659,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-BAL",
       "rulesPrimary": "If Baltimore wins the Cincinnati vs Baltimore Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Cincinnati vs Baltimore Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:52-05:00"
     },
     {
       "gameId": "nyg-hou",
@@ -5147,8 +5678,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-NYG",
       "rulesPrimary": "If New York G wins the New York G vs Houston Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the New York G vs Houston Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:55-05:00"
     },
     {
       "gameId": "nyg-hou",
@@ -5166,8 +5697,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-HOU",
       "rulesPrimary": "If Houston wins the New York G vs Houston Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the New York G vs Houston Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:55-05:00"
     },
     {
       "gameId": "den-ari",
@@ -5185,8 +5716,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-DEN",
       "rulesPrimary": "If Denver wins the Denver vs Arizona Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Denver vs Arizona Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:55-05:00"
     },
     {
       "gameId": "den-ari",
@@ -5204,8 +5735,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-ARI",
       "rulesPrimary": "If Arizona wins the Denver vs Arizona Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Denver vs Arizona Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:55-05:00"
     },
     {
       "gameId": "gb-det",
@@ -5223,8 +5754,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-GB",
       "rulesPrimary": "If Green Bay wins the Green Bay vs Detroit Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Green Bay vs Detroit Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:55-05:00"
     },
     {
       "gameId": "gb-det",
@@ -5242,8 +5773,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-DET",
       "rulesPrimary": "If Detroit wins the Green Bay vs Detroit Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Green Bay vs Detroit Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:10:55-05:00"
     },
     {
       "gameId": "lar-lv",
@@ -5261,8 +5792,8 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LV",
       "rulesPrimary": "If Las Vegas wins the Los Angeles R vs Las Vegas Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Los Angeles R vs Las Vegas Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:55-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:11:01-05:00"
     },
     {
       "gameId": "lar-lv",
@@ -5280,14 +5811,14 @@
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LAR",
       "rulesPrimary": "If Los Angeles R wins the Los Angeles R vs Las Vegas Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Los Angeles R vs Las Vegas Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
-      "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+      "marketStatus": "finalized",
+      "marketCheckedAt": "2026-10-25T19:11:01-05:00"
     },
     {
       "gameId": "kc-sea",
       "team": "Seattle Seahawks",
       "ticker": "KXNFLGAME-26OCT25KCSEA-SEA",
-      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "retrievedAt": "2026-10-25T19:11:01-05:00",
       "apiUpdatedTime": "2026-10-13T04:06:00.407282Z",
       "yesBid": 0.58,
       "yesAsk": 0.59,
@@ -5300,13 +5831,13 @@
       "rulesPrimary": "If Seattle wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+      "marketCheckedAt": "2026-10-25T19:11:01-05:00"
     },
     {
       "gameId": "kc-sea",
       "team": "Kansas City Chiefs",
       "ticker": "KXNFLGAME-26OCT25KCSEA-KC",
-      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "retrievedAt": "2026-10-25T19:11:01-05:00",
       "apiUpdatedTime": "2026-10-13T04:06:00.407282Z",
       "yesBid": 0.41,
       "yesAsk": 0.42,
@@ -5319,18 +5850,18 @@
       "rulesPrimary": "If Kansas City wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+      "marketCheckedAt": "2026-10-25T19:11:01-05:00"
     },
     {
       "gameId": "dal-phi",
       "team": "Philadelphia Eagles",
       "ticker": "KXNFLGAME-26OCT26DALPHI-PHI",
-      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "retrievedAt": "2026-10-25T19:11:01-05:00",
       "apiUpdatedTime": "2026-10-13T04:06:00.565631Z",
-      "yesBid": 0.35,
-      "yesAsk": 0.36,
-      "noBid": 0.64,
-      "noAsk": 0.65,
+      "yesBid": 0.33,
+      "yesAsk": 0.34,
+      "noBid": 0.66,
+      "noAsk": 0.67,
       "executableNow": false,
       "depthVerified": false,
       "feesIncluded": false,
@@ -5338,18 +5869,18 @@
       "rulesPrimary": "If Philadelphia wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+      "marketCheckedAt": "2026-10-25T19:11:01-05:00"
     },
     {
       "gameId": "dal-phi",
       "team": "Dallas Cowboys",
       "ticker": "KXNFLGAME-26OCT26DALPHI-DAL",
-      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "retrievedAt": "2026-10-25T19:11:01-05:00",
       "apiUpdatedTime": "2026-10-13T04:06:00.565631Z",
-      "yesBid": 0.65,
-      "yesAsk": 0.66,
-      "noBid": 0.34,
-      "noAsk": 0.35,
+      "yesBid": 0.66,
+      "yesAsk": 0.68,
+      "noBid": 0.32,
+      "noAsk": 0.34,
       "executableNow": false,
       "depthVerified": false,
       "feesIncluded": false,
@@ -5357,13 +5888,13 @@
       "rulesPrimary": "If Dallas wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026, then the market resolves to Yes.",
       "rulesSecondary": "The following market refers to the team who wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "active",
-      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+      "marketCheckedAt": "2026-10-25T19:11:01-05:00"
     }
   ],
   "coverage": {
     "totalWeekGames": 14,
-    "upcomingGames": 13,
-    "completedGames": 1,
+    "upcomingGames": 2,
+    "completedGames": 12,
     "liveGames": 0,
     "byeTeams": [
       "Buffalo Bills",
@@ -5374,22 +5905,21 @@
     "scope": "Complete 14-game Week 7 slate; first Sunday kickoff 08:30 Cancun in France. Week remains open."
   },
   "researchQuality": {
-    "status": "Weekend reviewed; availability limitations remain",
+    "status": "Scores and market snapshots refreshed; Monday injury designations verified",
     "reviewedUpcomingGames": 13,
-    "activeQuotesRefreshed": 26,
-    "activeQuotesChanged": 13,
-    "finalizedMarketsVerified": 2,
+    "activeQuotesRefreshed": 4,
+    "activeQuotesChanged": 2,
+    "finalizedMarketsVerified": 24,
     "limitations": [
-      "Monday final designations pending",
-      "Sunday inactives and late quarterback decisions pending",
-      "One inconsistent SF receiver identity excluded",
-      "Weather and opponent-adjusted strength of schedule unverified",
-      "No calibrated probabilities or executable combo quotes"
+      "Monday inactives and IR activations pending",
+      "Sunday night score snapshot may be superseded after capture",
+      "Weather and calibrated probabilities unavailable",
+      "Executable combo quotes unavailable"
     ],
-    "nextReview": "Recheck Sunday inactives before 08:30 Cancun international kickoff; Monday final designations and quarterback decisions still required."
+    "nextReview": "Refresh Sunday night result after the game and Monday inactives before kickoff."
   },
-  "marketsCheckedAt": "2026-10-24T08:02:58-05:00",
-  "dataVersion": "2026-10-24-week7-weekend-1",
+  "marketsCheckedAt": "2026-10-25T19:11:01-05:00",
+  "dataVersion": "20261025T1912160500-refresh",
   "researchRevisions": [
     {
       "revisedAt": "2026-10-20T06:31:49-05:00",
@@ -5479,9 +6009,15 @@
       "previousSnapshotPath": "2026/history/week-07-before-20261024-weekend.json",
       "previousSnapshotSha256": "39390913f891d441a5868e3fd09b04c41531f9476099fc4742472e8c40b5a9a1",
       "reason": "Weekend pregame review; original Thursday forecast and all AI paper baselines preserved."
+    },
+    {
+      "revisedAt": "2026-10-25T19:12:16-05:00",
+      "previousSnapshotPath": "2026/history/week-07-before-20261025-evening.json",
+      "previousSnapshotSha256": "67786978842819ea8e70473785e2c6b28cc83aa09d8faf2d40347eed46705522",
+      "reason": "Verified score/market refresh and Monday final injury report; forecasts and AI paper baselines unchanged."
     }
   ],
-  "recordsCheckedAt": "2026-10-24T08:02:48-05:00",
+  "recordsCheckedAt": "2026-10-25T19:10:46-05:00",
   "marketSnapshotHistory": [
     {
       "gameId": "ne-chi",
@@ -6508,6 +7044,82 @@
       "rulesSecondary": "The following market refers to the team who wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
       "marketStatus": "active",
       "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+    },
+    {
+      "gameId": "kc-sea",
+      "team": "Seattle Seahawks",
+      "ticker": "KXNFLGAME-26OCT25KCSEA-SEA",
+      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "apiUpdatedTime": "2026-10-13T04:06:00.407282Z",
+      "yesBid": 0.58,
+      "yesAsk": 0.59,
+      "noBid": 0.41,
+      "noAsk": 0.42,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25KCSEA-SEA",
+      "rulesPrimary": "If Seattle wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active",
+      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+    },
+    {
+      "gameId": "kc-sea",
+      "team": "Kansas City Chiefs",
+      "ticker": "KXNFLGAME-26OCT25KCSEA-KC",
+      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "apiUpdatedTime": "2026-10-13T04:06:00.407282Z",
+      "yesBid": 0.41,
+      "yesAsk": 0.42,
+      "noBid": 0.58,
+      "noAsk": 0.59,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25KCSEA-KC",
+      "rulesPrimary": "If Kansas City wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Kansas City vs Seattle Pro Football game originally scheduled for Oct 25, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active",
+      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+    },
+    {
+      "gameId": "dal-phi",
+      "team": "Philadelphia Eagles",
+      "ticker": "KXNFLGAME-26OCT26DALPHI-PHI",
+      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "apiUpdatedTime": "2026-10-13T04:06:00.565631Z",
+      "yesBid": 0.35,
+      "yesAsk": 0.36,
+      "noBid": 0.64,
+      "noAsk": 0.65,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT26DALPHI-PHI",
+      "rulesPrimary": "If Philadelphia wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active",
+      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
+    },
+    {
+      "gameId": "dal-phi",
+      "team": "Dallas Cowboys",
+      "ticker": "KXNFLGAME-26OCT26DALPHI-DAL",
+      "retrievedAt": "2026-10-24T08:02:58-05:00",
+      "apiUpdatedTime": "2026-10-13T04:06:00.565631Z",
+      "yesBid": 0.65,
+      "yesAsk": 0.66,
+      "noBid": 0.34,
+      "noAsk": 0.35,
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT26DALPHI-DAL",
+      "rulesPrimary": "If Dallas wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Dallas vs Philadelphia Pro Football game originally scheduled for Oct 26, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "marketStatus": "active",
+      "marketCheckedAt": "2026-10-24T08:02:58-05:00"
     }
   ],
   "scheduleCheckedAt": "2026-10-22T07:58:03-05:00",
@@ -6519,7 +7131,7 @@
       "status": "finalized",
       "result": "no",
       "settlementValue": 0.0,
-      "verifiedAt": "2026-10-24T08:02:49-05:00",
+      "verifiedAt": "2026-10-25T19:10:46-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-NE"
     },
     {
@@ -6529,9 +7141,230 @@
       "status": "finalized",
       "result": "yes",
       "settlementValue": 1.0,
-      "verifiedAt": "2026-10-24T08:02:49-05:00",
+      "verifiedAt": "2026-10-25T19:10:46-05:00",
       "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT22NECHI-CHI"
+    },
+    {
+      "gameId": "pit-no",
+      "team": "Pittsburgh Steelers",
+      "ticker": "KXNFLGAME-26OCT25PITNO-PIT",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:46-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-PIT"
+    },
+    {
+      "gameId": "pit-no",
+      "team": "New Orleans Saints",
+      "ticker": "KXNFLGAME-26OCT25PITNO-NO",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:46-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25PITNO-NO"
+    },
+    {
+      "gameId": "sf-atl",
+      "team": "San Francisco 49ers",
+      "ticker": "KXNFLGAME-26OCT25SFATL-SF",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:49-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-SF"
+    },
+    {
+      "gameId": "sf-atl",
+      "team": "Atlanta Falcons",
+      "ticker": "KXNFLGAME-26OCT25SFATL-ATL",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:49-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25SFATL-ATL"
+    },
+    {
+      "gameId": "cle-ten",
+      "team": "Tennessee Titans",
+      "ticker": "KXNFLGAME-26OCT25CLETEN-TEN",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:49-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-TEN"
+    },
+    {
+      "gameId": "cle-ten",
+      "team": "Cleveland Browns",
+      "ticker": "KXNFLGAME-26OCT25CLETEN-CLE",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:49-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CLETEN-CLE"
+    },
+    {
+      "gameId": "ind-min",
+      "team": "Minnesota Vikings",
+      "ticker": "KXNFLGAME-26OCT25INDMIN-MIN",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:49-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-MIN"
+    },
+    {
+      "gameId": "ind-min",
+      "team": "Indianapolis Colts",
+      "ticker": "KXNFLGAME-26OCT25INDMIN-IND",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:49-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25INDMIN-IND"
+    },
+    {
+      "gameId": "mia-nyj",
+      "team": "New York Jets",
+      "ticker": "KXNFLGAME-26OCT25MIANYJ-NYJ",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:52-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-NYJ"
+    },
+    {
+      "gameId": "mia-nyj",
+      "team": "Miami Dolphins",
+      "ticker": "KXNFLGAME-26OCT25MIANYJ-MIA",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:52-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25MIANYJ-MIA"
+    },
+    {
+      "gameId": "tb-car",
+      "team": "Tampa Bay Buccaneers",
+      "ticker": "KXNFLGAME-26OCT25TBCAR-TB",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:52-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-TB"
+    },
+    {
+      "gameId": "tb-car",
+      "team": "Carolina Panthers",
+      "ticker": "KXNFLGAME-26OCT25TBCAR-CAR",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:52-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25TBCAR-CAR"
+    },
+    {
+      "gameId": "cin-bal",
+      "team": "Cincinnati Bengals",
+      "ticker": "KXNFLGAME-26OCT25CINBAL-CIN",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:52-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-CIN"
+    },
+    {
+      "gameId": "cin-bal",
+      "team": "Baltimore Ravens",
+      "ticker": "KXNFLGAME-26OCT25CINBAL-BAL",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:52-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25CINBAL-BAL"
+    },
+    {
+      "gameId": "nyg-hou",
+      "team": "New York Giants",
+      "ticker": "KXNFLGAME-26OCT25NYGHOU-NYG",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:55-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-NYG"
+    },
+    {
+      "gameId": "nyg-hou",
+      "team": "Houston Texans",
+      "ticker": "KXNFLGAME-26OCT25NYGHOU-HOU",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:55-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25NYGHOU-HOU"
+    },
+    {
+      "gameId": "den-ari",
+      "team": "Denver Broncos",
+      "ticker": "KXNFLGAME-26OCT25DENARI-DEN",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:55-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-DEN"
+    },
+    {
+      "gameId": "den-ari",
+      "team": "Arizona Cardinals",
+      "ticker": "KXNFLGAME-26OCT25DENARI-ARI",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:55-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25DENARI-ARI"
+    },
+    {
+      "gameId": "gb-det",
+      "team": "Green Bay Packers",
+      "ticker": "KXNFLGAME-26OCT25GBDET-GB",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:10:55-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-GB"
+    },
+    {
+      "gameId": "gb-det",
+      "team": "Detroit Lions",
+      "ticker": "KXNFLGAME-26OCT25GBDET-DET",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:10:55-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25GBDET-DET"
+    },
+    {
+      "gameId": "lar-lv",
+      "team": "Las Vegas Raiders",
+      "ticker": "KXNFLGAME-26OCT25LARLV-LV",
+      "status": "finalized",
+      "result": "no",
+      "settlementValue": 0.0,
+      "verifiedAt": "2026-10-25T19:11:01-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LV"
+    },
+    {
+      "gameId": "lar-lv",
+      "team": "Los Angeles Rams",
+      "ticker": "KXNFLGAME-26OCT25LARLV-LAR",
+      "status": "finalized",
+      "result": "yes",
+      "settlementValue": 1.0,
+      "verifiedAt": "2026-10-25T19:11:01-05:00",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT25LARLV-LAR"
     }
   ],
-  "scoresCheckedAt": "2026-10-24T08:02:48-05:00"
+  "scoresCheckedAt": "2026-10-25T19:10:46-05:00",
+  "resultsVersion": "20261025T1912160500-scores"
 }
