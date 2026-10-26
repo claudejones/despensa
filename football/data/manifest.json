@@ -26,12 +26,13 @@
       "path": "2026/week-07.json",
       "status": "refreshed-open",
       "researchVersion": "2026-10-24-week7-weekend-1",
-      "dataVersion": "2026-10-24-week7-weekend-1"
+      "dataVersion": "20261025T1912160500-refresh",
+      "resultsVersion": "20261025T1912160500-scores"
     }
   },
-  "lastSuccessfulPublication": "2026-10-24T08:05:03-05:00",
-  "notice": "Week 7 weekend research refreshed: 13 upcoming games; Thursday CHI 30–NE 24 final. Week remains open. Final inactives and Monday designations pending.",
-  "scoresCheckedAt": "2026-10-24T08:02:48-05:00",
-  "marketsCheckedAt": "2026-10-24T08:02:58-05:00",
-  "recordsCheckedAt": "2026-10-22T07:58:03-05:00"
+  "lastSuccessfulPublication": "2026-10-25T19:12:16-05:00",
+  "notice": "Week 7: 12 finals, 0 live, 2 scheduled. Monday injury report refreshed. Original picks and personal records preserved.",
+  "scoresCheckedAt": "2026-10-25T19:10:46-05:00",
+  "marketsCheckedAt": "2026-10-25T19:11:01-05:00",
+  "recordsCheckedAt": "2026-10-25T19:10:46-05:00"
 }

@@ -15,7 +15,8 @@ class FinalRecords(unittest.TestCase):
         for _ in range(2): refresh.refresh_final_records(g,self.competitors,g['home']['recordAsOf'],g['home']['recordSource'])
         self.assertEqual(g,original)
         w7=json.loads((ROOT/'football/data/2026/week-07.json').read_text())
-        self.assertEqual(next(g for g in w7['games'] if g['id']=='sf-atl')['away']['record'],'6-0-0')
+        sf=next(g for g in w7['games'] if g['id']=='sf-atl')['away']
+        self.assertEqual(sf['pregameRecord'],'6-0-0'); self.assertEqual(sf['record'],'6-1-0')
     def test_invalid_records_fail_atomically(self):
         for records in ([],[{'type':'total','summary':'5-0'}],[{'type':'total','summary':'invalid'}]):
             with self.subTest(records=records):
@@ -26,7 +27,8 @@ class FinalRecords(unittest.TestCase):
         self.game['status']='live'
         with self.assertRaises(ValueError):refresh.refresh_final_records(self.game,self.competitors,'new','source')
     def test_every_final_preserves_pregame_and_has_provenance(self):
-        for g in self.week['games']+self.week['completedGames']:
+        w7=json.loads((ROOT/'football/data/2026/week-07.json').read_text())
+        for g in self.week['games']+self.week['completedGames']+[g for g in w7['games'] if g['status']=='final']:
             for side in ('away','home'):
                 team=g[side];self.assertTrue(team['recordSource'].startswith('https://'));self.assertIn('-05:00',team['recordAsOf'])
                 if 'pregameRecord' in team:
