@@ -26,13 +26,13 @@
       "path": "2026/week-07.json",
       "status": "refreshed-open",
       "researchVersion": "2026-10-24-week7-weekend-1",
-      "dataVersion": "20261025T1912160500-refresh",
-      "resultsVersion": "20261025T1912160500-scores"
+      "dataVersion": "20261025T2305130500-markets",
+      "resultsVersion": "20261025T2305130500-scores"
     }
   },
-  "lastSuccessfulPublication": "2026-10-25T19:12:16-05:00",
-  "notice": "Week 7: 12 finals, 0 live, 2 scheduled. Monday injury report refreshed. Original picks and personal records preserved.",
-  "scoresCheckedAt": "2026-10-25T19:10:46-05:00",
-  "marketsCheckedAt": "2026-10-25T19:11:01-05:00",
-  "recordsCheckedAt": "2026-10-25T19:10:46-05:00"
+  "lastSuccessfulPublication": "2026-10-25T23:05:13-05:00",
+  "notice": "Week 7: all 12 Sunday games plus Thursday final verified; Monday remains scheduled. Original picks and personal records preserved.",
+  "scoresCheckedAt": "2026-10-25T23:04:50-05:00",
+  "marketsCheckedAt": "2026-10-25T23:05:13-05:00",
+  "recordsCheckedAt": "2026-10-25T23:04:50-05:00"
 }
