@@ -973,6 +973,36 @@
       "archivedAt": "2026-10-19T11:05:36.575060+00:00",
       "archiveMode": "prospective",
       "researchVersion": "2026-10-19-week7-preliminary-1"
+    },
+    {
+      "id": "2026:8:single:car-gb",
+      "kind": "single",
+      "title": "Green Bay Packers",
+      "publishedAt": "2026-10-29T08:02:24-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Narrow Green Bay home lean given Carolina\u2019s depleted line and missing defensive starters.",
+      "legs": [
+        {
+          "gameId": "car-gb",
+          "team": "Green Bay Packers",
+          "side": "YES",
+          "kickoff": "2026-10-29T19:15:00-05:00",
+          "record": "4-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26OCT29CARGB-GB",
+        "capturedAt": "2026-10-29T08:02:47-05:00",
+        "price": 0.65,
+        "payout": 3.0769230769230766,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-29T13:03:26.792759+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-29-week8-thursday-1"
     }
   ]
 }
