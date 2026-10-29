@@ -28,11 +28,17 @@
       "researchVersion": "2026-10-24-week7-weekend-1",
       "dataVersion": "20261025T2305130500-markets",
       "resultsVersion": "20261025T2305130500-scores"
+    },
+    "08": {
+      "path": "2026/week-08.json",
+      "status": "preliminary",
+      "researchVersion": "2026-10-29-week8-thursday-1",
+      "dataVersion": "2026-10-29-week8-thursday-1"
     }
   },
-  "lastSuccessfulPublication": "2026-10-25T23:05:13-05:00",
-  "notice": "Week 7: all 12 Sunday games plus Thursday final verified; Monday remains scheduled. Original picks and personal records preserved.",
+  "lastSuccessfulPublication": "2026-10-29T08:03:44-05:00",
+  "notice": "Week 8 Thursday research: Panthers at Packers; all 14 games scheduled. Sunday/Monday research preliminary. Week 7 preserved.",
   "scoresCheckedAt": "2026-10-25T23:04:50-05:00",
-  "marketsCheckedAt": "2026-10-25T23:05:13-05:00",
+  "marketsCheckedAt": "2026-10-29T08:03:24-05:00",
   "recordsCheckedAt": "2026-10-25T23:04:50-05:00"
 }
