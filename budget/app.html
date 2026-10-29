@@ -732,7 +732,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v119";
+const APP_BUILD = "v120";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -1301,7 +1301,12 @@ function rolloverForMonth(catId, ym){
     // real money this month (avail!==0) — an overspend there is a genuine
     // deficit and must carry forward like any other overspend. Only
     // avail===0 (truly no money, from any source) floors the result.
-    roll = (avail===0 && result<0) ? 0 : result;
+    // v120: "no money at stake" means nothing came from ANY source — no Base,
+    // no rollover in, no transfer in or out. A category that had a budget (or
+    // funds moved through it) and was fully used or moved out is not
+    // unplanned: an overspend after that is a real deficit and carries.
+    const unplanned = base===0 && roll===0 && adj===0;
+    roll = (unplanned && result<0) ? 0 : result;
   }
   return roll;
 }
@@ -3416,7 +3421,10 @@ function renderMonthly(main){
     // budget) — it has real money to track against even with base===0. What
     // actually decides whether there's a target to show status against is
     // whether there's any money available at all, from any source.
-    const hasTarget = avail !== 0;
+    // v120: a budget was set (Base), or money moved through this category
+    // (rollover / transfer) — not just "Available is non-zero". A category that
+    // had funds and was fully used or moved out still has a budget to show.
+    const hasTarget = base > 0 || Math.abs(roll) > 0.005 || Math.abs(adj) > 0.005 || avail !== 0;
     const spent = spentForMonth(id, ym);
     const remaining = roundCents(avail - spent);
     const pct = avail>0 ? Math.min(100, (spent/avail)*100) : (spent>0?100:0);
@@ -4066,7 +4074,7 @@ function openMonthlyCategoryDetailSheet(categoryId, ym){
   // See the matching comment on the Monthly card list: a target to show
   // status against means real money available, from any source — base,
   // rollover, or transfer — not specifically a non-zero Base allocation.
-  const hasTarget = avail !== 0;
+  const hasTarget = base > 0 || Math.abs(roll) > 0.005 || Math.abs(adj) > 0.005 || avail !== 0;
   const spent = spentForMonth(categoryId, ym);
   const remaining = roundCents(avail - spent);
   const remainingInfo = remainingDisplay(hasTarget, remaining);
