@@ -732,7 +732,7 @@ const SEED_YEAR = 2027; // the year the original seed data was written for
 // home-screen install actually picked up the latest publish yet, since
 // iOS can hold a suspended copy of the page open for a long time without
 // reloading it.
-const APP_BUILD = "v120";
+const APP_BUILD = "v121";
 // Categories no longer carry an assigned identity color — past ~8
 // categories a generated hue stops being reliably distinguishable (see
 // the dataviz skill), and the category set here is unlimited/custom, so
@@ -5235,7 +5235,24 @@ function renderSettings(main){
     <div class="muted" style="font-size:12px; margin-top:3px">${configuredN} of 12 months configured for ${settingsYear}</div>
     <div class="cf-row taprow" id="dlYear" style="margin-top:8px"><span class="nm" style="flex:1">Download ${settingsYear} data</span><span class="rowchev">${iconChevronRight()}</span></div>
     <div class="cf-row taprow" id="clrYear"><span class="nm" style="flex:1; color:var(--bad)">Clear ${settingsYear}</span><span class="rowchev">${iconChevronRight()}</span></div>
-    <div class="cf-row taprow" id="expAll"><span class="nm" style="flex:1">Export everything (JSON)</span><span class="rowchev">${iconChevronRight()}</span></div>`;
+    <div class="cf-row taprow" id="expAll"><span class="nm" style="flex:1">Export everything (JSON)</span><span class="rowchev">${iconChevronRight()}</span></div>
+    <div class="cf-row taprow" id="rstBackup"><span class="nm" style="flex:1">Restore from backup</span><span class="rowchev">${iconChevronRight()}</span></div>`;
+  const preRestore = readPreRestore();
+  if(preRestore){
+    const undoRow = el("div","cf-row taprow");
+    undoRow.id = "undoRestore";
+    undoRow.innerHTML = `<span class="nm" style="flex:1">Undo last restore<span class="muted" style="display:block; font-size:11.5px">Copy from ${escapeHtml(new Date(preRestore.at).toLocaleString())}</span></span><span class="rowchev">${iconChevronRight()}</span>`;
+    undoRow.onclick = ()=> restoreSheet("Undo the last restore?", [
+      `This puts your data back as it was ${new Date(preRestore.at).toLocaleString()}, just before you restored.`,
+      "What's in the app now is replaced. Only one undo copy is kept."
+    ], "Undo restore", async ()=>{ undoLastRestore(); showToast("Restore undone"); render(); });
+    dataCard.appendChild(undoRow);
+  }
+  const restoreInput = document.createElement("input");
+  restoreInput.type = "file"; restoreInput.accept = ".json,application/json"; restoreInput.style.display = "none";
+  restoreInput.onchange = async ()=>{ const f = restoreInput.files && restoreInput.files[0]; restoreInput.value = ""; if(f) await handleRestoreFile(f); };
+  dataCard.appendChild(restoreInput);
+  dataCard.querySelector("#rstBackup").onclick = ()=> restoreInput.click();
   dataCard.querySelector("#dlYear").onclick = ()=> exportYearData(settingsYear);
   dataCard.querySelector("#expAll").onclick = exportData;
   dataCard.querySelector("#clrYear").onclick = ()=>{
@@ -5542,6 +5559,149 @@ async function clearYearData(year){
   for(const li of dropItems) await dbDelete("lineitems", li.id);
   await dbSetSettings();
   await dbSetMonthCategoryData();
+}
+
+/* ---------------------------------------------------------------
+   RESTORE FROM BACKUP (v121)
+   Accepts the two files the app already exports: a full export
+   ("Export everything") or a single-year backup ("Download <year> data").
+   A year backup replaces only that year's actuals, transfers, fund events,
+   month setups, onlyYM line items and year settings. It carries no
+   Categories list and no Cash Flow data, so those are not touched. A full
+   export replaces everything. A copy of the data is saved just before every
+   restore so it can be undone once.
+--------------------------------------------------------------- */
+const PRE_RESTORE_KEY = "ledgercasa_prerestore";
+function readPreRestore(){
+  try{ const sv = JSON.parse(localStorage.getItem(PRE_RESTORE_KEY)||"null"); return (sv && sv.state) ? sv : null; }
+  catch(e){ return null; }
+}
+function savePreRestore(label){
+  try{ localStorage.setItem(PRE_RESTORE_KEY, JSON.stringify({ at:new Date().toISOString(), label, state })); return true; }
+  catch(e){ return false; }
+}
+function classifyBackup(obj){
+  if(!obj || typeof obj!=="object" || Array.isArray(obj)) return { error:"That file isn't a Ledger Casa backup." };
+  const isArr = k=> Array.isArray(obj[k]);
+  const hasMCD = obj.monthCategoryData && typeof obj.monthCategoryData==="object" && !Array.isArray(obj.monthCategoryData);
+  if(obj.settings && typeof obj.settings==="object" && isArr("categories") && isArr("lineitems") && isArr("actuals") && isArr("transfers") && isArr("fundevents") && hasMCD){
+    return { kind:"full" };
+  }
+  if(Number.isInteger(obj.year) && obj.year>=2000 && obj.year<=2100 && isArr("actuals") && isArr("transfers") && isArr("fundevents") && hasMCD){
+    return { kind:"year", year:obj.year };
+  }
+  return { error:"That file isn't a Ledger Casa full export or year backup." };
+}
+// The slice of a year backup that actually belongs to `year`.
+function yearBackupParts(b, year){
+  const safeYear = f=>{ try{ return f(); }catch(e){ return NaN; } };
+  return {
+    actuals: b.actuals.filter(a=> a && typeof a.date==="string" && safeYear(()=>yearOfDate(a.date))===year),
+    transfers: b.transfers.filter(t=> t && safeYear(()=>xferYear(t))===year),
+    fundevents: b.fundevents.filter(fe=> fe && safeYear(()=>yearOfYM(fe.targetYM))===year),
+    lineitems: (Array.isArray(b.lineitems) ? b.lineitems : []).filter(li=> li && li.onlyYM!==undefined && yearOfYM(li.onlyYM)===year),
+    monthCategoryData: Object.fromEntries(Object.entries(b.monthCategoryData).filter(([ym])=> yearOfYM(Number(ym))===year)),
+  };
+}
+function yearCounts(year){
+  return {
+    actuals: state.actuals.filter(a=>yearOfDate(a.date)===year).length,
+    transfers: state.transfers.filter(t=>xferYear(t)===year).length,
+    fundevents: state.fundevents.filter(fe=>yearOfYM(fe.targetYM)===year).length,
+    months: Object.keys(state.monthCategoryData||{}).filter(ym=>yearOfYM(Number(ym))===year).length,
+  };
+}
+async function applyYearRestore(b, year, parts){
+  await clearYearData(year);
+  state.actuals.push(...parts.actuals);
+  state.transfers.push(...parts.transfers);
+  state.fundevents.push(...parts.fundevents);
+  state.lineitems.push(...parts.lineitems);
+  if(!state.settings.perYear) state.settings.perYear = {};
+  if(b.perYearSettings && typeof b.perYearSettings==="object") state.settings.perYear[year] = b.perYearSettings;
+  if(!state.monthCategoryData) state.monthCategoryData = {};
+  Object.assign(state.monthCategoryData, parts.monthCategoryData);
+  // A year backup doesn't list which months were set up; a month that has
+  // saved category data in the backup is a set-up month.
+  state.settings.seededYMs = Array.from(new Set([ ...(state.settings.seededYMs||[]), ...Object.keys(parts.monthCategoryData).map(Number) ])).sort((x,y)=>x-y);
+  persistLocalFallback();
+}
+function applyFullRestore(b){
+  state.settings = b.settings;
+  state.categories = b.categories;
+  state.lineitems = b.lineitems;
+  state.actuals = b.actuals;
+  state.fundevents = b.fundevents;
+  state.transfers = b.transfers;
+  state.monthCategoryData = b.monthCategoryData;
+  if(b.cashflow && typeof b.cashflow==="object") state.cashflow = b.cashflow;
+  migrateToMultiYear();
+  migrateCategoryBaseAmounts();
+  migrateCategoryOrders();
+  persistLocalFallback();
+}
+function undoLastRestore(){
+  const sv = readPreRestore();
+  if(!sv) return false;
+  Object.keys(sv.state).forEach(k=>{ state[k] = sv.state[k]; });
+  try{ localStorage.removeItem(PRE_RESTORE_KEY); }catch(e){}
+  persistLocalFallback();
+  return true;
+}
+function restoreSheet(title, lines, confirmLabel, onConfirm){
+  const dlg = document.getElementById("dlg");
+  const body = document.getElementById("dlgBody");
+  body.innerHTML = `
+    <h3>${escapeHtml(title)}</h3>
+    <div class="stack" style="gap:6px">${lines.map(l=>`<p class="muted" style="margin:0">${escapeHtml(l)}</p>`).join("")}</div>
+    <div class="dialog-actions">
+      <button class="btn ghost" id="rsCancel">Cancel</button>
+      <button class="btn danger" id="rsConfirm">${escapeHtml(confirmLabel)}</button>
+    </div>
+  `;
+  body.querySelector("#rsCancel").onclick = ()=> dlg.close();
+  onceClick(body.querySelector("#rsConfirm"), async ()=>{ dlg.close(); await onConfirm(); });
+  openSheet();
+}
+async function handleRestoreFile(file){
+  let obj;
+  try{ obj = JSON.parse(await file.text()); }
+  catch(e){ showToast("That file couldn't be read as a backup"); return; }
+  const kind = classifyBackup(obj);
+  if(kind.error){ showToast(kind.error); return; }
+  const when = obj.exportedAt ? new Date(obj.exportedAt).toLocaleString() : "unknown time";
+  if(kind.kind==="year"){
+    const year = kind.year;
+    const parts = yearBackupParts(obj, year);
+    const cur = yearCounts(year);
+    const ignored = (obj.actuals.length-parts.actuals.length) + (obj.transfers.length-parts.transfers.length) + (obj.fundevents.length-parts.fundevents.length);
+    const lines = [
+      `This is a ${year} backup taken ${when}.`,
+      `Backup: ${parts.actuals.length} actuals, ${parts.transfers.length} transfers, ${parts.fundevents.length} fund events, ${Object.keys(parts.monthCategoryData).length} set-up months.`,
+      `In the app now: ${cur.actuals} actuals, ${cur.transfers} transfers, ${cur.fundevents} fund events, ${cur.months} set-up months.`,
+      `Restoring replaces all ${year} data with the backup. Other years, your Categories list and Cash Flow are not changed. A copy of what's in the app now is kept so you can undo.`,
+    ];
+    if(ignored>0) lines.push(`${ignored} entr${ignored===1?"y":"ies"} in the file belong to other years and will be skipped.`);
+    restoreSheet(`Restore ${year}?`, lines, "Restore", async ()=>{
+      if(!savePreRestore(`Before restoring ${year}`)){ showToast("Couldn't save an undo copy — nothing was changed"); return; }
+      await applyYearRestore(obj, year, parts);
+      showToast(`${year} restored`);
+      render();
+    });
+    return;
+  }
+  const lines = [
+    `This is a full export taken ${when}.`,
+    `Backup: ${obj.categories.length} categories, ${obj.lineitems.length} line items, ${obj.actuals.length} actuals, ${obj.transfers.length} transfers, ${obj.fundevents.length} fund events, ${Object.keys(obj.monthCategoryData).length} set-up months.`,
+    `In the app now: ${state.categories.length} categories, ${state.lineitems.length} line items, ${state.actuals.length} actuals, ${state.transfers.length} transfers, ${state.fundevents.length} fund events, ${Object.keys(state.monthCategoryData||{}).length} set-up months.`,
+    `Restoring replaces everything in the app — all years, Categories, settings and Cash Flow — with the backup. A copy of what's in the app now is kept so you can undo.`,
+  ];
+  restoreSheet("Restore everything?", lines, "Restore", async ()=>{
+    if(!savePreRestore("Before restoring everything")){ showToast("Couldn't save an undo copy — nothing was changed"); return; }
+    applyFullRestore(obj);
+    showToast("Everything restored");
+    render();
+  });
 }
 
 function el(tag, cls, text){
