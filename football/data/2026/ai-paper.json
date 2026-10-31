@@ -1003,6 +1003,551 @@
       "archivedAt": "2026-10-29T13:03:26.792759+00:00",
       "archiveMode": "prospective",
       "researchVersion": "2026-10-29-week8-thursday-1"
+    },
+    {
+      "id": "2026:8:single:bal-buf",
+      "kind": "single",
+      "title": "Buffalo Bills",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Buffalo\u2019s home field, bye-week rest and four wins in five games give a narrow lean.",
+      "legs": [
+        {
+          "gameId": "bal-buf",
+          "team": "Buffalo Bills",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "5-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01BALBUF-BUF",
+        "capturedAt": "2026-10-31T08:00:13-05:00",
+        "price": 0.62,
+        "payout": 3.2258064516129035,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:ten-cin",
+      "kind": "single",
+      "title": "Cincinnati Bengals",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Cincinnati has scored 31 and 35 in consecutive wins; Tennessee loses Spears and Tate.",
+      "legs": [
+        {
+          "gameId": "ten-cin",
+          "team": "Cincinnati Bengals",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01TENCIN-CIN",
+        "capturedAt": "2026-10-31T08:00:13-05:00",
+        "price": 0.87,
+        "payout": 2.2988505747126435,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:ari-dal",
+      "kind": "single",
+      "title": "Dallas Cowboys",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Dallas comes off a 38-21 win; Arizona has lost four of five and is missing Gaines and Nolen.",
+      "legs": [
+        {
+          "gameId": "ari-dal",
+          "team": "Dallas Cowboys",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "3-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01ARIDAL-DAL",
+        "capturedAt": "2026-10-31T08:00:13-05:00",
+        "price": 0.75,
+        "payout": 2.6666666666666665,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:min-det",
+      "kind": "single",
+      "title": "Minnesota Vikings",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Minnesota\u2019s recent wins have held opponents to 16 points or fewer; Detroit is missing safety Joseph.",
+      "legs": [
+        {
+          "gameId": "min-det",
+          "team": "Minnesota Vikings",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "6-0-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01MINDET-MIN",
+        "capturedAt": "2026-10-31T08:00:19-05:00",
+        "price": 0.38,
+        "payout": 5.2631578947368425,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:lv-nyj",
+      "kind": "single",
+      "title": "Las Vegas Raiders",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "The Jets are missing Mitchell, Sweat and Ossai, with Bailey doubtful; a narrow Raiders lean targets that depleted front.",
+      "legs": [
+        {
+          "gameId": "lv-nyj",
+          "team": "Las Vegas Raiders",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "3-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01LVNYJ-LV",
+        "capturedAt": "2026-10-31T08:00:19-05:00",
+        "price": 0.47,
+        "payout": 4.25531914893617,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:cle-pit",
+      "kind": "single",
+      "title": "Cleveland Browns",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Cleveland won the earlier meeting 27-24 and has won four of five; Pittsburgh is missing two defensive backs.",
+      "legs": [
+        {
+          "gameId": "cle-pit",
+          "team": "Cleveland Browns",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "5-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01CLEPIT-CLE",
+        "capturedAt": "2026-10-31T08:00:19-05:00",
+        "price": 0.36,
+        "payout": 5.555555555555555,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:atl-tb",
+      "kind": "single",
+      "title": "Atlanta Falcons",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Atlanta\u2019s 29-20 win over San Francisco supports a narrow lean; Tampa Bay is missing Egbuka.",
+      "legs": [
+        {
+          "gameId": "atl-tb",
+          "team": "Atlanta Falcons",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "3-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01ATLTB-ATL",
+        "capturedAt": "2026-10-31T08:00:19-05:00",
+        "price": 0.45,
+        "payout": 4.444444444444445,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:ind-jax",
+      "kind": "single",
+      "title": "Jacksonville Jaguars",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Jacksonville has bye-week rest and three wins in five; Indianapolis has lost three straight and is missing Walley.",
+      "legs": [
+        {
+          "gameId": "ind-jax",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "4-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01INDJAC-JAC",
+        "capturedAt": "2026-10-31T08:00:23-05:00",
+        "price": 0.81,
+        "payout": 2.4691358024691357,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:lac-lar",
+      "kind": "single",
+      "title": "Los Angeles Rams",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "The Rams scored 35 in their latest win; the winless Chargers are missing James and Awosika.",
+      "legs": [
+        {
+          "gameId": "lac-lar",
+          "team": "Los Angeles Rams",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:05:00-05:00",
+          "record": "3-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01LACLAR-LAR",
+        "capturedAt": "2026-10-31T08:00:23-05:00",
+        "price": 0.73,
+        "payout": 2.73972602739726,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:kc-den",
+      "kind": "single",
+      "title": "Kansas City Chiefs",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Kansas City\u2019s 5-1 start supports a narrow rebound lean; Denver is without Harvey and Hufanga.",
+      "legs": [
+        {
+          "gameId": "kc-den",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:25:00-05:00",
+          "record": "5-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01KCDEN-KC",
+        "capturedAt": "2026-10-31T08:00:23-05:00",
+        "price": 0.53,
+        "payout": 3.773584905660377,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:ne-mia",
+      "kind": "single",
+      "title": "New England Patriots",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "New England has extra rest after Thursday and won three of its last four; Miami is missing Proctor.",
+      "legs": [
+        {
+          "gameId": "ne-mia",
+          "team": "New England Patriots",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:25:00-05:00",
+          "record": "4-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01NEMIA-NE",
+        "capturedAt": "2026-10-31T08:00:23-05:00",
+        "price": 0.76,
+        "payout": 2.6315789473684212,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:phi-wsh",
+      "kind": "single",
+      "title": "Washington Commanders",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Washington has bye-week rest and home field; Philadelphia has lost five straight and is missing Smith and Wicks.",
+      "legs": [
+        {
+          "gameId": "phi-wsh",
+          "team": "Washington Commanders",
+          "side": "YES",
+          "kickoff": "2026-11-01T20:20:00-05:00",
+          "record": "1-4-1"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV01PHIWAS-WAS",
+        "capturedAt": "2026-10-31T08:00:29-05:00",
+        "price": 0.7,
+        "payout": 2.857142857142857,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:single:chi-sea",
+      "kind": "single",
+      "title": "Seattle Seahawks",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Seattle\u2019s 20-3 win over Kansas City and home field support a narrow lean.",
+      "legs": [
+        {
+          "gameId": "chi-sea",
+          "team": "Seattle Seahawks",
+          "side": "YES",
+          "kickoff": "2026-11-02T20:15:00-05:00",
+          "record": "4-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV02CHISEA-SEA",
+        "capturedAt": "2026-10-31T08:00:29-05:00",
+        "price": 0.61,
+        "payout": 3.278688524590164,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:combo:A2",
+      "kind": "combo",
+      "title": "Jacksonville to Rams ladder",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "A",
+      "legs": [
+        {
+          "gameId": "ind-jax",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "4-2-0"
+        },
+        {
+          "gameId": "lac-lar",
+          "team": "Los Angeles Rams",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:05:00-05:00",
+          "record": "3-4-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:combo:B1",
+      "kind": "combo",
+      "title": "Minnesota + Kansas City path",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "B",
+      "legs": [
+        {
+          "gameId": "min-det",
+          "team": "Minnesota Vikings",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "6-0-0"
+        },
+        {
+          "gameId": "kc-den",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:25:00-05:00",
+          "record": "5-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:combo:B2",
+      "kind": "combo",
+      "title": "Detroit + Denver opposing path",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "B",
+      "legs": [
+        {
+          "gameId": "min-det",
+          "team": "Detroit Lions",
+          "side": "YES",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "4-2-0"
+        },
+        {
+          "gameId": "kc-den",
+          "team": "Denver Broncos",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:25:00-05:00",
+          "record": "5-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:combo:C1",
+      "kind": "combo",
+      "title": "Sunday to Monday ladder",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "C",
+      "legs": [
+        {
+          "gameId": "ne-mia",
+          "team": "New England Patriots",
+          "side": "YES",
+          "kickoff": "2026-11-01T16:25:00-05:00",
+          "record": "4-3-0"
+        },
+        {
+          "gameId": "chi-sea",
+          "team": "Seattle Seahawks",
+          "side": "YES",
+          "kickoff": "2026-11-02T20:15:00-05:00",
+          "record": "4-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
+    },
+    {
+      "id": "2026:8:combo:E1",
+      "kind": "combo",
+      "title": "Two losing-record teams not to win",
+      "publishedAt": "2026-10-31T07:59:59-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "E",
+      "legs": [
+        {
+          "gameId": "ten-cin",
+          "team": "Tennessee Titans",
+          "side": "NO",
+          "kickoff": "2026-11-01T13:00:00-05:00",
+          "record": "1-6-0"
+        },
+        {
+          "gameId": "lac-lar",
+          "team": "Los Angeles Chargers",
+          "side": "NO",
+          "kickoff": "2026-11-01T16:05:00-05:00",
+          "record": "0-6-0"
+        }
+      ],
+      "season": 2026,
+      "week": 8,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-10-31T13:00:53.453614+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-10-31-week8-weekend-1"
     }
   ]
 }

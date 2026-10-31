@@ -31,14 +31,15 @@
     },
     "08": {
       "path": "2026/week-08.json",
-      "status": "preliminary",
-      "researchVersion": "2026-10-29-week8-thursday-1",
-      "dataVersion": "2026-10-29-week8-thursday-1"
+      "status": "refreshed-open",
+      "researchVersion": "2026-10-31-week8-weekend-1",
+      "dataVersion": "2026-10-31-week8-weekend-1",
+      "resultsVersion": "2026-10-31-week8-thursday-final"
     }
   },
-  "lastSuccessfulPublication": "2026-10-29T08:03:44-05:00",
-  "notice": "Week 8 Thursday research: Panthers at Packers; all 14 games scheduled. Sunday/Monday research preliminary. Week 7 preserved.",
-  "scoresCheckedAt": "2026-10-25T23:04:50-05:00",
-  "marketsCheckedAt": "2026-10-29T08:03:24-05:00",
-  "recordsCheckedAt": "2026-10-25T23:04:50-05:00"
+  "lastSuccessfulPublication": "2026-10-31T08:00:53-05:00",
+  "notice": "Week 8: 13 Sunday/Monday matchups researched, 7 unpriced strategy alternatives, 26 active quotes. Thursday 27-19 Packers final verified; week open.",
+  "scoresCheckedAt": "2026-10-31T07:57:34-05:00",
+  "marketsCheckedAt": "2026-10-31T08:00:29-05:00",
+  "recordsCheckedAt": "2026-10-31T07:57:34-05:00"
 }
