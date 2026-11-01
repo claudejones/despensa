@@ -1,13 +1,13 @@
 {
-  "syncId": 3,
-  "producedAt": "2026-10-25T18:33:54Z",
+  "syncId": 4,
+  "producedAt": "2026-11-01T23:43:29Z",
   "trips": {
-    "trip-1792941237088": {
-      "id": "trip-1792941237088",
+    "trip-1793556758195": {
+      "id": "trip-1793556758195",
       "shop": "chedraui",
       "shopName": "Chedraui Puerto Aventuras",
-      "date": "2026-10-25T12:36",
-      "fx": 18.631,
+      "date": "2026-11-01T16:37",
+      "fx": 18.7622,
       "note": "",
       "budgetUSD": null,
       "lines": [
@@ -22,23 +22,83 @@
           "state": "bought"
         },
         {
+          "id": "semillas-de-ch-a",
+          "es": "Semillas de Chía",
+          "en": "Chia seeds — brand varies",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 158.0,
+          "lineMXN": 158.0,
+          "state": "bought"
+        },
+        {
+          "id": "avena-org-nica",
+          "es": "Avena Orgánica",
+          "en": "Organic oats, 300 g",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 97.5,
+          "lineMXN": 97.5,
+          "state": "bought"
+        },
+        {
+          "id": "granola-miel-de-agave",
+          "es": "Granola Miel de Agave",
+          "en": "Agave granola, 310 g — rings up as Granola Tía Ofilia",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 104.0,
+          "lineMXN": 104.0,
+          "state": "bought"
+        },
+        {
           "id": "crema-de-cacahuate",
           "es": "Crema de Cacahuate",
           "en": "Peanut butter — the cheaper shelf one",
           "cat": "pantry",
           "q": 1,
-          "unitMXN": 69.0,
-          "lineMXN": 69.0,
+          "unitMXN": 67.0,
+          "lineMXN": 67.0,
           "state": "bought"
         },
         {
-          "id": "jarabe-aires-del-campo-org-nico-236-ml",
-          "es": "Jarabe Aires del Campo Orgánico 236 ml",
-          "en": "Organic maple syrup, 236 ml",
+          "id": "salsa-bbq-sweet-baby-ray-s-28-oz",
+          "es": "Salsa BBQ Sweet Baby Ray's 28 oz",
+          "en": "Barbecue sauce",
           "cat": "pantry",
           "q": 1,
-          "unitMXN": 200.0,
-          "lineMXN": 200.0,
+          "unitMXN": 109.0,
+          "lineMXN": 109.0,
+          "state": "bought"
+        },
+        {
+          "id": "aceite-de-oliva",
+          "es": "Aceite de Oliva",
+          "en": "Olive oil — size varies, see history",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 212.0,
+          "lineMXN": 212.0,
+          "state": "bought"
+        },
+        {
+          "id": "sal-rosa-alta",
+          "es": "Sal Rosa Alta",
+          "en": "Pink salt, 400 g",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 179.0,
+          "lineMXN": 179.0,
+          "state": "bought"
+        },
+        {
+          "id": "corazones-de-alcachofa-pasiega",
+          "es": "Corazones de Alcachofa Pasiega",
+          "en": "Artichoke hearts, jarred",
+          "cat": "pantry",
+          "q": 1,
+          "unitMXN": 72.5,
+          "lineMXN": 72.5,
           "state": "bought"
         },
         {
@@ -52,23 +112,13 @@
           "state": "bought"
         },
         {
-          "id": "limpiador-de-cocina",
-          "es": "Limpiador de Cocina",
-          "en": "Kitchen cleaner",
+          "id": "limpiador-de-ba-os",
+          "es": "Limpiador de Baños",
+          "en": "Bathroom cleaner",
           "cat": "home",
           "q": 1,
-          "unitMXN": 73.0,
-          "lineMXN": 73.0,
-          "state": "bought"
-        },
-        {
-          "id": "pl-stico-autoadherible-20-m",
-          "es": "Plástico Autoadherible 20 m",
-          "en": "Cling film, 20 m",
-          "cat": "home",
-          "q": 1,
-          "unitMXN": 27.5,
-          "lineMXN": 27.5,
+          "unitMXN": 67.0,
+          "lineMXN": 67.0,
           "state": "bought"
         },
         {
@@ -77,31 +127,69 @@
           "en": "Paper towels",
           "cat": "home",
           "q": 1,
-          "unitMXN": 45.0,
-          "lineMXN": 45.0,
+          "unitMXN": 33.0,
+          "lineMXN": 33.0,
           "state": "bought"
         },
         {
-          "id": "huevo-blanco-12-pz",
-          "es": "Huevo Blanco 12 pz",
-          "en": "Eggs, 12 ct — brand varies",
+          "id": "prosecco-maschio-750",
+          "es": "Prosecco Maschio 750",
+          "en": "Prosecco — shelf price, discounts vary",
+          "cat": "drinks",
+          "q": 2,
+          "unitMXN": 295.0,
+          "lineMXN": 590.0,
+          "state": "bought"
+        },
+        {
+          "id": "35-de-descuento-en-vinos",
+          "es": "35% de descuento en vinos",
+          "en": "35% wine promotion",
+          "cat": "drinks",
+          "q": 1,
+          "unitMXN": -206.5,
+          "lineMXN": -206.5,
+          "state": "bought"
+        },
+        {
+          "id": "desodorante",
+          "es": "Desodorante",
+          "en": "Deodorant",
+          "cat": "care",
+          "q": 1,
+          "unitMXN": 97.0,
+          "lineMXN": 97.0,
+          "state": "bought"
+        },
+        {
+          "id": "loci-n-protectora",
+          "es": "Loción Protectora",
+          "en": "Sunscreen",
+          "cat": "care",
+          "q": 1,
+          "unitMXN": 287.0,
+          "lineMXN": 287.0,
+          "state": "bought"
+        },
+        {
+          "id": "huevo-org-nico-blanco-12-pz",
+          "es": "Huevo Orgánico Blanco 12 pz",
+          "en": "Organic eggs, 12 ct",
           "cat": "protein",
           "q": 1,
-          "unitMXN": 32.0,
-          "lineMXN": 32.0,
+          "unitMXN": 78.0,
+          "lineMXN": 78.0,
           "state": "bought"
         },
         {
-          "id": "tomate-saladette",
-          "es": "Tomate Saladette",
-          "en": "Roma tomato",
-          "cat": "produce",
+          "id": "salm-n-atl-ntico",
+          "es": "Salmón Atlántico",
+          "en": "Atlantic salmon",
+          "cat": "protein",
           "q": 1,
-          "unitMXN": 22.54,
-          "lineMXN": 22.54,
-          "state": "bought",
-          "kg": 0.565,
-          "rate": 39.9
+          "unitMXN": 329.0,
+          "lineMXN": 329.0,
+          "state": "bought"
         },
         {
           "id": "baby-spinach-org-nica-142-g",
@@ -114,26 +202,98 @@
           "state": "bought"
         },
         {
+          "id": "lechuga-italiana-viva",
+          "es": "Lechuga Italiana Viva",
+          "en": "Living lettuce — rings up as Lechuga Hidropónica",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 38.9,
+          "lineMXN": 38.9,
+          "state": "bought"
+        },
+        {
+          "id": "tomate-saladette",
+          "es": "Tomate Saladette",
+          "en": "Roma tomato",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 33.66,
+          "lineMXN": 33.66,
+          "state": "bought",
+          "kg": 0.68,
+          "rate": 49.5
+        },
+        {
+          "id": "lim-n-eureka",
+          "es": "Limón Eureka",
+          "en": "Eureka lemon (yellow)",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 12.11,
+          "lineMXN": 12.11,
+          "state": "bought",
+          "kg": 0.255,
+          "rate": 47.5
+        },
+        {
           "id": "manzana",
           "es": "Manzana",
           "en": "Apple — whichever is good",
           "cat": "produce",
           "q": 1,
-          "unitMXN": 65.59,
-          "lineMXN": 65.59,
+          "unitMXN": 51.81,
+          "lineMXN": 51.81,
           "state": "bought",
-          "kg": 1.095,
+          "kg": 0.865,
           "rate": 59.9
         },
         {
-          "id": "seta-montebello-250-g",
-          "es": "Seta Montebello 250 g",
-          "en": "Oyster mushrooms, 250 g tray",
+          "id": "aguacate-hass",
+          "es": "Aguacate Hass",
+          "en": "Hass avocado",
           "cat": "produce",
           "q": 1,
-          "unitMXN": 34.9,
-          "lineMXN": 34.9,
-          "state": "bought"
+          "unitMXN": 30.38,
+          "lineMXN": 30.38,
+          "state": "bought",
+          "kg": 0.715,
+          "rate": 42.5
+        },
+        {
+          "id": "lim-n-s-semilla",
+          "es": "Limón s/semilla",
+          "en": "Seedless lime (green)",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 14.03,
+          "lineMXN": 14.03,
+          "state": "bought",
+          "kg": 0.44,
+          "rate": 31.9
+        },
+        {
+          "id": "pl-tano-chiapas-tabasco",
+          "es": "Plátano Chiapas/Tabasco",
+          "en": "Banana",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 30.04,
+          "lineMXN": 30.04,
+          "state": "bought",
+          "kg": 1.005,
+          "rate": 29.9
+        },
+        {
+          "id": "cebolla-amarilla",
+          "es": "Cebolla Amarilla",
+          "en": "Yellow onion",
+          "cat": "produce",
+          "q": 1,
+          "unitMXN": 25.41,
+          "lineMXN": 25.41,
+          "state": "bought",
+          "kg": 0.42,
+          "rate": 60.5
         },
         {
           "id": "ar-ndanos",
@@ -146,76 +306,46 @@
           "state": "bought"
         },
         {
-          "id": "aguacate-hass",
-          "es": "Aguacate Hass",
-          "en": "Hass avocado",
-          "cat": "produce",
-          "q": 1,
-          "unitMXN": 31.38,
-          "lineMXN": 31.38,
-          "state": "bought",
-          "kg": 0.675,
-          "rate": 46.5
-        },
-        {
-          "id": "pera-mantequilla-anjou",
-          "es": "Pera Mantequilla/Anjou",
-          "en": "Anjou pear",
-          "cat": "produce",
-          "q": 1,
-          "unitMXN": 41.25,
-          "lineMXN": 41.25,
-          "state": "bought",
-          "kg": 0.51,
-          "rate": 80.9
-        },
-        {
-          "id": "pl-tano-chiapas-tabasco",
-          "es": "Plátano Chiapas/Tabasco",
-          "en": "Banana",
-          "cat": "produce",
-          "q": 1,
-          "unitMXN": 27.45,
-          "lineMXN": 27.45,
-          "state": "bought",
-          "kg": 0.95,
-          "rate": 28.9
-        },
-        {
-          "id": "lim-n-s-semilla",
-          "es": "Limón s/semilla",
-          "en": "Seedless lime (green)",
-          "cat": "produce",
-          "q": 1,
-          "unitMXN": 9.1,
-          "lineMXN": 9.1,
-          "state": "bought",
-          "kg": 0.28,
-          "rate": 32.5
-        },
-        {
           "id": "ciruela-pasa-c-h",
           "es": "Ciruela Pasa C/H",
           "en": "Prunes, stone-in",
           "cat": "produce",
           "q": 1,
-          "unitMXN": 42.0,
-          "lineMXN": 42.0,
+          "unitMXN": 51.25,
+          "lineMXN": 51.25,
           "state": "bought",
-          "kg": 0.2,
-          "rate": 210.0
+          "kg": 0.205,
+          "rate": 250.0
         },
         {
-          "id": "cacahuate-garapi-ado",
-          "es": "Cacahuate Garapiñado",
-          "en": "Candied peanuts",
-          "cat": "pantry",
+          "id": "bionda-manchego",
+          "es": "Bionda Manchego",
+          "en": "Manchego cheese",
+          "cat": "chilled",
           "q": 1,
-          "unitMXN": 47.5,
-          "lineMXN": 47.5,
-          "state": "bought",
-          "kg": 0.25,
-          "rate": 190.0
+          "unitMXN": 125.0,
+          "lineMXN": 125.0,
+          "state": "bought"
+        },
+        {
+          "id": "violife-panela",
+          "es": "Violife Panela",
+          "en": "Vegan panela",
+          "cat": "chilled",
+          "q": 1,
+          "unitMXN": 94.0,
+          "lineMXN": 94.0,
+          "state": "bought"
+        },
+        {
+          "id": "leche-de-almendra-california-farms-vainilla-1-4-l",
+          "es": "Leche de Almendra California Farms Vainilla 1.4 L",
+          "en": "Vanilla almond milk, 1.4 L",
+          "cat": "chilled",
+          "q": 1,
+          "unitMXN": 145.0,
+          "lineMXN": 145.0,
+          "state": "bought"
         },
         {
           "id": "hamburguesa-de-yaca",
@@ -232,19 +362,9 @@
           "es": "Totopos",
           "en": "Tortilla chips, 500 g",
           "cat": "snacks",
-          "q": 3,
-          "unitMXN": 31.0,
-          "lineMXN": 93.0,
-          "state": "bought"
-        },
-        {
-          "id": "3x2-en-totopos-y-chips",
-          "es": "3x2 en totopos y chips",
-          "en": "3-for-2 promotion",
-          "cat": "snacks",
           "q": 1,
-          "unitMXN": -31.0,
-          "lineMXN": -31.0,
+          "unitMXN": 39.0,
+          "lineMXN": 39.0,
           "state": "bought"
         },
         {
@@ -256,25 +376,15 @@
           "unitMXN": 99.9,
           "lineMXN": 99.9,
           "state": "bought"
-        },
-        {
-          "id": "tabla-para-picar-34-cm",
-          "es": "Tabla para Picar 34 cm",
-          "en": "Chopping board, 34 cm",
-          "cat": "oneoff",
-          "q": 1,
-          "unitMXN": 159.0,
-          "lineMXN": 159.0,
-          "state": "bought"
         }
       ],
-      "listed": 1593.51,
-      "receiptTotal": 1593.51,
+      "listed": 3568.39,
+      "receiptTotal": 3568.39,
       "offList": 0,
-      "bought": 24,
+      "bought": 35,
       "skipped": 0,
-      "planned": 24,
-      "totalUSD": 85.53
+      "planned": 35,
+      "totalUSD": 190.19
     }
   },
   "removeTrips": [],
