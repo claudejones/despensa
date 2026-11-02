@@ -1,6 +1,6 @@
 {
-  "syncId": 4,
-  "producedAt": "2026-11-01T23:43:29Z",
+  "syncId": 5,
+  "producedAt": "2026-11-02T00:04:39Z",
   "trips": {
     "trip-1793556758195": {
       "id": "trip-1793556758195",
@@ -72,9 +72,9 @@
           "state": "bought"
         },
         {
-          "id": "aceite-de-oliva",
-          "es": "Aceite de Oliva",
-          "en": "Olive oil — size varies, see history",
+          "id": "aceite-de-oliva-grande",
+          "es": "Aceite de Oliva Grande",
+          "en": "Olive oil — the larger bottle (Carbonell)",
           "cat": "pantry",
           "q": 1,
           "unitMXN": 212.0,
