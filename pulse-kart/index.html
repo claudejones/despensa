@@ -3260,7 +3260,7 @@ fn mainFragment(
 `);return new Function("ps","f32v","u32v",i)}class O{constructor(r){this._size=0,this._generateParticleUpdateCache={};var e;const t=this._size=(e=r.size)!=null?e:1e3,i=r.properties;let o=0,s=0;for(const m in i){const n=i[m],d=PIXI.getAttributeInfoFromFormat(n.format);n.dynamic?s+=d.stride:o+=d.stride}this._dynamicStride=s/4,this._staticStride=o/4,this.staticAttributeBuffer=new b(t*4*o),this.dynamicAttributeBuffer=new b(t*4*s),this.indexBuffer=p(t);const u=new PIXI.Geometry;let f=0,c=0;this._staticBuffer=new PIXI.Buffer({data:new Float32Array(1),label:"static-particle-buffer",shrinkToFit:!1,usage:PIXI.BufferUsage.VERTEX|PIXI.BufferUsage.COPY_DST}),this._dynamicBuffer=new PIXI.Buffer({data:new Float32Array(1),label:"dynamic-particle-buffer",shrinkToFit:!1,usage:PIXI.BufferUsage.VERTEX|PIXI.BufferUsage.COPY_DST});for(const m in i){const n=i[m],d=PIXI.getAttributeInfoFromFormat(n.format);n.dynamic?(u.addAttribute(n.attributeName,{buffer:this._dynamicBuffer,stride:this._dynamicStride*4,offset:f*4,format:n.format}),f+=d.size):(u.addAttribute(n.attributeName,{buffer:this._staticBuffer,stride:this._staticStride*4,offset:c*4,format:n.format}),c+=d.size)}u.addIndex(this.indexBuffer);const l=this.getParticleUpdate(i);this._dynamicUpload=l.dynamicUpdate,this._staticUpload=l.staticUpdate,this.geometry=u}getParticleUpdate(r){const e=M(r);return this._generateParticleUpdateCache[e]?this._generateParticleUpdateCache[e]:(this._generateParticleUpdateCache[e]=this.generateParticleUpdate(r),this._generateParticleUpdateCache[e])}generateParticleUpdate(r){return C(r)}update(r,e){r.length>this._size&&(e=!0,this._size=Math.max(r.length,this._size*1.5|0),this.staticAttributeBuffer=new b(this._size*this._staticStride*4*4),this.dynamicAttributeBuffer=new b(this._size*this._dynamicStride*4*4),this.indexBuffer=p(this._size),this.geometry.indexBuffer.setDataWithSize(this.indexBuffer,this.indexBuffer.byteLength,!0));const t=this.dynamicAttributeBuffer;if(this._dynamicUpload(r,t.float32View,t.uint32View),this._dynamicBuffer.setDataWithSize(this.dynamicAttributeBuffer.float32View,r.length*this._dynamicStride*4,!0),e){const i=this.staticAttributeBuffer;this._staticUpload(r,i.float32View,i.uint32View),this._staticBuffer.setDataWithSize(i.float32View,r.length*this._staticStride*4,!0)}}destroy(){this._staticBuffer.destroy(),this._dynamicBuffer.destroy(),this.geometry.destroy()}}function M(a){const r=[];for(const e in a){const t=a[e];r.push(e,t.code,t.dynamic?"d":"s")}return r.join("_")}const I={aVertex:(a,r,e,t,i)=>{let o=0,s=0,u=0,f=0;for(let c=0;c<a.length;++c){const l=a[c],m=l.texture,n=l.scaleX,d=l.scaleY,y=l.anchorX,_=l.anchorY,w=m.trim,g=m.orig;w?(s=w.x-y*g.width,o=s+w.width,f=w.y-_*g.height,u=f+w.height):(o=g.width*(1-y),s=g.width*-y,u=g.height*(1-_),f=g.height*-_),r[t]=s*n,r[t+1]=f*d,r[t+i]=o*n,r[t+i+1]=f*d,r[t+i*2]=o*n,r[t+i*2+1]=u*d,r[t+i*3]=s*n,r[t+i*3+1]=u*d,t+=i*4}},aPosition:(a,r,e,t,i)=>{for(let o=0;o<a.length;++o){const s=a[o],u=s.x,f=s.y;r[t]=u,r[t+1]=f,r[t+i]=u,r[t+i+1]=f,r[t+i*2]=u,r[t+i*2+1]=f,r[t+i*3]=u,r[t+i*3+1]=f,t+=i*4}},aRotation:(a,r,e,t,i)=>{for(let o=0;o<a.length;++o){const s=a[o].rotation;r[t]=s,r[t+i]=s,r[t+i*2]=s,r[t+i*3]=s,t+=i*4}},aUV:(a,r,e,t,i)=>{for(let o=0;o<a.length;++o){const s=a[o].texture.uvs;r[t]=s.x0,r[t+1]=s.y0,r[t+i]=s.x1,r[t+i+1]=s.y1,r[t+i*2]=s.x2,r[t+i*2+1]=s.y2,r[t+i*3]=s.x3,r[t+i*3+1]=s.y3,t+=i*4}},aColor:(a,r,e,t,i)=>{for(let o=0;o<a.length;++o){const s=a[o].color;e[t]=s,e[t+i]=s,e[t+i*2]=s,e[t+i*3]=s,t+=i*4}}};function P(a){const r=Object.values(a),e=r.filter(i=>i.dynamic),t=r.filter(i=>!i.dynamic);return{dynamicUpdate:x(e),staticUpdate:x(t)}}function x(a){let r=0;const e=[];for(let t=0;t<a.length;t++){const i=a[t],o=PIXI.getAttributeInfoFromFormat(i.format).stride/4;r+=o,e.push({stride:o,updateFunction:i.updateFunction||I[i.attributeName]})}return(t,i,o)=>{let s=0;for(let u=0;u<e.length;u++){const f=e[u];f.updateFunction(t,i,o,s,r),s+=f.stride}}}function U(){return j}function j(a,r,e){const t=a.gl,i=a.shader,o=i._getProgramData(r.glProgram);for(const s in r.groups){const u=r.groups[s];for(const f in u.resources){const c=u.resources[f];if(c instanceof PIXI.UniformGroup)c.ubo?i.bindUniformBlock(c,r._uniformBindMap[s][f],e.blockIndex++):i.updateUniformGroup(c);else if(c instanceof PIXI.BufferResource)i.bindUniformBlock(c,r._uniformBindMap[s][f],e.blockIndex++);else if(c instanceof PIXI.TextureSource||c instanceof PIXI.TextureView){a.texture.bind(c,e.textureCount);const l=r._uniformBindMap[s][f],m=o.uniformData[l];m&&(m.value!==e.textureCount&&t.uniform1i(m.location,e.textureCount),e.textureCount++)}else c instanceof PIXI.TextureStyle}}}const S=[(a,r,e,t,i)=>{const o=t[a].toArray(!0);r[e]=o[0],r[e+1]=o[1],r[e+2]=o[2],r[e+4]=o[3],r[e+5]=o[4],r[e+6]=o[5],r[e+8]=o[6],r[e+9]=o[7],r[e+10]=o[8]},(a,r,e,t,i)=>{i=t[a],r[e]=i.x,r[e+1]=i.y,r[e+2]=i.width,r[e+3]=i.height},(a,r,e,t,i)=>{i=t[a],r[e]=i.x,r[e+1]=i.y},(a,r,e,t,i)=>{i=t[a],r[e]=i.red,r[e+1]=i.green,r[e+2]=i.blue,r[e+3]=i.alpha},(a,r,e,t,i)=>{i=t[a],r[e]=i.red,r[e+1]=i.green,r[e+2]=i.blue}],B={f32:(a,r,e,t,i)=>{r[e]=i},i32:(a,r,e,t,i)=>{r[e]=i},"vec2<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1]},"vec3<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2]},"vec4<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2],r[e+3]=i[3]},"mat2x2<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2],r[e+3]=i[3]},"mat3x3<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2],r[e+4]=i[3],r[e+5]=i[4],r[e+6]=i[5],r[e+8]=i[6],r[e+9]=i[7],r[e+10]=i[8]},"mat4x4<f32>":(a,r,e,t,i)=>{for(let o=0;o<16;o++)r[e+o]=i[o]},"mat3x2<f32>":(a,r,e,t,i)=>{for(let o=0;o<6;o++)r[e+(o/3|0)*4+o%3]=i[o]},"mat4x2<f32>":(a,r,e,t,i)=>{for(let o=0;o<8;o++)r[e+(o/4|0)*4+o%4]=i[o]},"mat2x3<f32>":(a,r,e,t,i)=>{for(let o=0;o<6;o++)r[e+(o/2|0)*4+o%2]=i[o]},"mat4x3<f32>":(a,r,e,t,i)=>{for(let o=0;o<12;o++)r[e+(o/4|0)*4+o%4]=i[o]},"mat2x4<f32>":(a,r,e,t,i)=>{for(let o=0;o<8;o++)r[e+(o/2|0)*4+o%2]=i[o]},"mat3x4<f32>":(a,r,e,t,i)=>{for(let o=0;o<12;o++)r[e+(o/3|0)*4+o%3]=i[o]}},A={f32:(a,r,e,t,i)=>{r[e]=i},i32:(a,r,e,t,i)=>{r[e]=i},"vec2<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1]},"vec3<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2]},"vec4<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2],r[e+3]=i[3]},"mat2x2<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+4]=i[2],r[e+5]=i[3]},"mat3x3<f32>":(a,r,e,t,i)=>{r[e]=i[0],r[e+1]=i[1],r[e+2]=i[2],r[e+4]=i[3],r[e+5]=i[4],r[e+6]=i[5],r[e+8]=i[6],r[e+9]=i[7],r[e+10]=i[8]},"mat4x4<f32>":(a,r,e,t,i)=>{for(let o=0;o<16;o++)r[e+o]=i[o]},"mat3x2<f32>":(a,r,e,t,i)=>{for(let o=0;o<6;o++)r[e+(o/3|0)*4+o%3]=i[o]},"mat4x2<f32>":(a,r,e,t,i)=>{for(let o=0;o<8;o++)r[e+(o/4|0)*4+o%4]=i[o]},"mat2x3<f32>":(a,r,e,t,i)=>{for(let o=0;o<6;o++)r[e+(o/2|0)*4+o%2]=i[o]},"mat4x3<f32>":(a,r,e,t,i)=>{for(let o=0;o<12;o++)r[e+(o/4|0)*4+o%4]=i[o]},"mat2x4<f32>":(a,r,e,t,i)=>{for(let o=0;o<8;o++)r[e+(o/2|0)*4+o%2]=i[o]},"mat3x4<f32>":(a,r,e,t,i)=>{for(let o=0;o<12;o++)r[e+(o/3|0)*4+o%3]=i[o]}};function V(a){return F(a,A,r=>{const e=Math.max(PIXI.WGSL_TO_STD40_SIZE[r.data.type]/16,1),t=r.data.value.length/r.data.size,i=(4-t%4)%4;return(o,s,u,f,c)=>{let l=0;for(let m=0;m<r.data.size*e;m++){for(let n=0;n<t;n++)s[u++]=c[l++];u+=i}}})}function X(a){return F(a,B,r=>{const{size:e,align:t}=PIXI.WGSL_ALIGN_SIZE_DATA[r.data.type],i=(Math.max(e,t)-e)/4;return(o,s,u,f,c)=>{let l=0;for(let m=0;m<r.data.size;m++){for(let n=0;n<e/4;n++)s[u++]=c[l++];u+=i}}})}function F(a,r,e){const t={};for(const i in a){const o=a[i],s=o.data;let u=!1;t[s.name]={offset:o.offset/4,func:null};for(let f=0;f<PIXI.uniformParsers.length;f++){const c=PIXI.uniformParsers[f];if(s.type===c.type&&c.test(s)){t[s.name].func=S[f],u=!0;break}}u||(s.size===1?t[s.name].func=r[s.type]:t[s.name].func=e(o))}return(i,o,s,u)=>{for(const f in t)t[f].func(f,o,u+t[f].offset,i,i[f])}}const D={f32(a,r,e,t,i,o,s){e!==t&&(r.value=t,s.uniform1f(i[a].location,t))},"vec2<f32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1])&&(e[0]=t[0],e[1]=t[1],s.uniform2f(i[a].location,t[0],t[1]))},"vec3<f32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],s.uniform3f(i[a].location,t[0],t[1],t[2]))},"vec4<f32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2]||e[3]!==t[3])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],s.uniform4f(i[a].location,t[0],t[1],t[2],t[3]))},i32(a,r,e,t,i,o,s){e!==t&&(r.value=t,s.uniform1i(i[a].location,t))},"vec2<i32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1])&&(e[0]=t[0],e[1]=t[1],s.uniform2i(i[a].location,t[0],t[1]))},"vec3<i32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],s.uniform3i(i[a].location,t[0],t[1],t[2]))},"vec4<i32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2]||e[3]!==t[3])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],s.uniform4i(i[a].location,t[0],t[1],t[2],t[3]))},u32(a,r,e,t,i,o,s){e!==t&&(r.value=t,s.uniform1ui(i[a].location,t))},"vec2<u32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1])&&(e[0]=t[0],e[1]=t[1],s.uniform2ui(i[a].location,t[0],t[1]))},"vec3<u32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],s.uniform3ui(i[a].location,t[0],t[1],t[2]))},"vec4<u32>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2]||e[3]!==t[3])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],s.uniform4ui(i[a].location,t[0],t[1],t[2],t[3]))},bool(a,r,e,t,i,o,s){e!==t&&(r.value=t,s.uniform1i(i[a].location,t))},"vec2<bool>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1])&&(e[0]=t[0],e[1]=t[1],s.uniform2i(i[a].location,t[0],t[1]))},"vec3<bool>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],s.uniform3i(i[a].location,t[0],t[1],t[2]))},"vec4<bool>"(a,r,e,t,i,o,s){(e[0]!==t[0]||e[1]!==t[1]||e[2]!==t[2]||e[3]!==t[3])&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],s.uniform4i(i[a].location,t[0],t[1],t[2],t[3]))},"mat2x2<f32>"(a,r,e,t,i,o,s){s.uniformMatrix2fv(i[a].location,!1,t)},"mat3x3<f32>"(a,r,e,t,i,o,s){s.uniformMatrix3fv(i[a].location,!1,t)},"mat4x4<f32>"(a,r,e,t,i,o,s){s.uniformMatrix4fv(i[a].location,!1,t)}},z={f32(a,r,e,t,i,o,s){s.uniform1fv(i[a].location,t)},"vec2<f32>"(a,r,e,t,i,o,s){s.uniform2fv(i[a].location,t)},"vec3<f32>"(a,r,e,t,i,o,s){s.uniform3fv(i[a].location,t)},"vec4<f32>"(a,r,e,t,i,o,s){s.uniform4fv(i[a].location,t)},"mat2x2<f32>"(a,r,e,t,i,o,s){s.uniformMatrix2fv(i[a].location,!1,t)},"mat3x3<f32>"(a,r,e,t,i,o,s){s.uniformMatrix3fv(i[a].location,!1,t)},"mat4x4<f32>"(a,r,e,t,i,o,s){s.uniformMatrix4fv(i[a].location,!1,t)},i32(a,r,e,t,i,o,s){s.uniform1iv(i[a].location,t)},"vec2<i32>"(a,r,e,t,i,o,s){s.uniform2iv(i[a].location,t)},"vec3<i32>"(a,r,e,t,i,o,s){s.uniform3iv(i[a].location,t)},"vec4<i32>"(a,r,e,t,i,o,s){s.uniform4iv(i[a].location,t)},u32(a,r,e,t,i,o,s){s.uniform1iv(i[a].location,t)},"vec2<u32>"(a,r,e,t,i,o,s){s.uniform2iv(i[a].location,t)},"vec3<u32>"(a,r,e,t,i,o,s){s.uniform3iv(i[a].location,t)},"vec4<u32>"(a,r,e,t,i,o,s){s.uniform4iv(i[a].location,t)},bool(a,r,e,t,i,o,s){s.uniform1iv(i[a].location,t)},"vec2<bool>"(a,r,e,t,i,o,s){s.uniform2iv(i[a].location,t)},"vec3<bool>"(a,r,e,t,i,o,s){s.uniform3iv(i[a].location,t)},"vec4<bool>"(a,r,e,t,i,o,s){s.uniform4iv(i[a].location,t)}},T=[(a,r,e,t,i,o,s)=>{s.uniformMatrix3fv(i[a].location,!1,o[a].toArray(!0))},(a,r,e,t,i,o,s)=>{e=i[a].value,t=o[a],(e[0]!==t.x||e[1]!==t.y||e[2]!==t.width||e[3]!==t.height)&&(e[0]=t.x,e[1]=t.y,e[2]=t.width,e[3]=t.height,s.uniform4f(i[a].location,t.x,t.y,t.width,t.height))},(a,r,e,t,i,o,s)=>{e=i[a].value,t=o[a],(e[0]!==t.x||e[1]!==t.y)&&(e[0]=t.x,e[1]=t.y,s.uniform2f(i[a].location,t.x,t.y))},(a,r,e,t,i,o,s)=>{e=i[a].value,t=o[a],(e[0]!==t.red||e[1]!==t.green||e[2]!==t.blue||e[3]!==t.alpha)&&(e[0]=t.red,e[1]=t.green,e[2]=t.blue,e[3]=t.alpha,s.uniform4f(i[a].location,t.red,t.green,t.blue,t.alpha))},(a,r,e,t,i,o,s)=>{e=i[a].value,t=o[a],(e[0]!==t.red||e[1]!==t.green||e[2]!==t.blue)&&(e[0]=t.red,e[1]=t.green,e[2]=t.blue,s.uniform3f(i[a].location,t.red,t.green,t.blue))}];function G(a,r){const e={};for(const t in a.uniformStructures){if(!r[t])continue;const i=a.uniformStructures[t];let o=!1;for(let s=0;s<PIXI.uniformParsers.length;s++){const u=PIXI.uniformParsers[s];if(i.type===u.type&&u.test(i)){e[t]=T[s],o=!0;break}}if(!o){const s=i.size===1?D:z;e[t]=s[i.type]}}return(t,i,o)=>{const s=o.gl;for(const u in e){const f=i[u],c=t[u],l=t[u].value;e[u](u,c,l,f,t,i,s)}}}function k(){Object.assign(PIXI.AbstractRenderer.prototype,{_unsafeEvalCheck(){}}),Object.assign(PIXI.UboSystem.prototype,{_systemCheck(){}}),Object.assign(PIXI.GlUniformGroupSystem.prototype,{_generateUniformsSync:G}),Object.assign(PIXI.GlUboSystem.prototype,{_generateUboSync:V}),Object.assign(PIXI.GpuUboSystem.prototype,{_generateUboSync:X}),Object.assign(PIXI.GlShaderSystem.prototype,{_generateShaderSync:U}),Object.assign(O.prototype,{generateParticleUpdate:P})}return k(),h.generateParticleUpdatePolyfill=P,h.generateShaderSyncPolyfill=U,h.generateUboSyncPolyfillSTD40=V,h.generateUboSyncPolyfillWGSL=X,h.generateUniformsSyncPolyfill=G,h.particleUpdateFunctions=I,h.uboParserFunctions=S,h.uboSingleFunctionsSTD40=A,h.uboSingleFunctionsWGSL=B,h.uniformArrayParserFunctions=z,h.uniformParserFunctions=T,h.uniformSingleParserFunctions=D,h})({});Object.assign(this.PIXI,unsafe_eval_js);
 //# sourceMappingURL=unsafe-eval.min.js.map
 </script>
-<script>const VERSION = "1.0.1", BUILD_DATE = "Nov 3", RELEASE = true;
+<script>const VERSION = "1.0.3", BUILD_DATE = "Nov 4", RELEASE = true;
 const KIT_CONFIG = {"kitVersion":"1.0.0","status":"proposed-initial-tuning-not-playtested","race":{"laps":3,"racers":4,"nominalLapUnits":3300,"targetRaceSeconds":90},"timing":{"perfectHalfWindowMs":90,"approachCueSeconds":1.2,"perfectEnergy":1,"goodEnergy":0.5,"minimumEventGapSeconds":0.8},"boost":{"capacity":3,"cost":1,"stackable":false,"padMultiplier":1.25,"padDurationSeconds":0.8,"combination":"max-active-multiplier"},"items":{"slots":2,"rouletteSeconds":0.7,"weights":{"bubble_shield":0.25,"pulse_bolt":0.25,"turbo_cell":0.25,"shockwave":0.25},"shieldDurationSeconds":null,"shieldHits":1,"spareShieldAllowed":true,"boltRangeUnits":90,"boltMinimumTravelSeconds":0.8,"shockwaveRangeUnits":18,"hitSpeedMultiplier":0.65,"stunSeconds":0.35,"postHitOrBlockImmunitySeconds":1.5},"ai":{"perfectChance":0.25,"goodChance":0.55,"missChance":0.2,"hiddenSpeedBonus":0},"racers":[{"id":"nova","fixedKart":"all_rounder","ratings":{"topSpeed":3,"acceleration":3,"boostPower":3,"boostDuration":3,"control":3},"topSpeedUnitsPerSecond":100,"accelerationUnitsPerSecondSquared":45,"boostMultiplier":1.35,"boostDurationSeconds":1.5,"goodHalfWindowMs":220},{"id":"rook","fixedKart":"speedster","ratings":{"topSpeed":5,"acceleration":2,"boostPower":3,"boostDuration":3,"control":2},"topSpeedUnitsPerSecond":108,"accelerationUnitsPerSecondSquared":35,"boostMultiplier":1.35,"boostDurationSeconds":1.5,"goodHalfWindowMs":190},{"id":"pix","fixedKart":"boost_racer","ratings":{"topSpeed":2,"acceleration":2,"boostPower":4,"boostDuration":5,"control":2},"topSpeedUnitsPerSecond":96,"accelerationUnitsPerSecondSquared":35,"boostMultiplier":1.42,"boostDurationSeconds":1.9,"goodHalfWindowMs":190},{"id":"moss","fixedKart":"stunt_buggy","ratings":{"topSpeed":2,"acceleration":4,"boostPower":2,"boostDuration":2,"control":5},"topSpeedUnitsPerSecond":96,"accelerationUnitsPerSecondSquared":55,"boostMultiplier":1.28,"boostDurationSeconds":1.3,"goodHalfWindowMs":280}],"progression":{"phase1PlayableTracks":["neon_harbor"],"laterTracks":["sunset_coast","foundry_run"],"enableUnimplementedUnlocks":false}};
 const ART = {"arcade-district-far":"art/layer-arcade-district-far.webp","arcade-district-near":"art/layer-arcade-district-near.webp","arcade-district-sky":"art/layer-arcade-district-sky.webp","aurora-ridge-far":"art/layer-aurora-ridge-far.webp","aurora-ridge-near":"art/layer-aurora-ridge-near.webp","aurora-ridge-sky":"art/layer-aurora-ridge-sky.webp","canyon-leap-far":"art/layer-canyon-leap-far.webp","canyon-leap-near":"art/layer-canyon-leap-near.webp","canyon-leap-sky":"art/layer-canyon-leap-sky.webp","cargo-port-far":"art/layer-cargo-port-far.webp","cargo-port-near":"art/layer-cargo-port-near.webp","cargo-port-sky":"art/layer-cargo-port-sky.webp","carnival-pier-far":"art/layer-carnival-pier-far.webp","carnival-pier-near":"art/layer-carnival-pier-near.webp","carnival-pier-sky":"art/layer-carnival-pier-sky.webp","foundry-run-far":"art/layer-foundry-run-far.webp","foundry-run-near":"art/layer-foundry-run-near.webp","foundry-run-sky":"art/layer-foundry-run-sky.webp","glacier-pass-far":"art/layer-glacier-pass-far.webp","glacier-pass-near":"art/layer-glacier-pass-near.webp","glacier-pass-sky":"art/layer-glacier-pass-sky.webp","hyper-loop-far":"art/layer-hyper-loop-far.webp","hyper-loop-near":"art/layer-hyper-loop-near.webp","hyper-loop-sky":"art/layer-hyper-loop-sky.webp","lighthouse-cliffs-far":"art/layer-lighthouse-cliffs-far.webp","lighthouse-cliffs-near":"art/layer-lighthouse-cliffs-near.webp","lighthouse-cliffs-sky":"art/layer-lighthouse-cliffs-sky.webp","neon-harbor-far":"art/layer-neon-harbor-far.webp","neon-harbor-near":"art/layer-neon-harbor-near.webp","neon-harbor-sky":"art/layer-neon-harbor-sky.webp","pulse-core-far":"art/layer-pulse-core-far.webp","pulse-core-near":"art/layer-pulse-core-near.webp","pulse-core-sky":"art/layer-pulse-core-sky.webp","skyline-overpass-far":"art/layer-skyline-overpass-far.webp","skyline-overpass-near":"art/layer-skyline-overpass-near.webp","skyline-overpass-sky":"art/layer-skyline-overpass-sky.webp","starfall-far":"art/layer-starfall-far.webp","starfall-near":"art/layer-starfall-near.webp","starfall-sky":"art/layer-starfall-sky.webp","summit-tunnels-far":"art/layer-summit-tunnels-far.webp","summit-tunnels-near":"art/layer-summit-tunnels-near.webp","summit-tunnels-sky":"art/layer-summit-tunnels-sky.webp","sunset-beach-far":"art/layer-sunset-beach-far.webp","sunset-beach-near":"art/layer-sunset-beach-near.webp","sunset-beach-sky":"art/layer-sunset-beach-sky.webp","zero-point-far":"art/layer-zero-point-far.webp","zero-point-near":"art/layer-zero-point-near.webp","zero-point-sky":"art/layer-zero-point-sky.webp","ui:arch-arcade_district":"art/ui-arch-arcade_district.webp","ui:arch-aurora_ridge":"art/ui-arch-aurora_ridge.webp","ui:arch-canyon_leap":"art/ui-arch-canyon_leap.webp","ui:arch-cargo_port":"art/ui-arch-cargo_port.webp","ui:arch-carnival_pier":"art/ui-arch-carnival_pier.webp","ui:arch-foundry_run":"art/ui-arch-foundry_run.webp","ui:arch-glacier_pass":"art/ui-arch-glacier_pass.webp","ui:arch-hyper_loop":"art/ui-arch-hyper_loop.webp","ui:arch-lighthouse_cliffs":"art/ui-arch-lighthouse_cliffs.webp","ui:arch-neon_harbor":"art/ui-arch-neon_harbor.webp","ui:arch-pulse_core":"art/ui-arch-pulse_core.webp","ui:arch-skyline_overpass":"art/ui-arch-skyline_overpass.webp","ui:arch-starfall":"art/ui-arch-starfall.webp","ui:arch-summit_tunnels":"art/ui-arch-summit_tunnels.webp","ui:arch-sunset_beach":"art/ui-arch-sunset_beach.webp","ui:arch-zero_point":"art/ui-arch-zero_point.webp","ui:arrowL":"art/ui-arrowL.webp","ui:arrowR":"art/ui-arrowR.webp","ui:bronze":"art/ui-bronze.webp","ui:btnA":"art/ui-btnA.webp","ui:btnB":"art/ui-btnB.webp","ui:card-arcade_district":"art/ui-card-arcade_district.webp","ui:card-aurora_ridge":"art/ui-card-aurora_ridge.webp","ui:card-canyon_leap":"art/ui-card-canyon_leap.webp","ui:card-cargo_port":"art/ui-card-cargo_port.webp","ui:card-carnival_pier":"art/ui-card-carnival_pier.webp","ui:card-foundry_run":"art/ui-card-foundry_run.webp","ui:card-glacier_pass":"art/ui-card-glacier_pass.webp","ui:card-hyper_loop":"art/ui-card-hyper_loop.webp","ui:card-lighthouse_cliffs":"art/ui-card-lighthouse_cliffs.webp","ui:card-neon_harbor":"art/ui-card-neon_harbor.webp","ui:card-pulse_core":"art/ui-card-pulse_core.webp","ui:card-skyline_overpass":"art/ui-card-skyline_overpass.webp","ui:card-starfall":"art/ui-card-starfall.webp","ui:card-summit_tunnels":"art/ui-card-summit_tunnels.webp","ui:card-sunset_beach":"art/ui-card-sunset_beach.webp","ui:card-zero_point":"art/ui-card-zero_point.webp","ui:drv-moss":"art/ui-drv-moss.webp","ui:drv-nova":"art/ui-drv-nova.webp","ui:drv-pix":"art/ui-drv-pix.webp","ui:drv-rook":"art/ui-drv-rook.webp","ui:drv-zero":"art/ui-drv-zero.webp","ui:face-moss":"art/ui-face-moss.webp","ui:face-nova":"art/ui-face-nova.webp","ui:face-pix":"art/ui-face-pix.webp","ui:face-rook":"art/ui-face-rook.webp","ui:face-zero":"art/ui-face-zero.webp","ui:gold":"art/ui-gold.webp","ui:home-zero-smoke":"art/ui-home-zero-smoke.webp","ui:home-zero":"art/ui-home-zero.webp","ui:hz-ball":"art/ui-hz-ball.webp","ui:hz-barrel":"art/ui-hz-barrel.webp","ui:hz-barrier":"art/ui-hz-barrier.webp","ui:hz-cone":"art/ui-hz-cone.webp","ui:hz-crab":"art/ui-hz-crab.webp","ui:hz-crate":"art/ui-hz-crate.webp","ui:hz-ice":"art/ui-hz-ice.webp","ui:hz-iceblock":"art/ui-hz-iceblock.webp","ui:hz-sign":"art/ui-hz-sign.webp","ui:hz-snowman":"art/ui-hz-snowman.webp","ui:hz-snowpile":"art/ui-hz-snowpile.webp","ui:hz-spike":"art/ui-hz-spike.webp","ui:ic-gear":"art/ui-ic-gear.webp","ui:ic-help":"art/ui-ic-help.webp","ui:ic-home":"art/ui-ic-home.webp","ui:ic-stats":"art/ui-ic-stats.webp","ui:ic-time":"art/ui-ic-time.webp","ui:item-bolt":"art/ui-item-bolt.webp","ui:item-box":"art/ui-item-box.webp","ui:item-shield":"art/ui-item-shield.webp","ui:item-turbo":"art/ui-item-turbo.webp","ui:item-wave":"art/ui-item-wave.webp","ui:kart-moss":"art/ui-kart-moss.webp","ui:kart-nova":"art/ui-kart-nova.webp","ui:kart-pix":"art/ui-kart-pix.webp","ui:kart-rook":"art/ui-kart-rook.webp","ui:kart-zero":"art/ui-kart-zero.webp","ui:lock":"art/ui-lock.webp","ui:logo":"art/ui-logo.webp","ui:panel":"art/ui-panel.webp","ui:pill":"art/ui-pill.webp","ui:prop-barrels":"art/ui-prop-barrels.webp","ui:prop-billboard":"art/ui-prop-billboard.webp","ui:prop-bollard":"art/ui-prop-bollard.webp","ui:prop-energy":"art/ui-prop-energy.webp","ui:prop-flood":"art/ui-prop-flood.webp","ui:prop-lamp-city":"art/ui-prop-lamp-city.webp","ui:prop-lamp-iron":"art/ui-prop-lamp-iron.webp","ui:prop-lamp-wood":"art/ui-prop-lamp-wood.webp","ui:prop-lantern":"art/ui-prop-lantern.webp","ui:prop-palm-planter":"art/ui-prop-palm-planter.webp","ui:prop-palm":"art/ui-prop-palm.webp","ui:prop-pine":"art/ui-prop-pine.webp","ui:prop-pylon":"art/ui-prop-pylon.webp","ui:prop-skisign":"art/ui-prop-skisign.webp","ui:prop-snowpole":"art/ui-prop-snowpole.webp","ui:prop-umbrella":"art/ui-prop-umbrella.webp","ui:silver":"art/ui-silver.webp","ui:star":"art/ui-star.webp","ui:tog-off":"art/ui-tog-off.webp","ui:tog-on":"art/ui-tog-on.webp","ui:w-bolt":"art/ui-w-bolt.webp","ui:w-box":"art/ui-w-box.webp","ui:arches":{"neon_harbor":{"w":256,"h":205,"x":54,"y":35,"bw":149,"bh":39},"arcade_district":{"w":256,"h":160,"x":65,"y":13,"bw":125,"bh":35},"skyline_overpass":{"w":256,"h":204,"x":55,"y":33,"bw":145,"bh":42},"sunset_beach":{"w":256,"h":213,"x":50,"y":22,"bw":155,"bh":28},"carnival_pier":{"w":256,"h":220,"x":62,"y":60,"bw":126,"bh":33},"lighthouse_cliffs":{"w":256,"h":242,"x":66,"y":70,"bw":113,"bh":30},"foundry_run":{"w":256,"h":224,"x":70,"y":37,"bw":115,"bh":30},"cargo_port":{"w":256,"h":192,"x":52,"y":6,"bw":154,"bh":48},"pulse_core":{"w":256,"h":220,"x":80,"y":46,"bw":110,"bh":28},"glacier_pass":{"w":256,"h":194,"x":70,"y":42,"bw":130,"bh":30},"aurora_ridge":{"w":256,"h":204,"x":62,"y":52,"bw":130,"bh":30},"summit_tunnels":{"w":256,"h":210,"x":56,"y":43,"bw":137,"bh":30},"zero_point":{"w":256,"h":230,"x":60,"y":68,"bw":136,"bh":22},"hyper_loop":{"w":256,"h":230,"x":62,"y":34,"bw":132,"bh":32},"canyon_leap":{"w":256,"h":169,"x":68,"y":14,"bw":122,"bh":34},"starfall":{"w":256,"h":220,"x":63,"y":52,"bw":128,"bh":36}},"spr:moss-drift":{"url":"art/spr-moss-drift.webp","frames":4,"cw":125,"ch":109,"kartW":116},"spr:moss-drive":{"url":"art/spr-moss-drive.webp","frames":4,"cw":118,"ch":106,"kartW":116},"spr:moss-hit":{"url":"art/spr-moss-hit.webp","frames":4,"cw":126,"ch":106,"kartW":116},"spr:moss-victory":{"url":"art/spr-moss-victory.webp","frames":4,"cw":119,"ch":154,"kartW":116},"spr:nova-drift":{"url":"art/spr-nova-drift.webp","frames":4,"cw":123,"ch":100,"kartW":116},"spr:nova-drive":{"url":"art/spr-nova-drive.webp","frames":4,"cw":118,"ch":97,"kartW":116},"spr:nova-hit":{"url":"art/spr-nova-hit.webp","frames":4,"cw":128,"ch":109,"kartW":116},"spr:nova-victory":{"url":"art/spr-nova-victory.webp","frames":4,"cw":118,"ch":135,"kartW":116},"spr:pix-drift":{"url":"art/spr-pix-drift.webp","frames":4,"cw":133,"ch":113,"kartW":116},"spr:pix-drive":{"url":"art/spr-pix-drive.webp","frames":4,"cw":119,"ch":107,"kartW":116},"spr:pix-hit":{"url":"art/spr-pix-hit.webp","frames":4,"cw":140,"ch":127,"kartW":116},"spr:pix-victory":{"url":"art/spr-pix-victory.webp","frames":4,"cw":119,"ch":153,"kartW":116},"spr:rook-drift":{"url":"art/spr-rook-drift.webp","frames":4,"cw":129,"ch":89,"kartW":116},"spr:rook-drive":{"url":"art/spr-rook-drive.webp","frames":4,"cw":118,"ch":84,"kartW":116},"spr:rook-hit":{"url":"art/spr-rook-hit.webp","frames":4,"cw":142,"ch":96,"kartW":116},"spr:rook-victory":{"url":"art/spr-rook-victory.webp","frames":4,"cw":118,"ch":120,"kartW":116},"spr:zero-drift":{"url":"art/spr-zero-drift.webp","frames":4,"cw":134,"ch":120,"kartW":116},"spr:zero-drive":{"url":"art/spr-zero-drive.webp","frames":4,"cw":118,"ch":106,"kartW":116},"spr:zero-hit":{"url":"art/spr-zero-hit.webp","frames":4,"cw":120,"ch":114,"kartW":116},"spr:zero-victory":{"url":"art/spr-zero-victory.webp","frames":4,"cw":118,"ch":139,"kartW":116}};
 const MUSIC_META = {"results":{"kind":"loop","len":14.166,"gain":0.905,"loopStart":0.9813,"loopEnd":14.1657,"match":2.369},"victory":{"kind":"once","len":9,"gain":1.29},"podium":{"kind":"once","len":7,"gain":1.034},"tryagain":{"kind":"once","len":5,"gain":1.132},"zero":{"kind":"once","len":16,"gain":1.252},"neon_city":{"kind":"loop","len":101.784,"gain":0.87,"loopStart":9.728,"loopEnd":101.7836,"match":1.072},"sunset_coast":{"kind":"loop","len":101.206,"gain":0.964,"loopStart":36.9067,"loopEnd":101.206,"match":1.021},"pulse_extreme":{"kind":"loop","len":92.922,"gain":1.108,"loopStart":22.016,"loopEnd":92.922,"match":0.885},"zero_point":{"kind":"loop","len":100.812,"gain":1.059,"loopStart":39.5947,"loopEnd":100.8123,"match":0.737},"menu":{"kind":"loop","len":99.525,"gain":0.869,"loopStart":40.0213,"loopEnd":99.525,"match":1.084},"foundry":{"kind":"loop","len":99,"gain":0.914,"loopStart":44.416,"loopEnd":99.0004,"match":0.865},"frost_peaks":{"kind":"loop","len":93.878,"gain":0.984,"loopStart":47.4027,"loopEnd":93.8779,"match":0.951}};
@@ -3316,6 +3316,11 @@ const DIFFICULTY = {
 const DIFF_LEVELS = 4, DIFF_WIN_BY = 1.5;
 // Zero as a rival (the showdown): full skill and its own engine on any difficulty; never sped up or slowed down
 const ZERO_RIVAL = { skill: 1, pace: 1 };
+// the 1:1 showdown (v1.0.3, owner 2026-11-04: Zero must be hard, "I need to up my game to beat him"): Zero's pace for the
+// racer you bring. Rook and Pix lose 3-5 s a race to Nova and Moss on twisty tracks like Zero Point, so the same Zero would
+// be unbeatable for them; each value gives the strong test bot about 3 wins in 10 (TUNING_LOG v1.0.3)
+const ZERO_DUEL_PACE = { nova: 1.02, moss: 1.01, rook: 0.98, pix: 0.98 };
+const zeroDuelPace = (id) => ZERO_DUEL_PACE[id] || 1;
 const RIVAL_PLANS = {
   front: { label: 'LEADS EARLY', greedy: 0 },
   stalker: { label: 'STALKS', greedy: 0.3 },
@@ -3489,7 +3494,7 @@ const CIRCUITS = [
   { id: 'neon_city', name: 'Neon City' },
   { id: 'sunset_coast', name: 'Sunset Coast' },
   { id: 'foundry', name: 'Foundry District' },
-  { id: 'frost_peaks', name: 'Frost Peaks' },
+  { id: 'frost_peaks', name: 'Frost Peaks', afterZero: true },   // owner 2026-11-04: opens when Zero is beaten
   { id: 'pulse_extreme', name: 'Pulse Extreme', bonus: true },
 ];
 const trackDef = (id) => TRACK_DEFS.find((d) => d.id === id) || NEON_HARBOR;
@@ -6024,7 +6029,7 @@ function qaRender() {
     b('+1 boost charge', () => { if (APP.race) APP.race.player().energy = Math.min(APP.race.player().cap || 3, APP.race.player().energy + 1); }),
     b('Jump to final lap', () => qaFinalLap()),
     b('Unlock all tracks', () => { APP.unlockAll = !APP.unlockAll; saveSettings(); if (el.tracks.classList.contains('show')) buildTracks(); }, APP.unlockAll),
-    b('Zero: open the showdown', () => { const pr = loadProgress(); TRACK_ORDER.forEach((id) => { const t = pr.tracks[id] = pr.tracks[id] || {}; t.won = true; t.bestPlace = 1; if (t.best == null) t.best = 95; }); saveProgress(pr); qaRefresh(); }, zeroOpen()),
+    b('Zero: open the showdown', () => { const pr = loadProgress(); MAIN_ORDER.forEach((id) => { const t = pr.tracks[id] = pr.tracks[id] || {}; t.won = true; t.bestPlace = 1; if (t.best == null) t.best = 95; }); saveProgress(pr); qaRefresh(); }, zeroOpen()),
     b('Zero: unlock (beaten)', () => { const pr = loadProgress(); pr.zero = !pr.zero; saveProgress(pr); qaRefresh(); }, zeroBeaten()),
     b('New art (preview)', () => setArt(!APP.art), APP.art),
     b('Classic rules (old)', () => setRules(APP.rules === 'steer' ? 'classic' : 'steer'), APP.rules === 'classic'),
@@ -6096,27 +6101,31 @@ function showResults() {
   let zNote = '';
   if (race.showdown) {
     const z = race.racers.find((r) => r.id === 'zero');
-    if (rank === 1 && !pr.zero) { pr.zero = true; zNote = 'ZERO UNLOCKED! RACE AS ZERO'; APP.zeroNew = true; setTimeout(() => { const ms = mfJingle('zero'); if (ms) APP.jingleEnd = performance.now() + ms; resultsMusic((ms || 0) + 300); }, 400); }
+    if (rank === 1 && !pr.zero) { pr.zero = true; zNote = 'ZERO UNLOCKED! FROST PEAKS IS OPEN'; APP.zeroNew = true; setTimeout(() => { if (!el.results.classList.contains('show')) return; const ms = mfJingle('zero'); if (ms) APP.jingleEnd = performance.now() + ms; resultsMusic((ms || 0) + 300); }, 400); }   // only while the results still show
     else if (rank === 1) zNote = 'YOU BEAT ZERO AGAIN!';
     else if (z && z.finishT < p.finishT) zNote = `ZERO WON BY ${(p.finishT - z.finishT).toFixed(2)} s · TRY AGAIN`;
   } else if (!zWasOpen && zeroOpen(pr)) zNote = 'ZERO CHALLENGES YOU! FIND ZERO POINT IN CIRCUITS';
-  else if (t.won && zeroWins(pr) > zWas && !pr.zero) zNote = `${zeroWins(pr)}/${TRACK_ORDER.length} TRACKS WON · ZERO IS WATCHING`;
+  else if (t.won && zeroWins(pr) > zWas && !pr.zero) zNote = `${zeroWins(pr)}/${MAIN_ORDER.length} TRACKS WON · ZERO IS WATCHING`;
+  else if (TRACK.id === MAIN_ORDER[MAIN_ORDER.length - 1] && !zeroOpen(pr)) zNote = `WIN ALL ${MAIN_ORDER.length} TRACKS ON NORMAL OR HARD TO MEET ZERO (${zeroWins(pr)}/${MAIN_ORDER.length})`;
   if (race.rules === 'steer') recordRun(pr, { mode: 'race', track: TRACK.id, racer: APP.racerId, place: rank, time: p.finishT, diff: APP.diff }, p);
   saveProgress(pr);
   const nowOpen = nx && trackOpen(nx, pr), nd = nx && trackDef(nx);
   el.resNote.textContent = zNote || (nx && nowOpen && !wasOpen ? (nd.circuit !== TRACK.def.circuit ? `NEW CIRCUIT OPEN: ${CIRCUITS[nd.circuit].name.toUpperCase()}` : `NEW TRACK OPEN: ${nd.name.toUpperCase()}`)
-    : !nx && rank <= 3 && !TRACK.def.secret ? 'YOU FINISHED THE FINALE!' : '');
+    : !nx && rank <= 3 && TRACK.id === BONUS_IDS[BONUS_IDS.length - 1] ? 'YOU FINISHED THE FINALE!' : '');
   el.resNote.classList.toggle('zero', !!zNote);
-  APP.nextTrack = rank <= 3 && nowOpen ? nx : null;
+  // beating Zero leads straight on to Frost Peaks
+  APP.nextTrack = race.showdown && rank === 1 ? FROST_IDS[0] : rank <= 3 && nowOpen ? nx : null;
   for (const b of [el.again, el.next2]) b.textContent = APP.nextTrack ? 'NEXT TRACK ›' : 'RACE AGAIN ›';
 
-  el.resCup.innerHTML = cupImg(rank, 'bigcup');
-  el.resTitle.textContent = ['1ST PLACE!', '2ND PLACE!', '3RD PLACE!', '4TH PLACE'][rank - 1];
-  el.resTitle.className = 'H p' + rank;
+  // the 1:1 showdown has no silver cup: you beat Zero or Zero wins
+  const lostDuel = race.showdown && rank > 1;
+  el.resCup.innerHTML = lostDuel ? '' : cupImg(rank, 'bigcup');
+  el.resTitle.textContent = race.showdown ? (rank === 1 ? 'YOU BEAT ZERO!' : 'ZERO WINS') : ['1ST PLACE!', '2ND PLACE!', '3RD PLACE!', '4TH PLACE'][rank - 1];
+  el.resTitle.className = 'H p' + (lostDuel ? 4 : rank);
   el.resBest.style.display = newBest ? '' : 'none';
   const win = st[0].finishT;
   el.resTable.innerHTML = st.map((r, i) => `<div class="rrow ${r.isPlayer ? 'you' : ''}" style="animation-delay:${0.15 + i * 0.28}s;--acc:${r.stats.accent}">
-    ${cupImg(i + 1)}<span class="pos">${i + 1}</span><span class="nm">${r.stats.name}</span><span class="kt">${r.stats.kart}</span>
+    ${race.showdown && i ? '<span class="cup"></span>' : cupImg(i + 1)}<span class="pos">${i + 1}</span><span class="nm">${r.stats.name}</span><span class="kt">${r.stats.kart}</span>
     <span class="time">${fmtTime(r.finishT)}</span><span class="gap">${i ? '+' + (r.finishT - win).toFixed(2) : ''}</span></div>`).join('');
   buildStats(race, p, rep);
   setResLayout(APP.resUI || 'c');
@@ -6335,7 +6344,7 @@ function helpHtml(tab) {
   if (tab === 'race') return '<div class="hgrid">' + [
     hItem(hImg('arrowL') + hImg('arrowR'), 'STEER', 'Hold the left or right side of the steering pill (slide your thumb across to switch). Speed is automatic. Bends push you wide; the road edge slows you and walls knock you back.', 'c', true),
     hItem(`<span><i class="hsw" style="background:#29DBF2"></i><i class="hsw" style="background:#FFBF35"></i><i class="hsw" style="background:#fff"></i></span>`, 'DRIFT', 'Steer hard into a bend and keep holding. The sparks go cyan, amber, then white. As the bend ends you get a burst of speed: white is the biggest.', 'w'),
-    hItem(hImg('gold'), 'PLACES AND TRACKS', '3 laps against 3 rivals. Finish in the top 3 to open the next track. Top 3 on a circuit\'s last track opens the next circuit.'),
+    hItem(hImg('gold'), 'PLACES AND TRACKS', '3 laps against 3 rivals. Finish in the top 3 to open the next track. Top 3 on a circuit\'s last track opens the next circuit. Win all 9 tracks of the first three circuits on Normal or Hard and Zero challenges you to a race, just the two of you, on Zero Point. Beat Zero to race as Zero and open Frost Peaks; top 3 on Summit Tunnels opens Pulse Extreme.'),
     hItem(hImg('star'), 'MISSIONS', 'Each track has three missions, shown before the start. Each one met earns a star for good. The star badge on each track card shows how many are done (2/3); pick a track to see its three at the bottom of the circuits screen.'),
     hItem(hImg('ic-time'), 'TIME TRIAL', 'Race alone against the clock on any track you have finished, with no rivals or item boxes. Beat the gold, silver and bronze times, and chase the blue ghost of your best run.'),
     `<div class="hitem hwide"><div class="ico">${hImg('face-' + APP.racerId)}</div><div><b>RIVALS</b>Easy, Normal or Hard on the racer screen. Rivals get a little sharper after a big win and ease off after a loss. Later tracks ask a little more.</div></div>`,
@@ -6358,7 +6367,7 @@ function helpHtml(tab) {
     if (c.bonus) return '';   // the bonus circuit reuses hazards from the others; its set pieces have their own entry
     const kinds = [...new Set(TRACK_DEFS.filter((d) => d.circuit === ci).flatMap((d) => (d.hazards || []).map((h) => h.kind)))];
     return `<div><div class="hsec">${c.name.toUpperCase()}</div><div class="hzrow">${kinds.map((k) => `<figure>${hImg('hz-' + k)}${HZ_NAME[k]}</figure>`).join('')}</div></div>`;
-  }).join('') + hItem('<span class="hring" style="border-color:#FF5CD6"></span>', 'PULSE EXTREME (BONUS)', 'Beat Zero to open it. RAMPS: hit the amber stripes and fly over the gap; land on the road with the wheels straight for a CLEAN LANDING boost. LOOPS: hold on, you go round. TUNNELS: neon rings, mind the hazards inside.', 'c') + hItem(hImg('item-shield'), 'STEER ROUND THEM', 'Hazards sit on the road from track 2 on (none on Neon Harbor), more on harder tracks. Driving into one slows you like an item hit. A Shield blocks one. Ice is different: you slide sideways and steering half answers for a moment, so steer to catch it (a Shield doesn\'t help).', 'c')
+  }).join('') + hItem('<span class="hring" style="border-color:#FF5CD6"></span>', 'PULSE EXTREME (BONUS)', 'Top 3 on Summit Tunnels (Frost Peaks) opens it. RAMPS: hit the amber stripes and fly over the gap; land on the road with the wheels straight for a CLEAN LANDING boost. LOOPS: hold on, you go round. TUNNELS: neon rings, mind the hazards inside.', 'c') + hItem(hImg('item-shield'), 'STEER ROUND THEM', 'Hazards sit on the road from track 2 on (none on Neon Harbor), more on harder tracks. Driving into one slows you like an item hit. A Shield blocks one. Ice is different: you slide sideways and steering half answers for a moment, so steer to catch it (a Shield doesn\'t help).', 'c')
     + '</div>';
 }
 function helpTab(tab) {
@@ -6546,14 +6555,18 @@ const PLACE = ['1st', '2nd', '3rd', '4th'];
 const HZ_NAME = { barrier: 'Barriers', sign: 'Fallen signs', ball: 'Beach balls', crab: 'Crabs', crate: 'Crates', barrel: 'Barrels', cone: 'Cones', spike: 'Energy spikes', ice: 'Ice patches', snowman: 'Snowmen', iceblock: 'Ice blocks', snowpile: 'Snow piles' };
 // unlocks (owner 2026-10-29): top 3 on a track opens the next; top 3 on a circuit's last track opens the next circuit
 const TRACK_ORDER = TRACK_DEFS.filter((d) => !d.secret && !d.bonus).map((d) => d.id);
-// the bonus circuit (owner 2026-11-02): opens when Zero is beaten; not part of the campaign or the Zero win count
+// the bonus circuit (owner 2026-11-02): not part of the campaign or the Zero win count
 const BONUS_IDS = TRACK_DEFS.filter((d) => d.bonus).map((d) => d.id);
+// the order (owner 2026-11-04): the first three circuits (MAIN_ORDER, 9 tracks) lead to Zero; beating Zero opens Frost
+// Peaks (FROST_IDS, chained like the others); top 3 on its last track opens Pulse Extreme (all three at once)
+const FROST_IDS = TRACK_DEFS.filter((d) => !d.secret && !d.bonus && (CIRCUITS[d.circuit] || {}).afterZero).map((d) => d.id);
+const MAIN_ORDER = TRACK_ORDER.filter((id) => !FROST_IDS.includes(id));
 // Zero (board p3-plan-zero, owner: "1st on all 12 tracks on normal or above difficulty"): every track won at Normal or Hard
 // opens the showdown on Zero Point; win it to race as Zero. t.won is saved with each such win (wins from before v0.13
 // didn't save the difficulty, so they were carried over once: zeroMigrate)
 const ZERO_TRACK = 'zero_point';
-const zeroWins = (pr) => TRACK_ORDER.filter((id) => ((pr || loadProgress()).tracks[id] || {}).won).length;
-const zeroOpen = (pr) => APP.unlockAll || zeroWins(pr) >= TRACK_ORDER.length;
+const zeroWins = (pr) => MAIN_ORDER.filter((id) => ((pr || loadProgress()).tracks[id] || {}).won).length;
+const zeroOpen = (pr) => APP.unlockAll || zeroWins(pr) >= MAIN_ORDER.length;
 const zeroBeaten = (pr) => !!(pr || loadProgress()).zero;
 const racerOpen = (id, pr) => !(racerById(id) || {}).secret || APP.unlockAll || zeroBeaten(pr);
 function zeroMigrate() {
@@ -6561,15 +6574,28 @@ function zeroMigrate() {
   for (const id in pr.tracks) if (pr.tracks[id].bestPlace === 1 && pr.tracks[id].won == null) pr.tracks[id].won = true;
   pr.wonV13 = 1; saveProgress(pr);
 }
+const top3 = (t) => !!(t && t.bestPlace && t.bestPlace <= 3);
+// the track before this one in its chain (null for the first of the main road, Frost Peaks and Pulse Extreme)
+const prevTrackId = (id) => { for (const L of [MAIN_ORDER, FROST_IDS]) { const i = L.indexOf(id); if (i > 0) return L[i - 1]; } return null; };
 function trackOpen(id, pr) {
+  if (APP.unlockAll) return true;
+  pr = pr || loadProgress();
   if (id === ZERO_TRACK) return zeroOpen(pr);
-  if (BONUS_IDS.includes(id)) return APP.unlockAll || zeroBeaten(pr);
-  const i = TRACK_ORDER.indexOf(id);
-  if (i <= 0 || APP.unlockAll) return true;
-  const prev = (pr || loadProgress()).tracks[TRACK_ORDER[i - 1]];
-  return !!(prev && prev.bestPlace && prev.bestPlace <= 3);
+  if ((pr.keepOpen || []).includes(id)) return true;   // opened under the old order (before v1.0.3): never taken away
+  if (BONUS_IDS.includes(id)) return top3(pr.tracks[FROST_IDS[FROST_IDS.length - 1]]);
+  if (id === FROST_IDS[0]) return zeroBeaten(pr);
+  const pv = prevTrackId(id);
+  return !pv || top3(pr.tracks[pv]);
 }
-const nextTrackId = (id) => (TRACK_ORDER.includes(id) && TRACK_ORDER[TRACK_ORDER.indexOf(id) + 1]) || (BONUS_IDS.includes(id) && BONUS_IDS[BONUS_IDS.indexOf(id) + 1]) || null;
+// NEXT RACE follows the chains; the last of Frost Peaks leads into Pulse Extreme
+const nextTrackId = (id) => { for (const L of [MAIN_ORDER, FROST_IDS.concat(BONUS_IDS)]) { const i = L.indexOf(id); if (i >= 0) return L[i + 1] || null; } return null; };
+// v1.0.3 moved Frost Peaks after Zero and Pulse Extreme after Frost Peaks: keep open whatever the old order had opened
+function orderMigrate() {
+  const pr = loadProgress(); if (pr.orderV103) return;
+  const old = TRACK_ORDER.filter((id, i) => FROST_IDS.includes(id) && top3(pr.tracks[TRACK_ORDER[i - 1]])).concat(pr.zero ? BONUS_IDS : []);
+  if (old.length) pr.keepOpen = old;
+  pr.orderV103 = 1; saveProgress(pr);
+}
 // time trial (owner v0.9): any track you have finished in a race; medals from the track's target times (10-track.js)
 // KNOCKOUT (board p3-plan-knockout): any track where you've been top 3 in a race (Zero Point too)
 function koOpen(id, pr) { const t = (pr || loadProgress()).tracks[id]; return APP.unlockAll || !!(t && t.bestPlace && t.bestPlace <= 3); }
@@ -6650,7 +6676,7 @@ function showMystery(r) {
   el.rcard.querySelector('.nm').textContent = '???';
   el.rcard.querySelector('.kd').innerHTML = '<span class="ou">ORIGIN UNKNOWN</span>';
   el.rcard.querySelector('.bars').innerHTML = STAT_ROWS.map(([l]) => `<div class="sbar">${l}<span class="q">? ? ?</span></div>`).join('');
-  el.rcard.querySelector('.note').textContent = zeroOpen() ? 'A challenger waits on Zero Point. Beat them to race as them.' : `Win every track on Normal or Hard to meet this racer (${zeroWins()}/${TRACK_ORDER.length} won).`;
+  el.rcard.querySelector('.note').textContent = zeroOpen() ? 'A challenger waits on Zero Point. Beat them to race as them.' : `Win every track of the first three circuits on Normal or Hard to meet this racer (${zeroWins()}/${MAIN_ORDER.length} won).`;
   if (!art.querySelector('.mlock')) art.insertAdjacentHTML('beforeend', `<img class="mlock" src="${artUrl('lock')}" alt="Locked">`);
   el.roster.querySelectorAll('.rtile').forEach((t) => t.setAttribute('aria-pressed', String(t === el.roster.children[RACERS.indexOf(r)])));
   el.goRace.textContent = 'LOCKED'; el.goRace.disabled = true; SEL.cur = r.id;
@@ -6659,11 +6685,13 @@ function pickRacer(id) { if (SEL.posing) return; if (id !== APP.racerId) SFX.din
 // Realm Champion's select (owner v0.9): the racer shrinks out and bounces in, the kart slides in, then a slow breathe; the
 // stat pips light one after another in a quick wave down the bars (pip s of bar n at 60 + 30n + 35s ms); BEST on the top stat
 function showRacer(r) {
-  el.rcard.classList.remove('mystery'); el.rcard.querySelector('.note').textContent = 'Control: curves push you less wide and drift sparks come sooner.';
+  el.rcard.querySelector('.note').textContent = 'Control: curves push you less wide and drift sparks come sooner.';
   const art = el.rcard.querySelector('.art'), drv = art.querySelector('.drv'), kart = art.querySelector('.kart'), nm = el.rcard.querySelector('.nm'), still = reduceMotion();
   SEL.timers.forEach(clearTimeout); SEL.timers = [];
   el.select.style.setProperty('--glow', r.accent + '55'); el.rcard.style.setProperty('--c', r.accent);
   const swapIn = () => {
+    // the shadow stays on while a locked racer shrinks out (owner 2026-11-03: Zero showed in colour for a moment)
+    el.rcard.classList.remove('mystery');
     drv.src = artUrl('drv-' + r.id); kart.src = artUrl('kart-' + r.id); nm.textContent = r.name.toUpperCase();
     drv.className = 'drv'; kart.className = 'kart'; nm.className = 'nm'; void drv.offsetWidth;
     drv.className = 'drv in'; kart.className = 'kart in'; nm.className = 'nm in';
@@ -6729,8 +6757,8 @@ function buildTracks() {
     row.className = 'crow';
     const won = (d) => { const t = pr.tracks[d.id] || {}; return trial ? (t.trial ? trialMedal(d.id, t.trial.best) : 0) : ko ? ((t.ko || {}).best || 0) : t.bestPlace <= 3 ? t.bestPlace : 0; };
     const cups = defs.map((d) => (won(d) ? cupImg(won(d), 'c') : '<i></i>')).join('');
-    const prev = trackDef(TRACK_ORDER[TRACK_ORDER.indexOf(defs[0].id) - 1] || defs[0].id);
-    const lockHint = !trial && !ko && !isOpen(defs[0].id) ? `<div class="lkh"><img src="${artUrl('lock')}" alt="">${c.bonus ? 'Beat Zero to open it' : 'Top 3 on ' + prev.name + ' opens it'}</div>` : '';
+    const prev = trackDef(prevTrackId(defs[0].id) || MAIN_ORDER[MAIN_ORDER.length - 1]);
+    const lockHint = !trial && !ko && !isOpen(defs[0].id) ? `<div class="lkh"><img src="${artUrl('lock')}" alt="">${c.afterZero ? 'Beat Zero to open it' : c.bonus ? 'Top 3 on ' + trackDef(FROST_IDS[FROST_IDS.length - 1]).name + ' opens it' : 'Top 3 on ' + prev.name + ' opens it'}</div>` : '';
     row.innerHTML = `<div class="clab" style="--cc:${CIRCUIT_COL[ci]}"><span class="H">${c.name.toUpperCase()}</span><small>${CIRCUIT_SUB[ci]}</small>${lockHint || `<div class="cups">${cups}</div>`}</div>`;
     for (const d of defs) {
       const open = isOpen(d.id), t = pr.tracks[d.id] || {}, b = document.createElement('button'), w = won(d);
@@ -6749,8 +6777,8 @@ function buildTracks() {
       b.innerHTML = `${pill}${stars}<span class="tn">${d.name}</span><span class="tl">${line}</span>`;
       b.onclick = () => {
         if (!open) {
-          const pv = trackDef(TRACK_ORDER[TRACK_ORDER.indexOf(d.id) - 1] || d.id);
-          trkMsg(trial ? `Finish ${d.name} in a race to time it here` : d.bonus && !ko ? 'Beat Zero on Zero Point to open the bonus circuit' : ko ? `Finish top 3 on ${d.name} in a race to open its knockout` : `Top 3 on ${pv.name} opens ${d.name}`); SFX.miss(); return;
+          const pv = trackDef(prevTrackId(d.id) || d.id);
+          trkMsg(trial ? `Finish ${d.name} in a race to time it here` : d.id === FROST_IDS[0] && !ko ? 'Beat Zero on Zero Point to open Frost Peaks' : d.bonus && !ko ? `Top 3 on ${trackDef(FROST_IDS[FROST_IDS.length - 1]).name} opens the bonus circuit` : ko ? `Finish top 3 on ${d.name} in a race to open its knockout` : `Top 3 on ${pv.name} opens ${d.name}`); SFX.miss(); return;
         }
         setTrack(d.id); saveSettings(); buildTracks(); SFX.ding();
       };
@@ -6758,31 +6786,32 @@ function buildTracks() {
     }
     el.circuits.append(row);
   };
-  CIRCUITS.forEach((c, ci) => { if (!c.bonus) drawRow(c, ci); });
+  CIRCUITS.forEach((c, ci) => { if (!c.bonus && !c.afterZero) drawRow(c, ci); });
   // the secret row (v0.13): Zero Point, locked until every track is won on Normal or Hard (a counter till then); Zero
   // stands beside it, a black outline until beaten
   if (!trial || trialOpen(ZERO_TRACK, pr)) {
     const zo = isOpen(ZERO_TRACK), n = zeroWins(pr), beat = zeroBeaten(pr), t = pr.tracks[ZERO_TRACK] || {}, row = document.createElement('div');
     const w = trial ? (t.trial ? trialMedal(ZERO_TRACK, t.trial.best) : 0) : t.bestPlace <= 3 ? t.bestPlace : 0;
     row.className = 'crow zrow';
-    row.innerHTML = `<div class="clab" style="--cc:#F4F1FF"><span class="H">SECRET</span><small>${beat ? 'Zero beaten' : zo ? 'Zero is waiting' : 'Win every track'}</small>${zo ? '' : `<div class="lkh"><img src="${artUrl('lock')}" alt="">Wins on Normal or Hard: ${n}/${TRACK_ORDER.length}</div>`}</div>`;
+    row.innerHTML = `<div class="clab" style="--cc:#F4F1FF"><span class="H">SECRET</span><small>${beat ? 'Zero beaten' : zo ? 'Zero is waiting' : 'Win all ' + MAIN_ORDER.length + ' tracks above'}</small>${zo ? '' : `<div class="lkh"><img src="${artUrl('lock')}" alt="">Wins on Normal or Hard: ${n}/${MAIN_ORDER.length}</div>`}</div>`;
     const b = document.createElement('button');
     b.className = 'tcard zcard' + (zo ? '' : ' locked'); b.dataset.track = ZERO_TRACK;
     b.style.backgroundImage = `url(${artUrl('card-' + ZERO_TRACK)})`;
     b.setAttribute('aria-pressed', String(zo && APP.trackId === ZERO_TRACK)); b.setAttribute('aria-label', zo ? 'Zero Point' : 'Secret track (locked)');
     const pill = !zo ? lockImg : !beat && !trial ? '<span class="tp zc">ZERO CHALLENGES YOU</span>'
       : w ? `<span class="tp" style="--pc:${PILL_COL[w - 1]}">${cupImg(w, 'c')}${trial ? ['GOLD', 'SILVER', 'BRONZE'][w - 1] : ['1ST', '2ND', '3RD'][w - 1]}</span>` : '';
-    const line = !zo ? `${n}/${TRACK_ORDER.length} tracks won` : trial ? (t.trial ? 'best ' + fmtTime(t.trial.best) : 'gold ' + fmtTime(trialTargets(ZERO_TRACK)[0])) : t.best ? 'best ' + fmtTime(t.best) : 'beat Zero to race as Zero';
+    const line = !zo ? `${n}/${MAIN_ORDER.length} tracks won` : trial ? (t.trial ? 'best ' + fmtTime(t.trial.best) : 'gold ' + fmtTime(trialTargets(ZERO_TRACK)[0])) : t.best ? 'best ' + fmtTime(t.best) : 'beat Zero to race as Zero';
     b.innerHTML = `${pill}<span class="tn">${zo ? 'Zero Point' : '???'}</span><span class="tl">${line}</span>`;
     b.onclick = () => {
-      if (!zo) { trkMsg(`Win every track on Normal or Hard to open this (${n}/${TRACK_ORDER.length})`); SFX.miss(); return; }
+      if (!zo) { trkMsg(`Win all ${MAIN_ORDER.length} tracks of the first three circuits on Normal or Hard to open this (${n}/${MAIN_ORDER.length})`); SFX.miss(); return; }
       setTrack(ZERO_TRACK); saveSettings(); buildTracks(); SFX.ding();
     };
     const z = document.createElement('div');
     z.className = 'zfig' + (beat ? ' won' : ''); z.innerHTML = `<img src="${artUrl('drv-zero')}" alt="Zero"><span>${beat ? 'ZERO' : '?'}</span>`;
     row.append(b, z); el.circuits.append(row);
   }
-  // the bonus circuit after the secret row, locked until Zero is beaten
+  // after the secret row: Frost Peaks (opens when Zero is beaten), then the bonus circuit (opens after Frost Peaks)
+  CIRCUITS.forEach((c, ci) => { if (c.afterZero) drawRow(c, ci); });
   CIRCUITS.forEach((c, ci) => { if (c.bonus) drawRow(c, ci); });
   trkScroll();
   trkMsg('');
@@ -6841,10 +6870,11 @@ function tutEnd() {
 function startRace(opts) {
   cancelInput(); if (APP.replay) replayStop();
   if (TRACK.id !== RN.trackId) renderSetTrack(TRACK);
-  // four karts (kit): you and three of the others; on Zero Point you face Zero (unless you are Zero)
+  // four karts (kit): you and three of the others. On Zero Point (unless you are Zero) a RACE is the showdown, you against
+  // Zero alone (owner 2026-11-04: "a 1:1 challenge"); a KNOCKOUT there has Zero and two rivals
   const field = RACERS.filter((r) => !r.secret && r.id !== APP.racerId).map((r) => r.id);
-  const showdown = APP.mode !== 'trial' && TRACK.id === ZERO_TRACK && APP.racerId !== 'zero';
-  const others = showdown ? ['zero'].concat(field.slice(0, 2)) : field.length > 3 ? field.filter((_, i) => i !== APP.seed % field.length) : field;
+  const zeroHere = APP.mode !== 'trial' && TRACK.id === ZERO_TRACK && APP.racerId !== 'zero', showdown = zeroHere && APP.mode !== 'knockout';
+  const others = showdown ? ['zero'] : zeroHere ? ['zero'].concat(field.slice(0, 2)) : field.length > 3 ? field.filter((_, i) => i !== APP.seed % field.length) : field;
   const soh = APP.rules === 'soh', pc = rivalSkill(TRACK.id);
   const aiProfile = soh ? { perfectChance: pc, goodChance: 0.55, missChance: 1 - pc - 0.55 } : TRACK_AI[TRACK.id] || AI_PROFILES.medium;
   // time trial (owner v0.9): just you and the clock, no item boxes; lap splits against your best run
@@ -6852,7 +6882,7 @@ function startRace(opts) {
   const lineup = trial ? [APP.racerId] : [APP.racerId].concat(others), knockout = APP.mode === 'knockout' && !trial;
   // steering race: rival pace and skill from the difficulty and its between-race level
   const ds = diffSettings(TRACK.id, APP.diff);
-  APP.race = APP.rules === 'steer' ? createSteerRace({ track: TRACK, lineup, seed: APP.seed++, skill: ds.skill, pace: ds.pace, items: !trial, knockout, skills: { zero: ZERO_RIVAL.skill }, paces: { zero: ZERO_RIVAL.pace } })
+  APP.race = APP.rules === 'steer' ? createSteerRace({ track: TRACK, lineup, seed: APP.seed++, skill: ds.skill, pace: ds.pace, items: !trial, knockout, skills: { zero: ZERO_RIVAL.skill }, paces: { zero: showdown ? zeroDuelPace(APP.racerId) : ZERO_RIVAL.pace } })
     : createRace({ track: TRACK, lineup, seed: APP.seed++, aiProfile, rules: APP.rules });
   APP.race.trial = trial; APP.race.showdown = showdown;
   document.body.classList.toggle('cap5', APP.race.player().cap > 3);
@@ -6925,7 +6955,7 @@ function resumeGame() {
 function finishRace() {
   const race = APP.race, p = race.player(), rank = race.rankOf(p);
   APP.state = 'finished'; musicStop(0.8); el.missions.className = '';
-  let celebrate = race.knockout ? rank === 1 && !p.out : rank <= 3;
+  let celebrate = race.knockout ? rank === 1 && !p.out : race.showdown ? rank === 1 : rank <= 3;   // the 1:1 showdown: only a win
   // finish jingle (owner's Suno jingles): a win, a podium, or try again; the code-made fanfare when there's none
   const jingleFor = (place) => (place === 1 ? 'victory' : place <= 3 ? 'podium' : 'tryagain');
   const playJingle = (place) => { const ms = mfJingle(jingleFor(place)); APP.jingleEnd = performance.now() + (ms || 0); return ms != null; };
@@ -7107,7 +7137,7 @@ async function boot() {
   el.boostRing = el.boost.querySelector('.ring'); el.driftRing = el.drift.querySelector('.ring'); el.driftLbl = el.drift.querySelector('.lbl');
   el.ver.textContent = 'Build v' + VERSION;
   const s = loadSettings();
-  zeroMigrate();
+  zeroMigrate(); orderMigrate();
   applySettings(s);
   await bootWire();
   cloudInit();   // the account copy, if this view has one (artifact db + user); never blocks the game
