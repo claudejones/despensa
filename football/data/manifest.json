@@ -35,11 +35,17 @@
       "researchVersion": "2026-10-31-week8-weekend-1",
       "dataVersion": "20261101T2305420500-markets",
       "resultsVersion": "20261101T2305420500-scores"
+    },
+    "09": {
+      "path": "2026/week-09.json",
+      "status": "preliminary",
+      "researchVersion": "2026-11-05-week9-thursday-1",
+      "dataVersion": "2026-11-05-week9-thursday-1"
     }
   },
-  "lastSuccessfulPublication": "2026-11-01T23:05:42-05:00",
-  "notice": "Week 8: 11 Sunday finals plus Thursday verified; Philadelphia-Washington live; Chicago-Seattle Monday. Week remains open.",
+  "lastSuccessfulPublication": "2026-11-05T08:07:50-05:00",
+  "notice": "Week 9 Thursday research: Jaguars at Ravens; all 15 games scheduled. Later-game research preliminary. Prior weeks preserved.",
   "scoresCheckedAt": "2026-11-01T23:04:48-05:00",
-  "marketsCheckedAt": "2026-11-01T23:04:56-05:00",
-  "recordsCheckedAt": "2026-11-01T23:04:48-05:00"
+  "marketsCheckedAt": "2026-11-05T08:07:50-05:00",
+  "recordsCheckedAt": "2026-11-05T08:05:17-05:00"
 }
