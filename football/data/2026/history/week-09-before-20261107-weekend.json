@@ -1,0 +1,4062 @@
+{
+  "schemaVersion": 1,
+  "season": 2026,
+  "week": 9,
+  "researchVersion": "2026-11-05-week9-thursday-1",
+  "dataVersion": "2026-11-05-week9-thursday-1",
+  "researchedAt": "2026-11-05T08:07:41-05:00",
+  "status": "preliminary",
+  "notes": "Thursday pregame research; Sunday/Monday analysis preliminary. Prior weeks preserved.",
+  "games": [
+    {
+      "id": "jax-bal",
+      "kickoff": "2026-11-05T20:15:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873037",
+      "venue": "M&T Bank Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873037",
+        "ravens-injury",
+        "jaguars-injury",
+        "ravens-qb"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Baltimore Ravens: W vs Tennessee Titans 24-18; W @ Atlanta Falcons 30-23 OT; L @ Cleveland Browns 13-10; L vs Cincinnati Bengals 35-13; L @ Buffalo Bills 36-10",
+            "Jacksonville Jaguars: W vs New England Patriots 35-6; W @ Cincinnati Bengals 22-17; W vs Philadelphia Eagles 19-17; L vs Houston Texans 34-31; W vs Indianapolis Colts 42-7"
+          ],
+          "sourceIds": [
+            "espn-401873037"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Thursday final designations verified",
+          "details": [
+            "Jackson and Huntley are out; Fagnano is the announced starter. Hawkins is out; Randall and Wiggins are questionable.",
+            "Tuten and Walker are questionable for Jacksonville."
+          ],
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury",
+            "ravens-qb"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "AI lean: Jacksonville Jaguars · low confidence",
+          "details": [
+            "Jacksonville enters 5-2 after beating Indianapolis 42-7; Baltimore is 4-4 after losing 36-10 in Buffalo.",
+            "Baltimore confirms rookie Joe Fagnano will make his first start with Jackson and Huntley ruled out.",
+            "Baltimore has home field; short-week road preparation adds uncertainty for Jacksonville.",
+            "Jacksonville RB Bhayshul Tuten and DE Travon Walker are questionable; final inactives are pending."
+          ],
+          "sourceIds": [
+            "schedule",
+            "ravens-qb",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873037"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Jacksonville Jaguars: YES bid 81¢ / ask 82¢.",
+            "Baltimore Ravens: YES bid 18¢ / ask 19¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV05JACBAL-JAC",
+            "KXNFLGAME-26NOV05JACBAL-BAL"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Baltimore Ravens",
+          "name": "Lamar Jackson",
+          "position": "QB",
+          "status": "Out",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Tyler Huntley",
+          "position": "QB",
+          "status": "Out",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Jaylinn Hawkins",
+          "position": "S",
+          "status": "Out",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Adam Randall",
+          "position": "RB",
+          "status": "Questionable",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Nate Wiggins",
+          "position": "CB",
+          "status": "Questionable",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "status": "Questionable",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Jacksonville Jaguars",
+          "name": "Travon Walker",
+          "position": "DE",
+          "status": "Questionable",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Baltimore Ravens",
+          "name": "Joe Fagnano",
+          "position": "QB",
+          "status": "No injury designation",
+          "note": "Wednesday final report; final inactives pending.",
+          "sourceIds": [
+            "ravens-injury",
+            "jaguars-injury"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "baltimore-ravens",
+        "name": "Baltimore Ravens",
+        "record": "4-4-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/bal.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "jacksonville-jaguars",
+        "name": "Jacksonville Jaguars",
+        "record": "5-2-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/jax.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "cin-atl",
+      "kickoff": "2026-11-08T09:30:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873038",
+      "venue": "Santiago Bernabéu",
+      "neutralSite": true,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873038"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Atlanta Falcons: W @ New Orleans Saints 45-24; L vs Baltimore Ravens 30-23 OT; L vs Chicago Bears 31-23; W vs San Francisco 49ers 29-20; L @ Tampa Bay Buccaneers 16-0",
+            "Cincinnati Bengals: L @ Pittsburgh Steelers 30-27; L vs Jacksonville Jaguars 22-17; W @ Miami Dolphins 31-24; W @ Baltimore Ravens 35-13; W vs Tennessee Titans 43-36 OT"
+          ],
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Cincinnati Bengals 5-2-0; Atlanta Falcons 3-5-0.",
+            "Venue: Santiago Bernabéu. Neutral site."
+          ],
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Atlanta Falcons: YES bid 38¢ / ask 39¢.",
+            "Cincinnati Bengals: YES bid 61¢ / ask 62¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08CINATL-ATL",
+            "KXNFLGAME-26NOV08CINATL-CIN"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Atlanta Falcons",
+          "name": "Divine Deablo",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "Yasir Abdullah",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "Brian Robinson Jr.",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "Samson Ebukam",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Atlanta Falcons",
+          "name": "Zachariah Branch",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "name": "Jordan Battle",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "name": "Cashius Howell",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "name": "Kyle Dugger",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "name": "DJ Turner II",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cincinnati Bengals",
+          "name": "Cedric Johnson",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873038"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "atlanta-falcons",
+        "name": "Atlanta Falcons",
+        "record": "3-5-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/atl.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "cincinnati-bengals",
+        "name": "Cincinnati Bengals",
+        "record": "5-2-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "dal-ind",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873040",
+      "venue": "Lucas Oil Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873040"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Indianapolis Colts: W vs Washington Commanders 30-13; L @ Pittsburgh Steelers 34-22; L vs Tennessee Titans 26-20; L @ Minnesota Vikings 16-10; L @ Jacksonville Jaguars 42-7",
+            "Dallas Cowboys: W @ Houston Texans 34-30; L vs Tampa Bay Buccaneers 24-16; L @ Green Bay Packers 23-13; W @ Philadelphia Eagles 38-21; L vs Arizona Cardinals 33-30 OT"
+          ],
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Dallas Cowboys 3-5-0; Indianapolis Colts 2-6-0.",
+            "Venue: Lucas Oil Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Indianapolis Colts: YES bid 30¢ / ask 31¢.",
+            "Dallas Cowboys: YES bid 69¢ / ask 70¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08DALIND-IND",
+            "KXNFLGAME-26NOV08DALIND-DAL"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Indianapolis Colts",
+          "name": "Drew Ogletree",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Akeem Davis-Gaither",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Alec Pierce",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Justin Walley",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Indianapolis Colts",
+          "name": "Anthony Gould",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Jalen Thompson",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Dee Winters",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "KaVontae Turpin",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "P.J. Locke",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Dallas Cowboys",
+          "name": "Caleb Downs",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873040"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "indianapolis-colts",
+        "name": "Indianapolis Colts",
+        "record": "2-6-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ind.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "dallas-cowboys",
+        "name": "Dallas Cowboys",
+        "record": "3-5-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "nyj-kc",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873045",
+      "venue": "Arrowhead Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873045"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Kansas City Chiefs: W @ Miami Dolphins 24-10; W @ Las Vegas Raiders 30-27; W vs Los Angeles Chargers 22-6; L @ Seattle Seahawks 20-3; L @ Denver Broncos 28-24",
+            "New York Jets: L @ Chicago Bears 23-12; W vs Cleveland Browns 17-12; L @ New England Patriots 26-19; L vs Miami Dolphins 28-25; L vs Las Vegas Raiders 38-33"
+          ],
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: New York Jets 2-6-0; Kansas City Chiefs 5-2-0.",
+            "Venue: Arrowhead Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "New York Jets: YES bid 19¢ / ask 20¢.",
+            "Kansas City Chiefs: YES bid 80¢ / ask 81¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08NYJKC-NYJ",
+            "KXNFLGAME-26NOV08NYJKC-KC"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Nikko Remigio",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Rashee Rice",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Travis Kelce",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Mansoor Delane",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Kansas City Chiefs",
+          "name": "Peter Woods",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "VJ Payne",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Joseph Ossai",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Mason Taylor",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Trevin Wallace",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Jets",
+          "name": "Harrison Phillips",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873045"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "kansas-city-chiefs",
+        "name": "Kansas City Chiefs",
+        "record": "5-2-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "new-york-jets",
+        "name": "New York Jets",
+        "record": "2-6-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "det-mia",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873042",
+      "venue": "Hard Rock Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873042"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Miami Dolphins: L vs Kansas City Chiefs 24-10; L @ Minnesota Vikings 15-10; L vs Cincinnati Bengals 31-24; W @ New York Jets 28-25; L vs New England Patriots 24-19",
+            "Detroit Lions: W vs New York Jets 31-24; L @ Carolina Panthers 32-26; W @ Arizona Cardinals 45-21; W vs Green Bay Packers 20-17; W vs Minnesota Vikings 19-15"
+          ],
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Detroit Lions 5-2-0; Miami Dolphins 1-6-0.",
+            "Venue: Hard Rock Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Detroit Lions: YES bid 74¢ / ask 75¢.",
+            "Miami Dolphins: YES bid 25¢ / ask 26¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08DETMIA-DET",
+            "KXNFLGAME-26NOV08DETMIA-MIA"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Miami Dolphins",
+          "name": "Kadyn Proctor",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Miami Dolphins",
+          "name": "Malik Herring",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Miami Dolphins",
+          "name": "Kaytron Allen",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Miami Dolphins",
+          "name": "Will Kacmarek",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Miami Dolphins",
+          "name": "Darrell Baker Jr.",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Detroit Lions",
+          "name": "Kerby Joseph",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Detroit Lions",
+          "name": "Brian Branch",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Detroit Lions",
+          "name": "Jack Campbell",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Doubtful. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Detroit Lions",
+          "name": "Amon-Ra St. Brown",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Detroit Lions",
+          "name": "Amen Ogbongbemiga",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873042"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "miami-dolphins",
+        "name": "Miami Dolphins",
+        "record": "1-6-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/mia.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "detroit-lions",
+        "name": "Detroit Lions",
+        "record": "5-2-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "cle-no",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873039",
+      "venue": "Caesars Superdome",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873039"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "New Orleans Saints: L vs Las Vegas Raiders 35-27; L vs Atlanta Falcons 45-24; L vs Minnesota Vikings 23-13; W @ New York Giants 34-27; L vs Pittsburgh Steelers 16-10",
+            "Cleveland Browns: W vs Pittsburgh Steelers 27-24; L @ New York Jets 17-12; W vs Baltimore Ravens 13-10; W @ Tennessee Titans 27-24; L @ Pittsburgh Steelers 27-6"
+          ],
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Cleveland Browns 5-3-0; New Orleans Saints 2-5-0.",
+            "Venue: Caesars Superdome."
+          ],
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Cleveland Browns: YES bid 39¢ / ask 40¢.",
+            "New Orleans Saints: YES bid 59¢ / ask 61¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08CLENO-CLE",
+            "KXNFLGAME-26NOV08CLENO-NO"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "New Orleans Saints",
+          "name": "Kelvin Banks Jr.",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "Justin Reid",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "CJ Donaldson",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "Alvin Kamara",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New Orleans Saints",
+          "name": "Asim Richards",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Deshaun Watson",
+          "position": "QB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Denzel Boston",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Carson Schwesinger",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Jared Verse",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Cleveland Browns",
+          "name": "Elgton Jenkins",
+          "position": "C",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873039"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "new-orleans-saints",
+        "name": "New Orleans Saints",
+        "record": "2-5-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/no.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "cleveland-browns",
+        "name": "Cleveland Browns",
+        "record": "5-3-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cle.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "nyg-phi",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873044",
+      "venue": "Lincoln Financial Field",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873044"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Philadelphia Eagles: L vs Los Angeles Rams 24-20; L vs Jacksonville Jaguars 19-17; L vs Carolina Panthers 25-14; L vs Dallas Cowboys 38-21; L @ Washington Commanders 27-10",
+            "New York Giants: W vs Tennessee Titans 12-7; W vs Arizona Cardinals 36-24; T @ Washington Commanders 27-27 OT; L vs New Orleans Saints 34-27; W @ Houston Texans 27-21 OT"
+          ],
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: New York Giants 4-2-1; Philadelphia Eagles 2-6-0.",
+            "Venue: Lincoln Financial Field."
+          ],
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "New York Giants: YES bid 62¢ / ask 63¢.",
+            "Philadelphia Eagles: YES bid 37¢ / ask 38¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08NYGPHI-NYG",
+            "KXNFLGAME-26NOV08NYGPHI-PHI"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Jihaad Campbell",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Jake Elliott",
+          "position": "PK",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Dontayvion Wicks",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "DeVonta Smith",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Philadelphia Eagles",
+          "name": "Saquon Barkley",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Jermaine Eluemunor",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Cam Skattebo",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Andrew Thomas",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Malik Harrison",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New York Giants",
+          "name": "Charlie Jones",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873044"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "philadelphia-eagles",
+        "name": "Philadelphia Eagles",
+        "record": "2-6-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "new-york-giants",
+        "name": "New York Giants",
+        "record": "4-2-1",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyg.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "lar-wsh",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873043",
+      "venue": "Northwest Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873043"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Washington Commanders: W vs Seattle Seahawks 33-31; L vs Indianapolis Colts 30-13; T vs New York Giants 27-27 OT; L @ San Francisco 49ers 23-17; W vs Philadelphia Eagles 27-10",
+            "Los Angeles Rams: W @ Philadelphia Eagles 24-20; L vs Buffalo Bills 37-34 OT; L vs Arizona Cardinals 18-16; W @ Las Vegas Raiders 35-21; W vs Los Angeles Chargers 24-9"
+          ],
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Los Angeles Rams 4-4-0; Washington Commanders 2-4-1.",
+            "Venue: Northwest Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Washington Commanders: YES bid 32¢ / ask 33¢.",
+            "Los Angeles Rams: YES bid 67¢ / ask 68¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08LARWAS-WAS",
+            "KXNFLGAME-26NOV08LARWAS-LAR"
+          ],
+          "asOf": "2026-11-05T08:07:46-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Washington Commanders",
+          "name": "Jer'Zhan Newton",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Treylon Burks",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Shy Tuttle",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "John Bates",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Washington Commanders",
+          "name": "Sam Cosmi",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Trent McDuffie",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Kam Curl",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Jordan Whittington",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Ronnie Rivers",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Rams",
+          "name": "Jaylen Watson",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873043"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "washington-commanders",
+        "name": "Washington Commanders",
+        "record": "2-4-1",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/wsh.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "los-angeles-rams",
+        "name": "Los Angeles Rams",
+        "record": "4-4-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "den-car",
+      "kickoff": "2026-11-08T13:00:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873041",
+      "venue": "Bank of America Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873041"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Carolina Panthers: L @ Cleveland Browns 21-18; W vs Detroit Lions 32-26; W @ Philadelphia Eagles 25-14; L vs Tampa Bay Buccaneers 43-13; L @ Green Bay Packers 27-19",
+            "Denver Broncos: L @ San Francisco 49ers 24-14; W @ Los Angeles Chargers 23-17; W vs Seattle Seahawks 17-14 OT; W @ Arizona Cardinals 30-16; W vs Kansas City Chiefs 28-24"
+          ],
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Denver Broncos 6-2-0; Carolina Panthers 3-4-0.",
+            "Venue: Bank of America Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Carolina Panthers: YES bid 42¢ / ask 43¢.",
+            "Denver Broncos: YES bid 57¢ / ask 58¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08DENCAR-CAR",
+            "KXNFLGAME-26NOV08DENCAR-DEN"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Carolina Panthers",
+          "name": "Bobby Okereke",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Brady Christensen",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Jonathon Brooks",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Torricelli Simpkins III",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Carolina Panthers",
+          "name": "Damien Lewis",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Denver Broncos",
+          "name": "Kris Abrams-Draine",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Denver Broncos",
+          "name": "Pat Bryant",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Denver Broncos",
+          "name": "Eyioma Uwazurike",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Denver Broncos",
+          "name": "Talanoa Hufanga",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Denver Broncos",
+          "name": "Brandon Jones",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873041"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "carolina-panthers",
+        "name": "Carolina Panthers",
+        "record": "3-4-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/car.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "denver-broncos",
+        "name": "Denver Broncos",
+        "record": "6-2-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "hou-lac",
+      "kickoff": "2026-11-08T16:05:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873046",
+      "venue": "SoFi Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873046"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Los Angeles Chargers: L @ Buffalo Bills 24-16; L @ Seattle Seahawks 30-23; L vs Denver Broncos 23-17; L @ Kansas City Chiefs 22-6; L @ Los Angeles Rams 24-9",
+            "Houston Texans: L @ Indianapolis Colts 19-17; L vs Dallas Cowboys 34-30; W @ Tennessee Titans 26-3; W vs Jacksonville Jaguars 34-31; L vs New York Giants 27-21 OT"
+          ],
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Houston Texans 2-5-0; Los Angeles Chargers 0-7-0.",
+            "Venue: SoFi Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Houston Texans: YES bid 66¢ / ask 67¢.",
+            "Los Angeles Chargers: YES bid 32¢ / ask 33¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08HOULAC-HOU",
+            "KXNFLGAME-26NOV08HOULAC-LAC"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Denzel Perryman",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Bud Dupree",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Daiyan Henley",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Kendall Williamson",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Los Angeles Chargers",
+          "name": "Brenen Thompson",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Doubtful. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Reed Blankenship",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Azeez Al-Shaair",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Braden Smith",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "Brevin Jordan",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Houston Texans",
+          "name": "David Montgomery",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873046"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "los-angeles-chargers",
+        "name": "Los Angeles Chargers",
+        "record": "0-7-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "houston-texans",
+        "name": "Houston Texans",
+        "record": "2-5-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "gb-ne",
+      "kickoff": "2026-11-08T16:25:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873049",
+      "venue": "Gillette Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873049"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "New England Patriots: W @ Buffalo Bills 29-26; W vs Las Vegas Raiders 45-17; W vs New York Jets 26-19; L @ Chicago Bears 30-24; W @ Miami Dolphins 24-19",
+            "Green Bay Packers: W @ Tampa Bay Buccaneers 17-14; W vs Chicago Bears 31-7; W vs Dallas Cowboys 23-13; L @ Detroit Lions 20-17; W vs Carolina Panthers 27-19"
+          ],
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Green Bay Packers 5-3-0; New England Patriots 5-3-0.",
+            "Venue: Gillette Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Green Bay Packers: YES bid 38¢ / ask 39¢.",
+            "New England Patriots: YES bid 61¢ / ask 62¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08GBNE-GB",
+            "KXNFLGAME-26NOV08GBNE-NE"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "New England Patriots",
+          "name": "Greg Van Roten",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Dre'Mont Jones",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Morgan Moses",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Carlton Davis III",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "New England Patriots",
+          "name": "Christian Barmore",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Keisean Nixon",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Chris Brooks",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Micah Parsons",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Christian Watson",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Green Bay Packers",
+          "name": "Josh Whyle",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873049"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "new-england-patriots",
+        "name": "New England Patriots",
+        "record": "5-3-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "green-bay-packers",
+        "name": "Green Bay Packers",
+        "record": "5-3-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "lv-sf",
+      "kickoff": "2026-11-08T16:25:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873047",
+      "venue": "Levi's Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873047"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "San Francisco 49ers: W vs Arizona Cardinals 36-30; W vs Denver Broncos 24-14; W @ Seattle Seahawks 32-29; W vs Washington Commanders 23-17; L @ Atlanta Falcons 29-20",
+            "Las Vegas Raiders: L vs Kansas City Chiefs 30-27; L @ New England Patriots 45-17; L vs Buffalo Bills 33-30; L vs Los Angeles Rams 35-21; W @ New York Jets 38-33"
+          ],
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Las Vegas Raiders 4-4-0; San Francisco 49ers 6-1-0.",
+            "Venue: Levi's Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "San Francisco 49ers: YES bid 80¢ / ask 81¢.",
+            "Las Vegas Raiders: YES bid 19¢ / ask 20¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08LVSF-SF",
+            "KXNFLGAME-26NOV08LVSF-LV"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "San Francisco 49ers",
+          "name": "Marques Sigle",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Nate Hobbs",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Demarcus Robinson",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Christian Kirk",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "San Francisco 49ers",
+          "name": "Nick Bosa",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Folorunso Fatukasi",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Thomas Booker IV",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Ian Thomas",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Darien Porter",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Las Vegas Raiders",
+          "name": "Patrick Johnson",
+          "position": "DE",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873047"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "san-francisco-49ers",
+        "name": "San Francisco 49ers",
+        "record": "6-1-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "las-vegas-raiders",
+        "name": "Las Vegas Raiders",
+        "record": "4-4-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "ari-sea",
+      "kickoff": "2026-11-08T16:25:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873048",
+      "venue": "Lumen Field",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873048"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Seattle Seahawks: W vs Los Angeles Chargers 30-23; L vs San Francisco 49ers 32-29; L @ Denver Broncos 17-14 OT; W vs Kansas City Chiefs 20-3; L vs Chicago Bears 34-17",
+            "Arizona Cardinals: L @ New York Giants 36-24; L vs Detroit Lions 45-21; W @ Los Angeles Rams 18-16; L vs Denver Broncos 30-16; W @ Dallas Cowboys 33-30 OT"
+          ],
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Arizona Cardinals 3-5-0; Seattle Seahawks 4-4-0.",
+            "Venue: Lumen Field."
+          ],
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Seattle Seahawks: YES bid 78¢ / ask 79¢.",
+            "Arizona Cardinals: YES bid 21¢ / ask 22¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08ARISEA-SEA",
+            "KXNFLGAME-26NOV08ARISEA-ARI"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Seattle Seahawks",
+          "name": "Rashid Shaheed",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Seattle Seahawks",
+          "name": "Quenton Nelson",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Seattle Seahawks",
+          "name": "Anthony Bradford",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Seattle Seahawks",
+          "name": "Connor O'Toole",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Seattle Seahawks",
+          "name": "Drew Lock",
+          "position": "QB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Isaiah Adams",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Bam Knight",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Michael Wilson",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "James Conner",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Arizona Cardinals",
+          "name": "Jeremiyah Love",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873048"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "seattle-seahawks",
+        "name": "Seattle Seahawks",
+        "record": "4-4-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "arizona-cardinals",
+        "name": "Arizona Cardinals",
+        "record": "3-5-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "tb-chi",
+      "kickoff": "2026-11-08T20:20:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873050",
+      "venue": "Soldier Field",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873050"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Chicago Bears: W vs New York Jets 23-12; L @ Green Bay Packers 31-7; W @ Atlanta Falcons 31-23; W vs New England Patriots 30-24; W @ Seattle Seahawks 34-17",
+            "Tampa Bay Buccaneers: L vs Green Bay Packers 17-14; W @ Dallas Cowboys 24-16; L vs Pittsburgh Steelers 26-19 OT; W @ Carolina Panthers 43-13; W vs Atlanta Falcons 16-0"
+          ],
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Tampa Bay Buccaneers 3-5-0; Chicago Bears 6-2-0.",
+            "Venue: Soldier Field."
+          ],
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Chicago Bears: YES bid 71¢ / ask 72¢.",
+            "Tampa Bay Buccaneers: YES bid 27¢ / ask 29¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV08TBCHI-CHI",
+            "KXNFLGAME-26NOV08TBCHI-TB"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Chicago Bears",
+          "name": "Kentavius Street",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Braxton Jones",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Malik Muhammad II",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Zavier Scott",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Chicago Bears",
+          "name": "Theo Benedet",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Tykee Smith",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Kenny Gainwell",
+          "position": "RB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Emeka Egbuka",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Yaya Diaby",
+          "position": "LB",
+          "status": "Watch",
+          "note": "ESPN listing: Out. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Tampa Bay Buccaneers",
+          "name": "Josh Hayes",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873050"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "chicago-bears",
+        "name": "Chicago Bears",
+        "record": "6-2-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "tampa-bay-buccaneers",
+        "name": "Tampa Bay Buccaneers",
+        "record": "3-5-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    },
+    {
+      "id": "buf-min",
+      "kickoff": "2026-11-09T20:15:00-05:00",
+      "status": "scheduled",
+      "verifiedAt": "2026-11-05T08:05:17-05:00",
+      "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+      "espnEventId": "401873051",
+      "venue": "U.S. Bank Stadium",
+      "neutralSite": false,
+      "sourceIds": [
+        "schedule",
+        "nfl-schedule",
+        "espn-401873051"
+      ],
+      "insights": [
+        {
+          "category": "form",
+          "summary": "Recent five games; opponent strength not adjusted",
+          "details": [
+            "Minnesota Vikings: W @ Tampa Bay Buccaneers 23-16; W vs Miami Dolphins 15-10; W @ New Orleans Saints 23-13; W vs Indianapolis Colts 16-10; L @ Detroit Lions 19-15",
+            "Buffalo Bills: W vs Los Angeles Chargers 24-16; L vs New England Patriots 29-26; W @ Los Angeles Rams 37-34 OT; W @ Las Vegas Raiders 33-30; W vs Baltimore Ravens 36-10"
+          ],
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "injuries",
+          "summary": "Preliminary availability watch; final reports pending",
+          "details": [
+            "Feed listings are watch items, not final game designations."
+          ],
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "matchup",
+          "summary": "Independent analysis pending weekend review",
+          "details": [
+            "Verified records: Buffalo Bills 6-1-0; Minnesota Vikings 6-1-0.",
+            "Venue: U.S. Bank Stadium."
+          ],
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "history",
+          "summary": "Historical matchup research pending",
+          "details": [
+            "No head-to-head advantage inferred."
+          ],
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "category": "market",
+          "summary": "Available market quotes; execution unverified",
+          "details": [
+            "Minnesota Vikings: YES bid 38¢ / ask 39¢.",
+            "Buffalo Bills: YES bid 62¢ / ask 63¢.",
+            "Quotes are market prices, not independent AI probabilities. Combo payouts unavailable."
+          ],
+          "sourceIds": [
+            "KXNFLGAME-26NOV09BUFMIN-MIN",
+            "KXNFLGAME-26NOV09BUFMIN-BUF"
+          ],
+          "asOf": "2026-11-05T08:07:50-05:00"
+        }
+      ],
+      "availability": [
+        {
+          "team": "Minnesota Vikings",
+          "name": "Christian Darrisaw",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Minnesota Vikings",
+          "name": "Kyler Murray",
+          "position": "QB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Minnesota Vikings",
+          "name": "Theo Jackson",
+          "position": "S",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Minnesota Vikings",
+          "name": "Donovan Jackson",
+          "position": "G",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Minnesota Vikings",
+          "name": "Josh Oliver",
+          "position": "TE",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Jordan Hancock",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Injured Reserve. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Greg Gaines",
+          "position": "DT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Dee Alford",
+          "position": "CB",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "Spencer Brown",
+          "position": "OT",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        },
+        {
+          "team": "Buffalo Bills",
+          "name": "DJ Moore",
+          "position": "WR",
+          "status": "Watch",
+          "note": "ESPN listing: Questionable. Preliminary, not a confirmed game-day designation.",
+          "sourceIds": [
+            "espn-401873051"
+          ],
+          "asOf": "2026-11-05T08:07:41-05:00"
+        }
+      ],
+      "researchReviewedAt": "2026-11-05T08:07:41-05:00",
+      "researchLimitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ],
+      "home": {
+        "id": "minnesota-vikings",
+        "name": "Minnesota Vikings",
+        "record": "6-1-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      },
+      "away": {
+        "id": "buffalo-bills",
+        "name": "Buffalo Bills",
+        "record": "6-1-0",
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png",
+        "recordAsOf": "2026-11-05T08:05:17-05:00",
+        "recordSource": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000"
+      }
+    }
+  ],
+  "predictions": [
+    {
+      "gameId": "jax-bal",
+      "kind": "qualitative-research-lean",
+      "winner": "Jacksonville Jaguars",
+      "probability": null,
+      "validated": false,
+      "researchReviewed": true,
+      "calibrated": false,
+      "frozenAt": "2026-11-05T08:07:41-05:00",
+      "modelVersion": "source-based-qualitative-v1",
+      "confidence": "Low (inactives pending)",
+      "summary": "Jacksonville lean based on recent form and Baltimore’s quarterback absences; short-week road risk remains.",
+      "supportingEvidence": [
+        "Jacksonville enters 5-2 after beating Indianapolis 42-7; Baltimore is 4-4 after losing 36-10 in Buffalo.",
+        "Baltimore confirms rookie Joe Fagnano will make his first start with Jackson and Huntley ruled out."
+      ],
+      "opposingEvidence": [
+        "Baltimore has home field; short-week road preparation adds uncertainty for Jacksonville.",
+        "Jacksonville RB Bhayshul Tuten and DE Travon Walker are questionable; final inactives are pending."
+      ],
+      "sourceIds": [
+        "schedule",
+        "espn-401873037",
+        "ravens-qb",
+        "ravens-injury",
+        "jaguars-injury"
+      ],
+      "limitations": [
+        "Final inactives pending",
+        "Weather and opponent-adjusted strength of schedule not verified"
+      ]
+    }
+  ],
+  "comboCandidates": [],
+  "sources": [
+    {
+      "id": "schedule",
+      "title": "ESPN verified Week 9 schedule and records",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=9&limit=1000",
+      "retrievedAt": "2026-11-05T08:05:17-05:00"
+    },
+    {
+      "id": "nfl-schedule",
+      "title": "nfl-schedule",
+      "url": "https://www.nfl.com/schedules/2026/reg9/",
+      "retrievedAt": "2026-11-05T08:07:29-05:00"
+    },
+    {
+      "id": "ravens-injury",
+      "title": "ravens-injury",
+      "url": "https://www.baltimoreravens.com/team/injury-report/index-app",
+      "retrievedAt": "2026-11-05T08:07:33-05:00"
+    },
+    {
+      "id": "jaguars-injury",
+      "title": "jaguars-injury",
+      "url": "https://www.jaguars.com/team/injury-report/",
+      "retrievedAt": "2026-11-05T08:07:37-05:00"
+    },
+    {
+      "id": "ravens-qb",
+      "title": "ravens-qb",
+      "url": "https://www.baltimoreravens.com/news/joe-fagnano-ravens-quarterbacks-practice-report-tyler-huntley",
+      "retrievedAt": "2026-11-05T08:07:41-05:00"
+    },
+    {
+      "id": "espn-401873037",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873037",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873038",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873038",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873040",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873040",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873045",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873045",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873042",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873042",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873039",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873039",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873044",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873044",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873043",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873043",
+      "retrievedAt": "2026-11-05T08:05:22-05:00"
+    },
+    {
+      "id": "espn-401873041",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873041",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "espn-401873046",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873046",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "espn-401873049",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873049",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "espn-401873047",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873047",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "espn-401873048",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873048",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "espn-401873050",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873050",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "espn-401873051",
+      "title": "ESPN game research",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873051",
+      "retrievedAt": "2026-11-05T08:05:25-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV05JACBAL-JAC",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV05JACBAL-JAC",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV05JACBAL-BAL",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV05JACBAL-BAL",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08CINATL-ATL",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CINATL-ATL",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08CINATL-CIN",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CINATL-CIN",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08DALIND-IND",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DALIND-IND",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08DALIND-DAL",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DALIND-DAL",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08NYJKC-NYJ",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYJKC-NYJ",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08NYJKC-KC",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYJKC-KC",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08DETMIA-DET",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DETMIA-DET",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08DETMIA-MIA",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DETMIA-MIA",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08CLENO-CLE",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CLENO-CLE",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08CLENO-NO",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CLENO-NO",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08NYGPHI-NYG",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYGPHI-NYG",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08NYGPHI-PHI",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYGPHI-PHI",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08LARWAS-WAS",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LARWAS-WAS",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08LARWAS-LAR",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LARWAS-LAR",
+      "retrievedAt": "2026-11-05T08:07:46-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08DENCAR-CAR",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DENCAR-CAR",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08DENCAR-DEN",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DENCAR-DEN",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08HOULAC-HOU",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08HOULAC-HOU",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08HOULAC-LAC",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08HOULAC-LAC",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08GBNE-GB",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08GBNE-GB",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08GBNE-NE",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08GBNE-NE",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08LVSF-SF",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LVSF-SF",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08LVSF-LV",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LVSF-LV",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08ARISEA-SEA",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08ARISEA-SEA",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08ARISEA-ARI",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08ARISEA-ARI",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08TBCHI-CHI",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08TBCHI-CHI",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV08TBCHI-TB",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08TBCHI-TB",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV09BUFMIN-MIN",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV09BUFMIN-MIN",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    },
+    {
+      "id": "KXNFLGAME-26NOV09BUFMIN-BUF",
+      "title": "Kalshi team contract",
+      "url": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV09BUFMIN-BUF",
+      "retrievedAt": "2026-11-05T08:07:50-05:00"
+    }
+  ],
+  "marketSnapshots": [
+    {
+      "gameId": "jax-bal",
+      "team": "Jacksonville Jaguars",
+      "ticker": "KXNFLGAME-26NOV05JACBAL-JAC",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV05JACBAL-JAC",
+      "rulesPrimary": "If Jacksonville wins the Jacksonville vs Baltimore Pro Football game originally scheduled for Nov 5, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Jacksonville vs Baltimore Pro Football game originally scheduled for Nov 5, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.81,
+      "yesAsk": 0.82,
+      "noBid": 0.18,
+      "noAsk": 0.19
+    },
+    {
+      "gameId": "jax-bal",
+      "team": "Baltimore Ravens",
+      "ticker": "KXNFLGAME-26NOV05JACBAL-BAL",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV05JACBAL-BAL",
+      "rulesPrimary": "If Baltimore wins the Jacksonville vs Baltimore Pro Football game originally scheduled for Nov 5, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Jacksonville vs Baltimore Pro Football game originally scheduled for Nov 5, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.18,
+      "yesAsk": 0.19,
+      "noBid": 0.81,
+      "noAsk": 0.82
+    },
+    {
+      "gameId": "cin-atl",
+      "team": "Atlanta Falcons",
+      "ticker": "KXNFLGAME-26NOV08CINATL-ATL",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CINATL-ATL",
+      "rulesPrimary": "If Atlanta wins the Cincinnati vs Atlanta Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Cincinnati vs Atlanta Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.38,
+      "yesAsk": 0.39,
+      "noBid": 0.61,
+      "noAsk": 0.62
+    },
+    {
+      "gameId": "cin-atl",
+      "team": "Cincinnati Bengals",
+      "ticker": "KXNFLGAME-26NOV08CINATL-CIN",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CINATL-CIN",
+      "rulesPrimary": "If Cincinnati wins the Cincinnati vs Atlanta Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Cincinnati vs Atlanta Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.61,
+      "yesAsk": 0.62,
+      "noBid": 0.38,
+      "noAsk": 0.39
+    },
+    {
+      "gameId": "dal-ind",
+      "team": "Indianapolis Colts",
+      "ticker": "KXNFLGAME-26NOV08DALIND-IND",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DALIND-IND",
+      "rulesPrimary": "If Indianapolis wins the Dallas vs Indianapolis Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Dallas vs Indianapolis Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.3,
+      "yesAsk": 0.31,
+      "noBid": 0.69,
+      "noAsk": 0.7
+    },
+    {
+      "gameId": "dal-ind",
+      "team": "Dallas Cowboys",
+      "ticker": "KXNFLGAME-26NOV08DALIND-DAL",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DALIND-DAL",
+      "rulesPrimary": "If Dallas wins the Dallas vs Indianapolis Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Dallas vs Indianapolis Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.69,
+      "yesAsk": 0.7,
+      "noBid": 0.3,
+      "noAsk": 0.31
+    },
+    {
+      "gameId": "nyj-kc",
+      "team": "New York Jets",
+      "ticker": "KXNFLGAME-26NOV08NYJKC-NYJ",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYJKC-NYJ",
+      "rulesPrimary": "If New York J wins the New York J vs Kansas City Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the New York J vs Kansas City Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.19,
+      "yesAsk": 0.2,
+      "noBid": 0.8,
+      "noAsk": 0.81
+    },
+    {
+      "gameId": "nyj-kc",
+      "team": "Kansas City Chiefs",
+      "ticker": "KXNFLGAME-26NOV08NYJKC-KC",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYJKC-KC",
+      "rulesPrimary": "If Kansas City wins the New York J vs Kansas City Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the New York J vs Kansas City Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.8,
+      "yesAsk": 0.81,
+      "noBid": 0.19,
+      "noAsk": 0.2
+    },
+    {
+      "gameId": "det-mia",
+      "team": "Detroit Lions",
+      "ticker": "KXNFLGAME-26NOV08DETMIA-DET",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DETMIA-DET",
+      "rulesPrimary": "If Detroit wins the Detroit vs Miami Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Detroit vs Miami Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.74,
+      "yesAsk": 0.75,
+      "noBid": 0.25,
+      "noAsk": 0.26
+    },
+    {
+      "gameId": "det-mia",
+      "team": "Miami Dolphins",
+      "ticker": "KXNFLGAME-26NOV08DETMIA-MIA",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DETMIA-MIA",
+      "rulesPrimary": "If Miami wins the Detroit vs Miami Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Detroit vs Miami Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.25,
+      "yesAsk": 0.26,
+      "noBid": 0.74,
+      "noAsk": 0.75
+    },
+    {
+      "gameId": "cle-no",
+      "team": "Cleveland Browns",
+      "ticker": "KXNFLGAME-26NOV08CLENO-CLE",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CLENO-CLE",
+      "rulesPrimary": "If Cleveland wins the Cleveland vs New Orleans Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Cleveland vs New Orleans Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.39,
+      "yesAsk": 0.4,
+      "noBid": 0.6,
+      "noAsk": 0.61
+    },
+    {
+      "gameId": "cle-no",
+      "team": "New Orleans Saints",
+      "ticker": "KXNFLGAME-26NOV08CLENO-NO",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08CLENO-NO",
+      "rulesPrimary": "If New Orleans wins the Cleveland vs New Orleans Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Cleveland vs New Orleans Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.59,
+      "yesAsk": 0.61,
+      "noBid": 0.39,
+      "noAsk": 0.41
+    },
+    {
+      "gameId": "nyg-phi",
+      "team": "New York Giants",
+      "ticker": "KXNFLGAME-26NOV08NYGPHI-NYG",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYGPHI-NYG",
+      "rulesPrimary": "If New York G wins the New York G vs Philadelphia Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the New York G vs Philadelphia Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.62,
+      "yesAsk": 0.63,
+      "noBid": 0.37,
+      "noAsk": 0.38
+    },
+    {
+      "gameId": "nyg-phi",
+      "team": "Philadelphia Eagles",
+      "ticker": "KXNFLGAME-26NOV08NYGPHI-PHI",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08NYGPHI-PHI",
+      "rulesPrimary": "If Philadelphia wins the New York G vs Philadelphia Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the New York G vs Philadelphia Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.37,
+      "yesAsk": 0.38,
+      "noBid": 0.62,
+      "noAsk": 0.63
+    },
+    {
+      "gameId": "lar-wsh",
+      "team": "Washington Commanders",
+      "ticker": "KXNFLGAME-26NOV08LARWAS-WAS",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LARWAS-WAS",
+      "rulesPrimary": "If Washington wins the Los Angeles R vs Washington Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Los Angeles R vs Washington Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.32,
+      "yesAsk": 0.33,
+      "noBid": 0.67,
+      "noAsk": 0.68
+    },
+    {
+      "gameId": "lar-wsh",
+      "team": "Los Angeles Rams",
+      "ticker": "KXNFLGAME-26NOV08LARWAS-LAR",
+      "retrievedAt": "2026-11-05T08:07:46-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LARWAS-LAR",
+      "rulesPrimary": "If Los Angeles R wins the Los Angeles R vs Washington Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Los Angeles R vs Washington Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.67,
+      "yesAsk": 0.68,
+      "noBid": 0.32,
+      "noAsk": 0.33
+    },
+    {
+      "gameId": "den-car",
+      "team": "Carolina Panthers",
+      "ticker": "KXNFLGAME-26NOV08DENCAR-CAR",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DENCAR-CAR",
+      "rulesPrimary": "If Carolina wins the Denver vs Carolina Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Denver vs Carolina Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.42,
+      "yesAsk": 0.43,
+      "noBid": 0.57,
+      "noAsk": 0.58
+    },
+    {
+      "gameId": "den-car",
+      "team": "Denver Broncos",
+      "ticker": "KXNFLGAME-26NOV08DENCAR-DEN",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:05:00.27934Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08DENCAR-DEN",
+      "rulesPrimary": "If Denver wins the Denver vs Carolina Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Denver vs Carolina Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.57,
+      "yesAsk": 0.58,
+      "noBid": 0.42,
+      "noAsk": 0.43
+    },
+    {
+      "gameId": "hou-lac",
+      "team": "Houston Texans",
+      "ticker": "KXNFLGAME-26NOV08HOULAC-HOU",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08HOULAC-HOU",
+      "rulesPrimary": "If Houston wins the Houston vs Los Angeles C Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Houston vs Los Angeles C Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.66,
+      "yesAsk": 0.67,
+      "noBid": 0.33,
+      "noAsk": 0.34
+    },
+    {
+      "gameId": "hou-lac",
+      "team": "Los Angeles Chargers",
+      "ticker": "KXNFLGAME-26NOV08HOULAC-LAC",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08HOULAC-LAC",
+      "rulesPrimary": "If Los Angeles C wins the Houston vs Los Angeles C Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Houston vs Los Angeles C Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.32,
+      "yesAsk": 0.33,
+      "noBid": 0.67,
+      "noAsk": 0.68
+    },
+    {
+      "gameId": "gb-ne",
+      "team": "Green Bay Packers",
+      "ticker": "KXNFLGAME-26NOV08GBNE-GB",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08GBNE-GB",
+      "rulesPrimary": "If Green Bay wins the Green Bay vs New England Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Green Bay vs New England Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.38,
+      "yesAsk": 0.39,
+      "noBid": 0.61,
+      "noAsk": 0.62
+    },
+    {
+      "gameId": "gb-ne",
+      "team": "New England Patriots",
+      "ticker": "KXNFLGAME-26NOV08GBNE-NE",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08GBNE-NE",
+      "rulesPrimary": "If New England wins the Green Bay vs New England Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Green Bay vs New England Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.61,
+      "yesAsk": 0.62,
+      "noBid": 0.38,
+      "noAsk": 0.39
+    },
+    {
+      "gameId": "lv-sf",
+      "team": "San Francisco 49ers",
+      "ticker": "KXNFLGAME-26NOV08LVSF-SF",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LVSF-SF",
+      "rulesPrimary": "If San Francisco wins the Las Vegas vs San Francisco Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Las Vegas vs San Francisco Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.8,
+      "yesAsk": 0.81,
+      "noBid": 0.19,
+      "noAsk": 0.2
+    },
+    {
+      "gameId": "lv-sf",
+      "team": "Las Vegas Raiders",
+      "ticker": "KXNFLGAME-26NOV08LVSF-LV",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08LVSF-LV",
+      "rulesPrimary": "If Las Vegas wins the Las Vegas vs San Francisco Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Las Vegas vs San Francisco Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.19,
+      "yesAsk": 0.2,
+      "noBid": 0.8,
+      "noAsk": 0.81
+    },
+    {
+      "gameId": "ari-sea",
+      "team": "Seattle Seahawks",
+      "ticker": "KXNFLGAME-26NOV08ARISEA-SEA",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08ARISEA-SEA",
+      "rulesPrimary": "If Seattle wins the Arizona vs Seattle Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Arizona vs Seattle Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.78,
+      "yesAsk": 0.79,
+      "noBid": 0.21,
+      "noAsk": 0.22
+    },
+    {
+      "gameId": "ari-sea",
+      "team": "Arizona Cardinals",
+      "ticker": "KXNFLGAME-26NOV08ARISEA-ARI",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08ARISEA-ARI",
+      "rulesPrimary": "If Arizona wins the Arizona vs Seattle Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Arizona vs Seattle Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.21,
+      "yesAsk": 0.22,
+      "noBid": 0.78,
+      "noAsk": 0.79
+    },
+    {
+      "gameId": "tb-chi",
+      "team": "Chicago Bears",
+      "ticker": "KXNFLGAME-26NOV08TBCHI-CHI",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08TBCHI-CHI",
+      "rulesPrimary": "If Chicago wins the Tampa Bay vs Chicago Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Tampa Bay vs Chicago Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.71,
+      "yesAsk": 0.72,
+      "noBid": 0.28,
+      "noAsk": 0.29
+    },
+    {
+      "gameId": "tb-chi",
+      "team": "Tampa Bay Buccaneers",
+      "ticker": "KXNFLGAME-26NOV08TBCHI-TB",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV08TBCHI-TB",
+      "rulesPrimary": "If Tampa Bay wins the Tampa Bay vs Chicago Pro Football game originally scheduled for Nov 8, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Tampa Bay vs Chicago Pro Football game originally scheduled for Nov 8, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.27,
+      "yesAsk": 0.29,
+      "noBid": 0.71,
+      "noAsk": 0.73
+    },
+    {
+      "gameId": "buf-min",
+      "team": "Minnesota Vikings",
+      "ticker": "KXNFLGAME-26NOV09BUFMIN-MIN",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV09BUFMIN-MIN",
+      "rulesPrimary": "If Minnesota wins the Buffalo vs Minnesota Pro Football game originally scheduled for Nov 9, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Buffalo vs Minnesota Pro Football game originally scheduled for Nov 9, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.38,
+      "yesAsk": 0.39,
+      "noBid": 0.61,
+      "noAsk": 0.62
+    },
+    {
+      "gameId": "buf-min",
+      "team": "Buffalo Bills",
+      "ticker": "KXNFLGAME-26NOV09BUFMIN-BUF",
+      "retrievedAt": "2026-11-05T08:07:50-05:00",
+      "apiUpdatedTime": "2026-10-27T04:06:00.276368Z",
+      "marketStatus": "active",
+      "sourceUrl": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV09BUFMIN-BUF",
+      "rulesPrimary": "If Buffalo wins the Buffalo vs Minnesota Pro Football game originally scheduled for Nov 9, 2026, then the market resolves to Yes.",
+      "rulesSecondary": "The following market refers to the team who wins the Buffalo vs Minnesota Pro Football game originally scheduled for Nov 9, 2026. If the game ends in a tie, the market will resolve to $0.50 for each team. If the game is postponed but begins within 48 hours from its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is not started within 48 hours, the market will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Governing League. All trademarks, logos, and brand names are the property of their respective owners.",
+      "executableNow": false,
+      "depthVerified": false,
+      "feesIncluded": false,
+      "yesBid": 0.62,
+      "yesAsk": 0.63,
+      "noBid": 0.37,
+      "noAsk": 0.38
+    }
+  ],
+  "scheduleCheckedAt": "2026-11-05T08:05:17-05:00",
+  "recordsCheckedAt": "2026-11-05T08:05:17-05:00",
+  "marketsCheckedAt": "2026-11-05T08:07:50-05:00",
+  "coverage": {
+    "totalWeekGames": 15,
+    "upcomingGames": 15,
+    "completedGames": 0,
+    "liveGames": 0,
+    "byeTeams": [
+      "Tennessee Titans",
+      "Pittsburgh Steelers"
+    ],
+    "scope": "Complete Week 9 schedule; Thursday researched, later games preliminary."
+  },
+  "researchQuality": {
+    "status": "Thursday researched; weekend preliminary",
+    "limitations": [
+      "Final inactives pending",
+      "Weather and opponent-adjusted strength of schedule not verified",
+      "Sunday/Monday independent picks and combo analysis pending",
+      "Executable combo quotes and calibrated probabilities unavailable"
+    ],
+    "activeQuotesRefreshed": 30,
+    "missingQuotes": []
+  }
+}
