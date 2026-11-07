@@ -38,14 +38,15 @@
     },
     "09": {
       "path": "2026/week-09.json",
-      "status": "preliminary",
-      "researchVersion": "2026-11-05-week9-thursday-1",
-      "dataVersion": "2026-11-05-week9-thursday-1"
+      "status": "refreshed-open",
+      "researchVersion": "2026-11-07-week9-weekend-1",
+      "dataVersion": "2026-11-07-week9-weekend-1",
+      "resultsVersion": "2026-11-07-week9-thursday-final"
     }
   },
-  "lastSuccessfulPublication": "2026-11-05T08:07:50-05:00",
-  "notice": "Week 9 Thursday research: Jaguars at Ravens; all 15 games scheduled. Later-game research preliminary. Prior weeks preserved.",
-  "scoresCheckedAt": "2026-11-01T23:04:48-05:00",
-  "marketsCheckedAt": "2026-11-05T08:07:50-05:00",
-  "recordsCheckedAt": "2026-11-05T08:05:17-05:00"
+  "lastSuccessfulPublication": "2026-11-07T08:04:16-05:00",
+  "notice": "14 weekend leans; six unpriced strategy alternatives. No undefeated team for Plan D. Thursday final verified; week open.",
+  "scoresCheckedAt": "2026-11-07T08:01:27-05:00",
+  "marketsCheckedAt": "2026-11-07T08:03:07-05:00",
+  "recordsCheckedAt": "2026-11-07T08:01:27-05:00"
 }
