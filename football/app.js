@@ -333,7 +333,7 @@ function builder() {
   if (!data)
     return '<div class="card">Choose a week with published games to build a ticket.</div>';
   return (
-    '<div class="card"><h3>Custom ticket builder</h3><label>Ticket name<input id="buildName" placeholder="My Sunday combo"></label><label>Ticket type<select id="buildType"><option value="Single Game Bet">Single Game Bet</option><option value="Combo">Combo</option><option value="Player Prop Combo">Player Prop Combo</option></select></label><div id="buildLegs">' +
+    '<div class="card"><h3>Custom ticket builder</h3><p class="muted small">Choose a week for each game. The ticket stays in the week where you create it.</p><label>Ticket name<input id="buildName" placeholder="My Sunday combo"></label><label>Ticket type<select id="buildType"><option value="Single Game Bet">Single Game Bet</option><option value="Combo">Combo</option><option value="Player Prop Combo">Player Prop Combo</option></select></label><div id="buildLegs">' +
     legRow() +
     '</div><button data-builder="addLeg">+ Add game selection</button><div class="grid2"><label>Total paid ($)<input type="number" id="buildStake" min="0.01" step=".01" value="2"></label><label>Gross payout ($)<input type="number" id="buildPayout" min="0" step=".01" value="0"></label></div><div class="button-group"><button class="primary" data-builder="save">Save custom draft</button><button data-builder="cancel">Cancel</button></div><p class="muted">Player prop markets can be entered as custom selections. Enter the full amount charged by Kalshi, including any trading costs. All quotes are entered manually.</p></div>'
   );
@@ -345,9 +345,14 @@ function outcomeChoices(g, value='away', selectedTeam=null) {
  const options = selectedTeam ? [['YES',selectedTeam,'To win'],['NO',selectedTeam,'Not to win']] : [['away',g.away.name,'To win'],['home',g.home.name,'To win'],['awayNo',g.away.name,'Not to win'],['homeNo',g.home.name,'Not to win'],['prop',null,'Custom player prop']];
  return `<fieldset class="outcome-choices"><legend>Outcome</legend><input type="hidden" ${selectedTeam?'id="reviewOutcome"':'class="legSide"'} value="${value}"><div class="outcome-choice-grid">${options.map(([key,name,label])=>`<button type="button" data-outcome-choice="${key}" aria-pressed="${value===key}" aria-label="${esc(name ? name+' — '+label : label)}" class="outcome-choice ${value===key?'selected':''}">${name?compactTeamChoice(name):''}<span>${label}</span></button>`).join('')}</div></fieldset>`;
 }
+function builderGames(w) {
+ return Number(w)===Number(data.week)?data.games:(ticketSchedule2026[w]||[]);
+}
+function legGameOptions(w) {return builderGames(w).map(g=>`<option value="${esc(g.id)}">${esc(teamAbbr(g.away.name))} vs. ${esc(teamAbbr(g.home.name))}</option>`).join('');}
 function legRow() {
- const opts=data.games.map(g=>`<option value="${esc(g.id)}">${esc(teamAbbr(g.away.name))} vs. ${esc(teamAbbr(g.home.name))}</option>`).join('');
- return `<div class="card build-leg"><label>Game<select class="legGame">${opts}</select></label>${outcomeChoices(data.games[0])}<label>Player prop / notes<input class="legProp" placeholder="e.g. Player 1+ touchdowns"></label><label>Kalshi %<input class="legPct" type="number" min="0" max="100" step=".1" placeholder="Optional"></label><button data-builder="removeLeg">Remove leg</button></div>`;
+ const opts=legGameOptions(data.week);
+ const weeks=Object.keys(ticketSchedule2026).map(w=>`<option value="${w}" ${Number(w)===Number(data.week)?'selected':''}>Week ${w}</option>`).join('');
+ return `<div class="card build-leg"><label>Game week<select class="legWeek">${weeks}</select></label><label>Game<select class="legGame">${opts}</select></label>${outcomeChoices(data.games[0])}<label>Player prop / notes<input class="legProp" placeholder="e.g. Player 1+ touchdowns"></label><label>Kalshi %<input class="legPct" type="number" min="0" max="100" step=".1" placeholder="Optional"></label><button data-builder="removeLeg">Remove leg</button></div>`;
 }
 document.addEventListener('click',e=>{
  const b=e.target.closest('[data-outcome-choice]');if(!b)return;
@@ -356,8 +361,12 @@ document.addEventListener('click',e=>{
  input.dispatchEvent(new Event('change',{bubbles:true}));
 });
 document.addEventListener('change',e=>{
+ if(e.target.matches('.legWeek')){
+   const row=e.target.closest('.build-leg'), select=row.querySelector('.legGame');
+   select.innerHTML=legGameOptions(e.target.value);select.dispatchEvent(new Event('change',{bubbles:true}));return;
+ }
  if(!e.target.matches('.legGame'))return;
- const row=e.target.closest('.build-leg'),g=data.games.find(g=>g.id===e.target.value);
+ const row=e.target.closest('.build-leg'),g=builderGames(row.querySelector('.legWeek').value).find(g=>g.id===e.target.value);
  row.querySelector('.outcome-choices').outerHTML=outcomeChoices(g);
  row.querySelector('.legPct').value='';
 });
@@ -377,13 +386,15 @@ function saveCustom() {
     return;
   }
   let legs = [...document.querySelectorAll(".build-leg")].map((row) => {
-    let g = data.games.find(
+    let week=Number(row.querySelector(".legWeek").value);
+    let g = builderGames(week).find(
         (g) => g.id === row.querySelector(".legGame").value,
       ),
       side = row.querySelector(".legSide").value,
       selected = side.startsWith("away") ? g.away : g.home,
       custom = side === "prop";
     return {
+      week, kickoff:g.kickoff, opponent:selected===g.away?g.home.name:g.away.name, quotedPercent:row.querySelector(".legPct").value===""?null:Number(row.querySelector(".legPct").value),
       gameId: g.id,
       team: custom ? "Player prop" : selected.name,
       side: custom ? "PROP" : side.endsWith("No") ? "NO" : "YES",
@@ -568,7 +579,7 @@ function render() {
   let v = $("#view");
   $("#status").hidden = sub === "settings";
   if(data) $("#status").textContent = "Week " + data.week + " · " + data.status + " · " + date(data.researchedAt) + " · Times in Cancún" + (data.scoresCheckedAt ? " · Scores checked " + date(data.scoresCheckedAt) : "") + (autoClosed ? " · " + autoClosed + " losing ticket(s) closed automatically — see Kalshi History" : "");
-  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.4";
+  $("#weekName").textContent = "Week " + Number($("#week").value) + " · v1.8.5";
   $("#title").textContent =
     sub === "calendar"
       ? "Season Overview"
