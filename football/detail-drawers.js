@@ -28,7 +28,7 @@ document.addEventListener('click',e=>{const button=e.target.closest('[data-open-
 // Read-only navigation within the existing drawer. Retain the actual ticket DOM
 // so form values, expanded sections and scroll position survive the round trip.
 function ticketResearchGame(t,l){
- if(!data || weekOf(t)!==Number(data.week) || Number(t.season||2026)!==Number(data.season))return null;
+ if(!data || Number(l.week??weekOf(t))!==Number(data.week) || Number(t.season||2026)!==Number(data.season))return null;
  return [...(data.games||[]),...(data.completedGames||[])].find(g=>g.id===l.gameId);
 }
 function ticketResearchTime(g){return g.researchReviewedAt||data.researchedAt;}

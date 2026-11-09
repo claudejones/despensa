@@ -50,7 +50,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 
 // Read-only signals. Never substitute an opposing team's YES for this team's NO.
 function selectionMarket(l,scope={}) {
-  if(!data||l.side==='PROP'||!['YES','NO'].includes(l.side))return null;
+  if(!data||(l.week!=null&&Number(l.week)!==Number(data.week))||l.side==='PROP'||!['YES','NO'].includes(l.side))return null;
   if((scope.week!=null&&Number(scope.week)!==Number(data.week))||(scope.season!=null&&Number(scope.season)!==Number(data.season)))return null;
   const valid=p=>Number.isFinite(p)&&p>=0&&p<=1;
   const qs=(data.marketSnapshots||[]).filter(q=>q.gameId===l.gameId&&q.team===l.team&&valid(q[l.side==='YES'?'yesAsk':'noAsk'])&&Number.isFinite(Date.parse(q.retrievedAt))&&(q.ticker?.startsWith('KXNFL')||q.sourceUrl?.includes('kalshi.com/'))).sort((a,b)=>Date.parse(b.retrievedAt)-Date.parse(a.retrievedAt));
