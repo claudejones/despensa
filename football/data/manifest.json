@@ -40,13 +40,13 @@
       "path": "2026/week-09.json",
       "status": "refreshed-open",
       "researchVersion": "2026-11-07-week9-weekend-1",
-      "dataVersion": "2026-11-07-week9-weekend-1",
-      "resultsVersion": "2026-11-07-week9-thursday-final"
+      "dataVersion": "2026-11-08-week9-sunday-1",
+      "resultsVersion": "2026-11-08-week9-sunday-results"
     }
   },
-  "lastSuccessfulPublication": "2026-11-07T08:04:16-05:00",
-  "notice": "14 weekend leans; six unpriced strategy alternatives. No undefeated team for Plan D. Thursday final verified; week open.",
-  "scoresCheckedAt": "2026-11-07T08:01:27-05:00",
-  "marketsCheckedAt": "2026-11-07T08:03:07-05:00",
-  "recordsCheckedAt": "2026-11-07T08:01:27-05:00"
+  "lastSuccessfulPublication": "2026-11-08T23:03:35-05:00",
+  "notice": "Week 9: 12 Sunday finals plus Thursday verified. Tampa Bay–Chicago live; Buffalo–Minnesota scheduled Monday. Week open.",
+  "scoresCheckedAt": "2026-11-08T23:02:02-05:00",
+  "marketsCheckedAt": "2026-11-08T23:02:23-05:00",
+  "recordsCheckedAt": "2026-11-08T23:02:02-05:00"
 }
