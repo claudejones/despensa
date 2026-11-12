@@ -2153,6 +2153,36 @@
       "archivedAt": "2026-11-07T13:04:41.198382+00:00",
       "archiveMode": "prospective",
       "researchVersion": "2026-11-07-week9-weekend-1"
+    },
+    {
+      "id": "2026:10:single:wsh-nyg",
+      "kind": "single",
+      "title": "New York Giants",
+      "publishedAt": "2026-11-12T08:05:51-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "The Giants have the stronger recent results and home field. The first meeting ended in a tie.",
+      "legs": [
+        {
+          "gameId": "wsh-nyg",
+          "team": "New York Giants",
+          "side": "YES",
+          "kickoff": "2026-11-12T20:15:00-05:00",
+          "record": "5-2-1"
+        }
+      ],
+      "season": 2026,
+      "week": 10,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV12WASNYG-NYG",
+        "capturedAt": "2026-11-12T08:05:59-05:00",
+        "price": 0.56,
+        "payout": 3.571428571428571,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-12T13:07:10.668294+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-12-week10-thursday-1"
     }
   ]
 }
