@@ -42,11 +42,17 @@
       "researchVersion": "2026-11-07-week9-weekend-1",
       "dataVersion": "2026-11-08-week9-sunday-1",
       "resultsVersion": "2026-11-08-week9-sunday-results"
+    },
+    "10": {
+      "path": "2026/week-10.json",
+      "status": "preliminary",
+      "researchVersion": "2026-11-12-week10-thursday-1",
+      "dataVersion": "2026-11-12-week10-thursday-1"
     }
   },
-  "lastSuccessfulPublication": "2026-11-08T23:03:35-05:00",
-  "notice": "Week 9: 12 Sunday finals plus Thursday verified. Tampa Bay–Chicago live; Buffalo–Minnesota scheduled Monday. Week open.",
+  "lastSuccessfulPublication": "2026-11-12T08:07:10-05:00",
+  "notice": "Week 10: all 14 games available. Thursday Giants lean; weekend picks pending.",
   "scoresCheckedAt": "2026-11-08T23:02:02-05:00",
-  "marketsCheckedAt": "2026-11-08T23:02:23-05:00",
-  "recordsCheckedAt": "2026-11-08T23:02:02-05:00"
+  "marketsCheckedAt": "2026-11-12T08:05:59-05:00",
+  "recordsCheckedAt": "2026-11-12T08:05:36-05:00"
 }
