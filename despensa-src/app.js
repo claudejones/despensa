@@ -1,0 +1,2965 @@
+"use strict";
+var APP_VERSION = "4.26.0";
+var KEY = "despensa_v2";
+var LEGACY_KEY = "despensa_v1";
+
+/* ---------------- state ---------------- */
+var S, screen = "dash", drawerItem = null;
+
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+function todayISO(){
+  var d=new Date(), p=function(x){return String(x).padStart(2,"0")};
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());
+}
+function nowLocal(){
+  var d=new Date(), p=function(x){return String(x).padStart(2,"0")};
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());
+}
+
+/* A negative amount on a seed line is a promotion, not a product: Chedraui
+   prints "3x2 en botanas" and "30% dsc en Vinos" as their own negative
+   lines, and that is how they are kept. The item above keeps its shelf
+   price, so a promotion never reads as a price cut next time. */
+function importSeedTrips(){
+  return SEED_TRIPS.map(function(t){
+    var lines=t.l.map(function(x){
+      var disc = x[2] < 0;
+      var L={id:slug(x[0]), es:x[0], en:"", cat:x[1], q:1,
+             unitMXN:x[2], lineMXN:x[2], state:"bought", disc:disc};
+      /* [name, cat, lineTotal, ratePerKg, kg] — the receipt prints all three
+         for anything weighed, and the rate is the only comparable figure */
+      if(x.length>=5){ L.rate=x[3]; L.kg=x[4]; }
+      return L;
+    });
+    var listed=lines.reduce(function(s,l){return s+l.lineMXN},0);
+    var items=lines.filter(function(l){ return !l.disc; }).length;
+    /* The rate belongs to the day, not to the importer. This used to be a
+       hardcoded 17.30 for all ten receipts — a figure that was never the
+       real rate on any of those days, so every historical dollar total was
+       wrong by the spread. Each receipt now carries its own; the ones still
+       reading 17.30 say so in seed-trips.js and are waiting on a statement. */
+    var fx = t.fx > 0 ? t.fx : 17.30;
+    return {id:"seed-"+t.d, shop:"chedraui", shopName:"Chedraui Puerto Aventuras",
+      date:t.d, fx:fx, lines:lines, note:t.note||"",
+      listed:Math.round(listed*100)/100, receiptTotal:t.t,
+      offList:Math.round((t.t-listed)*100)/100,
+      bought:items, skipped:0, planned:items,
+      totalUSD:Math.round(t.t/fx*100)/100,
+      imported:true, totalsOnly:!t.l.length};
+  });
+}
+/* total promotions in a window, as a positive number */
+function savedIn(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var s=0;
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    (t.lines||[]).forEach(function(l){
+      if(l.state==="bought" && l.lineMXN<0) s += conv(-l.lineMXN, t);
+    });
+  });
+  return s;
+}
+function seed(){
+  var st = {v:6, cat:CATALOGUE_VERSION, appVersion:APP_VERSION, fx:16.89, budgetUSD:700, ccy:"usd", seeded:false, seedV:0, seedFP:null, catFP:null,
+            shops:SHOPS.slice(), items:{}, trips:[], active:null};
+  ITEMS.forEach(function(it){
+    var id = slug(it.es);
+    st.items[id] = {id:id, cat:it.c, es:it.es, en:it.en, q:it.q, p:it.p,
+      ref:it.ref||null, hint:it.hint||null, active:true,
+      /* A history point is [date, price] or [date, price, shop]. The third
+         slot names the shop when it is not the item's usual one — the
+         jackfruit burger is a DAC item that Chedraui also carries. It used
+         to be read by nobody: the 14 Oct reconciliation wrote seven points
+         INTO that slot as nested arrays and every one of them vanished.
+         build.py now rejects anything in it that is not a shop id. */
+      hist:(it.hist||[]).map(function(h){return {d:h[0], p:h[1], shop:h[2]||it.hint||"chedraui"}})};
+  });
+  return st;
+}
+
+/* old ids looked like "chedraui|wk|pollo-rostizado"; the catalogue now uses the bare slug */
+function bareId(id){
+  var p=String(id||"").split("|");
+  return p[p.length-1];
+}
+/* In every migrated trip, sum(paid) ties exactly to the receipt total —
+   so paid is a LINE total, not a price each. Repair accordingly. */
+function repairLine(l, items){
+  var q=parseFloat(l.q); if(isNaN(q)||q<=0) q=1;
+  var line=(l.lineMXN!==undefined && l.lineMXN!==null) ? Number(l.lineMXN)
+         : (l.paid===null||l.paid===undefined||isNaN(l.paid) ? null : Number(l.paid));
+  var id=bareId(l.id), it=items[id];
+  var out={id:id, es:l.es||l.nameES||"", en:l.en||l.nameEN||"",
+    cat:(l.cat || (it?it.cat:null) || "other"),
+    q:q, unitMXN:(line===null?null:Math.round(line/q*100)/100),
+    lineMXN:line, state:l.state||"bought"};
+  /* Carry these through. Rebuilding a line from scratch used to drop them:
+     one malformed line in a trip sends every line in it through here, and
+     every per-kilo rate in that trip would vanish without a word. `note`
+     records a till mis-ring and is the only reason a line's item can differ
+     from what the receipt printed, so losing it loses the explanation. */
+  if(l.rate>0) out.rate=l.rate;
+  if(l.kg>0)   out.kg=l.kg;
+  if(l.note)   out.note=l.note;
+  return out;
+}
+function migrate(){
+  try{
+    var raw = localStorage.getItem(LEGACY_KEY);
+    if(!raw) return [];
+    var old = JSON.parse(raw);
+    if(!old || !old.trips || !old.trips.length) return [];
+    return old.trips.map(function(t){
+      return {id:t.id||("legacy-"+Math.random().toString(36).slice(2)),
+        shop:t.storeKey||"chedraui", shopName:t.store||"Chedraui",
+        date:t.datetime||"", fx:t.fxRate||17.30,
+        lines:(t.items||[]).map(function(i){
+          return {id:i.id, es:i.nameES||"", en:i.nameEN||"",
+                  q:i.qty||1, paid:i.priceMXN, state:"bought"};
+        }),
+        receiptTotal:t.totalMXN||null, listed:t.totalMXN||0, offList:0, legacy:true};
+    });
+  }catch(e){ return []; }
+}
+/* run once over whatever is already stored, old format or not */
+function repairTrips(){
+  var fixed=0;
+  S.trips.forEach(function(t){
+    var needs=(t.lines||[]).some(function(l){
+      return l.cat===undefined || l.lineMXN===undefined || typeof l.q==="string" || String(l.id).indexOf("|")>=0;
+    });
+    if(!needs) return;
+    t.lines=(t.lines||[]).map(function(l){ return repairLine(l, S.items); });
+    var sum=t.lines.reduce(function(s,l){ return s+(l.lineMXN||0); },0);
+    t.listed=Math.round(sum*100)/100;
+    if(t.receiptTotal!==null && t.receiptTotal!==undefined){
+      t.offList=Math.round((t.receiptTotal-t.listed)*100)/100;
+    }
+    t.bought=t.lines.filter(function(l){return l.state==="bought"}).length;
+    t.skipped=t.lines.filter(function(l){return l.state==="skip"}).length;
+    fixed++;
+  });
+  return fixed;
+}
+
+function load(){
+  try{ var raw=localStorage.getItem(KEY); if(raw) S=JSON.parse(raw); }catch(e){ S=null; }
+  if(!S || !S.items){
+    S = seed();
+    S.trips = importSeedTrips().concat(migrate());
+    S.seeded = true;
+    S.seedV = SEED_VERSION;
+    S.seedFP = SEED_FP;
+    S.catFP = CAT_FP;
+    repairTrips();
+    save(); return;
+  }
+  var fresh = seed();
+  /* add catalogue items that did not exist before */
+  Object.keys(fresh.items).forEach(function(id){
+    if(!(id in S.items)) S.items[id] = fresh.items[id];
+  });
+  /* CAT_FP is a hash of catalogue.js, injected at build time. Comparing it
+     to what the phone stored is how a catalogue correction arrives; a typed
+     version number only works if someone remembers to change it. */
+  if(S.catFP !== CAT_FP){
+    Object.keys(fresh.items).forEach(function(id){
+      var mine = S.items[id];
+      mine.p = fresh.items[id].p;
+      mine.ref = fresh.items[id].ref;
+      mine.cat = fresh.items[id].cat;
+      mine.hint = fresh.items[id].hint;
+      if(fresh.items[id].hist.length >= (mine.hist||[]).length) mine.hist = fresh.items[id].hist;
+    });
+    S.cat = CATALOGUE_VERSION;
+    S.catFP = CAT_FP;
+  }
+  /* Seeded receipts are fingerprinted, not latched.
+     "if(!S.seeded)" was a one-way gate: a phone that seeded once kept those
+     trips for ever, so corrected transcriptions never arrived. SEED_FP is a
+     hash of seed-trips.js computed at build time, so any edit to the
+     receipts changes it and the phone rebuilds them — no version number to
+     remember. Only ids beginning "seed-" are touched; trips logged in the
+     app and anything migrated from v1 are left exactly as they are. */
+  if(!S.seeded || S.seedFP !== SEED_FP){
+    S.trips = (S.trips||[]).filter(function(t){
+      return String(t.id||"").indexOf("seed-") !== 0;
+    }).concat(importSeedTrips());
+    S.trips.sort(function(x,y){ return (x.date||"").localeCompare(y.date||""); });
+    S.seeded = true;
+    S.seedV = SEED_VERSION;
+    S.seedFP = SEED_FP;
+  }
+  repairTrips();
+  /* 4.10.0 shipped a quick trip that could be left with no category at all.
+     Those are Mixed — that is what an untagged quick run always was. One
+     line, so the breakdown is whole for anyone who logged one in that
+     window. */
+  (S.trips||[]).forEach(function(t){ if(isQuick(t) && !t.cat) t.cat="mixed"; });
+  /* after repair and after any seed rebuild, so a correction made on the
+     phone is not quietly undone by the next data push */
+  applyCatFix();
+  S.appVersion = APP_VERSION;
+  if(!S.shops) S.shops = SHOPS.slice();
+  if(!S.trips) S.trips = [];
+  if(typeof S.fx!=="number" || !isFinite(S.fx) || S.fx<=0) S.fx = 16.89;
+  if(typeof S.budgetUSD!=="number" || !isFinite(S.budgetUSD) || S.budgetUSD<=0) S.budgetUSD = 700;
+  if(S.ccy!=="usd" && S.ccy!=="mxn") S.ccy="usd";
+  delete S.budget;
+  /* seeding and repair happen here — persist them or they are redone every launch */
+  save();
+}
+
+function save(){
+  clearResolve();   /* the catalogue may have changed under the index */
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ toast("Could not save — storage is blocked or full"); }
+}
+
+/* ---------------- helpers ---------------- */
+function mx(n){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  return "MX$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+/* Money is shown in ONE currency at a time. Mixing them line by line is
+   what made the old dashboard unreadable. */
+function m(n, dp){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  var v=(S.ccy==="usd") ? Number(n)/S.fx : Number(n);
+  var d=(dp===undefined) ? 2 : dp;
+  return (S.ccy==="usd"?"$":"MX$")+v.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+/* Same as m(), but converts a saved trip at the rate that trip was charged
+   at rather than today's. A trip at 17.90 and one at 16.89 are different
+   amounts of money and the history should not pretend otherwise. */
+function m2(n, trip){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  if(S.ccy!=="usd") return "MX$"+Number(n).toLocaleString("en-US",
+    {minimumFractionDigits:2,maximumFractionDigits:2});
+  var r=(trip && trip.fx>0) ? trip.fx : S.fx;
+  return "$"+(Number(n)/r).toLocaleString("en-US",
+    {minimumFractionDigits:2,maximumFractionDigits:2});
+}
+/* A figure in the currency on screen. Pesos pass through; dollars are what
+   THAT trip's card was charged, not the month's pesos run through a setting.
+
+   This is the whole fix. Every aggregate used to divide a peso total by
+   S.fx — a number in Settings, not a rate anyone was ever charged — so a
+   month of five trips at five rates came out at none of them. October read
+   $464 against $429 actually paid, 8% high on a $700 budget, and changing
+   that one setting silently rewrote every historical dollar figure in the
+   app. Trips carry the rate they were charged at; aggregates add those up. */
+function conv(n, trip){
+  if(n===null||n===undefined||isNaN(n)) return n;
+  if(S.ccy!=="usd") return Number(n);
+  var r=(trip && trip.fx>0) ? trip.fx : S.fx;
+  return Number(n)/r;
+}
+/* the money the trip cost, already in the currency on screen */
+function spendView(t){ return conv(spendOf(t), t); }
+/* Format a figure that is ALREADY in the currency on screen. m() converts;
+   this one must not, or an aggregate gets divided by the rate twice. */
+function mv(n, dp){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  var d=(dp===undefined) ? 2 : dp;
+  return (S.ccy==="usd"?"$":"MX$")
+    +Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+function ccyLabel(){ return S.ccy==="usd" ? "USD" : "MXN"; }
+function budgetInView(){ return S.ccy==="usd" ? S.budgetUSD : S.budgetUSD*S.fx; }
+/* While a trip is open, convert at THAT trip's rate — it is the rate the
+   card was actually charged at, and it is what the saved trip will record. */
+function usd(n){
+  if(n===null||n===undefined||isNaN(n)) return "—";
+  var r=(S.active && S.active.fx>0) ? S.active.fx : S.fx;
+  return "US$"+(Number(n)/r).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function esc(s){ return String(s===null||s===undefined?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function catName(id){
+  var c=CATS.filter(function(x){return x.id===id})[0];
+  return c ? c.name : "Uncategorised";
+}
+function catIcon(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?icon(c.ic):""; }
+/* the categories an individual item may be filed under — CATS minus the
+   quick-trip-only ones. Every picker and every grouped item list uses
+   this; only the quick-trip sheet and the lookups use the whole list. */
+function itemCats(){ return CATS.filter(function(c){ return !c.quickOnly; }); }
+function shopName(id){ var s=S.shops.filter(function(x){return x.id===id})[0]; return s?s.name:id; }
+function toast(m){
+  var t=document.getElementById("toast");
+  t.textContent=m; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("show")},2200);
+}
+function itemsByCat(){
+  var out={};
+  itemCats().forEach(function(c){ out[c.id]=[]; });
+  Object.keys(S.items).forEach(function(id){
+    var it=S.items[id];
+    if(!it.active) return;
+    if(!out[it.cat]) out[it.cat]=[];
+    out[it.cat].push(it);
+  });
+  itemCats().forEach(function(c){
+    out[c.id].sort(function(a,b){ return a.es.localeCompare(b.es); });
+  });
+  return out;
+}
+/* Item times price times quantity is only arithmetic if the price and the
+   quantity are in the same unit. For a jar of olives they are: 78.00 is a
+   jar, two jars is 156.00. For the 18 items sold by weight they are NOT.
+   `p` there is the LAST BAG'S TOTAL — apples at 74.87 is 1.25 kg at
+   59.90/kg, not one apple — while `q` is a count of fruit. Multiplying
+   them made six ticked apples read as 449.22 against the 65.59 that
+   1.095 kg actually cost, and put the 25 Oct estimate 31% over a
+   MX$1,593.51 receipt on five produce lines alone.
+
+   So a weighed item does not multiply. The estimate is the last bag,
+   which is the only honest figure available without a weight: still
+   approximate — it moves with how much went in the bag last time — and
+   the row says so, with the shelf rate beside it. `q` survives as what
+   it always really was, a note to self about how much to get.
+
+   A price typed at the till (L.paid) needs no special case: for a
+   weighed line that IS what the bag cost, so it passes through too. */
+function lineTotal(it, L){
+  var q = (L && L.q!==undefined) ? L.q : it.q;
+  var p = (L && L.paid!==null && L.paid!==undefined && !isNaN(L.paid)) ? L.paid : it.p;
+  if(p===null||p===undefined||isNaN(p)) return null;
+  return byWeight(it) ? p : p*q;
+}
+function tripTotals(){
+  var t=S.active, listed=0, bought=0, nb=0, nn=0, ns=0, missing=0;
+  if(!t) return {listed:0,bought:0,nb:0,nn:0,ns:0,missing:0};
+  Object.keys(t.lines).forEach(function(id){
+    var L=t.lines[id], it=S.items[id]; if(!it) return;
+    var v=lineTotal(it,L);
+    if(L.state==="skip"){ ns++; return; }
+    if(L.state==="bought"){ nb++; if(v===null) missing++; else bought+=v; }
+    else { nn++; }
+    if(v!==null) listed+=v;
+  });
+  return {listed:listed,bought:bought,nb:nb,nn:nn,ns:ns,missing:missing};
+}
+
+/* ---------------- analytics ---------------- */
+function monthKey(d){ return String(d||"").slice(0,7); }
+function spendOf(t){
+  return (t.receiptTotal!==null && t.receiptTotal!==undefined) ? t.receiptTotal : (t.listed||0);
+}
+/* ---- quick trips ----
+   A run to the panadería or the market: a total, a shop, a rate, and no
+   itemised receipt. Real money, so it counts everywhere money is counted.
+   It has no lines, so anything derived FROM lines — staples, per-kilo
+   rates, biggest lines — ignores it on its own, which is correct. The
+   two places it would mislead are handled explicitly: it never joins a
+   basket average, and it never looks like a duplicate of a real shop. */
+function isQuick(t){ return t && t.kind==="quick"; }
+function quickSpend(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var s=0;
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    if(isQuick(t)) s+=spendView(t);
+  });
+  return s;
+}
+/* There is deliberately no quickUntagged() any more. Every quick trip
+   carries a category — Mixed if you pick nothing — so "Where it goes" has
+   nothing left to apologise for and sums to the month total. A footnote
+   explaining a gap was the right answer while the gap existed; closing the
+   gap is a better one. */
+function byMonth(){
+  var m={};
+  S.trips.forEach(function(t){
+    var k=monthKey(t.date); if(!k) return;
+    if(!m[k]) m[k]={key:k, spend:0, trips:0, off:0, hasReceipt:0, quick:0};
+    m[k].spend+=spendView(t); m[k].trips++;
+    if(isQuick(t)) m[k].quick++;
+    else if(t.receiptTotal!==null && t.receiptTotal!==undefined){
+      m[k].hasReceipt++; m[k].off+=conv(t.offList||0, t);
+    }
+  });
+  return Object.keys(m).sort().map(function(k){ return m[k]; });
+}
+function byCategory(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var c={};
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    /* a quick trip has no lines, so the whole amount is its category —
+       Mixed when nothing more specific was chosen */
+    if(isQuick(t)){
+      var qk=t.cat||"mixed";
+      c[qk]=(c[qk]||0)+spendView(t);
+      return;
+    }
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought") return;
+      var k=l.cat||"pantry";
+      c[k]=(c[k]||0)+conv(l.lineMXN||0, t);
+    });
+  });
+  return Object.keys(c).map(function(k){ return {cat:k, name:catName(k), total:c[k]}; })
+    .sort(function(x,y){ return y.total-x.total; });
+}
+function topItems(n, months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var it={};
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought" || l.lineMXN<0) return;
+      var k=l.es||l.id;
+      if(!it[k]) it[k]={name:k, total:0, times:0, cat:l.cat};
+      it[k].total+=conv(l.lineMXN||0, t); it[k].times++;
+    });
+  });
+  return Object.keys(it).map(function(k){return it[k]})
+    .sort(function(x,y){ return y.total-x.total; }).slice(0,n||8);
+}
+/* Items sold by weight record the line total for whatever weight went in
+   the bag, not a rate. 1.25 kg of apples against one loose apple is a
+   +225% "price rise" that never happened. Until a trip records kg, those
+   items cannot be compared at all, so they are excluded outright. */
+function byWeight(it){
+  return /\/\s*(kg|g|l|ml|lt|litro)\b/i.test(String(it.ref||""));
+}
+/* "more than usual" beats "more than last time" — one odd purchase
+   should not look like a trend. Latest against the median of the rest.
+   Guarded twice over, because every absurd percentage this card has ever
+   shown came from comparing two different things under one name. */
+function priceWatch(n){
+  var out=[], skipped={weight:0, noisy:0};
+  Object.keys(S.items).forEach(function(id){
+    var it=S.items[id], h=(it.hist||[]);
+    if(!it.active || h.length<3) return;
+    var ps=h.map(function(x){return x.p}).filter(function(p){return p>0});
+    if(ps.length<3) return;
+    if(byWeight(it)){ skipped.weight++; return; }
+
+    var last=ps[ps.length-1], prior=ps.slice(0,-1).sort(function(a,b){return a-b});
+    var med = prior.length%2 ? prior[(prior.length-1)/2]
+            : (prior[prior.length/2-1]+prior[prior.length/2])/2;
+    if(!med) return;
+
+    /* If the earlier prices do not agree with each other, the history is
+       mixing products — a different brand, a bigger bottle, two packs on
+       one line. There is no "usual price" to be above or below. */
+    if((prior[prior.length-1]-prior[0])/med > 0.35){ skipped.noisy++; return; }
+
+    var pct=(last-med)/med*100;
+    /* a few pesos on a cheap item is noise, not a price move */
+    if(Math.abs(pct)<8 || Math.abs(last-med)<5) return;
+    out.push({id:id, es:it.es, en:it.en, last:last, usual:med,
+      gap:last-med, pct:pct, n:ps.length});
+  });
+  out.sort(function(x,y){ return Math.abs(y.gap)-Math.abs(x.gap); });
+  return {rows:out.slice(0, n||5), skipped:skipped};
+}
+/* ---- by the kilo ----
+   The only honest way to compare a weighed item over time. A line total is
+   whatever the bag weighed; the rate printed beside it is the price. This
+   is what "Manzana +225%" should always have been: 1.25 kg against 0.37 kg
+   at the same 59.90 a kilo is not a price rise at all. */
+function rateHistory(){
+  var by={};
+  S.trips.forEach(function(t){
+    var d=String(t.date||"").slice(0,10);
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought" || !(l.rate>0)) return;
+      var k=l.es||l.id;
+      (by[k]=by[k]||[]).push({d:d, rate:l.rate, kg:l.kg, cat:l.cat});
+    });
+  });
+  return Object.keys(by).map(function(k){
+    var h=by[k].sort(function(a,b){ return a.d<b.d?-1:1; });
+    /* one reading per day — two bags of prunes at one rate is one price */
+    var seen={}, u=[];
+    h.forEach(function(x){ if(!seen[x.d]){ seen[x.d]=1; u.push(x); } });
+    var first=u[0], last=u[u.length-1];
+    return {name:k, cat:last.cat, n:u.length, hist:u,
+      first:first.rate, last:last.rate,
+      pct:(u.length>1 && first.rate>0) ? (last.rate-first.rate)/first.rate*100 : null,
+      kg:by[k].reduce(function(s,x){ return s+(x.kg||0); },0)};
+  }).filter(function(x){ return x.n>1; })
+    .sort(function(a,b){ return Math.abs(b.pct)-Math.abs(a.pct); });
+}
+
+/* ---- resolving a receipt line to the thing you actually buy ----
+   A receipt says "Manzana Pink Lady"; the catalogue says "Manzana — apple,
+   whichever is good". The catalogue is the list of things; the receipt is
+   what happened to be on the shelf. For anything about habit — how often
+   you buy it, whether you are due more — the catalogue entry is the unit,
+   not the brand. Match on the longest catalogue name the receipt line
+   begins with, so "Papa Chips Jalapeño" lands on "Papa Chips" and not on
+   something shorter it happens to share a word with. */
+function normName(s){
+  return String(s||"").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g,"")
+    .replace(/\s*[x×]\s*\d+\s*$/,"")          /* ×2 */
+    .replace(/\([^)]*\)/g," ")                      /* (3-for-2) */
+    .replace(/\b\d+(\.\d+)?\s?(g|gr|kg|ml|l|lt|pz|pzs|r)\b/g," ")   /* 300 g, 750 ml */
+    .replace(/[^a-z0-9]+/g," ").trim();
+}
+var _resolveCache=null;
+function resolveItem(name){
+  if(!_resolveCache){
+    _resolveCache={index:[], hit:{}};
+    Object.keys(S.items).forEach(function(id){
+      var it=S.items[id];
+      _resolveCache.index.push({id:id, n:normName(it.es)});
+    });
+    _resolveCache.index.sort(function(a,b){ return b.n.length-a.n.length; });
+  }
+  if(name in _resolveCache.hit) return _resolveCache.hit[name];
+  var n=normName(name), found=null;
+  /* forward: the receipt name begins with a catalogue name, longest first
+     — "manzana pink lady" lands on "manzana" */
+  for(var i=0;i<_resolveCache.index.length;i++){
+    var c=_resolveCache.index[i];
+    if(c.n && (n===c.n || n.indexOf(c.n+" ")===0)){ found=c.id; break; }
+  }
+  /* reverse: the catalogue name is the longer one — a receipt that just
+     says "Plátano" against a catalogue "Plátano Chiapas/Tabasco". Only
+     when exactly one catalogue item starts that way, so a bare "Crema"
+     against two kinds of cream resolves to neither. */
+  if(!found && n){
+    var cands=_resolveCache.index.filter(function(c){
+      return c.n.indexOf(n+" ")===0;
+    });
+    if(cands.length===1) found=cands[0].id;
+  }
+  _resolveCache.hit[name]=found;
+  return found;
+}
+/* the catalogue changes under us on an edit, so the index must not persist */
+function clearResolve(){ _resolveCache=null; }
+
+/* ---- what you buy every time ----
+   The recurring baseline the budget is actually made of. Frequency is
+   emergent: how often an item turns up, not a cadence anyone set. */
+function staples(minShare){
+  var trips=S.trips.filter(function(t){ return (t.lines||[]).some(function(l){
+    return l.state==="bought" && !(l.lineMXN<0); }); });
+  if(trips.length<3) return [];
+  /* grouped by the catalogue entry, same as restock — you buy apples, not
+     Pink Ladies, and a brand swap is not a gap in the habit */
+  var by={};
+  trips.forEach(function(t){
+    var seen={};
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought" || l.lineMXN<0) return;
+      var id=resolveItem(l.es||l.id);
+      if(!id) return;
+      var it=S.items[id];
+      if(!it || it.active===false) return;
+      if(!by[id]) by[id]={id:id, name:it.es, en:it.en, cat:it.cat, trips:0, total:0};
+      /* through conv(), like every other aggregate: this card's figures are
+         printed with mv(), which does not convert, so raw pesos would reach
+         the screen with a dollar sign on them */
+      by[id].total += conv(l.lineMXN||0, t);
+      if(seen[id]) return;             /* two bags is still one occasion */
+      seen[id]=1;
+      by[id].trips++;
+    });
+  });
+  var span=monthSpan();
+  return Object.keys(by).map(function(k){
+    var x=by[k];
+    x.share = x.trips/trips.length*100;
+    x.perMonth = span>0 ? x.total/span : x.total;
+    return x;
+  }).filter(function(x){ return x.share>=(minShare||60); })
+    .sort(function(a,b){ return b.perMonth-a.perMonth; });
+}
+/* how many months of history there are, as a fraction */
+function monthSpan(){
+  var ds=S.trips.map(function(t){ return String(t.date||"").slice(0,10); })
+    .filter(Boolean).sort();
+  if(ds.length<2) return 1;
+  var days=(new Date(ds[ds.length-1])-new Date(ds[0]))/86400000;
+  return Math.max(days/30.44, 0.5);
+}
+
+/* ---- what to start a trip from ----
+   The regulars, by share of trips. No prediction of when anything runs out
+   — you decide that standing in the kitchen. This only saves the typing. */
+function recommended(){
+  return staples(40).map(function(x){ return x.id; });
+}
+
+/* items with enough purchases to have been looked at at all */
+function priceTracked(){
+  var n=0;
+  Object.keys(S.items).forEach(function(id){
+    var it=S.items[id];
+    if(it.active && (it.hist||[]).length>=3) n++;
+  });
+  return n;
+}
+/* per-shop: trips, total and the average basket the research kept naming */
+function shopStats(months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var s={};
+  S.trips.forEach(function(t){
+    if(months && !keep[monthKey(t.date)]) return;
+    var k=t.shop||"other";
+    if(!s[k]) s[k]={shop:k, name:t.shopName||shopName(k), total:0, trips:0,
+                    shops:0, shopTotal:0, quick:0};
+    s[k].total+=spendView(t); s[k].trips++;
+    /* A baguette run averaged with a stock-up makes "a basket" meaningless,
+       so the average is built from real shops only. The money still counts. */
+    if(isQuick(t)) s[k].quick++;
+    else { s[k].shops++; s[k].shopTotal+=spendView(t); }
+  });
+  return Object.keys(s).map(function(k){
+    s[k].basket = s[k].shops ? s[k].shopTotal/s[k].shops : null;
+    return s[k];
+  }).sort(function(x,y){ return y.total-x.total; });
+}
+/* Removed on purpose: month-over-month category percentages, and the
+   same-window spend comparison they leaned on. With one or two trips a
+   month, whether a single big shop lands before or after today's date
+   swings a category by hundreds of percent. The number moved; the
+   habit did not. The ranked bars show the shape of a month and the
+   month chart shows months side by side, which is what those were
+   reaching for without the false precision. */
+function monthProgress(curKey){
+  var now=new Date(), nowKey=monthKey(todayISO());
+  if(curKey!==nowKey) return null;           /* a finished month compares whole to whole */
+  var y=parseInt(curKey.slice(0,4),10), m=parseInt(curKey.slice(5,7),10);
+  var days=new Date(y, m, 0).getDate();
+  return {day:now.getDate(), days:days, partial:now.getDate()<days};
+}
+/* byStore() lived here: a second by-shop aggregator, called from nowhere,
+   still summing raw pesos after shopStats moved to the view currency. Dead
+   code with a live bug in it is a trap for whoever revives it — the same
+   reason catBars() went in 4.14.0. */
+/* Two trips to one shop on one day may be one receipt entered twice —
+   once by hand in the app, once from the seeded receipt history. But
+   people do shop twice in a day, so the date alone proves nothing.
+   Compare the actual lines: how much of the smaller basket appears in
+   the larger one at the same price. Only a real overlap gets flagged. */
+function tripKey(s){
+  return String(s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"")
+    .toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+function overlap(a, b){
+  var big=(a.lines||[]).length>=(b.lines||[]).length?a:b;
+  var small=(big===a)?b:a;
+  var sl=(small.lines||[]).filter(function(l){
+    return l.state==="bought" && l.lineMXN!=null && l.lineMXN>=0; });
+  var idx={};
+  (big.lines||[]).forEach(function(l){
+    if(l.state!=="bought" || l.lineMXN==null || l.lineMXN<0) return;
+    (idx[tripKey(l.es||l.id)] = idx[tripKey(l.es||l.id)] || []).push(+l.lineMXN);
+  });
+  if(!sl.length || !Object.keys(idx).length) return null;   /* nothing to compare */
+  var hit=sl.filter(function(l){
+    var k=idx[tripKey(l.es||l.id)];
+    return k && k.indexOf(+l.lineMXN)>=0;
+  }).length;
+  return {hit:hit, of:sl.length, pct:hit/sl.length*100};
+}
+function sameDayPairs(){
+  var by={}, out=[];
+  S.trips.forEach(function(t){
+    /* a quick trip the same day as a real shop is an ordinary errand,
+       not the same receipt entered twice */
+    if(isQuick(t)) return;
+    var k=(t.shop||"other")+"|"+String(t.date||"").slice(0,10);
+    (by[k]=by[k]||[]).push(t);
+  });
+  Object.keys(by).forEach(function(k){
+    var g=by[k];
+    if(g.length<2) return;
+    g=g.slice().sort(function(a,b){ return spendOf(b)-spendOf(a); });
+    /* the strongest overlap found between any pair that day */
+    var best=null;
+    for(var i=0;i<g.length;i++) for(var j=i+1;j<g.length;j++){
+      var o=overlap(g[i], g[j]);
+      if(o && (!best || o.pct>best.pct)) best=o;
+    }
+    /* A transcribed receipt and an app session on the same day at the same
+       shop are two accounts of one trip, not two trips. Surface every
+       collision; the line overlap only ranks how certain it is. */
+    var receipt=null, sessions=[];
+    g.forEach(function(t){
+      if(String(t.id||"").indexOf("seed-")===0) receipt=receipt||t;
+      else sessions.push(t);          /* a day can hold more than one */
+    });
+    out.push({ date:k.split("|")[1], shop:shopName(k.split("|")[0]), trips:g,
+      receipt:receipt, sessions:sessions, ov:best,
+      total:g.reduce(function(s,t){ return s+spendView(t); },0),
+      /* what drops out if the non-receipt records go */
+      dup:g.reduce(function(s,t){
+        return s + (String(t.id||"").indexOf("seed-")===0 ? 0 : spendView(t)); },0) });
+  });
+  return out.sort(function(a,b){ return a.date<b.date?1:-1; });
+}
+/* unpriced lines, and which trips they sit in */
+function unpricedByTrip(){
+  var m={};
+  S.trips.forEach(function(t){
+    var n=(t.lines||[]).filter(function(l){
+      return l.state==="bought" && !l.disc &&
+             (l.lineMXN===null || l.lineMXN===undefined || isNaN(l.lineMXN));
+    }).length;
+    if(n) m[t.id]=n;
+  });
+  return m;
+}
+/* A line with no price only matters if it leaves a hole. On most of these
+   trips the priced lines already sum to the receipt total, so the unpriced
+   ones cost nothing that is not already counted — warning about them sends
+   you looking for a problem that is not there. Only report lines from trips
+   where the priced lines actually fall short of the receipt. */
+function missingPrices(){
+  var out=[], seen={};
+  S.trips.forEach(function(t){
+    var rt=(t.receiptTotal===null||t.receiptTotal===undefined)?null:Number(t.receiptTotal);
+    if(rt!==null){
+      var priced=(t.lines||[]).reduce(function(s,l){
+        return s + ((l.state==="bought" && l.lineMXN!==null && l.lineMXN!==undefined
+                     && !isNaN(l.lineMXN)) ? Number(l.lineMXN) : 0);
+      },0);
+      if(priced >= rt-0.02) return;      /* nothing missing from this trip */
+    }
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought" || l.disc) return;
+      if(l.lineMXN!==null && l.lineMXN!==undefined && !isNaN(l.lineMXN)) return;
+      var k=l.es||l.id;
+      if(!seen[k]){ seen[k]=1; out.push(k); }
+    });
+  });
+  return out;
+}
+function tripCadence(){
+  /* Quick trips are left out. "Between trips" is how often a shop happens;
+     a bakery run two days after a stock-up would halve the figure and
+     describe a rhythm that is not there. The Rhythm card says so. */
+  var ds=S.trips.filter(function(t){ return !isQuick(t); })
+    .map(function(t){return String(t.date||"").slice(0,10)})
+    .filter(Boolean).sort();
+  if(ds.length<2) return null;
+  var gaps=[];
+  for(var i=1;i<ds.length;i++){
+    var g=(new Date(ds[i])-new Date(ds[i-1]))/86400000;
+    if(g>0 && g<60) gaps.push(g);
+  }
+  if(!gaps.length) return null;
+  gaps.sort(function(a,b){return a-b});
+  return gaps[Math.floor(gaps.length/2)];
+}
+
+/* ---------------- render ---------------- */
+function render(){
+  renderHeader();
+  var m=document.getElementById("main");
+  if(screen==="dash")      m.innerHTML=viewDash();
+  else if(screen==="trip") m.innerHTML=viewTrip();
+  else if(screen==="cat")  m.innerHTML=viewCatalogue();
+  else if(screen==="hist") m.innerHTML=viewHistory();
+  else                     m.innerHTML=viewSettings();
+  renderTabs();
+  renderBar();
+}
+
+function renderHeader(){
+  var t=S.active, title, sub="";
+  if(screen==="dash"){
+    title="Despensa"; sub=S.trips.length+" trips · "+shopName("chedraui").split(" ")[0];
+  } else if(screen==="trip"){
+    title = t ? shopName(t.shop) : "Despensa";
+    sub = t ? (t.mode==="plan" ? "Planning · "+t.date : "Shopping · "+t.date) : "No trip open";
+  } else if(screen==="cat"){ title="Catalogue"; sub=Object.keys(S.items).length+" items"; }
+  else if(screen==="hist"){ title="Trips"; sub=S.trips.length+" logged"; }
+  else { title="Settings"; sub="v"+APP_VERSION; }
+  document.getElementById("hTitle").textContent=title;
+  document.getElementById("hSub").textContent=sub;
+  /* Settings that belong to this trip, not to the catalogue or the app. */
+  document.getElementById("tripSet").hidden = !(screen==="trip" && S.active);
+}
+
+/* ----- dashboard ----- */
+/* Which month the whole screen is showing. null means "the latest one",
+   so a new trip in a new month moves the dashboard forward on its own. */
+var dashMonth = null;
+function dashIndex(ms){
+  if(dashMonth){
+    for(var i=0;i<ms.length;i++) if(ms[i].key===dashMonth) return i;
+  }
+  return ms.length-1;
+}
+/* One filter row above everything it scopes — month and currency together,
+   not a control buried inside the first card. Every card below reads from it. */
+function filterBar(ms, i){
+  var mo=ms[i];
+  return '<div class="filters">'
+    +'<div class="mnav">'
+      +'<button class="marrow" data-mstep="-1"'+(i<=0?' disabled':'')
+        +' aria-label="Previous month">'
+        +'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>'
+      +'<button class="mlabel" id="mJump">'+esc(monthLabel(mo.key))
+        +'<small>'+mo.trips+' trip'+(mo.trips===1?"":"s")+'</small></button>'
+      +'<button class="marrow" data-mstep="1"'+(i>=ms.length-1?' disabled':'')
+        +' aria-label="Next month">'
+        +'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>'
+    +'</div>'
+    /* USD first — it is the default view, so it reads left to right */
+    +'<span class="ccy"><button data-ccy="usd" class="'+(S.ccy==="usd"?"on":"")+'">USD</button>'
+    +'<button data-ccy="mxn" class="'+(S.ccy==="mxn"?"on":"")+'">MXN</button></span>'
+    +'</div>';
+}
+/* the jump list: every month that has trips, newest first */
+function monthJumpSheet(){
+  var ms=byMonth().slice().reverse(), cur=byMonth()[dashIndex(byMonth())].key;
+  var h='<h2>Jump to a month</h2><p class="hint">'+ms.length
+    +' month'+(ms.length===1?"":"s")+' with trips logged.</p>';
+  ms.forEach(function(mo){
+    h+='<button class="mbtn'+(mo.key===cur?" primary":"")+'" data-mgo="'+mo.key+'">'
+      +esc(monthLabel(mo.key))
+      +'<small>'+mo.trips+' trip'+(mo.trips===1?"":"s")+' · '+mv(mo.spend,0)+'</small></button>';
+  });
+  openSheet(h);
+}
+function viewDash(){
+  var ms=byMonth();
+  if(!ms.length){
+    return '<div class="empty">'+icon("chart","big")+'<h3>Nothing logged yet</h3>'
+      +'<p>Close a trip and this fills with your spend, categories and price moves.</p>'
+      +'<button class="big" id="startTrip">Start a trip</button>'
+      +'<button class="mbtn mid" id="quickTrip" style="margin-top:16px">'
+      +'Log a quick trip</button></div>';
+  }
+  var mi=dashIndex(ms), cur=ms[mi];
+  var prog=monthProgress(cur.key);
+  /* The budget must be in the same currency as the spend above it. That
+     spend is now the sum of what each card charge actually came to, so
+     comparing it against pesos-at-the-default-rate would reintroduce the
+     bug in the denominator. */
+  var budget=budgetInView();
+  var pct=Math.round(cur.spend/budget*100);
+  var left=budget-cur.spend;
+
+  /* No projection. Extrapolating a month from its first fortnight turns
+     one stock-up shop into "on pace for MX$18,000", which is arithmetic
+     rather than information. What the budget is actually for is the
+     question "how much can I spend from here", and that is division of
+     two numbers already known. */
+  var daysLeft = (prog && prog.partial) ? (prog.days-prog.day) : 0;
+  var perWeek = (daysLeft>0 && left>0) ? left/(daysLeft/7) : null;
+
+  var html=filterBar(ms, mi);
+
+  /* ---- the month ---- */
+  html+='<div class="dcard">'
+    +'<div class="eyebrow" style="margin-bottom:12px">'+icon("chart")
+    +(prog&&prog.partial?"Month to date":"Closed month")+'</div>'
+    +'<div class="bignum">'+mv(cur.spend,0)+'</div>'
+    /* The count splits when there is something to split: a month of
+       "4 trips" that is one stock-up and three bakery runs reads as four
+       shops. The money is one figure because it is one figure. */
+    +'<div class="bigsub">of '+mv(budget,0)+' budgeted · '
+    +(cur.quick
+       ? ((cur.trips-cur.quick)+' shop'+(cur.trips-cur.quick===1?"":"s")
+          +' · '+cur.quick+' quick')
+       : (cur.trips+' trip'+(cur.trips===1?"":"s")))+'</div>'
+    +budgetBar(pct, prog)
+    /* one word per label, so none of them wrap and the three figures
+       sit on the same baseline */
+    +'<div class="metrow">'
+      +'<div class="metcell"><div class="metlab">Used</div>'
+      +'<div class="metval">'+pct+'%</div></div>'
+      +'<div class="metcell"><div class="metlab">'+(left<0?"Over by":"Left")+'</div>'
+      +'<div class="metval">'+mv(Math.abs(left),0)+'</div></div>'
+      +'<div class="metcell r"><div class="metlab">'
+      +(perWeek!==null ? 'A week' : (prog&&prog.partial ? 'Days left' : 'Trips'))+'</div>'
+      +'<div class="metval">'
+      +(perWeek!==null ? mv(perWeek,0)
+        : (prog&&prog.partial ? daysLeft : cur.trips))+'</div></div>'
+    +'</div>'
+    +(savedIn([cur.key])>0
+       ? '<div class="lmeta" style="margin-top:12px">'
+         +'Promotions took '+mv(savedIn([cur.key]),0)+' off this month’s receipts.</div>'
+       : '')
+    +(prog&&prog.partial
+       ? '<div class="lmeta" style="margin-top:12px">Day '+prog.day+' of '+prog.days
+         +(left<0 ? ' · already past the budget with '+daysLeft+' to go'
+                  : (perWeek!==null ? ' · '+mv(perWeek,0)+' a week keeps you inside it' : ''))
+         +'</div>'
+       : '')
+    +'<button class="dbtn'+(S.active?" quiet":"")+'" id="startTrip">'
+    +(S.active?"Resume the open trip":"Start a trip")+'</button>'
+    +'<button class="dbtn quiet" id="quickTrip">Log a quick trip'
+    +'<small>A total with no itemised receipt</small></button></div>';
+
+  /* ---- a receipt and an app record for the same trip ---- */
+  var dup=sameDayPairs();
+  if(dup.length){
+    var dupAll=dup.reduce(function(s,d){ return s+d.dup; },0);
+    var dupCur=dup.filter(function(d){ return monthKey(d.date)===cur.key; })
+                  .reduce(function(s,d){ return s+d.dup; },0);
+    html+='<div class="dcard"><div class="flagbox">'+icon("alert")
+      +'<div style="flex:1;min-width:0"><div class="flagtitle">'
+      +dup.length+' day'+(dup.length===1?"":"s")+' counted twice</div>'
+      +'<div class="lmeta">A transcribed receipt and a record you built in the app, '
+      +'for the same shop on the same day. Both are being added up.'
+      +(dupCur>0 ? ' '+esc(monthLabel(cur.key))+' is high by '+mv(dupCur,0)
+                   +(dupAll>dupCur ? ', and every month together by '+mv(dupAll,0) : '')+'.'
+                 : (dupAll>0 ? ' Every month together is high by '+mv(dupAll,0)+'.' : ''))
+      +'</div></div></div>';
+    var unp=unpricedByTrip();
+    dup.forEach(function(d){
+      html+='<div class="lrow"><div class="lhead">'
+        +'<span class="lname">'+esc(d.date)+'</span>'
+        +'<span class="lamt">'+mv(d.total,0)+'</span></div>'
+        +'<div class="lmeta">'+esc(d.shop)
+        +(d.receipt ? ' · receipt '+m2(spendOf(d.receipt),d.receipt) : '')
+        +(d.sessions.length ? ' · app record'+(d.sessions.length>1?'s':'')+' '
+            +d.sessions.map(function(t){
+                return m2(spendOf(t),t)+(unp[t.id]?' ('+unp[t.id]+' unpriced)':''); }).join(' + ') : '')
+        +(d.ov ? ' · '+d.ov.hit+' of '+d.ov.of+' lines identical' : '')
+        +'</div></div>';
+    });
+    html+='<div class="lmeta dfoot">The receipt is the printed total and ties to the '
+      +'centavo; the app record is what got ticked off. Keeping the receipt is '
+      +'almost always right.</div>'
+      +'<button class="dbtn quiet" id="fixDupes">Review and resolve</button></div>';
+  }
+
+  /* ---- unpriced lines: what they actually affect ---- */
+  var mp=missingPrices();
+  if(mp.length){
+    /* Totals come from each trip's receipt total, so they are NOT short.
+       Only the category split is, because a line with no price adds zero
+       to its category. Saying otherwise sent the user looking for a
+       problem in the wrong number. */
+    html+='<div class="dcard"><div class="flagbox">'+icon("alert")
+      +'<div style="flex:1;min-width:0"><div class="flagtitle">'+mp.length
+      +' item'+(mp.length===1?"":"s")+' ticked off with no price</div>'
+      +'<div class="lmeta">'+esc(mp.slice(0,5).join(" · "))
+      +(mp.length>5?" and "+(mp.length-5)+" more":"")+'</div>'
+      +'<div class="lmeta" style="margin-top:6px">The month totals are unaffected — '
+      +'those come from each receipt total. It is <b>Where it goes</b> that falls '
+      +'short, by these lines and by anything bought off the list.</div>'
+      +'</div></div></div>';
+  }
+
+  /* ---- trend ---- */
+  html+='<div class="dcard"><div class="dhead">'
+    +'<span class="eyebrow">'+icon("receipt")+'Month by month</span>'
+    +'<span class="dnote">'+ccyLabel()+'</span></div>'+monthBars(ms, cur.key)+'</div>';
+
+  /* ---- the trips behind the month ----
+     The month total is a single figure and the Trips tab lists every trip
+     ever taken; neither answers "which shops made up THIS month". That
+     question comes up whenever the figure has to be squared against a bank
+     statement, and the answer is usually a trip sitting just the other side
+     of a month boundary. */
+  var mTrips = S.trips.filter(function(t){ return monthKey(t.date)===cur.key; })
+    .sort(function(x,y){ return String(y.date||"").localeCompare(String(x.date||"")); });
+  if(mTrips.length){
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("receipt")+'Trips this month</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
+    mTrips.forEach(function(t){
+      var q=isQuick(t);
+      html+='<div class="lrow tap" data-'+(q?'editquick':'trip')+'="'+t.id+'">'
+        +'<div class="lhead"><span class="lname">'
+          +esc(t.shopName||shopName(t.shop))+'</span>'
+        +'<span class="lamt">'+m2(spendOf(t), t)+'</span></div>'
+        +'<div class="lhead"><span class="lmeta">'
+          +esc(String(t.date||"").slice(0,10))
+          +(q?' · quick trip'+(t.note?' · '+esc(t.note):'')
+             :' · '+(t.lines||[]).filter(function(l){
+                 return l.state==="bought" && !(l.lineMXN<0); }).length+' items')
+          +'</span></div></div>';
+    });
+    /* The total is the sum of the rows above it, each converted at its own
+       trip's rate — not the month's pesos run through the app default. The
+       hero figure at the top of the dashboard still does the latter and so
+       reads high; that is a separate defect, and a total that disagrees
+       with the rows printed directly above it is indefensible either way. */
+    var mSum = mTrips.reduce(function(s,t){ return s+spendView(t); },0);
+    html+='<div class="sumrow"><div class="lhead">'
+      +'<span class="lname">Total<small>'+mTrips.length
+      +(mTrips.length===1?' trip':' trips')+'</small></span>'
+      +'<span class="lamt">'+mv(mSum)+'</span></div></div>'
+      +'<div class="lmeta dfoot">Dated by the day you shopped. A card charge '
+      +'can post in the next month, so a bank statement may put a trip near a '
+      +'month end on the other side of the line.</div>'
+      +'</div>';
+  }
+
+  /* ---- where it goes: nine fixed categories, so part-to-whole ---- */
+  var catScope=cur.key, cats=byCategory([catScope]).filter(function(c){return c.total>0});
+  if(!cats.length){ catScope=null; cats=byCategory(null).filter(function(c){return c.total>0}); }
+  if(cats.length){
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("pie")+'Where it goes</span>'
+      +'<span class="dnote">'+(catScope?esc(monthLabel(catScope)):"all trips")+'</span></div>'
+      +catRanked(cats, catScope)
+      +'</div>';
+  }
+
+  /* ---- per shop ---- */
+  var sh=shopStats([cur.key]);
+  if(sh.length>1){
+    var smax=sh[0].total||1;
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("cart")+'By shop</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
+    sh.forEach(function(x){
+      html+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(x.name)+'</span>'
+        +'<span class="lamt">'+mv(x.total)+'</span></div>'
+        +'<div class="lhead"><span class="lmeta">'+x.trips+' trip'+(x.trips===1?"":"s")
+        +(x.quick?' ('+x.quick+' quick)':'')
+        +(x.basket!==null?' · '+mv(x.basket)+' a basket':'')+'</span></div>'
+        +'<div class="catbar"><div style="width:'+(x.total/smax*100).toFixed(1)+'%"></div></div></div>';
+    });
+    html+='</div>';
+  } else if(sh.length===1){
+    /* one shop is not a comparison — a bar at 100% of itself says nothing */
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("cart")+esc(sh[0].name)+'</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>'
+      +'<div class="metrow" style="border-top:none;margin-top:0;padding-top:0">'
+      +'<div class="metcell"><div class="metlab">Trips</div>'
+      +'<div class="metval">'+sh[0].shops
+      +(sh[0].quick?'<span class="lpc">+'+sh[0].quick+' quick</span>':'')+'</div></div>'
+      +'<div class="metcell"><div class="metlab">A basket</div>'
+      +'<div class="metval">'+(sh[0].basket===null?"—":mv(sh[0].basket,0))+'</div></div>'
+      +'<div class="metcell r"><div class="metlab">This month</div>'
+      +'<div class="metval">'+mv(sh[0].total,0)+'</div></div></div></div>';
+  }
+
+  /* ---- paying more than usual ---- */
+  var pw=priceWatch(5), tracked=priceTracked();
+  if(tracked){
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("chart")+'Against the usual price</span>'
+      +'<span class="dnote">'+tracked+' tracked</span></div>';
+    if(pw.rows.length){
+      pw.rows.forEach(function(x){
+        html+='<div class="lrow tap" data-hist="'+x.id+'"><div class="lhead">'
+          +'<span class="lname">'+esc(x.es)+'</span>'
+          +'<span class="lamt">'+(x.gap>0?"+":"−")
+          +m(Math.abs(x.gap))+'</span></div>'
+          +'<div class="lmeta">usually '+m(x.usual)+', last '+m(x.last)
+          +' · '+x.n+' purchases</div></div>';
+      });
+    } else {
+      html+='<div class="lmeta">Nothing is far enough off its usual price to '
+        +'be worth your attention.</div>';
+    }
+    var notes=[];
+    if(pw.skipped.weight) notes.push(pw.skipped.weight+' sold by weight \u2014 a trip '
+      +'records what the bag cost, not the rate per kilo');
+    if(pw.skipped.noisy) notes.push(pw.skipped.noisy+' whose past prices disagree too '
+      +'much to have a usual one \u2014 usually a second brand or size under one name');
+    if(notes.length) html+='<div class="lmeta dfoot">Left out: '+notes.join('; ')+'.</div>';
+    html+='</div>';
+  }
+
+  /* ---- by the kilo: the only valid comparison for weighed goods ---- */
+  var rh=rateHistory();
+  if(rh.length){
+    var movers=rh.filter(function(x){ return Math.abs(x.pct)>=5; }).slice(0,6);
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("leaf")+'By the kilo</span>'
+      +'<span class="dnote">all trips</span></div>';
+    if(movers.length){
+      movers.forEach(function(x){
+        html+='<div class="lrow"><div class="lhead">'
+          +'<span class="lname">'+esc(x.name)+'</span>'
+          +'<span class="pill '+(x.pct>0?"bad":"good")+'">'
+          +(x.pct>0?"+":"−")+Math.abs(x.pct).toFixed(0)+'%</span></div>'
+          +'<div class="lmeta">'+m(x.first)+' → '+m(x.last)+' a kilo'
+          +' · '+x.n+' readings</div>'
+          +rateBars(x)+'</div>';
+      });
+    } else {
+      html+='<div class="lmeta">Every weighed item is within 5% of where it started.</div>';
+    }
+    html+='<div class="lmeta dfoot">'+rh.length+' weighed items tracked. Rates come '
+      +'straight off the receipt, so a heavier bag never reads as a price rise.</div></div>';
+  }
+
+  /* ---- the recurring baseline ---- */
+  var st=staples(60);
+  if(st.length){
+    var stMonth=st.reduce(function(s,x){ return s+x.perMonth; },0);
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("cart")+'On almost every trip</span>'
+      +'<span class="dnote">all trips</span></div>';
+    st.slice(0,8).forEach(function(x){
+      html+='<div class="lrow"><div class="lhead">'
+        +'<span class="lname">'+(x.cat?icon(catIconName(x.cat)):'')+esc(x.name)+'</span>'
+        +'<span class="lamt">'+mv(x.perMonth,0)
+        +'<span class="lpc">'+Math.round(x.share)+'%</span></span></div>'
+        +'<div class="lmeta">'+x.trips+' of the last '
+        +S.trips.filter(function(t){ return (t.lines||[]).some(function(l){
+            return l.state==="bought" && !(l.lineMXN<0); }); }).length
+        +' trips · '+mv(x.total,0)+' in all</div></div>';
+    });
+    html+='<div class="lmeta dfoot">What the budget is really made of — '
+      +mv(stMonth,0)+' a month before anything else goes in the trolley.</div></div>';
+  }
+
+  /* "Due a restock" lived here and was removed in 4.9.0.
+     Its premise was that purchase cadence predicts running out. It does not:
+     the median gap between any two trips is 7 days and almost every item
+     came back as "every 8 days" — the card was measuring how often the shop
+     happens, relabelled as how fast things are consumed. With ~5 trips a
+     month at one store that is baked in, and no amount of better name
+     matching fixes it. What survives is the share of trips an item appears
+     on, which is a fact rather than a prediction, and that now seeds a trip
+     instead of nagging about one. */
+
+  /* ---- biggest lines ---- */
+  var ti=topItems(6, [cur.key]);
+  if(ti.length){
+    var tmax=ti[0].total||1;
+    html+='<div class="dcard"><div class="dhead">'
+      +'<span class="eyebrow">'+icon("list")+'Biggest lines</span>'
+      +'<span class="dnote">'+esc(monthLabel(cur.key))+'</span></div>';
+    ti.forEach(function(x){
+      html+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(x.name)+'</span>'
+        +'<span class="lamt">'+mv(x.total,0)+'</span></div>'
+        +'<div class="lmeta">'+esc(catName(x.cat))+' · '+x.times+' purchase'+(x.times===1?"":"s")
+        +' · '+mv(x.total/x.times)+' each time</div>'
+        +'<div class="catbar"><div style="width:'+(x.total/tmax*100).toFixed(1)+'%"></div></div></div>';
+    });
+    html+='</div>';
+  }
+
+  /* ---- rhythm ---- */
+  var cad=tripCadence();
+  if(cad){
+    /* spendView, not spendOf: these are formatted with mv(), which does
+       not convert, so a peso sum would reach the screen wearing a dollar
+       sign. $27,952 of groceries is the symptom to remember. */
+    var all=S.trips.reduce(function(s,t){return s+spendView(t)},0);
+    var shopsOnly=S.trips.filter(function(t){ return !isQuick(t); });
+    var shopSpend=shopsOnly.reduce(function(s,t){ return s+spendView(t); },0);
+    var nQuick=S.trips.length-shopsOnly.length;
+    html+='<div class="dcard"><div class="dhead"><span class="eyebrow">'+icon("cart")+'Rhythm</span></div>'
+      +'<div class="metrow" style="border-top:none;margin-top:0;padding-top:0">'
+      +'<div class="metcell"><div class="metlab">Between trips</div><div class="metval">'+Math.round(cad)+' days</div></div>'
+      +'<div class="metcell"><div class="metlab">Average basket</div><div class="metval">'
+      +(shopsOnly.length? mv(shopSpend/shopsOnly.length,0) : "—")+'</div></div>'
+      +'<div class="metcell"><div class="metlab">Logged in all</div><div class="metval">'+mv(all,0)+'</div></div>'
+      +'</div>'
+      +(nQuick?'<div class="lmeta dfoot">The basket average is from the '
+        +shopsOnly.length+' full shop'+(shopsOnly.length===1?"":"s")+' only — '
+        +nQuick+' quick trip'+(nQuick===1?"":"s")+' would drag it down without '
+        +'meaning anything.</div>':'')
+      +'</div>';
+  }
+  return html;
+}
+
+function monthLabel(k){
+  var M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var p=String(k).split("-");
+  return M[parseInt(p[1],10)-1]+" "+p[0];
+}
+
+/* vertical bars — magnitude from a zero baseline, budget as a reference */
+function monthBars(ms, selKey){
+  var show=ms.slice(-6);
+  /* byMonth already returns the figure in the currency on screen, summed at
+     each trip's own rate. Dividing by S.fx here converted it a second time —
+     August read 32 instead of 575, and every bar sat on the floor because it
+     was being compared against a full-size budget line. The sweep that moved
+     the rest of the dashboard off the flat rate looked for m() and missed
+     this, because the division is written out by hand. */
+  var vals=show.map(function(mo){ return mo.spend; });
+  var bud = budgetInView();
+  var max=Math.max(Math.max.apply(null, vals), bud)||1;
+  var W=320, H=158, mL=4, mR=34, mT=18, mB=32;
+  var pw=W-mL-mR, ph=H-mT-mB;
+  var n=show.length, slot=pw/n, bw=Math.min(28, slot-14);
+  var bars="", labs="";
+  show.forEach(function(mo,i){
+    var v=vals[i], h=(v/max)*ph;
+    var x=mL+slot*i+(slot-bw)/2, y=mT+ph-h;
+    var isCur=(selKey ? mo.key===selKey : i===show.length-1);
+    bars+='<rect class="mbar'+(isCur?" cur":"")+'" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)
+      +'" width="'+bw.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+'" rx="3"/>';
+    bars+='<text class="mval" x="'+(x+bw/2).toFixed(1)+'" y="'+(y-5).toFixed(1)+'">'
+      + (S.ccy==="usd" ? Math.round(v) : (Math.round(v/100)/10)+"k") +'</text>';
+    labs+='<text class="mlab" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-14)+'">'+esc(shortMonth(mo.key))+'</text>';
+    labs+='<text class="msub" x="'+(x+bw/2).toFixed(1)+'" y="'+(H-3)+'">'
+      +mo.trips+(mo.trips===1?" trip":" trips")+'</text>';
+  });
+  var by=mT+ph-(bud/max)*ph;
+  return '<svg class="mchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Spend by month against budget">'
+    +'<line class="cgrid" x1="'+mL+'" y1="'+(mT+ph)+'" x2="'+(W-mR)+'" y2="'+(mT+ph)+'"/>'
+    +'<line class="mbudget" x1="'+mL+'" y1="'+by.toFixed(1)+'" x2="'+(W-mR)+'" y2="'+by.toFixed(1)+'"/>'
+    +'<text class="mbtxt" x="'+(W-mR+4)+'" y="'+(by+3).toFixed(1)+'">budget</text>'
+    +bars+labs+'</svg>';
+}
+
+/* The budget bar, with a tick showing where the month has got to.
+   Borrowed from Copilot's ideal-pace line: the bar alone says how much
+   is gone, the tick says whether that is early or late. */
+function budgetBar(pct, prog){
+  var fill=Math.min(100,Math.max(0,pct));
+  var tick=(prog&&prog.partial) ? (prog.day/prog.days*100) : null;
+  var over=pct>=100, ahead=(tick!==null && pct>tick+4);
+  return '<div class="budgetbar">'
+    +'<div class="bbfill'+(over?" over":(ahead?" ahead":""))+'" style="width:'+fill+'%"></div>'
+    +(tick===null?'':'<div class="bbtick" style="left:'+tick.toFixed(1)+'%"></div>')
+    +'</div>'
+    +(tick===null?'':'<div class="bblegend"><span>'+pct+'% spent</span>'
+      +'<span>'+Math.round(tick)+'% elapsed</span></div>');
+}
+
+/* Where it goes — ranked horizontal bars, biggest first.
+   Not a donut: the guidance caps pie and donut at five or six segments and
+   there are ten categories here, and colouring each bar darker-where-bigger
+   would encode the bar's own length a second time. One series, one colour;
+   the category names carry identity, the bar lengths carry size. */
+/* One denominator, stated on the card.
+
+   This used to draw the bar against the largest category while printing a
+   percentage of the month beside it: Pantry filled the row end to end next
+   to the number "29%". Two scales in one line, neither labelled, and the
+   bar looked broken because nothing said it was measuring something else.
+
+   Both are now the share of the month's spend, and the column says so. The
+   cost is real and accepted: against the total, the small categories are
+   short and 6% is harder to tell from 9% than it was. Comparing categories
+   to each other was never this card's question — "Where it goes" is a
+   part-to-whole, the number is the answer, and the bar's job is to show
+   that answer rather than a different one. Rank order is unchanged, so the
+   largest is still obvious at a glance. */
+function catRanked(cats, scopeKey){
+  var tot=cats.reduce(function(s,c){return s+c.total},0);
+  if(!tot) return '<p class="lmeta">No priced lines in this period yet.</p>';
+  return '<div class="colhead"><span>% of spend</span></div>'
+  +cats.map(function(c,i){
+    var un=(c.cat==="other"), last=(i===cats.length-1);
+    return '<div class="lrow tap'+(un?" dim":"")+(last?" last":"")
+      +'" data-catdrill="'+c.cat+'" data-catmon="'+(scopeKey||"")+'">'
+      +'<div class="lhead"><span class="lname">'
+        +(un?"":icon(catIconName(c.cat)))+esc(c.name)+'</span>'
+      +'<span class="lamt">'+mv(c.total,0)
+        +'<span class="lpc">'+Math.round(c.total/tot*100)+'%</span></span></div>'
+      /* the track is the month; the fill is this category's share of it.
+         The floor keeps a 1% category visible as a mark rather than
+         nothing at all — it is a presence indicator, not a reading. */
+      +'<div class="catbar"><div style="width:'
+        +Math.max(c.total/tot*100,1.5).toFixed(1)+'%"></div></div></div>';
+  }).join("")
+  /* The total belongs in the table, in the same two columns the rows use,
+     rather than in a sentence underneath restating them. It also anchors
+     the scale: every bar above is a share of this figure, and this row is
+     the 100% they are shares of. */
+  +'<div class="sumrow"><div class="lhead">'
+    +'<span class="lname">Total<small>'+cats.length+' categories</small></span>'
+    +'<span class="lamt">'+mv(tot,0)+'<span class="lpc">100%</span></span>'
+  +'</div></div>';
+}
+function shortMonth(k){
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return M[parseInt(String(k).split("-")[1],10)-1];
+}
+
+/* horizontal bars — one series, ordered by size */
+/* catBars() lived here: a second ranked-bar renderer, called from nowhere
+   since the dashboard was rebuilt, and carrying the same mixed-denominator
+   bug this change fixes. Dead code with a live bug in it is a trap for
+   whoever revives it, so it is gone rather than fixed. */
+function catIconName(id){ var c=CATS.filter(function(x){return x.id===id})[0]; return c?c.ic:"box"; }
+
+/* A rate over time, as bars from a zero baseline. Two or three readings is
+   too few for a line — a line implies a trend between the points, and there
+   isn't one; the bars just say what each reading was. */
+function rateBars(x){
+  var h=x.hist.slice(-6);
+  /* labels follow the currency toggle — a peso figure beside a dollar one
+     is the mixing this dashboard is meant to have stopped doing */
+  var usd=(S.ccy==="usd");
+  /* A per-kilo rate is a price, not a spend, and this chart exists to show
+     the price moving. Converting each reading at its own trip's rate would
+     fold currency movement into the line and you could no longer tell a
+     dearer avocado from a weaker peso. One rate for all readings keeps the
+     shape honest — the same reason catalogue prices follow S.fx. */
+  var val=function(p){ return usd ? p.rate/S.fx : p.rate; };
+  var max=Math.max.apply(null, h.map(val))||1;
+  var W=300, H=52, bw=Math.min(30, (W-4)/h.length-8), gap=(W-4)/h.length;
+  var bars="";
+  h.forEach(function(p,i){
+    var v=val(p), hh=Math.max(v/max*(H-13), 3);
+    var bx=2+gap*i+(gap-bw)/2;
+    bars+='<rect class="rbar'+(i===h.length-1?" cur":"")+'" x="'+bx.toFixed(1)
+      +'" y="'+(H-hh).toFixed(1)+'" width="'+bw.toFixed(1)
+      +'" height="'+hh.toFixed(1)+'" rx="2"/>';
+    bars+='<text class="rlab" x="'+(bx+bw/2).toFixed(1)+'" y="'+(H-hh-4).toFixed(1)+'">'
+      +(usd ? v.toFixed(2) : Math.round(v))+'</text>';
+  });
+  return '<svg class="rchart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'
+    +esc(x.name)+' rate per kilo, '+h.length+' readings">'+bars+'</svg>';
+}
+
+/* ----- trip ----- */
+function viewTrip(){
+  var t=S.active;
+  if(!t){
+    return '<div class="empty">'+icon("cart","big")+'<h3>No trip open</h3>'
+      +'<p>Start a trip, pick the shop, then go through the catalogue and mark what you need.</p>'
+      +'<button class="big" id="startTrip">Start a trip</button></div>';
+  }
+  var byCat=itemsByCat(), html="";
+  var planning = t.mode==="plan";
+
+  itemCats().forEach(function(c){
+    var rows = byCat[c.id]||[];
+    if(!planning) rows = rows.filter(function(it){ return t.lines[it.id]; });
+    if(!rows.length) return;
+    /* sort the likely shop first while planning */
+    rows = rows.slice().sort(function(a,b){
+      var ah=(a.hint===t.shop)?0:1, bh=(b.hint===t.shop)?0:1;
+      return ah-bh || a.es.localeCompare(b.es);
+    });
+    var on = rows.filter(function(it){ return t.lines[it.id]; }).length;
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
+      +'<span class="secright"><span class="seccount">'+(planning? on+" / "+rows.length : rows.length)+'</span>'
+      +'<button class="plus" data-newitem="'+c.id+'" aria-label="Add an item">+</button></span></div>';
+    rows.forEach(function(it){ html+=tripRow(it, t.lines[it.id], planning, t.shop); });
+    html+='</section>';
+  });
+
+  if(!planning){
+    html+='<button class="addbtn" id="addMore">+ Add something from the catalogue</button>';
+  }
+  if(!html) html='<div class="empty"><p>Nothing marked yet.</p></div>';
+  return html;
+}
+
+function tripRow(it, L, planning, shop){
+  var state = L ? L.state : null;
+  var q = L && L.q!==undefined ? L.q : it.q;
+  var paid = L && L.paid!==null && L.paid!==undefined ? L.paid : null;
+  var shown = paid!==null ? paid : it.p;
+  var tot = lineTotal(it, L);
+  var cls = "row";
+  if(state==="bought") cls+=" bought";
+  if(state==="skip") cls+=" skipped";
+  if(planning && state) cls+=" on";
+
+  var ctrl;
+  if(planning){
+    ctrl = '<button class="box'+(state?" fill":"")+'" data-pick="'+it.id+'" aria-label="Need this"></button>';
+  } else if(state==="bought"){
+    ctrl = '<button class="box fill" data-got="'+it.id+'" aria-label="Bought"></button>';
+  } else if(state==="skip"){
+    ctrl = '<button class="box dash" data-got="'+it.id+'" aria-label="Skipped"></button>';
+  } else {
+    ctrl = '<button class="box" data-got="'+it.id+'" aria-label="Mark bought"></button>';
+  }
+
+  /* A weighed row must not print "Qty 6 × MX$74.87": that multiplication
+     is exactly the thing that is wrong, and showing the sum makes the
+     wrong number look derived. It gets the shelf rate instead, which is
+     the figure the till will actually use, and the count reads as the
+     instruction it is. */
+  var wt = byWeight(it);
+  var bits=[];
+  if(wt){
+    if(q>1) bits.push("get "+q);
+    if(it.ref) bits.push(it.ref);
+    if(paid===null) bits.push("last bag "+mx(shown));
+  } else {
+    if(q>1) bits.push("Qty "+q+" × "+mx(shown));
+    if(it.ref) bits.push("ref "+it.ref);
+  }
+  if(it.hint && it.hint!==shop) bits.push("usually "+shopName(it.hint).split(" ")[0]);
+  var meta=bits.join(" · ");
+
+  var chart = (it.hist && it.hist.length>1)
+    ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>' : '';
+
+  return '<div class="'+cls+'" data-id="'+it.id+'">'+ctrl
+    +'<div class="namewrap" data-open="'+it.id+'"><div class="nm">'+esc(it.es)
+    +(state==="skip"?'<span class="tag">skipped</span>':'')+'</div>'
+    +'<div class="en">'+esc(it.en)+'</div>'
+    +(meta?'<div class="meta">'+esc(meta)+'</div>':'')+'</div>'
+    + chart
+    /* "≈" is the whole claim this figure can honestly make: a weighed
+       item's estimate is last trip's bag, not a quote. Once a price is
+       typed at the till it is exact, and the mark goes. */
+    +'<button class="amt'+(paid!==null?" paid":"")+'" data-price="'+it.id+'">'
+    +'<span class="mx">'+((wt && paid===null && tot!==null)?"≈":"")+mx(tot)+'</span>'
+    +'<span class="us">'+usd(tot)+'</span></button></div>';
+}
+
+/* tiny inline price sparkline */
+function sparkSVG(hist){
+  var pts=hist.slice(-8).map(function(h){return h.p});
+  if(pts.length<2) return "";
+  var min=Math.min.apply(null,pts), max=Math.max.apply(null,pts), rng=(max-min)||1;
+  var w=30, h=16;
+  var d=pts.map(function(p,i){
+    var x=(i/(pts.length-1))*w, y=h-((p-min)/rng)*h;
+    return (i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+  }).join(" ");
+  var up = pts[pts.length-1] > pts[0];
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" aria-hidden="true">'
+    +'<path d="'+d+'" fill="none" stroke="'+(up?"#B3261E":"#1E7A55")+'" stroke-width="1.6" '
+    +'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+/* ----- catalogue ----- */
+function viewCatalogue(){
+  var byCat=itemsByCat(), html="";
+  itemCats().forEach(function(c){
+    var rows=byCat[c.id]||[];
+    if(!rows.length) return;
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
+      +'<span class="secright"><span class="seccount">'+rows.length+'</span>'
+      +'<button class="plus" data-newitem="'+c.id+'" aria-label="Add an item">+</button></span></div>';
+    rows.forEach(function(it){
+      var chart=(it.hist&&it.hist.length>1)
+        ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>':'';
+      html+='<div class="row" data-id="'+it.id+'">'
+        +'<div class="namewrap" data-open="'+it.id+'"><div class="nm">'+esc(it.es)+'</div>'
+        +'<div class="en">'+esc(it.en)+'</div>'
+        +'<div class="meta">'+(it.q>1?"Qty "+it.q+" · ":"")
+        +(it.hint?shopName(it.hint).split(" ")[0]:"any shop")
+        +(it.ref?" · ref "+esc(it.ref):"")+'</div></div>'
+        + chart
+        +'<button class="amt" data-open="'+it.id+'"><span class="mx">'+mx(it.p)+'</span>'
+        +'<span class="us">'+usd(it.p)+'</span></button></div>';
+    });
+    html+='</section>';
+  });
+  return html;
+}
+
+/* ----- history ----- */
+function viewHistory(){
+  if(!S.trips.length){
+    return '<div class="empty">'+icon("receipt","big")+'<h3>No trips yet</h3>'
+      +'<p>Close a trip and it is kept here with its receipt total.</p></div>';
+  }
+  var html="";
+  /* month roll-up */
+  var months={};
+  S.trips.forEach(function(t){
+    var m=(t.date||"").slice(0,7); if(!m) return;
+    if(!months[m]) months[m]={n:0, q:0, spend:0};
+    months[m].n++;
+    if(isQuick(t)) months[m].q++;
+    months[m].spend += (t.receiptTotal!==null&&t.receiptTotal!==undefined) ? t.receiptTotal : (t.listed||0);
+  });
+  var keys=Object.keys(months).sort().reverse();
+  if(keys.length){
+    html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'By month</span></div>';
+    keys.forEach(function(m){
+      html+='<div class="mrow"><span class="mname">'+esc(monthLabel(m))+'</span>'
+        /* same split as the dashboard: four runs that are one stock-up and
+           three bakery stops should not read as four shops */
+        +'<span class="mtrips">'
+        +(months[m].q
+           ? ((months[m].n-months[m].q)+' shop'+(months[m].n-months[m].q===1?"":"s")
+              +' · '+months[m].q+' quick')
+           : (months[m].n+' trip'+(months[m].n===1?"":"s")))+'</span>'
+        +'<span class="mspend mono">'+m2(months[m].spend)+'</span></div>';
+    });
+    html+='</section>';
+  }
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("receipt")+'Trips</span>'
+    +'<span class="seccount">'+S.trips.length+'</span></div>';
+  S.trips.slice().reverse().forEach(function(t){
+    var off = t.offList;
+    var nb = t.lines ? t.lines.filter(function(l){
+      return l.state==="bought" && !(l.lineMXN<0); }).length : 0;
+    var sv = t.lines ? t.lines.reduce(function(s,l){
+      return s + (l.state==="bought" && l.lineMXN<0 ? -l.lineMXN : 0); },0) : 0;
+    /* A trip with a receipt total and no lines is a receipt nobody itemised.
+       Saying "0 bought · off-list MX$2,946" claims every peso went on
+       something unplanned, which is not what happened — nothing was
+       recorded at all. Say that instead. */
+    var meta = isQuick(t)
+      ? ('Quick trip · '+esc(catName(t.cat||"mixed")))
+      : (nb ? (nb+' item'+(nb===1?"":"s")
+               +(sv?' · saved '+m2(sv,t):'')
+               +(t.legacy?' · imported':'')
+               +((off!==null&&off!==undefined&&off!==0)?' · off-list '+m2(off,t):''))
+            : 'Receipt total only — items not recorded');
+    html+='<div class="trow" data-trip="'+t.id+'">'
+      +'<div class="namewrap"><div class="nm">'+esc(t.shopName||shopName(t.shop))+'</div>'
+      +'<div class="en">'+esc((t.date||"").replace("T"," "))
+      +(t.note?' · '+esc(t.note):'')+'</div>'
+      +'<div class="meta'+((nb||isQuick(t))?'':' flag')+'">'+meta+'</div></div>'
+      +'<div class="amt"><span class="mx">'
+      +m2(t.receiptTotal!==null&&t.receiptTotal!==undefined?t.receiptTotal:t.listed, t)
+      +'</span></div></div>';
+  });
+  html+='</section>';
+  return html;
+}
+
+/* ----- settings ----- */
+function viewSettings(){
+  /* Three things ship together and can each go stale on their own. All three
+     are shown, with what the phone actually holds beside what this build
+     carries, so a gap is visible instead of silent. */
+  var seedTrips=S.trips.filter(function(t){ return String(t.id||"").indexOf("seed-")===0; }).length;
+  function vrow(label, build, stored, extra){
+    var ok = (stored===build);
+    return '<div class="srow"><span>'+label+(extra?' <small class="vsub">'+extra+'</small>':'')+'</span>'
+      +'<span class="mono vfp'+(ok?"":" stale")+'">'+build
+      +(ok?'':' <span class="vold">was '+(stored||"none")+'</span>')+'</span></div>';
+  }
+  var html='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("sliders")+'App</span></div>'
+    +'<div class="srow"><span>Version</span><span class="mono">'+APP_VERSION+'</span></div>'
+    + vrow('Catalogue', CAT_FP, S.catFP, 'rev '+CATALOGUE_VERSION+' · '+Object.keys(S.items).length+' items')
+    + vrow('Receipt data', SEED_FP, S.seedFP, 'rev '+SEED_VERSION+' · '+seedTrips+' seeded')
+    +'<div class="srow"><span>Trips logged</span><span class="mono">'+S.trips.length+'</span></div>'
+    +'<div class="pad"><p class="hint">'
+    +(S.catFP===CAT_FP && S.seedFP===SEED_FP
+      ? 'Catalogue and receipt data match this build. Those codes are '
+        +'fingerprints of the data files themselves — if either file changes, '
+        +'its code changes and the app rebuilds that data on the next load.'
+      : 'This phone is holding older data than the build. It will rebuild on '
+        +'the next load — pull down to reload if it has not.')
+    +'</p></div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Exchange rate</span></div>'
+    +'<div class="pad"><label class="lbl">MXN per USD</label>'
+    +'<input class="field mono" id="setFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +'<p class="hint">Used for the dollar figures on screen. Each trip also stores the rate it was closed at.</p>'
+    +'<button class="mbtn primary" id="saveFx">Save rate</button></div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("chart")+'Monthly budget</span></div>'
+    +'<div class="pad"><label class="lbl">Target · USD per month</label>'
+    +'<input class="field mono" id="setBudget" type="number" inputmode="decimal" step="10" value="'+S.budgetUSD+'">'
+    +'<p class="hint">Across every shop. At '+S.fx.toFixed(2)+' that is '+mx(S.budgetUSD*S.fx)+' a month — '
+    +'the peso figure moves with the rate, the dollar target does not.</p>'
+    +'<button class="mbtn primary" id="saveBudget">Save budget</button></div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("cart")+'Shops</span>'
+    +'<span class="seccount">'+S.shops.length+'</span></div>';
+  S.shops.forEach(function(sh){
+    html+='<div class="srow"><span>'+esc(sh.name)+'</span>'
+      +'<button class="xbtn" data-delshop="'+sh.id+'">Remove</button></div>';
+  });
+  html+='<div class="pad"><input class="field" id="newShop" type="text" placeholder="Add a shop — Costco, Walmart…">'
+    +'<button class="mbtn" id="addShop">Add shop</button></div></section>';
+
+  /* The sync state is shown rather than assumed. If a reconciliation has
+     not landed, the number here is the evidence — the same reasoning as the
+     fingerprint rows above. */
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("receipt")+'Reconciliation</span></div>'
+    +'<div class="srow"><span>Last sync applied</span><span class="mono">'
+    +(S.syncId ? '#'+S.syncId : 'none')+'</span></div>'
+    +(S.syncedAt?'<div class="srow"><span>When</span><span class="mono">'
+      +esc(String(S.syncedAt).slice(0,10))+'</span></div>':'')
+    +'<div class="pad"><p class="hint">After a shop, send the receipt and this '
+    +'trip\'s export. The corrected trip comes back here on its own — it '
+    +'replaces itself in place, so nothing is counted twice and there is '
+    +'nothing to delete by hand.</p>'
+    +'<button class="mbtn" id="syncNow">Check for a reconciliation</button>'
+    +'</div></section>';
+
+  html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon("box")+'Data</span></div><div class="pad">'
+    +'<button class="mbtn primary" id="expAll">Copy everything for Claude<small>Catalogue, prices and every trip</small></button>'
+    +'<button class="mbtn" id="dlAll">Download as a file</button>'
+    +'<button class="mbtn danger" id="wipe">Erase everything<small>Cannot be undone</small></button>'
+    +'</div></section>';
+  return html;
+}
+
+/* ----- bottom bar ----- */
+function renderBar(){
+  var bar=document.getElementById("bar");
+  if(screen!=="trip" || !S.active){ bar.innerHTML=""; bar.style.display="none"; fit(); return; }
+  bar.style.display="block";
+  var t=S.active, T=tripTotals();
+  if(t.mode==="plan"){
+    /* "On the list" lived here and is now the badge on the Trip tab, a few
+       pixels below. The estimate is what this bar is for. In shopping mode
+       the lines below stay, because "2 of 4 bought, 1 skipped" says more
+       than a single count can. */
+    bar.innerHTML='<div class="btot"><span class="blabel">Estimate</span><div class="bright">'
+      +'<div class="bbig mono">'+mx(T.listed)+'</div><div class="bsub mono">'+usd(T.listed)+'</div></div></div>'
+      +'<div class="brow"><button class="gobtn" id="goShop">Start shopping</button>'
+      +'<button class="ghost" id="cancelTrip">Cancel</button></div>';
+  } else {
+    bar.innerHTML='<div class="bline"><span class="blabel">Bought</span>'
+      +'<span class="bval mono">'+T.nb+' of '+(T.nb+T.nn)+'</span></div>'
+      +(T.ns?'<div class="bline"><span class="blabel">Skipped</span><span class="bval mono">'+T.ns+'</span></div>':'')
+      +(T.missing?'<div class="bline"><span class="blabel">Prices needed</span><span class="bval mono">'+T.missing+'</span></div>':'')
+      +'<div class="btot"><span class="blabel">In the basket</span><div class="bright">'
+      +'<div class="bbig mono">'+mx(T.bought)+'</div><div class="bsub mono">'+usd(T.bought)+'</div></div></div>'
+      +'<div class="brow"><button class="gobtn" id="closeTrip">Close trip</button>'
+      +'<button class="ghost" id="backPlan">Edit list</button></div>';
+  }
+  fit();
+}
+var TABS=[
+  {go:"dash", ic:"chart",   label:"Home"},
+  {go:"trip", ic:"cart",    label:"Trip"},
+  {go:"cat",  ic:"list",    label:"Catalogue"},
+  {go:"hist", ic:"receipt", label:"History"},
+  {go:"set",  ic:"sliders", label:"Settings"}
+];
+/* While planning, the badge counts what is on the list. While shopping, the
+   number that matters is what is still to get, so it counts down as you
+   tick things off and reads 0 when the trolley is done. */
+function cartCount(){
+  var t=S.active; if(!t) return null;
+  var n=0;
+  Object.keys(t.lines||{}).forEach(function(id){
+    var L=t.lines[id];
+    if(t.mode==="plan") n++;
+    else if(L.state!=="bought" && L.state!=="skipped") n++;
+  });
+  return n;
+}
+var _lastCart=null;
+function renderTabs(){
+  var c=cartCount();
+  document.getElementById("tabs").innerHTML = TABS.map(function(t){
+    var badge="";
+    if(t.go==="trip" && S.active){
+      badge = (c>0)
+        ? '<span class="cbadge">'+(c>99?"99+":c)+'</span>'
+        : '<span class="dot"></span>';   /* open but nothing on it yet */
+    }
+    return '<button data-go="'+t.go+'" class="'+(screen===t.go?"on":"")+'"'
+      +(screen===t.go?' aria-current="page"':'')+'>'
+      +icon(t.ic)+badge
+      +'<span class="tlab">'+t.label+'</span></button>';
+  }).join("");
+  /* one-shot pulse when the number moves — confirmation that the tap
+     landed. Nothing animates while it is merely sitting there. */
+  if(c!==null && _lastCart!==null && c!==_lastCart){
+    var el=document.querySelector("#tabs .cbadge");
+    if(el){
+      el.classList.remove("bump","drop");
+      void el.offsetWidth;                       /* restart the animation */
+      el.classList.add(c>_lastCart ? "bump" : "drop");
+    }
+  }
+  _lastCart=c;
+}
+/* Keep the page clear of both fixed bars: the trip bar rides on top of the
+   tab bar, so content has to clear the pair of them. */
+function fit(){
+  var tabs=document.getElementById("tabs");
+  var th=tabs?tabs.offsetHeight:0;
+  var bar=document.getElementById("bar");
+  var bh=(bar && bar.style.display!=="none") ? bar.offsetHeight : 0;
+  if(bar) bar.style.bottom = th+"px";
+  document.body.style.paddingBottom=(th+bh+28)+"px";
+  var hd=document.querySelector("header");
+  if(hd) document.documentElement.style.setProperty("--hdr", hd.offsetHeight+"px");
+}
+window.addEventListener("resize", fit);
+window.addEventListener("orientationchange", function(){ setTimeout(fit,250); });
+
+/* ---------------- sheets ---------------- */
+var lockedY = 0;
+function openSheet(html){
+  /* swap in a fresh node so listeners from the previous sheet cannot linger */
+  var old = document.getElementById("sheetBody");
+  var fresh = document.createElement("div");
+  fresh.id = "sheetBody";
+  fresh.innerHTML = html;
+  old.parentNode.replaceChild(fresh, old);
+
+  /* Lift the sheet's own title into the sticky bar. Doing it here rather
+     than at each call site is the point: every sheet already opens with an
+     h2, so every sheet gets a title that holds its place while the body
+     scrolls, and none of them can drift out of the pattern later. */
+  var bar=document.querySelector(".sheetbar");
+  var stale=bar.querySelectorAll("h2, .hint");
+  for(var i=0;i<stale.length;i++) bar.removeChild(stale[i]);
+  var h2=fresh.querySelector(":scope > h2");
+  if(h2){
+    bar.appendChild(h2);
+    /* and the line under it, which says WHICH month and how many — the part
+       you keep needing while you read the list. Only the first one: a sheet
+       may carry further hints further down, and those are prose that belongs
+       in the body. */
+    var sub=fresh.querySelector(":scope > .hint");
+    if(sub && sub===fresh.firstElementChild) bar.appendChild(sub);
+  }
+
+  var sh=document.getElementById("sheet");
+  if(!sh.classList.contains("open")){
+    lockedY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.top = (-lockedY)+"px";
+    document.body.classList.add("locked");
+  }
+  sh.scrollTop = 0;
+  sh.classList.add("open");
+  document.getElementById("scrim").classList.add("open");
+}
+function closeSheet(){
+  var sh=document.getElementById("sheet");
+  if(!sh.classList.contains("open")) return;
+  sh.classList.remove("open");
+  document.getElementById("scrim").classList.remove("open");
+  document.body.classList.remove("locked");
+  document.body.style.top = "";
+  window.scrollTo(0, lockedY);
+}
+/* every way out of a sheet */
+document.getElementById("scrim").addEventListener("click", closeSheet);
+document.getElementById("scrim").addEventListener("touchend", function(e){
+  e.preventDefault(); closeSheet();
+}, {passive:false});
+document.getElementById("xClose").addEventListener("click", closeSheet);
+document.getElementById("grabClose").addEventListener("click", closeSheet);
+document.addEventListener("keydown", function(e){
+  if(e.key==="Escape") closeSheet();
+});
+document.getElementById("tripSet").addEventListener("click", function(){
+  if(S.active) tripSettingsSheet();
+});
+/* Navigation is the tab bar now — exposed, not hidden behind a menu. */
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b=e.target.closest("[data-go]"); if(!b) return;
+  if(screen===b.dataset.go){ window.scrollTo({top:0, behavior:"smooth"}); return; }
+  screen=b.dataset.go; render(); window.scrollTo(0,0);
+});
+
+/* ---------------- interactions ---------------- */
+/* Permanent, on #sheet rather than #sheetBody — openSheet() replaces the
+   body node each time, so anything bound there would be dropped. */
+document.getElementById("sheet").addEventListener("click", function(e){
+  var g=e.target.closest("[data-go]");
+  if(g){ screen=g.dataset.go; closeSheet(); render(); lockedY=0; window.scrollTo(0,0); return; }
+  var dr=e.target.closest("[data-dropsession]");
+  if(dr){ dropSession(dr.dataset.dropsession); return; }
+  var j=e.target.closest("[data-mgo]");
+  if(j){
+    var all=byMonth();
+    dashMonth = (j.dataset.mgo===all[all.length-1].key) ? null : j.dataset.mgo;
+    closeSheet(); render(); lockedY=0; window.scrollTo(0,0); return;
+  }
+});
+
+document.getElementById("main").addEventListener("click", function(e){
+  var el;
+  if((el=e.target.closest("[data-ccy]"))){
+    S.ccy=el.dataset.ccy; save(); render(); return;
+  }
+  if((el=e.target.closest("#startTrip"))){
+    if(S.active){ screen="trip"; render(); window.scrollTo(0,0); return; }
+    newTripSheet(); return;
+  }
+  if((el=e.target.closest("[data-mstep]"))){
+    if(el.disabled) return;
+    var all=byMonth(), at=dashIndex(all)+parseInt(el.dataset.mstep,10);
+    if(at<0 || at>=all.length) return;              /* stop at the ends, never wrap */
+    dashMonth = (at===all.length-1) ? null : all[at].key;
+    render(); window.scrollTo(0,0); return;
+  }
+  if((el=e.target.closest("#mJump"))){ monthJumpSheet(); return; }
+  if((el=e.target.closest("#quickTrip"))){ quickTripSheet(); return; }
+  if((el=e.target.closest("[data-editquick]"))){
+    quickTripSheet(el.dataset.editquick); return; }
+  if((el=e.target.closest("#fixDupes"))){ fixDupesSheet(); return; }
+  if((el=e.target.closest("#addMore"))){ addMoreSheet(); return; }
+  if((el=e.target.closest("[data-hist]"))){ histDrawer(el.dataset.hist); return; }
+  if((el=e.target.closest("[data-price]"))){ priceSheet(el.dataset.price); return; }
+  if((el=e.target.closest("[data-pick]"))){ togglePick(el.dataset.pick); return; }
+  if((el=e.target.closest("[data-got]"))){ toggleGot(el.dataset.got); return; }
+  if((el=e.target.closest("[data-newitem]"))){
+    itemSheet(null, el.dataset.newitem, screen==="trip" && !!S.active); return;
+  }
+  if((el=e.target.closest("[data-catdrill]"))){
+    catSheet(el.dataset.catdrill, el.dataset.catmon||null); return; }
+  if((el=e.target.closest("[data-trip]"))){ tripSheet(el.dataset.trip); return; }
+  if((el=e.target.closest("[data-open]"))){
+    if(screen==="trip" && S.active) tripItemSheet(el.dataset.open);
+    else itemSheet(el.dataset.open, null);
+    return;
+  }
+  if((el=e.target.closest("#saveFx"))){
+    var v=parseFloat(document.getElementById("setFx").value);
+    if(isNaN(v)||v<=0){ toast("Enter a valid rate"); return; }
+    S.fx=v; save(); render(); toast("Rate saved"); return;
+  }
+  if((el=e.target.closest("#saveBudget"))){
+    var bv=parseFloat(document.getElementById("setBudget").value);
+    if(isNaN(bv)||bv<=0){ toast("Enter a valid budget"); return; }
+    S.budgetUSD=bv; save(); render(); toast("Budget saved"); return;
+  }
+  if((el=e.target.closest("#addShop"))){
+    var n=document.getElementById("newShop").value.trim();
+    if(!n){ toast("Give the shop a name"); return; }
+    S.shops.push({id:slug(n), name:n, active:true}); save(); render(); toast("Shop added"); return;
+  }
+  if((el=e.target.closest("[data-delshop]"))){
+    S.shops=S.shops.filter(function(s){return s.id!==el.dataset.delshop});
+    save(); render(); toast("Shop removed"); return;
+  }
+  if((el=e.target.closest("#syncNow"))){ syncCheck(true); return; }
+  if((el=e.target.closest("#expAll"))){ copyExport(); return; }
+  if((el=e.target.closest("#dlAll"))){ downloadExport(); return; }
+  if((el=e.target.closest("#wipe"))){ wipeSheet(); return; }
+});
+
+document.getElementById("bar").addEventListener("click", function(e){
+  if(e.target.closest("#goShop")){
+    var T=tripTotals();
+    if(T.nn+T.nb===0){ toast("Mark at least one item first"); return; }
+    S.active.mode="shop"; save(); render(); window.scrollTo({top:0}); return;
+  }
+  if(e.target.closest("#backPlan")){ S.active.mode="plan"; save(); render(); return; }
+  if(e.target.closest("#closeTrip")){ closeTripSheet(); return; }
+  if(e.target.closest("#cancelTrip")){
+    openSheet('<h2>Cancel this trip?</h2><p class="hint">Everything you marked is discarded. Nothing is logged.</p>'
+      +'<button class="mbtn danger mid" id="ccYes">Discard the trip</button>'
+      +'<button class="mbtn mid" id="ccNo">Keep it</button>');
+    document.getElementById("ccNo").onclick=closeSheet;
+    document.getElementById("ccYes").onclick=function(){
+      S.active=null; save(); closeSheet();
+      screen="dash"; render(); window.scrollTo(0,0); toast("Trip discarded");
+    };
+    return;
+  }
+});
+
+/* ----- trip actions ----- */
+function newTripSheet(){
+  var opts=S.shops.map(function(s){
+    return '<button class="mbtn" data-shop="'+s.id+'">'+esc(s.name)+'</button>';
+  }).join("");
+  var rec=recommended();
+  openSheet('<h2>Start a trip</h2><p class="hint">Pick the shop, then start from your '
+    +'regulars or from nothing.</p>'
+    +'<label class="lbl">Date</label>'
+    +'<input class="field mono" id="ntDate" type="date" value="'+todayISO()+'">'
+    +'<label class="lbl">Exchange rate · MXN per USD</label>'
+    +'<input class="field mono" id="ntFx" type="number" inputmode="decimal" step="0.01" value="'+S.fx.toFixed(2)+'">'
+    +(rec.length
+      ? '<label class="lbl">Start from</label>'
+        +'<div class="seg" id="ntSeed">'
+        +'<button data-seed="rec" class="on">Recommended items'
+        +'<small>'+rec.length+' you buy most trips</small></button>'
+        +'<button data-seed="none">Empty list<small>Mark everything yourself</small></button>'
+        +'</div>'
+      : '')
+    +'<label class="lbl">Shop</label>'+opts);
+  var seedMode = rec.length ? "rec" : "none";
+  document.getElementById("sheetBody").addEventListener("click", function h(e){
+    var sg=e.target.closest("[data-seed]");
+    if(sg){
+      seedMode=sg.dataset.seed;
+      [].forEach.call(document.querySelectorAll("#ntSeed button"), function(x){
+        x.classList.toggle("on", x===sg);
+      });
+      return;
+    }
+    var b=e.target.closest("[data-shop]"); if(!b) return;
+    var d=document.getElementById("ntDate").value||todayISO();
+    var fxv=parseFloat(document.getElementById("ntFx").value);
+    if(isNaN(fxv) || fxv<=0) fxv=S.fx;
+    var lines={};
+    if(seedMode==="rec"){
+      rec.forEach(function(id){
+        var it=S.items[id];
+        if(it && it.active!==false)
+          lines[id]={q:it.q||1, state:"need", paid:null};
+      });
+    }
+    /* the rate lives on the trip, not only on the app — two trips a month
+       apart were charged different rates and the history should say so */
+    S.active={id:"trip-"+Date.now(), shop:b.dataset.shop, shopName:shopName(b.dataset.shop),
+      date:d, mode:"plan", fx:fxv, budgetUSD:null, note:"", lines:lines};
+    save(); closeSheet(); screen="trip"; render(); window.scrollTo({top:0});
+    var n=Object.keys(lines).length;
+    toast(n ? n+" regulars on the list — untick what you have"
+            : "Trip open — mark what you need");
+  });
+}
+
+function togglePick(id){
+  var t=S.active; if(!t) return;
+  if(t.lines[id]) delete t.lines[id];
+  else t.lines[id]={state:"need", q:S.items[id].q, paid:null};
+  save(); render();
+}
+function toggleGot(id){
+  var t=S.active; if(!t) return;
+  var L=t.lines[id];
+  if(!L){ t.lines[id]={state:"bought", q:S.items[id].q, paid:null}; }
+  else if(L.state==="bought"){ L.state="need"; }
+  else { L.state="bought"; }
+  save(); render();
+}
+function tripItemSheet(id){
+  var t=S.active, it=S.items[id];
+  if(!t || !it) return itemSheet(id,null);
+  var L=t.lines[id];
+  var shopping = t.mode==="shop";
+  if(!L){
+    /* not on this trip yet — planning view offers to add it */
+    openSheet('<h2>'+esc(it.es)+'</h2><p class="hint">'+esc(it.en)+' · not on this trip</p>'
+      +'<button class="mbtn primary" id="tiAdd">Add to this trip</button>'
+      +'<button class="mbtn mid" id="tiCancel">Cancel</button>');
+    document.getElementById("tiCancel").onclick=closeSheet;
+    document.getElementById("tiAdd").onclick=function(){
+      t.lines[id]={state:"need", q:it.q, paid:null};
+      save(); closeSheet(); render();
+    };
+    return;
+  }
+  openSheet('<h2>'+esc(it.es)+'</h2>'
+    +'<p class="hint">'+esc(it.en)+' · this trip only. The catalogue is not touched.</p>'
+    +'<label class="lbl">Quantity for this trip</label>'
+    +'<input class="field mono" id="tiQ" type="number" inputmode="decimal" step="1" min="0" value="'+L.q+'">'
+    +'<button class="mbtn primary" id="tiSave">Save</button>'
+    + (shopping
+        ? '<button class="mbtn mid" id="tiSkip">'
+          +(L.state==="skip"?"Put back on the list":"Skip this trip")
+          +'<small>'+(L.state==="skip"?"It is set to be skipped":"Planned, but not buying it today")+'</small></button>'
+        : '')
+    +'<button class="mbtn mid" id="tiOff">Take off this trip<small>Stays in the catalogue</small></button>'
+    +'<button class="mbtn mid" id="tiCancel">Cancel</button>');
+  document.getElementById("tiCancel").onclick=closeSheet;
+  document.getElementById("tiSave").onclick=function(){
+    var v=parseFloat(document.getElementById("tiQ").value);
+    L.q=(isNaN(v)||v<0)?1:v;
+    save(); closeSheet(); render();
+  };
+  document.getElementById("tiOff").onclick=function(){
+    delete t.lines[id]; save(); closeSheet(); render(); toast("Off this trip");
+  };
+  if(shopping){
+    document.getElementById("tiSkip").onclick=function(){
+      L.state = L.state==="skip" ? "need" : "skip";
+      save(); closeSheet(); render();
+    };
+  }
+}
+/* Logging a quick trip. Not a plan-then-shop flow — it already happened, so
+   this saves straight to history. The category is optional and is the thing
+   that keeps the amount from vanishing out of "Where it goes". */
+function quickTripSheet(editId){
+  var ex = editId ? S.trips.filter(function(x){ return x.id===editId; })[0] : null;
+  var shops=S.shops.map(function(sh){
+    return '<option value="'+sh.id+'"'
+      +((ex && ex.shop===sh.id)?' selected':'')+'>'+esc(sh.name)+'</option>';
+  }).join("");
+  /* Mixed unless you say otherwise, so a quick trip is never left out of
+     the breakdown. The whole list here — Mixed included — because this is
+     the one place it belongs. */
+  var pick=(ex && ex.cat) || "mixed";
+  var cats=CATS.map(function(c){
+    return '<option value="'+c.id+'"'+((c.id===pick)?' selected':'')+'>'
+      +esc(c.name)+'</option>';
+  }).join("");
+  openSheet('<h2>'+icon("cart")+(ex?'Edit quick trip':'Log a quick trip')+'</h2>'
+    +'<p class="hint">A run with no itemised receipt — the total is all you '
+    +'need. It counts towards the month like any other spend.</p>'
+    +'<label class="lbl">Shop</label>'
+    +'<select class="field" id="qkShop">'+shops+'</select>'
+    +'<label class="lbl">Date</label>'
+    +'<input class="field mono" id="qkDate" type="date" value="'
+    +esc(ex?String(ex.date||"").slice(0,10):todayISO())+'">'
+    +'<div class="two">'
+      +'<div><label class="lbl">Total · MXN</label>'
+      +'<input class="field mono" id="qkTot" type="number" inputmode="decimal" '
+      +'step="0.01" placeholder="0.00" value="'+(ex?ex.receiptTotal:"")+'"></div>'
+      +'<div><label class="lbl">Rate · MXN per USD</label>'
+      +'<input class="field mono" id="qkFx" type="number" inputmode="decimal" '
+      +'step="0.01" value="'+((ex&&ex.fx)||S.fx).toFixed(2)+'"></div>'
+    +'</div>'
+    +'<label class="lbl">What was it</label>'
+    +'<select class="field" id="qkCat">'+cats+'</select>'
+    +'<p class="hint" style="margin-top:-6px">Leave it on <b>Mixed</b> if the run '
+    +'was a bit of everything — it is a category in its own right and shows up in '
+    +'<b>Where it goes</b> like any other. Pick a real one when the whole run was '
+    +'that thing. A pharmacy run is Personal Care — the shop is <i>where</i>, '
+    +'this is <i>what</i>.</p>'
+    +'<label class="lbl">Note · optional</label>'
+    +'<input class="field" id="qkNote" type="text" placeholder="Baguettes, fruit…" '
+    +'value="'+esc((ex&&ex.note)||"")+'">'
+    +'<button class="mbtn primary" id="qkSave">'+(ex?'Save changes':'Log it')+'</button>'
+    +'<button class="mbtn mid" id="qkCancel">Cancel</button>'
+    +(ex?'<button class="mbtn mid" id="qkCopy">Copy this trip for Claude</button>':'')
+    +(ex?'<button class="mbtn danger mid" id="qkDel">Delete this trip</button>':''));
+  document.getElementById("qkCancel").onclick=closeSheet;
+  var cp=document.getElementById("qkCopy");
+  if(cp) cp.onclick=function(){ copyText(JSON.stringify(tripPayload(ex),null,2)); };
+  var del=document.getElementById("qkDel");
+  if(del) del.onclick=function(){
+    S.trips=S.trips.filter(function(x){ return x.id!==editId; });
+    save(); closeSheet(); render(); toast("Quick trip deleted");
+  };
+  document.getElementById("qkSave").onclick=function(){
+    var tot=parseFloat(document.getElementById("qkTot").value);
+    if(isNaN(tot) || tot<=0){ toast("Enter the total"); return; }
+    var fx=parseFloat(document.getElementById("qkFx").value);
+    if(isNaN(fx) || fx<=0){ toast("Enter a valid rate"); return; }
+    var sh=document.getElementById("qkShop").value;
+    var trip={
+      id: editId || ("quick-"+Date.now()),
+      kind:"quick", shop:sh, shopName:shopName(sh),
+      date: document.getElementById("qkDate").value||todayISO(),
+      fx:fx,
+      cat: document.getElementById("qkCat").value||"mixed",
+      note: document.getElementById("qkNote").value||"",
+      lines:[],
+      receiptTotal:Math.round(tot*100)/100,
+      listed:0,
+      offList:null,          /* nothing was on a list, so nothing is off it */
+      bought:0, skipped:0, planned:0,
+      totalUSD:Math.round(tot/fx*100)/100
+    };
+    if(editId) S.trips=S.trips.map(function(x){ return x.id===editId ? trip : x; });
+    else S.trips.push(trip);
+    S.trips.sort(function(x,y){ return (x.date||"").localeCompare(y.date||""); });
+    save(); closeSheet(); render();
+    toast(editId ? "Quick trip updated" : "Logged "+m2(trip.receiptTotal,trip));
+  };
+}
+
+/* Settings that belong to THIS trip — the shop it is at, the day it happened,
+   the rate the card was charged at, a budget just for this run. None of it
+   touches the master catalogue or the app's own defaults. */
+function tripFx(){ var t=S.active; return (t && t.fx>0) ? t.fx : S.fx; }
+function tripSettingsSheet(){
+  var t=S.active; if(!t) return;
+  var opts=S.shops.map(function(s){
+    return '<option value="'+s.id+'"'+(s.id===t.shop?' selected':'')+'>'+esc(s.name)+'</option>';
+  }).join("");
+  openSheet('<h2>This trip</h2>'
+    +'<p class="hint">Only this trip. The catalogue and the app defaults are left alone.</p>'
+    +'<label class="lbl">Shop</label>'
+    +'<select class="field" id="tsShop">'+opts+'</select>'
+    +'<label class="lbl">Date</label>'
+    +'<input class="field mono" id="tsDate" type="date" value="'+esc((t.date||"").slice(0,10))+'">'
+    +'<div class="two">'
+      +'<div><label class="lbl">Rate · MXN per USD</label>'
+      +'<input class="field mono" id="tsFx" type="number" inputmode="decimal" step="0.01" '
+      +'value="'+tripFx().toFixed(2)+'"></div>'
+      +'<div><label class="lbl">Budget · USD</label>'
+      +'<input class="field mono" id="tsBud" type="number" inputmode="decimal" step="1" '
+      +'placeholder="'+S.budgetUSD+'" value="'+(t.budgetUSD||"")+'"></div>'
+    +'</div>'
+    +'<p class="hint" style="margin-top:-6px">Leave the budget blank to use the monthly one '
+    +'('+'$'+S.budgetUSD+' a month). The rate here is what this trip is converted at — '
+    +'the app default stays '+S.fx.toFixed(2)+'.</p>'
+    +'<label class="lbl">Note</label>'
+    +'<input class="field" id="tsNote" type="text" placeholder="Party run, stock-up…" '
+    +'value="'+esc(t.note||"")+'">'
+    +'<button class="mbtn primary" id="tsSave">Save</button>'
+    +'<button class="mbtn mid" id="tsCancel">Cancel</button>'
+    /* reachable from either mode — the action bar only offers this while
+       planning, and a trip can need abandoning mid-aisle too */
+    +'<button class="mbtn danger mid" id="tsDrop">Discard this trip'
+    +'<small>Nothing is logged</small></button>');
+  document.getElementById("tsCancel").onclick=closeSheet;
+  document.getElementById("tsDrop").onclick=function(){
+    openSheet('<h2>Discard this trip?</h2>'
+      +'<p class="hint">Everything marked is lost. Nothing is logged.</p>'
+      +'<button class="mbtn danger mid" id="ccYes">Discard the trip</button>'
+      +'<button class="mbtn mid" id="ccNo">Keep it</button>');
+    document.getElementById("ccNo").onclick=closeSheet;
+    document.getElementById("ccYes").onclick=function(){
+      S.active=null; save(); closeSheet();
+      screen="dash"; render(); window.scrollTo(0,0); toast("Trip discarded");
+    };
+  };
+  document.getElementById("tsSave").onclick=function(){
+    var fxv=parseFloat(document.getElementById("tsFx").value);
+    if(isNaN(fxv)||fxv<=0){ toast("Enter a valid rate"); return; }
+    var bud=parseFloat(document.getElementById("tsBud").value);
+    var sh=document.getElementById("tsShop").value;
+    t.shop=sh; t.shopName=shopName(sh);
+    t.date=document.getElementById("tsDate").value||t.date;
+    t.fx=fxv;
+    t.budgetUSD=(isNaN(bud)||bud<=0)?null:bud;
+    t.note=document.getElementById("tsNote").value||"";
+    save(); closeSheet(); render(); toast("Trip updated");
+  };
+}
+/* Resolving a double-counted day. Nothing is removed without a tap, and
+   the receipt is never the thing removed — it is the printed total. */
+function fixDupesSheet(){
+  var dup=sameDayPairs();
+  if(!dup.length){ toast("Nothing double counted"); return; }
+  var unp=unpricedByTrip();
+  var h='<h2>Days counted twice</h2>'
+    +'<p class="hint">Each of these has a transcribed receipt and a record built '
+    +'in the app for the same shop on the same day. Removing the app record '
+    +'leaves the receipt, which ties to the printed total.</p>';
+  dup.forEach(function(d){
+    if(!d.sessions.length){
+      h+='<div class="lrow"><div class="lhead"><span class="lname">'+esc(d.date)+'</span></div>'
+        +'<div class="lmeta">Two records, neither transcribed from a receipt — '
+        +'open Trips and compare them by hand.</div></div>';
+      return;
+    }
+    var drop=d.sessions.reduce(function(s,t){ return s+spendView(t); },0);
+    h+='<div class="lrow"><div class="lhead">'
+      +'<span class="lname">'+esc(d.date)+'</span>'
+      +'<span class="lamt">−'+mv(drop,0)+'</span></div>'
+      +'<div class="lmeta">keep the receipt '+(d.receipt?m2(spendOf(d.receipt),d.receipt):'—')
+      +', drop '+d.sessions.length+' app record'+(d.sessions.length===1?'':'s')
+      +' totalling '+mv(drop,0)
+      +(d.ov?' · '+d.ov.hit+' of '+d.ov.of+' lines matched':'')+'</div>';
+    d.sessions.forEach(function(t){
+      h+='<button class="mbtn mid" data-dropsession="'+esc(t.id)+'">'
+        +'Drop '+m2(spendOf(t),t)+' · '+esc(String(t.date||"").replace("T"," "))
+        +(unp[t.id]?'<small>'+unp[t.id]+' unpriced lines</small>':'')+'</button>';
+    });
+    h+='</div>';
+  });
+  var allIds=[];
+  dup.forEach(function(d){ d.sessions.forEach(function(t){ allIds.push(t.id); }); });
+  if(allIds.length>1){
+    h+='<button class="mbtn primary" id="dropAllSessions">Drop all '+allIds.length
+      +' app records<small>Keeps every receipt and every trip with no receipt</small></button>';
+  }
+  h+='<button class="mbtn mid" id="dupClose">Leave it as it is</button>';
+  openSheet(h);
+  document.getElementById("dupClose").onclick=closeSheet;
+  var allBtn=document.getElementById("dropAllSessions");
+  if(allBtn) allBtn.onclick=function(){
+    var ids={}; allIds.forEach(function(id){ ids[id]=1; });
+    S.trips=S.trips.filter(function(t){ return !ids[t.id]; });
+    save(); closeSheet(); render();
+    toast(allIds.length+" records removed");
+  };
+}
+function dropSession(id){
+  var t=S.trips.filter(function(x){ return x.id===id; })[0];
+  if(!t) return;
+  S.trips=S.trips.filter(function(x){ return x.id!==id; });
+  save(); closeSheet(); render();
+  toast("Removed "+String(t.date||"").slice(0,10));
+}
+function qtySheet(id){
+  var L=S.active.lines[id], it=S.items[id];
+  openSheet('<h2>Quantity</h2><p class="hint">'+esc(it.es)
+    +(byWeight(it) ? ' — sold by weight ('+esc(it.ref)+'), so this is a note'
+        + ' to yourself about how much to get. It does not multiply the estimate.' : '')
+    +'</p>'
+    +'<input class="field mono" id="qIn" type="number" inputmode="decimal" step="1" min="0" value="'+L.q+'">'
+    +'<button class="mbtn primary" id="qSave">Save</button>');
+  document.getElementById("qSave").onclick=function(){
+    var v=parseFloat(document.getElementById("qIn").value);
+    L.q=(isNaN(v)||v<0)?1:v; save(); closeSheet(); render();
+  };
+}
+
+function addMoreSheet(){
+  var t=S.active;
+  var pool=Object.keys(S.items).map(function(id){return S.items[id]})
+    .filter(function(it){ return it.active && !t.lines[it.id]; })
+    .sort(function(a,b){ return a.es.localeCompare(b.es); });
+  openSheet('<h2>Add to this trip</h2>'
+    +'<input class="field" id="addSearch" type="text" placeholder="Search the catalogue">'
+    +'<div id="addList">'+pool.map(function(it){
+      return '<button class="mbtn" data-add="'+it.id+'">'+esc(it.es)+'<small>'+esc(it.en)+' · '+mx(it.p)+'</small></button>';
+    }).join("")+'</div>'
+    +'<button class="mbtn mid" id="addNew">Something not in the catalogue</button>');
+  var inp=document.getElementById("addSearch");
+  inp.addEventListener("input", function(){
+    var q=inp.value.toLowerCase();
+    Array.prototype.forEach.call(document.querySelectorAll("#addList [data-add]"), function(b){
+      b.style.display = b.textContent.toLowerCase().indexOf(q)>=0 ? "" : "none";
+    });
+  });
+  document.getElementById("addNew").onclick=function(){ itemSheet(null, "pantry", true); };
+  document.getElementById("addList").addEventListener("click", function(e){
+    var b=e.target.closest("[data-add]"); if(!b) return;
+    t.lines[b.dataset.add]={state:"bought", q:S.items[b.dataset.add].q, paid:null};
+    save(); closeSheet(); render(); toast("Added to the trip");
+  });
+}
+
+function priceSheet(id){
+  var it=S.items[id], t=S.active, L=t?t.lines[id]:null;
+  var cur = (L && L.paid!==null && L.paid!==undefined) ? L.paid : it.p;
+  var q = L ? L.q : it.q;
+  /* The same unit mismatch, on the way in. A weighed line on the receipt
+     prints one figure — what the bag cost — so asking for a "price each"
+     and multiplying it by the count would re-create the defect at the
+     point of entry, from a number copied correctly off the receipt. */
+  var wt = byWeight(it);
+  openSheet('<h2>'+(wt?"What the bag cost":"Price for one")+'</h2>'
+    +'<p class="hint">'+esc(it.es)+' — '
+    +(wt ? 'sold by weight, so the receipt prints one figure for the whole bag. Enter that.'
+         : 'what it cost today.')
+    +' The reference price stays as it is unless you change it in the catalogue.</p>'
+    +'<label class="lbl">'+(wt?"Line total":"Price each")+' · MXN</label>'
+    +'<input class="field mono" id="pIn" type="number" inputmode="decimal" step="0.01" value="'+(cur===null?"":cur)+'">'
+    +'<p class="hint mono" id="pCalc"></p>'
+    +'<button class="mbtn primary" id="pSave">Save</button>'
+    +(it.ref?'<p class="hint">Shelf reference: '+esc(it.ref)+'</p>':''));
+  var inp=document.getElementById("pIn"), out=document.getElementById("pCalc");
+  function sync(){
+    var v=parseFloat(inp.value);
+    out.textContent = isNaN(v) ? ""
+      : (wt ? "≈ "+usd(v)
+            : (q>1 ? q+" × "+mx(v)+" = "+mx(v*q)+"  ·  "+usd(v*q) : "≈ "+usd(v)));
+  }
+  inp.addEventListener("input", sync); sync();
+  setTimeout(function(){ inp.focus(); inp.select(); }, 120);
+  document.getElementById("pSave").onclick=function(){
+    var v=parseFloat(inp.value);
+    if(L){ L.paid=isNaN(v)?null:v; if(L.state==="need") L.state="bought"; }
+    else { it.p=isNaN(v)?it.p:v; }
+    save(); closeSheet(); render(); toast("Price saved");
+  };
+}
+
+/* ----- price history drawer ----- */
+function histDrawer(id){
+  var it=S.items[id], h=(it.hist||[]).slice();
+  if(h.length<2){ toast("Not enough price points yet"); return; }
+  var ps=h.map(function(x){return x.p});
+  var min=Math.min.apply(null,ps), max=Math.max.apply(null,ps);
+  var sorted=ps.slice().sort(function(a,b){return a-b});
+  var med = sorted.length%2 ? sorted[(sorted.length-1)/2]
+          : (sorted[sorted.length/2-1]+sorted[sorted.length/2])/2;
+  var first=ps[0], last=ps[ps.length-1];
+  var pct = first ? ((last-first)/first*100) : 0;
+
+  openSheet('<h2>'+esc(it.es)+'</h2><p class="hint">'+esc(it.en)+'</p>'
+    + bigChart(h)
+    +'<div class="stats">'
+      +'<div><span class="slab">Low</span><span class="sval mono">'+mx(min)+'</span></div>'
+      +'<div><span class="slab">Median</span><span class="sval mono">'+mx(med)+'</span></div>'
+      +'<div><span class="slab">High</span><span class="sval mono">'+mx(max)+'</span></div>'
+      +'<div><span class="slab">Change</span><span class="sval mono '+(pct>0?"up":(pct<0?"down":""))+'">'
+      +(pct>0?"+":"")+pct.toFixed(0)+'%</span></div>'
+    +'</div>'
+    +'<div class="hlist">'+h.slice().reverse().map(function(x){
+      return '<div class="hrow"><span class="hd mono">'+esc(x.d)+'</span>'
+        +'<span class="hs">'+esc(shopName(x.shop||"chedraui").split(" ")[0])+'</span>'
+        +'<button class="hp mono" data-setref="'+id+'|'+x.p+'">'+mx(x.p)+'</button></div>';
+    }).join("")+'</div>'
+    + (it.ref ? '<p class="hint"><strong>These are line totals, not unit prices.</strong> '
+        + esc(it.es) + ' is sold by weight ('+esc(it.ref)+'), so the figures move with how much you bought as well as the price.</p>' : '')
+    +'<p class="hint">Reference price is '+mx(it.p)+'. Tap any figure above to make it the reference.</p>');
+  document.getElementById("sheetBody").addEventListener("click", function(e){
+    var pt=e.target.closest("[data-pt]");
+    if(pt){
+      var x=h[parseInt(pt.dataset.pt,10)];
+      document.getElementById("cNote").textContent =
+        shortDate(x.d)+" · "+mx(x.p)+" · "+shopName(x.shop||"chedraui").split(" ")[0];
+      Array.prototype.forEach.call(document.querySelectorAll(".cdot"),function(c,i){
+        c.classList.toggle("sel", i===parseInt(pt.dataset.pt,10));
+      });
+      return;
+    }
+    var b=e.target.closest("[data-setref]"); if(!b) return;
+    var parts=b.dataset.setref.split("|");
+    S.items[parts[0]].p=parseFloat(parts[1]);
+    save(); closeSheet(); render(); toast("Reference price updated");
+  });
+}
+
+function niceAxis(lo, hi){
+  if(hi===lo){ var b=Math.abs(hi)||1; lo=hi-b*0.1; hi=hi+b*0.1; }
+  var pad=(hi-lo)*0.15; lo-=pad; hi+=pad;
+  if(lo<0 && (hi-lo)>hi*1.5) lo=0;
+  var raw=(hi-lo)/3, mag=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)), n=raw/mag;
+  var step=(n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*mag;
+  var alo=Math.floor(lo/step)*step, ahi=Math.ceil(hi/step)*step, ticks=[];
+  for(var v=alo; v<=ahi+step*0.001; v+=step) ticks.push(Math.round(v*100)/100);
+  return {lo:alo, hi:ahi, ticks:ticks};
+}
+function shortDate(iso){
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var p=String(iso).slice(0,10).split("-");
+  if(p.length<3) return iso;
+  return parseInt(p[2],10)+" "+M[parseInt(p[1],10)-1];
+}
+function bigChart(h){
+  /* one series, change over time: line + dots, no area fill.
+     The baseline is not zero, so a fill would imply magnitude it does not have. */
+  var W=320, H=172, mL=48, mR=10, mT=14, mB=30;
+  var pw=W-mL-mR, ph=H-mT-mB;
+  var ps=h.map(function(x){return x.p});
+  var ax=niceAxis(Math.min.apply(null,ps), Math.max.apply(null,ps));
+  var X=function(i){ return mL + (h.length<2?pw/2:(i/(h.length-1))*pw); };
+  var Y=function(v){ return mT + (1-(v-ax.lo)/(ax.hi-ax.lo))*ph; };
+
+  var grid="", ylab="";
+  ax.ticks.forEach(function(t){
+    var y=Y(t).toFixed(1);
+    grid+='<line class="cgrid" x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'"/>';
+    ylab+='<text class="cytick" x="'+(mL-8)+'" y="'+y+'" dy="3.5">'+Math.round(t)+'</text>';
+  });
+
+  var pts=h.map(function(x,i){ return {x:X(i), y:Y(x.p), p:x.p, d:x.d}; });
+  var line=pts.map(function(p,i){ return (i?"L":"M")+p.x.toFixed(1)+" "+p.y.toFixed(1); }).join(" ");
+
+  /* label the ends only; the full table sits below the chart */
+  var xlab="";
+  var show = h.length<=4 ? pts.map(function(_,i){return i}) : [0, pts.length-1];
+  show.forEach(function(i){
+    var anc = i===0 ? "start" : (i===pts.length-1 ? "end" : "middle");
+    var x = i===0 ? mL : (i===pts.length-1 ? W-mR : pts[i].x);
+    xlab+='<text class="cxtick" x="'+x+'" y="'+(H-10)+'" text-anchor="'+anc+'">'+esc(shortDate(pts[i].d))+'</text>';
+  });
+
+  var dots=pts.map(function(p,i){
+    return '<circle class="cdot" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4"/>'
+         + '<circle class="chit" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="15" data-pt="'+i+'"/>';
+  }).join("");
+
+  return '<div class="chartwrap">'
+    +'<svg class="bigchart" viewBox="0 0 '+W+' '+H+'" role="img" '
+    +'aria-label="Price history, '+h.length+' points from '+esc(shortDate(h[0].d))+' to '+esc(shortDate(h[h.length-1].d))+'">'
+    +'<g class="caxis">'+grid
+    +'<line class="caxisline" x1="'+mL+'" y1="'+mT+'" x2="'+mL+'" y2="'+(mT+ph)+'"/></g>'
+    +'<g class="cylabs">'+ylab+'</g>'
+    +'<path class="cline" d="'+line+'"/>'
+    +'<g class="cdots">'+dots+'</g>'
+    +'<g class="cxlabs">'+xlab+'</g></svg>'
+    +'<div class="cnote" id="cNote">MXN · tap a point</div></div>';
+}
+
+/* ----- catalogue item editing ----- */
+function itemSheet(id, catId, addToTrip){
+  var isNew=!id, it=id?S.items[id]:null;
+  var cats=itemCats().map(function(c){
+    var sel=(it? it.cat===c.id : c.id===catId);
+    return '<option value="'+c.id+'"'+(sel?' selected':'')+'>'+esc(c.name)+'</option>';
+  }).join("");
+  var shops='<option value="">Any shop</option>'+S.shops.map(function(s){
+    return '<option value="'+s.id+'"'+((it&&it.hint===s.id)?' selected':'')+'>'+esc(s.name)+'</option>';
+  }).join("");
+  openSheet('<h2>'+(isNew?"Add an item":"Edit item")+'</h2>'
+    +'<p class="hint">'+(isNew?"It joins the catalogue and is available on every future trip."
+      :"Changes apply from now on. Trips already closed keep what they recorded.")+'</p>'
+    +'<label class="lbl">Name in Spanish</label>'
+    +'<input class="field" id="fEs" type="text" value="'+esc(it?it.es:"")+'">'
+    +'<label class="lbl">Name in English</label>'
+    +'<input class="field" id="fEn" type="text" value="'+esc(it?it.en:"")+'">'
+    +'<div class="two"><div><label class="lbl">Usual quantity</label>'
+    +'<input class="field mono" id="fQ" type="number" inputmode="decimal" step="1" min="0" value="'+(it?it.q:1)+'"></div>'
+    +'<div><label class="lbl">Reference price · MXN</label>'
+    +'<input class="field mono" id="fP" type="number" inputmode="decimal" step="0.01" value="'+(it&&it.p!==null?it.p:"")+'"></div></div>'
+    +'<label class="lbl">Category</label><select class="field" id="fC">'+cats+'</select>'
+    +'<label class="lbl">Usually bought at</label><select class="field" id="fH">'+shops+'</select>'
+    +'<button class="mbtn primary" id="fSave">'+(isNew?"Add to the catalogue":"Save changes")+'</button>'
+    +(isNew?"":'<button class="mbtn danger mid" id="fDel">Remove from the catalogue<small>Hidden everywhere; its history is kept</small></button>')
+    +'<button class="mbtn mid" id="fCancel">Cancel</button>');
+  document.getElementById("fCancel").onclick=closeSheet;
+  document.getElementById("fSave").onclick=function(){
+    var es=document.getElementById("fEs").value.trim();
+    var en=document.getElementById("fEn").value.trim();
+    var q=parseFloat(document.getElementById("fQ").value); if(isNaN(q)||q<0) q=1;
+    var p=parseFloat(document.getElementById("fP").value);
+    var c=document.getElementById("fC").value, hint=document.getElementById("fH").value||null;
+    if(!es && !en){ toast("Give it a name first"); return; }
+    if(!es) es=en;
+    var tid=id;
+    if(isNew){
+      tid=slug(es)+"-"+Date.now().toString(36).slice(-4);
+      S.items[tid]={id:tid, cat:c, es:es, en:en, q:q, p:isNaN(p)?null:p,
+        ref:null, hint:hint, active:true, hist:[], custom:true};
+      if(addToTrip && S.active) S.active.lines[tid]={state:"bought", q:q, paid:isNaN(p)?null:p};
+    } else {
+      var o=S.items[tid];
+      o.es=es; o.en=en; o.q=q; o.cat=c; o.hint=hint;
+      if(!isNaN(p)) o.p=p;
+    }
+    save(); closeSheet(); render(); toast(isNew?"Added":"Saved");
+  };
+  if(!isNew){
+    document.getElementById("fDel").onclick=function(){
+      S.items[id].active=false;
+      if(S.active && S.active.lines[id]) delete S.active.lines[id];
+      save(); closeSheet(); render(); toast("Removed from the catalogue");
+    };
+  }
+}
+
+/* ----- closing a trip ----- */
+function closeTripSheet(){
+  var T=tripTotals();
+  openSheet('<h2>Close this trip</h2>'
+    +'<p class="hint">Enter the receipt total. The gap against what you checked off is your off-list spend.</p>'
+    +'<label class="lbl">Date and time</label>'
+    +'<input class="field mono" id="cDT" type="datetime-local" value="'+(S.active.date+"T12:00")+'">'
+    +'<label class="lbl">Receipt total · MXN</label>'
+    +'<input class="field mono" id="cTot" type="number" inputmode="decimal" step="0.01" placeholder="'+T.bought.toFixed(2)+'">'
+    +'<label class="lbl">Exchange rate · MXN per USD</label>'
+    +'<input class="field mono" id="cFx" type="number" inputmode="decimal" step="0.01" value="'+tripFx().toFixed(2)+'">'
+    +'<p class="hint mono" id="cCalc">Checked off '+mx(T.bought)+'</p>'
+    +'<button class="mbtn primary" id="cSave">Save the trip</button>'
+    +'<button class="mbtn mid" id="cCancel">Not yet</button>');
+  var inp=document.getElementById("cTot"), out=document.getElementById("cCalc");
+  inp.addEventListener("input", function(){
+    var v=parseFloat(inp.value);
+    if(isNaN(v)){ out.textContent="Checked off "+mx(T.bought); return; }
+    var off=v-T.bought, pct=v?(off/v*100):0;
+    out.textContent="Checked off "+mx(T.bought)+"  ·  off-list "+mx(off)+" ("+pct.toFixed(0)+"%)";
+  });
+  document.getElementById("cCancel").onclick=closeSheet;
+  document.getElementById("cSave").onclick=function(){
+    var fx=parseFloat(document.getElementById("cFx").value);
+    if(isNaN(fx)||fx<=0){ toast("Enter a valid rate"); return; }
+    var rt=parseFloat(document.getElementById("cTot").value);
+    saveTrip(document.getElementById("cDT").value, fx, isNaN(rt)?null:rt);
+  };
+}
+
+function saveTrip(dt, fx, receiptTotal){
+  var t=S.active, T=tripTotals(), lines=[], date=(dt||"").slice(0,10)||todayISO();
+  Object.keys(t.lines).forEach(function(id){
+    var L=t.lines[id], it=S.items[id]; if(!it) return;
+    /* `typed` is the whole distinction: a figure entered at the till is an
+       observation, the catalogue price is a guess carried forward. */
+    var typed = (L.paid!==null && L.paid!==undefined && !isNaN(L.paid));
+    var unit = typed ? L.paid : it.p;
+    lines.push({id:id, es:it.es, en:it.en, cat:it.cat, q:L.q,
+      unitMXN:(unit===null||unit===undefined||isNaN(unit))?null:unit,
+      lineMXN:lineTotal(it,L), state:L.state});
+    /* Only an observed price becomes a price point. This used to fall back
+       to it.p, so a line ticked off without typing anything wrote the
+       catalogue's own price back into history dated today — a point nobody
+       ever saw, indistinguishable afterwards from one off a receipt.
+
+       It is not self-correcting either. A catalogue rebuild overwrites p,
+       ref, cat and hint unconditionally, but takes the shipped history only
+       when it is at least as long as the phone's. A phone that has
+       accumulated invented points keeps them, and they go on feeding the
+       sparkline and the "more than usual" card. Sparse and true beats dense
+       and invented. */
+    if(L.state==="bought" && typed){
+      if(!it.hist) it.hist=[];
+      it.hist.push({d:date, p:unit, shop:t.shop});
+      if(it.hist.length>40) it.hist=it.hist.slice(-40);
+    }
+  });
+  var trip={id:t.id, shop:t.shop, shopName:shopName(t.shop), date:dt||date, fx:fx,
+    note:t.note||"", budgetUSD:t.budgetUSD||null,
+    lines:lines, listed:Math.round(T.bought*100)/100,
+    receiptTotal:receiptTotal,
+    offList:(receiptTotal===null?null:Math.round((receiptTotal-T.bought)*100)/100),
+    bought:T.nb, skipped:T.ns, planned:T.nb+T.nn+T.ns,
+    totalUSD:receiptTotal===null?null:Math.round(receiptTotal/fx*100)/100};
+  S.trips.push(trip);
+  /* S.fx is the app default and stays put — a rate entered for one trip
+     is that trip's rate, not a new default. Change the default in Settings. */
+  S.active=null;
+  save(); screen="dash"; dashMonth=null; render();
+  tripSheet(trip.id);
+}
+
+/* ----- changing an item's category ---------------------------------------
+
+   A Kellogg's cereal sat in Dairy & Chilled until it was spotted by eye in a
+   drill-down. Nothing in the app could have known it was wrong, so the fix
+   has to be something you can do yourself, where you notice it.
+
+   Two rules, both of which the old Uncategorised picker got wrong:
+
+   1. It applies to EVERY trip, not the month on screen. A category is a fact
+      about the thing. Filing one month and leaving another is how an item
+      ends up counted in two categories at once — the exact split v417 fails
+      the build over.
+   2. It is remembered. Lines inside the ten seeded receipts are rebuilt from
+      the build whenever the receipt data changes, which would silently undo
+      the fix on the next push. S.catFix survives that and is reapplied after
+      every rebuild. It rides along in the export, so a reconciliation folds
+      it into seed-trips.js for good and the sync can then clear it. */
+
+/* accent-, case- and quantity-insensitive, so "Limón S/Semilla" and
+   "Limón s/semilla ×2" are one item for this purpose */
+function catKey(s){
+  return String(s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"")
+    .replace(/\s*[×x]\s*\d+.*$/,"").replace(/\s*\(\d-for-\d\)\s*$/,"")
+    .toLowerCase().replace(/[^a-z0-9 ]/g,"").trim();
+}
+
+function recategorise(name, cat){
+  var k=catKey(name);
+  if(!k || !CATS.some(function(c){ return c.id===cat && !c.quickOnly; })) return 0;
+  if(!S.catFix) S.catFix={};
+  S.catFix[k]=cat;
+  var n=applyCatFix(k);
+  save();
+  return n;
+}
+
+/* Apply the remembered fixes. Called after every seed rebuild, and again
+   whenever one is made. Pass a key to apply just that one. */
+function applyCatFix(only){
+  if(!S.catFix) return 0;
+  var n=0;
+  S.trips.forEach(function(t){
+    if(isQuick(t)) return;              /* a quick trip's category is its own */
+    (t.lines||[]).forEach(function(l){
+      var k=catKey(l.es||l.id);
+      if(only && k!==only) return;
+      var c=S.catFix[k];
+      if(c && l.cat!==c){ l.cat=c; n++; }
+    });
+  });
+  /* and the catalogue, so the next trip gets it right rather than needing
+     the same correction again */
+  Object.keys(S.items).forEach(function(id){
+    var k=catKey(S.items[id].es);
+    if(only && k!==only) return;
+    var c=S.catFix[k];
+    if(c) S.items[id].cat=c;
+  });
+  clearResolve();
+  return n;
+}
+
+/* ----- what is behind a category ------------------------------------------
+
+   A row in "Where it goes" is a number with no way to ask what it is made
+   of. Tapping one answers that: every bought line in the category, grouped
+   by item so three jars of the same jam read as "×3" on one row rather than
+   three rows that have to be added up by eye.
+
+   Quick trips carry no lines but do carry a category, so each one appears as
+   a row of its own — otherwise Mixed opens empty and any category a quick
+   trip was tagged with under-reports what the card above it claims. */
+function catLines(catId, months){
+  var keep={}; (months||[]).forEach(function(k){ keep[k]=1; });
+  var g={}, order=[];
+  function add(key, name, amt, date, isQuickRow, lineRef){
+    if(!g[key]){ g[key]={key:key, name:name, n:0, total:0, first:date, last:date,
+                         quick:!!isQuickRow, refs:[]}; order.push(key); }
+    var x=g[key];
+    x.n++; x.total+=amt;
+    if(date<x.first) x.first=date;
+    if(date>x.last)  x.last=date;
+    if(lineRef) x.refs.push(lineRef);
+    return x;
+  }
+  S.trips.forEach(function(t){
+    var mk=monthKey(t.date); if(months && !keep[mk]) return;
+    var d=String(t.date||"").slice(0,10);
+    if(isQuick(t)){
+      if((t.cat||"mixed")!==catId) return;
+      /* the shop goes on the meta line with the date: a note and a shop name
+         together overflow one row and get cut off mid-word */
+      var g=add("q|"+t.id, t.note||"Quick trip", spendView(t), d, true, null);
+      g.shop=t.shopName||shopName(t.shop);
+      g.tripId=t.id;
+      return;
+    }
+    (t.lines||[]).forEach(function(l){
+      if(l.state!=="bought") return;
+      var k=l.cat||"pantry";
+      /* the card groups unknown categories under "other"; match that */
+      if(!CATS.some(function(c){return c.id===k;})) k="other";
+      if(k!==catId) return;
+      var gi=add("i|"+(l.es||l.id), l.es||l.en||"(unnamed)", conv(l.lineMXN||0, t), d, false,
+          {trip:t.id, id:l.id, es:l.es});
+      if(l.note) gi.note=l.note;
+    });
+  });
+  return order.map(function(k){ return g[k]; })
+    .sort(function(a,b){ return b.total-a.total; });
+}
+
+function catSheet(catId, monthK){
+  var months = monthK ? [monthK] : null;
+  var rows   = catLines(catId, months);
+  var tot    = rows.reduce(function(s,r){ return s+r.total; },0);
+  var un     = (catId==="other");
+  var title  = un ? "Uncategorised" : catName(catId);
+
+  var body = rows.map(function(r,i){
+    var when = (r.first===r.last) ? r.first : (r.first+" – "+r.last);
+    /* A quick trip's category belongs to the trip, not to an item, so it
+       cannot be moved from here — but the row is still tappable and opens
+       the trip, where the category is one field. Otherwise the instruction
+       above would be a lie on any sheet holding one. */
+    var canMove = !r.quick;
+    return '<div class="lrow'+((i===rows.length-1)?" last":"")+' rowtap"'
+      +(canMove ? ' data-recat="'+esc(r.name)+'"'
+                : ' data-opentrip="'+esc(r.tripId||"")+'"')+'>'
+      +'<div class="lhead"><span class="lname">'+esc(r.name)
+        +(r.n>1?' <span class="xn">×'+r.n+'</span>':'')+'</span>'
+      +'<span class="lamt">'+mv(r.total)+'</span></div>'
+      +'<div class="lhead"><span class="lmeta">'+esc(when)
+        +(r.shop?' · '+esc(r.shop):'')
+        +(r.quick?' · quick trip':'')+'</span></div>'
+      /* why this line's item differs from what the till printed */
+      +(r.note?'<div class="lnote">'+icon("alert")+esc(r.note)+'</div>':'')
+      +(canMove
+         ? '<div class="movebox" hidden>'
+           +'<span class="lmeta">Move to</span>'
+           +'<select class="minisel">'
+           +'<option value="">'+(un?'File it under…':'Choose a category…')+'</option>'
+           +itemCats().map(function(c){
+               return '<option value="'+c.id+'"'+(c.id===catId?' disabled':'')+'>'
+                 +esc(c.name)+'</option>'; }).join("")
+           +'</select></div>'
+         : '')
+      +'</div>';
+  }).join("");
+
+  openSheet('<h2>'+(un?'':icon(catIconName(catId)))+esc(title)+'</h2>'
+    /* the first hint is the sticky label and stays a single line; the
+       explanation is a second paragraph, which scrolls with the list */
+    +'<p class="hint">'+(monthK?esc(monthLabel(monthK)):"Every trip")+' · '
+    +rows.length+(rows.length===1?" item":" items")
+    +(un?" with no category":"")+'</p>'
+    +(un ? '<p class="hint" style="margin-top:-2px">These are lines whose item '
+          +'is not in the catalogue — added mid-trip, or since removed.</p>'
+         : '')
+    +(rows.length
+       ? '<p class="hint" style="margin-top:-2px">Tap a row to move it to '
+         +'another category. It moves on every trip, not just this month, and '
+         +'sticks for next time.'
+         +(rows.some(function(r){ return r.quick; })
+            ? ' A quick trip opens instead — its category belongs to the trip.'
+            : '')+'</p>'
+       : '')
+    +(rows.length ? body : '<p class="hint">Nothing in this category yet.</p>')
+    +'<div class="sumrow"><div class="lhead">'
+      +'<span class="lname">Total</span>'
+      +'<span class="lamt">'+mv(tot)+'</span></div></div>'
+    +'<button class="mbtn mid" id="clDone">Done</button>');
+
+  document.getElementById("clDone").onclick=closeSheet;
+  var sb=document.getElementById("sheetBody");
+
+  /* tap to reveal, rather than a picker sitting live on every row: these are
+     long lists scrolled with a thumb, and a stray tap that silently refiles
+     something is worse than one extra tap */
+  sb.addEventListener("click", function(e){
+    if(e.target.closest(".movebox")) return;        /* the picker itself */
+    var qt=e.target.closest("[data-opentrip]");
+    if(qt && qt.dataset.opentrip){ quickTripSheet(qt.dataset.opentrip); return; }
+    var row=e.target.closest("[data-recat]"); if(!row) return;
+    var box=row.querySelector(".movebox"); if(!box) return;
+    var opening=box.hidden;
+    sb.querySelectorAll(".movebox").forEach(function(b){ b.hidden=true; });
+    row.classList.remove("open");
+    sb.querySelectorAll(".lrow.open").forEach(function(r){ r.classList.remove("open"); });
+    if(opening){ box.hidden=false; row.classList.add("open"); }
+  });
+
+  sb.addEventListener("change", function(e){
+    var sel=e.target.closest(".movebox select"); if(!sel || !sel.value) return;
+    var row=sel.closest("[data-recat]"); if(!row) return;
+    var name=row.dataset.recat, cat=sel.value;
+    var n=recategorise(name, cat);
+    toast(n ? (n+" line"+(n===1?"":"s")+" moved to "+catName(cat))
+            : "Nothing to move");
+    catSheet(catId, monthK);     /* redraw: the row has left this category */
+    render();
+  });
+}
+
+/* ----- a saved trip ----- */
+function tripSheet(id){
+  var t=S.trips.filter(function(x){return x.id===id})[0];
+  if(!t){ toast("Trip not found"); return; }
+  /* A quick trip has no receipt to read, so there is no receipt view to show.
+     Opening it opens the thing you would actually want: the three fields it
+     was entered with, ready to correct. */
+  if(isQuick(t)){ quickTripSheet(id); return; }
+  openSheet('<h2>'+icon("receipt")+esc(t.shopName||shopName(t.shop))+'</h2>'
+    +'<p class="hint">'+esc((t.date||"").replace("T"," "))+'</p>'
+    +'<div class="rcpt mono">'+esc(receiptText(t))+'</div>'
+    +'<button class="mbtn primary" data-tripexp="'+t.id+'">Copy this trip for Claude</button>'
+    +'<button class="mbtn mid" data-tripdl="'+t.id+'">Download this trip</button>'
+    +'<button class="mbtn danger mid" data-tripdel="'+t.id+'">Delete this trip</button>'
+    +'<button class="mbtn mid" id="tDone">Done</button>');
+  document.getElementById("tDone").onclick=closeSheet;
+  document.getElementById("sheetBody").addEventListener("click", function(e){
+    var b;
+    if((b=e.target.closest("[data-tripexp]"))){ copyText(JSON.stringify(tripPayload(t),null,2)); return; }
+    if((b=e.target.closest("[data-tripdl]"))){
+      download(JSON.stringify(tripPayload(t),null,2), "trip-"+(t.date||"").slice(0,10)+".json"); return;
+    }
+    if((b=e.target.closest("[data-tripdel]"))){
+      S.trips=S.trips.filter(function(x){return x.id!==t.id});
+      save(); closeSheet(); render(); toast("Trip deleted"); return;
+    }
+  });
+}
+
+/* keep a free-text note inside the receipt's column width */
+function wrapTo(text, w){
+  var out=[], line="";
+  String(text||"").split(/\s+/).forEach(function(word){
+    if(!line){ line=word; return; }
+    if((line+" "+word).length<=w){ line+=" "+word; }
+    else { out.push(line); line=word; }
+  });
+  if(line) out.push(line);
+  return out.join("\n");
+}
+/* Grouped the way the trip and catalogue screens are, so a receipt reads
+   the same way you shopped it. Lines migrated from v1 carry "other" rather
+   than a real category — they get their own section at the end instead of
+   being dropped or silently filed under Pantry. */
+function receiptText(t){
+  var W=38, NW=28, s=(t.shopName||"")+"\n"+(t.date||"").replace("T"," ")+"\n";
+  if(t.note) s+=wrapTo(t.note, W)+"\n";
+  s+="-".repeat(W)+"\n";
+  /* No lines by design. Running the itemised path over one would print
+     "0 ITEMS 0.00" and an off-list figure, both of which assert something
+     about a basket that was never recorded. */
+  if(isQuick(t)){
+    s+="QUICK TRIP".padEnd(NW)+"no receipt".padStart(W-NW)+"\n";
+    s+=(t.cat?catName(t.cat).toUpperCase():"NOT CATEGORISED")+"\n";
+    s+="-".repeat(W)+"\n";
+    s+="TOTAL".padEnd(NW)+(t.receiptTotal||0).toFixed(2).padStart(W-NW)+"\n";
+    s+=("RATE "+(t.fx||S.fx).toFixed(2))+"\n";
+    if(t.totalUSD) s+="TOTAL USD".padEnd(NW)+t.totalUSD.toFixed(2).padStart(W-NW)+"\n";
+    return s;
+  }
+  var bought=(t.lines||[]).filter(function(l){ return l.state==="bought"; });
+  var items=bought.filter(function(l){ return !(l.lineMXN<0); });
+  var promos=bought.filter(function(l){ return l.lineMXN<0; });
+
+  var order=CATS.map(function(c){ return c.id; }).concat(["other"]);
+  var byCat={};
+  items.forEach(function(l){
+    var k=(l.cat && CATS.some(function(c){return c.id===l.cat;})) ? l.cat : "other";
+    (byCat[k]=byCat[k]||[]).push(l);
+  });
+  order.forEach(function(k){
+    var g=byCat[k]; if(!g || !g.length) return;
+    var sub=g.reduce(function(a,l){ return a+(l.lineMXN||0); },0);
+    var title=(k==="other") ? "UNCATEGORISED" : catName(k).toUpperCase();
+    s+=title.padEnd(NW)+(g.length+(g.length===1?" item":" items")).padStart(W-NW)+"\n";
+    g.forEach(function(l){
+      var nm="  "+l.es+(l.q>1?" x"+l.q:"");
+      s+=nm.slice(0,NW).padEnd(NW)
+        +((l.lineMXN===null||l.lineMXN===undefined)?"—":l.lineMXN.toFixed(2)).padStart(W-NW)+"\n";
+      if(l.note) s+=wrapTo("    ("+l.note+")", W)+"\n";
+    });
+    s+="".padEnd(NW)+sub.toFixed(2).padStart(W-NW)+"\n";
+  });
+  if(promos.length){
+    s+="PROMOTIONS".padEnd(NW)+(promos.length+"").padStart(W-NW)+"\n";
+    promos.forEach(function(l){
+      s+=("  "+l.es).slice(0,NW).padEnd(NW)+l.lineMXN.toFixed(2).padStart(W-NW)+"\n";
+    });
+  }
+  var sk=(t.lines||[]).filter(function(l){return l.state==="skip"});
+  if(sk.length){
+    s+="-".repeat(W)+"\nSKIPPED\n";
+    sk.forEach(function(l){ s+=("  "+l.es).slice(0,NW)+"\n"; });
+  }
+  s+="-".repeat(W)+"\n";
+  s+=(items.length+(items.length===1?" ITEM":" ITEMS")).padEnd(NW)
+    +(t.listed||0).toFixed(2).padStart(W-NW)+"\n";
+  if(t.receiptTotal!==null&&t.receiptTotal!==undefined){
+    s+="RECEIPT TOTAL".padEnd(NW)+t.receiptTotal.toFixed(2).padStart(W-NW)+"\n";
+    s+="OFF-LIST".padEnd(NW)+(t.offList||0).toFixed(2).padStart(W-NW)+"\n";
+  }
+  s+=("RATE "+(t.fx||S.fx).toFixed(2))+"\n";
+  if(t.totalUSD) s+="TOTAL USD".padEnd(NW)+t.totalUSD.toFixed(2).padStart(W-NW)+"\n";
+  return s;
+}
+
+/* ---------------- reconciliation sync ----------------
+
+   The app exports; until 4.12.0 nothing could come back. That meant a
+   reconciled receipt had to be published as a "seed-" trip and the app copy
+   deleted by hand, and until that happened the day was counted twice.
+
+   Now a reconciliation is published as a patch at sync/latest.json, keyed by
+   the trip's OWN id — the same id that came out in the export. The corrected
+   trip replaces itself in place. Nothing is deleted by hand, nothing is
+   counted twice, and seed-trips.js goes back to being what it should be: the
+   ten historical receipts, frozen.
+
+   Rules this holds to:
+   - syncId only ever moves forward. Re-publishing the same patch does
+     nothing; an older one does nothing. There is no file to remember to
+     delete.
+   - A patch names what it touches. It never replaces the whole store, so a
+     trip logged after the export survives.
+   - A patch may not touch a "seed-" trip. Those are owned by seed-trips.js
+     and its fingerprint; two owners for one record is how data drifts.
+   - Every failure is silent and total. No signal, no file, a 404, HTML from
+     a stale service worker, malformed JSON — all mean "no sync", and the app
+     is left exactly as it was. */
+
+var SYNC_URL = "sync/latest.json";
+var SYNC_MAX_TRIPS = 200;        /* a sane patch is a handful; 200 is a bug */
+
+function syncCheck(manual){
+  /* Opened straight off the disk there is no origin to fetch from, and the
+     browser logs a CORS failure the page cannot catch. A sync cannot work
+     there anyway, so do not go looking. */
+  if(location.protocol === "file:"){ if(manual) toast("Sync needs the hosted app"); return; }
+  if(!manual && navigator.onLine === false) return;
+  var done=function(msg){ if(manual) toast(msg); };
+  fetch(SYNC_URL, {cache:"no-store"}).then(function(res){
+    if(!res.ok) return null;
+    /* A service worker from before 4.12.0 answers an uncached path with
+       index.html. A 200 that is not JSON is that fallback, not a patch. */
+    var ct=String(res.headers.get("content-type")||"");
+    if(ct.indexOf("json")<0) return null;
+    return res.json();
+  }).then(function(p){
+    if(!p || typeof p.syncId!=="number" || !isFinite(p.syncId)){ done("Nothing to sync"); return; }
+    if(p.syncId <= (S.syncId||0)){ done("Already up to date"); return; }
+    var plan=syncPlan(p);
+    if(!plan.total){ done("Nothing to sync"); return; }
+    syncSheet(p, plan);
+  }).catch(function(){ done("Could not reach the sync file"); });
+}
+
+/* What a patch would actually do, worked out before anything is written, so
+   the sheet can say it and the apply step cannot surprise anyone. */
+function syncPlan(p){
+  var mine={}; (S.trips||[]).forEach(function(t){ mine[t.id]=t; });
+  var fixed=[], added=[], removed=[], priced=[], refused=0;
+  Object.keys(p.trips||{}).forEach(function(id){
+    if(String(id).indexOf("seed-")===0){ refused++; return; }
+    (mine[id] ? fixed : added).push(id);
+  });
+  (p.removeTrips||[]).forEach(function(id){
+    if(String(id).indexOf("seed-")===0){ refused++; return; }
+    if(mine[id]) removed.push(id);
+  });
+  Object.keys(p.catalogue||{}).forEach(function(id){
+    var it=S.items[id], u=p.catalogue[id];
+    if(!it || !u) return;
+    if(typeof u.p==="number" && u.p!==it.p) priced.push({id:id, from:it.p, to:u.p});
+  });
+  return {fixed:fixed, added:added, removed:removed, priced:priced, refused:refused,
+          total:fixed.length+added.length+removed.length+priced.length};
+}
+
+function syncSheet(p, plan){
+  var bits=[];
+  if(plan.fixed.length)   bits.push(plan.fixed.length+' trip'+(plan.fixed.length===1?"":"s")+' corrected');
+  if(plan.added.length)   bits.push(plan.added.length+' trip'+(plan.added.length===1?"":"s")+' added');
+  if(plan.removed.length) bits.push(plan.removed.length+' removed');
+  if(plan.priced.length)  bits.push(plan.priced.length+' price'+(plan.priced.length===1?"":"s")+' updated');
+  var moves=plan.priced.slice(0,6).map(function(x){
+    var it=S.items[x.id];
+    return '<div class="lrow"><div class="lhead"><span class="lname">'+esc(it.es)+'</span>'
+      +'<span class="lamt">'+m(x.to)+'</span></div>'
+      +'<div class="lmeta">was '+m(x.from)+'</div></div>';
+  }).join("");
+  openSheet('<h2>Reconciliation ready</h2>'
+    +'<p class="hint">Built from the receipt you sent. '+esc(bits.join(" · "))+'.'
+    +(plan.refused?' '+plan.refused+' change'+(plan.refused===1?"":"s")+' to the seeded '
+      +'receipts were ignored — those come from the build, not from here.':'')+'</p>'
+    +(moves?'<div class="rcpt" style="padding:0;background:none;border:none">'+moves+'</div>':'')
+    +(plan.priced.length>6?'<p class="hint">…and '+(plan.priced.length-6)+' more.</p>':'')
+    +'<button class="mbtn primary" id="syYes">Apply it</button>'
+    +'<button class="mbtn mid" id="syNo">Not now</button>');
+  document.getElementById("syNo").onclick=function(){
+    /* syncId is deliberately NOT stored — declining defers, it does not
+       dismiss. The same patch is offered again on the next load. */
+    closeSheet(); toast("Left alone");
+  };
+  document.getElementById("syYes").onclick=function(){ syncApply(p, plan); };
+}
+
+function syncApply(p, plan){
+  if(Object.keys(p.trips||{}).length > SYNC_MAX_TRIPS){
+    closeSheet(); toast("That sync looks wrong — nothing applied"); return;
+  }
+  var idx={}; (S.trips||[]).forEach(function(t,i){ idx[t.id]=i; });
+  Object.keys(p.trips||{}).forEach(function(id){
+    if(String(id).indexOf("seed-")===0) return;
+    var t=p.trips[id];
+    if(!t || typeof t!=="object") return;
+    t.id=id;                       /* the key is the id, not what the body claims */
+    if(idx[id]!==undefined) S.trips[idx[id]]=t; else S.trips.push(t);
+  });
+  var kill={};
+  (p.removeTrips||[]).forEach(function(id){
+    if(String(id).indexOf("seed-")!==0) kill[id]=1;
+  });
+  S.trips=(S.trips||[]).filter(function(t){ return !kill[t.id]; });
+  S.trips.sort(function(x,y){ return String(x.date||"").localeCompare(String(y.date||"")); });
+
+  Object.keys(p.catalogue||{}).forEach(function(id){
+    var it=S.items[id], u=p.catalogue[id];
+    if(!it || !u) return;
+    if(typeof u.p==="number" && isFinite(u.p)) it.p=u.p;
+    if(Array.isArray(u.hist)) it.hist=u.hist.slice(-40);
+  });
+
+  repairTrips();
+  clearResolve();
+  S.syncId=p.syncId;
+  S.syncedAt=new Date().toISOString();
+  save(); closeSheet(); render();
+  toast("Synced — "+(plan?plan.total:0)+" change"+((plan&&plan.total===1)?"":"s"));
+}
+
+/* ----- export ----- */
+function tripPayload(t){
+  return {appVersion:APP_VERSION, catalogueRev:CATALOGUE_VERSION, exportedAt:new Date().toISOString(), trip:t};
+}
+function fullPayload(){
+  return {appVersion:APP_VERSION, catalogueRev:CATALOGUE_VERSION,
+    exportedAt:new Date().toISOString(), currentRate:S.fx,
+    categoryFixes:S.catFix||{},
+    shops:S.shops, trips:S.trips,
+    catalogue:Object.keys(S.items).map(function(id){
+      var it=S.items[id];
+      return {id:id, category:catName(it.cat), es:it.es, en:it.en, qty:it.q,
+        refPriceMXN:it.p, shelfRef:it.ref, usualShop:it.hint, active:it.active,
+        priceHistory:it.hist};
+    })};
+}
+function copyText(txt){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast("Copied — paste it into Claude"); },
+      function(){ fallback(txt); });
+  } else fallback(txt);
+}
+function fallback(txt){
+  openSheet('<h2>Copy this</h2><p class="hint">Tap and hold in the box, Select All, then Copy.</p>'
+    +'<textarea class="field mono" style="height:44vh" readonly>'+esc(txt)+'</textarea>'
+    +'<button class="mbtn mid" id="fbDone">Done</button>');
+  document.getElementById("fbDone").onclick=closeSheet;
+}
+function copyExport(){ copyText(JSON.stringify(fullPayload(),null,2)); }
+function download(txt, name){
+  var b=new Blob([txt],{type:"application/json"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b); a.download=name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+}
+function downloadExport(){
+  download(JSON.stringify(fullPayload(),null,2), "despensa-"+todayISO()+".json");
+  toast("Downloaded");
+}
+function wipeSheet(){
+  openSheet('<h2>Erase everything?</h2>'
+    +'<p class="hint">Every trip, every price you edited and every item you added. Copy the data first if you want to keep any of it.</p>'
+    +'<button class="mbtn" id="wCopy">Copy the data first</button>'
+    +'<button class="mbtn danger mid" id="wYes">Yes, erase everything</button>'
+    +'<button class="mbtn mid" id="wNo">Keep it</button>');
+  document.getElementById("wCopy").onclick=copyExport;
+  document.getElementById("wNo").onclick=closeSheet;
+  document.getElementById("wYes").onclick=function(){
+    S=seed(); save(); closeSheet(); render(); toast("Erased");
+  };
+}
+
+/* ---------------- go ---------------- */
+load(); render(); setTimeout(fit,60);
+/* after the first paint, never before it: a sync is never worth a blank
+   screen, and this one is allowed to find nothing at all */
+setTimeout(function(){ try{ syncCheck(); }catch(e){} }, 1200);
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}

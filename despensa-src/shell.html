@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Despensa">
+<meta name="theme-color" content="#F7F7F4">
+<meta name="color-scheme" content="only light">
+<title>Despensa</title>
+<style>
+:root{
+  color-scheme:only light;
+  /* Despensa's own palette — no webfonts, no CDN: this has to paint
+     instantly in a store with no signal. */
+  --paper:#F7F7F4;
+  --card:#FFFFFF;
+  --well:#EFEFE9;          /* inset wells and empty bar track */
+  --ink:#15150F;
+  --muted:#8B8B80;
+  --rule:#E3E3DA;
+  --store:#D6431F;
+  --good:#1E7A55;
+  --good-bg:#E7F2EC;
+  --danger:#B3261E;
+  --bad-bg:#FBEAE8;
+  --shadow:0 1px 2px rgba(21,21,15,.05), 0 4px 14px rgba(21,21,15,.05);
+  --pad:16px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --num:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#F7F7F4}
+body{margin:0;padding:0;background:#F7F7F4;color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;line-height:1.4;padding-bottom:200px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:700;margin:0;letter-spacing:-.015em}
+.mono{font-family:var(--num);font-variant-numeric:tabular-nums}
+
+/* header */
+header{position:sticky;top:0;z-index:30;background:var(--paper);
+  border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top)}
+/* .hbar, not .hrow — .hrow is the price-history row further down and the
+   later rule was winning, which is what stripped the header's padding. */
+.hbar{display:flex;align-items:center;gap:12px;
+  padding:12px var(--pad) 13px;
+  padding-left:max(var(--pad), env(safe-area-inset-left));
+  padding-right:max(var(--pad), env(safe-area-inset-right))}
+.htext{flex:1;min-width:0}
+#hTitle{font-size:17px;font-weight:700;letter-spacing:-.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hSub{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);margin-top:3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbtn{background:none;border:1px solid var(--rule);border-radius:9px;color:var(--ink);
+  padding:10px;cursor:pointer;font-family:inherit;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center}
+.hbtn .ico{width:20px;height:20px}
+.hbtn:active{background:var(--rule)}
+/* .hbtn sets display:flex, which beats the browser's [hidden]{display:none} —
+   without this the back chevron shows on the dashboard it goes back to. */
+.hbtn[hidden]{display:none}
+
+main{padding:0 var(--pad);
+  padding-left:max(var(--pad), env(safe-area-inset-left));
+  padding-right:max(var(--pad), env(safe-area-inset-right))}
+.sec{margin:22px 0 0;background:var(--paper)}
+.sechead{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 2px 7px;border-bottom:1px solid var(--rule);
+  position:sticky;top:var(--hdr,64px);z-index:12;background:var(--paper)}
+.secright{display:flex;align-items:center;gap:10px}
+.plus{width:28px;height:28px;border:1px solid var(--rule);border-radius:8px;
+  background:var(--card);color:var(--store);font-size:19px;font-weight:600;
+  line-height:1;cursor:pointer;font-family:inherit;padding:0;
+  display:flex;align-items:center;justify-content:center}
+.plus:active{background:var(--rule)}
+/* icons — single weight, inherit colour, never fill */
+.ico{width:17px;height:17px;flex:0 0 auto;display:block;
+  fill:none;stroke:currentColor;stroke-width:1.75;
+  stroke-linecap:round;stroke-linejoin:round}
+.ico.big{width:46px;height:46px;stroke-width:1.4;color:var(--rule);margin:0 auto 18px}
+.sectitle{display:flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
+.sectitle .ico{width:15px;height:15px;color:var(--store);opacity:.85;
+  position:relative;top:-.5px}
+.seccount{font-size:11px;color:var(--muted);font-weight:650}
+.pad{padding:14px 2px 2px}
+
+/* rows */
+.row{display:flex;align-items:center;gap:11px;padding:12px 2px;
+  border-bottom:1px solid var(--rule);background:var(--paper);position:relative}
+.box{flex:0 0 26px;height:26px;border:1.5px solid var(--ink);border-radius:6px;
+  background:var(--card);cursor:pointer;position:relative;padding:0}
+.box.fill{background:var(--store);border-color:var(--store)}
+.box.fill::after{content:'';position:absolute;left:8px;top:4px;width:6px;height:12px;
+  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+.box.dash{background:var(--rule);border-color:var(--rule)}
+.box.dash::after{content:'';position:absolute;left:6px;top:11px;width:12px;height:2px;
+  background:var(--muted);border-radius:1px}
+.namewrap{flex:1;min-width:0;cursor:pointer}
+.nm{font-size:15px;font-weight:650;letter-spacing:-.01em}
+.en{font-size:12px;color:var(--muted);margin-top:1px}
+.meta{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.015em}
+.meta.flag{color:var(--store)}
+.tag{font-size:9px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;
+  color:var(--muted);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;margin-left:7px}
+.row.bought .nm{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
+.row.bought .en,.row.bought .meta{opacity:.45}
+.row.skipped{background:#F1F1EC}
+.row.skipped .nm,.row.skipped .en,.row.skipped .meta,.row.skipped .amt{opacity:.42}
+.row.on{background:#FBF6F4}
+
+.spark{flex:0 0 auto;background:none;border:none;padding:4px 2px;cursor:pointer;
+  opacity:.75;display:flex;align-items:center}
+.amt{flex:0 0 auto;text-align:right;padding:6px 6px;margin:-6px -6px -6px 0;
+  border:none;background:none;cursor:pointer;border-radius:7px;font-family:inherit;color:var(--ink)}
+.amt:active{background:var(--rule)}
+.amt.paid .mx{color:var(--good)}
+.mx{display:block;font-size:15px;font-weight:650;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.us{display:block;font-size:11px;color:var(--muted);margin-top:1px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+.addbtn{width:100%;margin:12px 0 0;padding:12px;background:none;
+  border:1.5px dashed var(--rule);border-radius:10px;color:var(--muted);
+  font-size:13px;font-weight:650;cursor:pointer;font-family:inherit}
+
+/* history + settings rows */
+.mrow,.srow,.trow{display:flex;align-items:center;gap:10px;
+  padding:13px 2px;border-bottom:1px solid var(--rule)}
+.trow{cursor:pointer}
+.mname{flex:0 0 auto;font-weight:650;font-size:15px}
+.mtrips{flex:1;font-size:12px;color:var(--muted)}
+.mspend{text-align:right;font-size:15px;font-weight:650}
+.mspend small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.srow span:first-child{flex:1;font-size:14px}
+.srow .mono{font-size:14px;color:var(--muted)}
+.srow span:first-child{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.vsub{font-size:11px;color:var(--muted);font-weight:500}
+.vfp{letter-spacing:.02em}
+.vfp.stale{color:var(--store);font-weight:700}
+.vold{font-size:11px;opacity:.75}
+.xbtn{background:none;border:none;color:var(--danger);font-size:13px;
+  font-weight:650;cursor:pointer;font-family:inherit;padding:4px}
+
+.empty{text-align:center;padding:48px 20px}
+.empty h3{font-size:17px;margin:0 0 8px}
+.empty p{font-size:13.5px;color:var(--muted);margin:0 0 22px;line-height:1.55}
+.big{padding:15px 30px;border:none;border-radius:11px;background:var(--store);
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* ---------- bottom navigation ----------
+   Five destinations, all visible. The trip's own action bar stacks on top
+   of this rather than replacing it, so you can leave a half-planned trip
+   and come back without losing it. */
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:45;display:flex;
+  background:var(--card);border-top:1px solid var(--rule);
+  padding-bottom:env(safe-area-inset-bottom)}
+#tabs button{flex:1 1 0;min-width:0;background:none;border:none;padding:8px 2px 7px;
+  font-family:inherit;color:var(--muted);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  position:relative;-webkit-tap-highlight-color:transparent}
+#tabs .ico{width:21px;height:21px;stroke-width:1.7}
+#tabs .tlab{font-size:9.5px;font-weight:700;letter-spacing:.02em;line-height:1.1;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tabs button.on{color:var(--store)}
+#tabs button.on .ico{stroke-width:2}
+#tabs button:active{background:var(--paper)}
+/* a dot while a trip is open but empty; a count once anything is on it */
+#tabs .dot{position:absolute;top:7px;left:50%;margin-left:7px;
+  width:6px;height:6px;border-radius:50%;background:var(--store);
+  border:1.5px solid var(--card)}
+#tabs .cbadge{position:absolute;top:3px;left:50%;margin-left:4px;
+  min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+  background:var(--store);color:#fff;border:2px solid var(--card);
+  font-family:var(--num);font-size:10px;font-weight:700;line-height:13px;
+  text-align:center;font-variant-numeric:tabular-nums}
+/* One shot, on change only. Nothing animates while it sits there: a loop
+   in the corner of your eye stops carrying information within a minute
+   and is a problem for anyone sensitive to motion. */
+@keyframes cbump{0%{transform:scale(1)}38%{transform:scale(1.42)}100%{transform:scale(1)}}
+@keyframes cdrop{0%{transform:scale(1)}38%{transform:scale(.72)}100%{transform:scale(1)}}
+#tabs .cbadge.bump{animation:cbump .28s cubic-bezier(.34,1.56,.64,1)}
+#tabs .cbadge.drop{animation:cdrop .22s ease-out}
+@media (prefers-reduced-motion:reduce){
+  #tabs .cbadge.bump,#tabs .cbadge.drop{animation:none}
+}
+
+/* segmented choice — start a trip from the regulars, or from nothing */
+.seg{display:flex;gap:8px;margin-bottom:13px}
+.seg button{flex:1;min-width:0;padding:11px 10px;border-radius:11px;
+  border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);
+  font-family:inherit;font-size:14px;font-weight:650;cursor:pointer;text-align:left}
+.seg button small{display:block;font-size:11px;font-weight:500;color:var(--muted);
+  margin-top:3px;line-height:1.3}
+.seg button.on{border-color:var(--store);background:#FBF1EE}
+.seg button.on small{color:var(--store);opacity:.85}
+
+/* trip action bar — sits directly above the tabs */
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);
+  padding:14px var(--pad) 12px;
+  box-shadow:0 -10px 30px rgba(0,0,0,.07)}
+#bar::before{content:'';position:absolute;top:-9px;left:0;right:0;height:10px;
+  background:radial-gradient(circle at 7px 10px,transparent 6.5px,var(--card) 7px) repeat-x;
+  background-size:14px 10px}
+.bline{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px}
+.blabel{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.bval{font-size:13px;font-weight:650}
+.btot{display:flex;align-items:baseline;justify-content:space-between;
+  border-top:1.5px solid var(--ink);margin-top:8px;padding-top:8px}
+.btot .blabel{color:var(--ink)}
+.bright{text-align:right}
+.bbig{font-size:24px;font-weight:700;letter-spacing:-.02em}
+.bsub{font-size:12px;color:var(--muted);margin-top:-1px}
+.brow{display:flex;gap:9px;margin-top:11px}
+.gobtn{flex:1;padding:13px;border:none;border-radius:10px;background:var(--store);
+  color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ghost{flex:0 0 auto;padding:13px 16px;border:1px solid var(--rule);border-radius:10px;
+  background:var(--card);color:var(--ink);font-size:14px;font-weight:650;
+  cursor:pointer;font-family:inherit}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(15,15,10,.45);z-index:50;display:none;
+  touch-action:none;cursor:pointer}
+.scrim.open{display:block}
+/* while a sheet is open the page behind must not scroll */
+body.locked{position:fixed;width:100%;overflow:hidden}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--card);
+  border-radius:18px 18px 0 0;padding:0 var(--pad) calc(20px + env(safe-area-inset-bottom));
+  max-height:86vh;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;display:none}
+.sheet.open{display:block}
+/* sticky close bar — a tap target that is always reachable */
+/* The bar owns the space above it and spans the sheet edge to edge. The
+   sheet used to carry 8px of its own padding above a top:0 sticky bar, and
+   rows scrolled up through that band and showed over the grab handle; the
+   bar also stopped short of the sheet's side padding, leaving two more
+   strips for content to pass behind. Nothing above it, nothing beside it. */
+/* The title lives up here, not in the body, so it stays put while a long
+   list scrolls under it — you never lose track of which category you opened.
+   openSheet() lifts the first h2 out of the body into this bar, so all
+   eighteen sheets get it without any of them having to remember. */
+.sheetbar{position:sticky;top:0;z-index:2;display:flex;flex-direction:column;
+  background:var(--card);margin:0 calc(-1 * var(--pad)) 4px;
+  padding:12px var(--pad) 10px;border-radius:18px 18px 0 0}
+.sbtop{display:flex;align-items:center}
+/* the title sits under the handle row, with room for an icon beside it */
+.sheetbar h2{display:flex;align-items:center;gap:9px;margin:6px 0 0;min-width:0}
+.sheetbar h2 .ico{width:17px;height:17px;color:var(--store);flex:none}
+/* the subtitle rides with the title: which month, how many. Anything longer
+   than a label stays in the body — see catSheet, where the explanation of
+   what "uncategorised" means is a second paragraph for exactly that reason. */
+.sheetbar .hint{margin:3px 0 0}
+/* a short fade under the bar, so a row passing beneath it dissolves instead
+   of being cut in half at a hard edge. Purely decorative, so it must never
+   swallow a tap meant for the row underneath it. */
+.sheetbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px;
+  pointer-events:none;
+  /* the end stop is --card at zero alpha written out: a bare "transparent"
+     fades through black in some engines and smears the card grey. If --card
+     ever stops being white, this value moves with it. */
+  background:linear-gradient(var(--card),rgba(255,255,255,0))}
+.grab{flex:1;height:30px;background:none;border:none;padding:0;cursor:pointer;
+  position:relative;font:inherit}
+.grab::after{content:'';position:absolute;left:50%;top:13px;transform:translateX(-50%);
+  width:40px;height:4px;background:var(--rule);border-radius:2px}
+.grab:active::after{background:var(--muted)}
+.xclose{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--rule);border-radius:50%;
+  background:var(--paper);color:var(--ink);cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center}
+.xclose:active{background:var(--rule)}
+.xclose .ico{width:17px;height:17px;stroke-width:2}
+.sheet h2{font-size:17px;margin:0 0 4px;letter-spacing:-.01em}
+.hint{font-size:12.5px;color:var(--muted);margin:0 0 15px;line-height:1.45}
+.lbl{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);margin:0 0 5px 2px}
+.field{width:100%;padding:13px;font-size:17px;border:1.5px solid var(--rule);
+  border-radius:10px;margin-bottom:13px;font-family:inherit;background:var(--paper);color:var(--ink)}
+select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),
+  linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.two{display:flex;gap:10px}
+.two>div{flex:1}
+.mbtn{display:block;width:100%;text-align:left;padding:14px;margin-bottom:9px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:11px;
+  font-size:15px;font-weight:650;color:var(--ink);cursor:pointer;font-family:inherit}
+.mbtn small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+.mbtn.primary{background:var(--store);border-color:var(--store);color:#fff;text-align:center}
+.mbtn.primary small{color:rgba(255,255,255,.8)}
+.mbtn.mid{text-align:center}
+.mbtn.nav{display:flex;align-items:center;gap:13px;text-align:left}
+.mbtn.nav .ico{width:20px;height:20px;color:var(--store)}
+.mbtn.nav.primary .ico{color:#fff}
+.mbtn.nav>span{flex:1;min-width:0}
+.mbtn.danger{color:var(--danger)}
+.rcpt{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:14px;
+  font-size:12.5px;max-height:40vh;overflow-y:auto;margin-bottom:14px;
+  white-space:pre-wrap;word-break:break-word}
+
+/* price history chart — single series, change over time */
+.chartwrap{margin:2px 0 16px}
+.bigchart{width:100%;height:auto;display:block}
+.bigchart .cgrid{stroke:var(--rule);stroke-width:1}
+.bigchart .caxisline{stroke:var(--rule);stroke-width:1}
+.bigchart .cytick{fill:var(--muted);font-size:9.5px;text-anchor:end;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.bigchart .cxtick{fill:var(--muted);font-size:9.5px;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.bigchart .cline{fill:none;stroke:var(--store);stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.bigchart .cdot{fill:var(--store);stroke:var(--card);stroke-width:2}
+.bigchart .cdot.sel{r:5.5;stroke-width:2.5}
+.bigchart .chit{fill:transparent;cursor:pointer}
+.cnote{font-size:11px;color:var(--muted);text-align:center;margin-top:7px;
+  letter-spacing:.04em;min-height:14px}
+.stats{display:flex;gap:8px;margin-bottom:16px}
+.stats>div{flex:1;background:var(--paper);border:1px solid var(--rule);
+  border-radius:9px;padding:9px 8px;text-align:center}
+.slab{display:block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--muted);margin-bottom:3px}
+.sval{display:block;font-size:13px;font-weight:700}
+.sval.up{color:var(--danger)}
+.sval.down{color:var(--good)}
+.hlist{border-top:1px solid var(--rule);margin-bottom:14px}
+.hrow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--rule)}
+.hrow:last-child{border-bottom:none}
+.hd{flex:0 0 auto;font-size:13px;color:var(--muted)}
+.hs{flex:1;font-size:11.5px;color:var(--muted)}
+.hp{background:none;border:1px solid var(--rule);border-radius:7px;padding:5px 9px;
+  font-size:13.5px;font-weight:650;color:var(--ink);cursor:pointer;font-family:inherit}
+
+/* ---------- dashboard ----------
+   Card structure borrowed from the budget app; the colours are Despensa's. */
+.dcard{background:var(--card);border:1px solid var(--rule);border-radius:14px;
+  padding:18px 17px;box-shadow:var(--shadow);margin-top:14px}
+.filters + .dcard{margin-top:14px}
+.eyebrow{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--store);font-weight:700;display:flex;align-items:center;gap:7px;min-width:0}
+.eyebrow .ico{width:14px;height:14px;color:var(--store);flex:none}
+.dhead{display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:14px}
+.dnote{font-size:11.5px;color:var(--muted);white-space:nowrap;flex:none}
+
+/* proportional figures on the hero — tabular digits read loose at this size */
+.bignum{font-size:34px;font-weight:700;letter-spacing:-.03em;line-height:1.05;
+  font-family:var(--sans);font-variant-numeric:proportional-nums}
+.bigsub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+  border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)}
+.pill.bad{background:var(--bad-bg);color:var(--danger)}
+.pill.neutral{background:var(--well);color:var(--muted)}
+
+.catbar{height:7px;border-radius:999px;background:var(--well);overflow:hidden;margin-top:10px}
+.catbar>div{height:100%;border-radius:999px;background:var(--store)}
+.catbar>div.over{background:var(--danger)}
+.catbar>div.quiet{background:var(--muted)}
+
+.metrow{display:flex;align-items:flex-start;gap:14px;
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--rule)}
+.metcell{flex:1;min-width:0}
+.metcell.r{text-align:right;flex:0 0 auto}
+.metlab{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metval{font-size:15px;font-weight:700;letter-spacing:-.01em;
+  font-family:var(--num);font-variant-numeric:tabular-nums}
+.metval.plain{font-family:var(--sans);letter-spacing:0}
+
+.lrow{display:flex;flex-direction:column;gap:5px;padding:12px 0;
+  border-bottom:1px solid var(--rule)}
+.dcard>.lrow:last-child{border-bottom:none;padding-bottom:0}
+.lrow:first-of-type{padding-top:0}
+/* a footnote under a list: the last row's own rule separates them */
+.dfoot{margin-top:13px}
+.lhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lname{font-weight:650;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;display:flex;align-items:center;gap:8px;font-size:14.5px}
+.lname .ico{width:14px;height:14px;color:var(--store);flex:none}
+.lamt{font-size:14px;font-weight:700;white-space:nowrap;
+  font-family:var(--num);font-variant-numeric:tabular-nums}
+.lmeta{font-size:11.5px;color:var(--muted);line-height:1.45}
+.lrow.dim .lname{color:var(--muted)}
+.lrow.dim .lname .ico{color:var(--muted)}
+.lrow.tap{cursor:pointer}
+
+.rchart{width:100%;height:auto;display:block;margin-top:7px}
+.rchart .rbar{fill:var(--rule)}
+.rchart .rbar.cur{fill:var(--store)}
+.rchart .rlab{fill:var(--muted);font-size:8.5px;font-weight:700;text-anchor:middle;
+  font-family:var(--num)}
+.mchart{width:100%;height:auto;display:block;margin-top:4px}
+.mchart .mbar{fill:#D7D7CD}
+.mchart .mbar.cur{fill:var(--store)}
+/* knocked out of the card so a value never sits on the budget line */
+.mchart .mval{fill:var(--ink);font-size:9px;font-weight:700;text-anchor:middle;
+  font-family:var(--num);stroke:var(--card);stroke-width:3;
+  paint-order:stroke fill;stroke-linejoin:round}
+.mchart .mlab{fill:var(--muted);font-size:9.5px;text-anchor:middle;font-weight:700}
+.mchart .msub{fill:var(--muted);font-size:8.5px;text-anchor:middle;opacity:.7;
+  font-family:var(--num)}
+.mchart .cgrid{stroke:var(--rule);stroke-width:1}
+/* budget reference — dashed so it never reads as data */
+.mchart .mbudget{stroke:var(--store);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
+.mchart .mbtxt{fill:var(--store);font-size:8.5px;font-weight:700;opacity:.85;
+  font-family:var(--num)}
+
+/* one filter row, above everything it scopes */
+.filters{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  position:sticky;top:var(--hdr,64px);z-index:14;
+  background:var(--paper);padding:12px 0 11px;
+  border-bottom:1px solid var(--rule);margin-bottom:2px}
+.mnav{display:flex;align-items:center;gap:2px;min-width:0;flex:1}
+.marrow{width:34px;height:34px;flex:0 0 34px;padding:0;border-radius:9px;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  cursor:pointer;display:flex;align-items:center;justify-content:center}
+.marrow .ico{width:17px;height:17px;stroke-width:2}
+.marrow:active{background:var(--rule)}
+.marrow[disabled]{opacity:.3;cursor:default;background:var(--paper)}
+.mlabel{flex:1;min-width:0;background:none;border:none;padding:0 8px;
+  font-family:inherit;color:var(--ink);cursor:pointer;text-align:center;
+  font-size:14.5px;font-weight:700;letter-spacing:-.01em;line-height:1.15;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mlabel small{display:block;font-size:10.5px;font-weight:650;color:var(--muted);
+  letter-spacing:.04em;margin-top:2px}
+
+/* budget bar: fill is what's spent, the tick is how far into the month */
+.budgetbar{position:relative;height:9px;border-radius:999px;
+  background:var(--well);margin-top:14px}
+.bbfill{height:100%;border-radius:999px;background:var(--store);
+  max-width:100%}
+.bbfill.ahead{background:#E0803F}
+.bbfill.over{background:var(--danger)}
+.bbtick{position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:1px;
+  background:var(--ink);opacity:.5;transform:translateX(-1px)}
+.bblegend{display:flex;justify-content:space-between;gap:10px;
+  font-size:11px;color:var(--muted);margin-top:7px}
+
+/* the table's own total row: same two columns as the rows, a heavier rule
+   above it, and no bar — it is the 100% the bars are shares of */
+/* a row you can open: a chevron-free affordance — the whole row is the
+   target, and it dims on press so a tap is acknowledged on a slow phone */
+.lrow.tap{cursor:pointer;-webkit-tap-highlight-color:transparent;
+  margin:0 -4px;padding-left:4px;padding-right:4px;border-radius:8px}
+.lrow.tap:active{background:var(--paper)}
+
+/* a repeat count beside an item name in the category drill-down */
+.xn{font-size:11.5px;color:var(--muted);font-weight:650;
+  font-family:var(--num);flex:none}
+
+/* the last row of the trips card gives way to its total, same as the
+   category card — the rule above a total is heavier than a row hairline */
+.dcard .lrow:last-of-type{border-bottom:none;padding-bottom:19px}
+
+/* a line whose item differs from what the till printed — a mis-ring caught
+   at reconciliation. Quiet, but it must be visible: an unexplained line is
+   how you lose trust in the whole breakdown. */
+.lnote{display:flex;align-items:flex-start;gap:6px;margin-top:6px;
+  font-size:11.5px;line-height:1.4;color:var(--muted)}
+.lnote .ico{width:13px;height:13px;flex:none;margin-top:1px}
+
+/* the category picker, revealed under a row when you tap it */
+/* An author display rule beats the hidden attribute's UA style, so without
+   this every picker renders open and `hidden` is a lie the DOM tells. The
+   same trap already caught .hbtn once in this project. */
+.movebox[hidden]{display:none}
+.movebox{display:flex;align-items:center;gap:9px;margin-top:9px;
+  padding:9px 10px;background:var(--paper);border:1px solid var(--rule);
+  border-radius:9px}
+.movebox .lmeta{flex:none}
+.movebox select{flex:1;max-width:none}
+.lrow.open .lname{color:var(--store)}
+
+/* filing an uncategorised line, inline on its row */
+.minisel{font:inherit;font-size:12px;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule);border-radius:7px;padding:3px 6px;
+  max-width:52%;flex:none}
+
+/* the last row's own hairline would sit 2px above the total's rule and read
+   as a double line, so it gives way to it */
+/* the total's rule is heavier than a row hairline, so it needs more room
+   than one — matching the 12px row rhythm left it looking crowded */
+.lrow.last{border-bottom:none;padding-bottom:19px}
+.sumrow{padding-top:14px;border-top:1.5px solid var(--ink)}
+.sumrow .lname{font-weight:750}
+.sumrow .lname small{display:block;font-size:11px;font-weight:500;
+  color:var(--muted);margin-top:2px;letter-spacing:0}
+.sumrow .lamt{font-size:15px}
+.sumrow .lpc{color:var(--ink)}
+/* a total row immediately followed by a button read as one block */
+.sumrow + .mbtn{margin-top:20px}
+
+/* names the column the percentages are in, so the bar and the number are
+   visibly answering one question */
+.colhead{display:flex;justify-content:flex-end;padding-bottom:9px;
+  font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);font-weight:650}
+
+/* ranked rows: the amount carries its share beside it */
+.lpc{font-size:11px;color:var(--muted);font-weight:650;margin-left:8px;
+  font-family:var(--num);font-variant-numeric:tabular-nums}
+
+.ccy{display:flex;gap:0;border:1px solid var(--rule);border-radius:999px;
+  overflow:hidden;background:var(--card);flex:0 0 auto}
+.ccy button{border:none;background:none;padding:6px 12px;font-size:11.5px;font-weight:700;
+  color:var(--muted);cursor:pointer;font-family:inherit;letter-spacing:.04em}
+.ccy button.on{background:var(--store);color:#fff}
+
+.dbtn{display:block;width:100%;margin-top:16px;padding:14px;border:none;border-radius:11px;
+  background:var(--store);color:#fff;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:inherit}
+.dbtn.quiet{background:var(--paper);color:var(--ink);border:1px solid var(--rule)}
+/* a dashboard button can carry a second line saying what it is for; two
+   stacked buttons sit closer together than a button after a card */
+.dbtn small{display:block;margin-top:3px;font-size:12px;font-weight:500;opacity:.6}
+.dbtn+.dbtn{margin-top:10px}
+
+/* a flag headline wraps — it is a sentence, not a list row */
+.flagtitle{font-weight:700;font-size:14.5px;line-height:1.35;margin-bottom:6px}
+.flagbox{display:flex;gap:11px;align-items:flex-start}
+.flagbox .ico{width:18px;height:18px;color:var(--store);flex:none;margin-top:1px}
+
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 76px);
+  transform:translateX(-50%) translateY(-6px);background:var(--ink);color:var(--paper);
+  padding:10px 17px;border-radius:9px;font-size:13.5px;font-weight:650;z-index:60;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="htext"><div id="hTitle">Despensa</div><div id="hSub">&nbsp;</div></div>
+    <button class="hbtn" id="tripSet" aria-label="Trip settings" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg></button>
+  </div>
+</header>
+
+<main id="main"></main>
+<div id="bar"></div>
+<nav id="tabs" aria-label="Sections"></nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheetbar">
+    <div class="sbtop">
+      <button class="grab" id="grabClose" aria-label="Close"></button>
+      <button class="xclose" id="xClose" aria-label="Close"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+  </div>
+  <div id="sheetBody"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/*__ICONS__*/
+/*__CATALOGUE__*/
+/*__APP__*/
+</script>
+</body>
+</html>

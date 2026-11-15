@@ -1,0 +1,188 @@
+/* Historical Chedraui trips, transcribed from audited receipts.
+   Every trip below sums exactly to its printed total.
+   l = [name, category, lineTotalMXN]; a negative amount is a promotion.
+
+   SEED_VERSION is a human-readable label only. What actually makes a
+   correction reach an installed phone is SEED_FP — a hash of this whole
+   file, computed by build.py. Edit anything below and it changes by
+   itself; there is no number anyone has to remember to bump. */
+var SEED_VERSION = 9;
+
+var SEED_TRIPS = [
+{d:"2026-08-08", t:2484.46, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"", l:[
+ ["Salmón Atlántico","protein",329],["Porciones Mahi-Mahi","protein",239],
+ ["Queso Mi Passion","chilled",139],["Pollo Rostizado","protein",99.90],
+ ["Tortilla Del Barrio","bakery",23.60],["Cristal Agua","drinks",8.50],
+ ["Coco Tostado","produce",52.50],["Manzana Pink Lady","produce",26.35],
+ ["Plátano","produce",15.15],["Tomate Saladette","produce",7.28],
+ ["Ciruela Pasa S/H","produce",61.09],["Ciruela Pasa S/H","produce",61.09],
+ ["Almendra Natural","pantry",89],["Papa Chips Jalapeño","snacks",61],
+ ["Papa Sabritas Sal","snacks",61],["Papa Sabritas Sal","snacks",61],
+ ["Frijoles Refritos Isadora","protein",18],["Riccadonna Asti","drinks",310],
+ ["Cerveza Barrilito","drinks",59],["Baygon Total","home",65],
+ ["Termo Okko ×2","oneoff",698]]},
+
+{d:"2026-08-16", t:2418.32, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"", l:[
+ ["Oroweat Multigrano","bakery",93],["Quinoa BSD Foods","pantry",71],
+ ["Avena Orgánica ×2","pantry",195],["Pasta Rummo Farfalle","pantry",84],
+ ["Granola Miel de Agave","pantry",104],["Jarabe Mister Maple","pantry",172],
+ ["Mermelada de Frambuesa","pantry",84],["Crema Almendra Sun Harvest","pantry",198],
+ ["Salsa Herdez Chipotle","pantry",27.50],["Papa Chips Jalapeño ×2","snacks",122],
+ ["Papa Chips Sal","snacks",61],["Frijoles Refritos Isadora","protein",17],
+ ["Mango Come Verde","produce",210],["Papel Aluminio Rey","home",59.50],
+ ["Toallas de Papel","home",52],["Vino Rosado Jean C","drinks",132.30],
+ ["Cerveza Barrilito","drinks",64],["Huevo Criollo Blanco 18 pz","protein",46],
+ ["Durazno Rojo","produce",60.88],["Limón Eureka","produce",10.03],
+ ["Dátil Medjool","produce",175],["Calabaza Italiana","produce",12.48],
+ ["Lechuga Italiana Viva","produce",39.10],["Ciruela Pasa S/H","produce",61.09],
+ ["Ciruela Pasa S/H","produce",61.09],["Plátano","produce",12.95],
+ ["Tomate Saladette","produce",3.50],["DontWorry Quiche","chilled",90],
+ ["Pollo Rostizado","protein",99.90]]},
+
+{d:"2026-08-23", t:2771.30, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"Wrong chicken bought; coffee was a mistake purchase", l:[
+ ["Oroweat Multigrano","bakery",93],["Maíz Palomero","pantry",19],
+ ["Tortilla Del Barrio","bakery",23.60],["Café Don Justo Orgánico","pantry",410],
+ ["Crema Almendra Sun Harvest","pantry",198],["Crema Sun Harvest","pantry",145],
+ ["Aceite de Coco Aires del Campo","pantry",140],["Vinagre Chedraui","pantry",13],
+ ["Sazonador Moe’s","pantry",44],["Sal Rosa Alta","pantry",179],
+ ["Papa Chips Sal","snacks",61],["Papa Chips Jalapeño","snacks",61],
+ ["Cacahuates Mafer Tostado","pantry",52.50],["Cacahuates Mafer Limón","pantry",52.50],
+ ["VR Danjou 750","drinks",351],["Salmón Atlántico","protein",329],
+ ["Tomate Saladette","produce",5.83],["Ciruela Pasa S/H","produce",61.09],
+ ["Manzana Pink Lady","produce",23.96],["Lechuga Hidropónica","produce",38.90],
+ ["Plátano","produce",22.28],["Ajo Granel","produce",8.06],
+ ["Queso Mi Passion","chilled",139],["DontWorry Quiche","chilled",90],
+ ["Pierna y Muslo","protein",133.58],["Cuaderno E. Plus","oneoff",29],
+ ["Cuaderno E. Plus","oneoff",29],["Bolígrafo Bic","oneoff",19]]},
+
+{d:"2026-08-30", t:2278.87, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"Power-outage restock — milks, eggs and food storage", l:[
+ ["Avena Orgánica ×2","pantry",195],["Granola Miel de Agave","pantry",104],
+ ["Tortilla Del Barrio","bakery",23.60],["BebiSilk Soya ×2","chilled",85],
+ ["Azúcar Zulka","pantry",23.50],["Mix de Nueces","pantry",86.01],
+ ["Frijoles Refritos Isadora ×2","protein",34],["Papa Sabritas Limón","snacks",61],
+ ["Aceituna Serpis Kalamata","pantry",78],["Cacahuates Mafer ×3 (3-for-2)","pantry",105],
+ ["Toallas de Papel","home",51],["Papel Encerado 10 m","home",54],
+ ["Enjuague Listerine","care",98],["Loción Protectora","care",287],
+ ["Huevo Blanco 18 pz","protein",43],["Manzana Pink Lady","produce",22.16],
+ ["Coco Tostado","produce",52.50],["Tomate Saladette","produce",7.22],
+ ["Ciruela Pasa S/H","produce",61.09],["Ciruela Pasa S/H","produce",61.09],
+ ["Limón Eureka","produce",4.76],["Plátano","produce",18.05],
+ ["AL Califia Farms Vainilla","chilled",155],["Tortillas Blancas granel","bakery",2.98],
+ ["Pollo Rostizado","protein",99.90],["Fibra Esponja Scotch-Brite","home",73],
+ ["Hermético Cubasa ×2","oneoff",90],["Hermético Cubasa ×2","oneoff",58],
+ ["Refresquero Guatepeor","oneoff",18.01],["Refripractic Cubasa ×2","oneoff",198],
+ ["Refresquero Jip Gu","oneoff",29]]},
+
+{d:"2026-09-05", t:1741.37, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"", l:[
+ ["Tortilla Blanca 45 pz","bakery",38],["Quinoa Okko","pantry",74],
+ ["Maíz Palomero","pantry",15],["Oroweat Multigrano","bakery",93],
+ ["Galleta Lotus Biscoff","snacks",83],["Jarabe Mister Maple","pantry",172],
+ ["Vinagre Chedraui","pantry",35],["Salsa Herdez Cacahuate","pantry",27],
+ ["Salsa Herdez Roja","pantry",27],["Papa Sabritas Sal","snacks",61],
+ ["Papa Sabritas Crema","snacks",61],["Chile Chipotle La Chata","pantry",60],
+ ["Garbanzo en Salmuera","protein",26],["Kleenex Gel 450 ml","care",54],
+ ["Huevo Blanco 12 pz","protein",32],["Salmón Atlántico","protein",329],
+ ["Lechuga Italiana Viva","produce",39.10],["Champiñón Granel","produce",24.61],
+ ["Aguacate Hass","produce",45.56],["Queso Mi Passion","chilled",139],
+ ["Pollo Rostizado","protein",99.90],["Filtro ecológico","oneoff",95],
+ ["Hermético Rectangular","oneoff",111.20]]},
+
+/* 13 Sep — subtotal 3,125.56 less a 61.00 "3x2 En Botanas" promotion on the
+   crisps = 3,064.56. The crisps keep their 61.00 shelf price and the
+   promotion is its own line, the same as the wine discount on 15 Sep. */
+{d:"2026-09-13", t:3064.56, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"3x2 on crisps", l:[
+ ["Oroweat Multigrano","bakery",93],["Granola Miel de Agave 310 g","pantry",104],
+ ["Avena Orgánica 300 g","pantry",97.50],["Pasta Rummo Fusilli","pantry",84],
+ ["Quinoa Okko Mix","pantry",74],["Chía Natural Dream","pantry",100],
+ ["Galleta Lotus Biscoff","snacks",83],
+ ["Crema Almendra Sun Harvest 454 g","pantry",198],
+ ["Mermelada de Fresa","pantry",75.01],["Aceite de Oliva","pantry",199],
+ ["Papa Chips Sal 150 g","snacks",61],
+ ["3x2 en botanas","snacks",-61],
+ ["Papa Chips Jalapeño","snacks",61],["Papa Chips Fuego","snacks",61],
+ ["Lavatrastes Axion Limón 900 ml","home",57],
+ ["Papel Higiénico Kleenex Cottonelle 32R","home",249],
+ ["Toallas de Papel","home",49],["Loción Protectora ×2","care",574],
+ ["Curitas Aquaprotect","care",60],["Curitas Resistente","care",123],
+ ["Huevo Blanco 12 pz","protein",32],["Salmón Atlántico","protein",329],
+ ["Almendra Natural","pantry",77.80,389.00,0.200],["Manzana Cosmic Crisp","produce",38.63,59.90,0.645],
+ ["Limón S/Semilla","produce",3.64,23.50,0.155],["Ajo Granel","produce",7.47,115.00,0.065],
+ ["Plátano Chiapas/Tabasco","produce",24.61,27.50,0.895],
+ ["Margarina I Can't Believe 425 g","chilled",110],
+ ["Pollo Rostizado","protein",99.90]]},
+/* 15 Sep — subtotal 839.50 less a 30% wine promotion (154.80) = 684.70.
+   The Prosecco is kept at its shelf price of 258 a bottle and the
+   discount sits on its own line, so the promotion does not masquerade
+   as a price drop the next time the wine is bought. */
+{d:"2026-09-15", t:684.70, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"Wine and soap run", l:[
+ ["Papa Chips Fuego","snacks",61],
+ ["Maschio Prosecco 750 ml ×2","drinks",516],
+ ["30% de descuento en vinos","drinks",-154.80],
+ ["Jabón de Tocador Zest ×5","care",105],
+ ["Jabón Zest Aqua 135 ×3","care",63],
+ ["Jabón Líquido Dove","care",94.50]]},
+{d:"2026-09-20", t:1657.29, fx:17.30, /* PLACEHOLDER - the real card rate for this day is not known */ note:"", l:[
+ ["Granola Tía Ofilia","pantry",135],["Avena Orgánica 300 g ×2","pantry",195],
+ ["Oroweat Multigrano","bakery",93],["Tortilla Blanca 45 pz","bakery",38],
+ ["Maíz Palomero Buenas","pantry",19],["Azúcar Metco Mascabado","pantry",75],
+ ["Crema Sun Harvest","pantry",145],
+ ["Crema Almendra Sun Harvest 454 g","pantry",198],
+ ["Garbanzo en Salmuera","protein",26],["Aceituna Serpis","pantry",78],
+ ["Harpic Líquido","home",60],["Limpiador Baños Trusgo Platino","home",60],
+ ["Limpiador Fabuloso Lavanda 2 L","home",59],
+ ["Bolsas de Basura La Casera","home",48.50],
+ ["Piña Gota de Miel","produce",23.67,41.90,0.565],["Blue Berry","produce",58.50],
+ ["Manzana Sugar Bee","produce",73.67,59.90,1.230],["Acelgas Rollo","produce",9.90],
+ ["Limón Eureka","produce",6.37,45.50,0.140],["Calabaza Italiana","produce",21.59,26.50,0.815],
+ ["Tomate Saladette","produce",20.08,28.90,0.695],["Aguacate Hass","produce",30.74,54.90,0.560],
+ ["Plátano Chiapas/Tabasco","produce",26.81,27.50,0.975],
+ ["Limón S/Semilla","produce",2.46,23.50,0.105],
+ ["Pollo Rostizado Jumbo Mexicano","protein",154]]},
+{d:"2026-09-30", t:2946.65, fx:17.8682, /* confirmed from the card statement */ note:"", l:[
+ ["Oroweat Multigrano","bakery",93],["Granola Granvita","pantry",65],
+ ["Maíz Palomero Buenas","pantry",19],["Tortilla Blanca 45 pz","bakery",38],
+ ["Mermelada Bonne Maman Fresa 370 g","pantry",195],
+ ["Jarabe Mister Maple","pantry",172],["Aceite de Coco Aires del Campo","pantry",140],
+ ["Macha ESDO 250 g","pantry",133],["Frijoles Refritos Isadora","protein",17],
+ ["Toallas de Papel","home",49],["Bolsa Ziploc Congelador G 15","home",68.50],
+ ["Papel Aluminio Rey","home",60],["Maschio Prosecco 750 ml","drinks",258],
+ ["Desodorante Arm & Hammer","care",101],["Loción Protectora","care",287],
+ ["Huevo Blanco Kaki 12 pz","protein",30],["Salmón Atlántico","protein",329],
+ ["Cacahuate Garapiñado","pantry",45,180.00,0.250],["Limón Eureka","produce",5.23,29.90,0.175],
+ ["Semilla de Girasol","pantry",43.05,210.00,0.205],["Coco Tostado","produce",50,500.00,0.100],
+ ["Limón S/Semilla","produce",4.71,32.50,0.145],["Ajo Granel","produce",14.62,121.90,0.120],
+ ["Lechuga Hidropónica","produce",38.90],["Aguacate Hass","produce",54.35,54.90,0.990],
+ ["Tomate Saladette","produce",24.68,36.30,0.680],["Acelgas Rollo","produce",9.90],
+ ["Calabaza Italiana","produce",26.02,24.90,1.045],["Piña Gota de Miel","produce",35.37,40.90,0.865],
+ ["Manzana Sugar Bee","produce",75.77,59.90,1.265],["Plátano Chiapas/Tabasco","produce",18.48,14.50,1.275],
+ ["Ciruela Pasa S/H","produce",61.09,298.00,0.205],["Ciruela Pasa S/H","produce",62.58,298.00,0.210],
+ ["Blue Berry","produce",58.50],["Queso Bionda Manchego","chilled",125],
+ ["Galleta Salmas Ancestral","snacks",39],["Pollo Rostizado","protein",99.90]]},
+
+{d:"2026-10-08", t:4331.75, fx:17.9257, /* confirmed from the card statement */ note:"Parents visiting — cereal, cider vinegar, mustard, almond milk, agave", l:[
+ ["Cereal Chee HN","pantry",108],["Quinoa Okko","pantry",74],
+ ["Oroweat Multigrano","bakery",93],["Maíz Palomero","pantry",19],
+ ["Pasta Rummo Penne","pantry",84],["Avena ADC Orgánica","pantry",86],
+ ["Avena Orgánica 300 g","pantry",97.50],["Chía Okko Semillas","pantry",158],
+ ["Galleta Lotus Biscoff","snacks",82],["Crema Sun Harvest","pantry",145],
+ ["Crema Almendra Sun Harvest","pantry",198],["Jarabe de Agave 330 g","pantry",74],
+ ["Mostaza First Street","pantry",25],["Vinagre de Manzana Sun Harvest","pantry",124],
+ ["Tajín Bajo Sodio","pantry",72.50],["Aceite de Oliva EV 500 ml","pantry",125],
+ ["Sazonador Moe’s","pantry",44],["Gouter Vinagreta 60 g","pantry",95],
+ ["Catar Curry 55 g","pantry",36.01],["Vinagre Chedraui","pantry",35],
+ ["Frijoles Refritos Isadora ×2","protein",34],["Detergente Tide","home",450],
+ ["Bolsas de Basura La Casera","home",48.50],["Protector de mesa","oneoff",38],
+ ["Tequila Azul 700 ml","drinks",199],["Cerveza Barrilito","drinks",64],
+ ["Huevo Webito 12 pz","protein",80.90],["Salmón Atlántico","protein",329],
+ ["Manzana Sugar Bee","produce",74.87],["Pera Mantequilla/Anjou","produce",32.80],
+ ["Almendra Natural","pantry",77.80],["Cacahuate Garapiñado","pantry",45.90],
+ ["Limón S/Semilla","produce",12.70],["Plátano","produce",25.88],
+ ["Arándanos","produce",58.50],["Tomate Saladette","produce",21.26],
+ ["Calabaza Italiana","produce",11.08],["Espinacas Rollo","produce",11.90],
+ ["Jugo Manzana y Naranja 1 L","drinks",56],["Coco Tostado","produce",54.60],
+ ["Ciruela Pasa S/H","produce",61.09],["Aguacate Hass","produce",65.05],
+ ["Violife Manchego","chilled",110],["AL Califia Farms Vainilla","chilled",145],
+ ["Sanissimo Salmas","snacks",37],["Kellogg’s Casero","pantry",94],
+ ["Totopo Chile Limón","snacks",39],["Totopo Botanero SB","snacks",39],
+ ["Pollo Rostizado","protein",99.90],["Carro Mandado","oneoff",140.01]]}
+];
