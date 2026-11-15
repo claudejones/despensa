@@ -1,5 +1,5 @@
 "use strict";
-var APP_VERSION = "4.27.0";
+var APP_VERSION = "4.27.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -1726,6 +1726,12 @@ function fit(){
   document.body.style.paddingBottom=(th+bh+28)+"px";
   var hd=document.querySelector("header");
   if(hd) document.documentElement.style.setProperty("--hdr", hd.offsetHeight+"px");
+  /* The toast rides above whatever bottom chrome is showing. It is measured
+     here rather than guessed, for the same reason --hdr is: the trip bar
+     appears and disappears, and a constant would be wrong half the time —
+     which is exactly how the old 76px-from-the-top toast ended up sitting
+     on the first section header. */
+  document.documentElement.style.setProperty("--toastgap", (th+bh+12)+"px");
 }
 window.addEventListener("resize", fit);
 window.addEventListener("orientationchange", function(){ setTimeout(fit,250); });

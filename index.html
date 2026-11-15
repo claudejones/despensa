@@ -534,10 +534,23 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .flagbox{display:flex;gap:11px;align-items:flex-start}
 .flagbox .ico{width:18px;height:18px;color:var(--store);flex:none;margin-top:1px}
 
-.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 76px);
-  transform:translateX(-50%) translateY(-6px);background:var(--ink);color:var(--paper);
+/* The toast used to sit at a hardcoded 76px from the top, which cleared the
+   app header by 3px and then landed squarely on the first sticky section
+   header below it — a 20px overlap on every screen with sections, and one
+   that would drift again the moment the header's height changed, because
+   76 was a guess rather than --hdr.
+
+   Anchoring it under the header does not help: .sechead is sticky directly
+   beneath, so anything top-anchored covers a section title. So it goes to
+   the bottom, clear of the list, over the tab bar — chrome rather than
+   content. It is pointer-events:none, so it has never blocked a tap and
+   still does not. */
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + var(--toastgap, 86px));
+  transform:translateX(-50%) translateY(6px);background:var(--ink);color:var(--paper);
   padding:10px 17px;border-radius:9px;font-size:13.5px;font-weight:650;z-index:60;
-  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
+  box-shadow:0 6px 20px rgba(0,0,0,.22);max-width:calc(100% - 32px);
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -1127,7 +1140,7 @@ var CAT_FP  = "6fba25d9";
 var SEED_FP = "49f6f833";
 
 "use strict";
-var APP_VERSION = "4.27.0";
+var APP_VERSION = "4.27.1";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -2854,6 +2867,12 @@ function fit(){
   document.body.style.paddingBottom=(th+bh+28)+"px";
   var hd=document.querySelector("header");
   if(hd) document.documentElement.style.setProperty("--hdr", hd.offsetHeight+"px");
+  /* The toast rides above whatever bottom chrome is showing. It is measured
+     here rather than guessed, for the same reason --hdr is: the trip bar
+     appears and disappears, and a constant would be wrong half the time —
+     which is exactly how the old 76px-from-the-top toast ended up sitting
+     on the first section header. */
+  document.documentElement.style.setProperty("--toastgap", (th+bh+12)+"px");
 }
 window.addEventListener("resize", fit);
 window.addEventListener("orientationchange", function(){ setTimeout(fit,250); });
