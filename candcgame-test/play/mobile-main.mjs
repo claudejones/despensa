@@ -9,9 +9,10 @@ const $=id=>document.getElementById(id),panel=$('game'),surface=$('surface'),can
 const loader=new AssetLoader(),limit=24,originalLoad=loader.load.bind(loader);
 loader.load=source=>{const p=originalLoad(source);loader.cache.delete(source);loader.cache.set(source,p);while(loader.cache.size>limit)loader.cache.delete(loader.cache.keys().next().value);return p;};
 let run=null,images={},ui=null,last=null,request=0,generation=0,auto=null;
+let qaSpeed=1,qaImmortal=false;// set only by QA mode (test builds)
 const slidePointers=new Set();
 // Version label (owner rule: visible on the title and Options). tools/public-build.mjs empties BUILD for the public game.
-export const VERSION='1.1.0',BUILD='t3';
+export const VERSION='1.1.0',BUILD='t4';
 $('version').textContent='v'+VERSION+(BUILD?' · '+BUILD:'');
 // Desktop: menu screens are laid out as if the window were at most ~960×600 and zoomed as one piece (up to 3×; 2× left big monitors half empty) to fill
 // bigger windows, like Pulse Kart's uiScale. Gameplay is untouched. --uiz is used by mobile.css.
@@ -31,13 +32,15 @@ function paint(){
  for(const a of ['jump','slide'])$('run-'+a).disabled=run.status!=='playing';
  $('run-pause').disabled=!['playing','paused'].includes(run.status);$('run-pause').textContent=run.status==='playing'?'PAUSE':'RESUME';$('run-pause').setAttribute('aria-label',run.status==='playing'?'Pause game':'Resume game');ui?.update(run);
 }
-function tick(now){request=0;if(!document.hidden&&!portrait.matches&&run&&ui?.presenting()){if(last!==null){const dt=Math.min(.1,(now-last)/1000);if(auto)auto.advance(dt);else run.advance(dt);}paint();}last=now;request=requestAnimationFrame(tick);}
+function tick(now){request=0;if(!document.hidden&&!portrait.matches&&run&&ui?.presenting()){if(last!==null){const dt=Math.min(.1,(now-last)/1000)*qaSpeed;if(auto)auto.advance(dt);else run.advance(dt);}paint();}last=now;request=requestAnimationFrame(tick);}
 function toggle(){if(ui?.blocked()||!run||portrait.matches)return;ui.audio.unlock();if(run.status==='playing')pause();else if(run.status==='paused'){release();run.start();sharedAudio.setPaused(false);last=null;}paint();}
 function action(a,held=false){if(ui?.blocked()||run?.status!=='playing'||portrait.matches)return;ui.audio.unlock();if(a==='slide'&&held&&ui.store.state.settings.continuousSlide)run.holdSlide(true);else run.action(a);}
 for(const a of ['jump','slide']){const b=$('run-'+a);b.onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();if(a==='slide')slidePointers.add(e.pointerId);action(a,a==='slide');try{b.setPointerCapture?.(e.pointerId);}catch{}paint();};b.onclick=e=>{if(e.detail===0)action(a);};}
 for(const event of ['pointerup','pointercancel','lostpointercapture'])$('run-slide').addEventListener(event,e=>{slidePointers.delete(e.pointerId);if(!slidePointers.size)run?.holdSlide?.(false);});
 $('run-pause').onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();toggle();};$('run-pause').onclick=e=>{if(e.detail===0)toggle();};
-addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(e.target.tagName)||e.repeat)return;const a=['ArrowDown','KeyS'].includes(e.code)?'slide':['Space','ArrowUp','KeyW'].includes(e.code)?'jump':null;if(a||e.code==='KeyP'){e.preventDefault();if(a)action(a,a==='slide');else toggle();}});
+// Keys (How to Play → Controls lists them): Space/↑/W jump, ↓/S slide, P or Esc pause/resume, M game menu.
+addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(e.target.tagName)||e.repeat)return;const a=['ArrowDown','KeyS'].includes(e.code)?'slide':['Space','ArrowUp','KeyW'].includes(e.code)?'jump':null;if(a||e.code==='KeyP'||e.code==='Escape'){e.preventDefault();if(a)action(a,a==='slide');else toggle();}
+ else if(e.code==='KeyM'&&run&&ui&&!ui.blocked()&&!portrait.matches){e.preventDefault();document.querySelector('.global-run-menu button')?.click();}});
 addEventListener('keyup',e=>{if(['ArrowDown','KeyS'].includes(e.code))release();});addEventListener('blur',interrupt);addEventListener('pagehide',interrupt);document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();else{sharedAudio.visibility(portrait.matches);last=null;}});portrait.addEventListener('change',rotation);
 panel.addEventListener('dblclick',e=>e.preventDefault());
 panel.addEventListener('gesturestart',e=>{if(panel.querySelector('.global-confirm,.global-result:not([hidden]),.global-notice:not([hidden])'))e.preventDefault();},{passive:false});
@@ -74,10 +77,40 @@ async function boot(){
    if(!sequence.verified||sequence.stage!==stage||sequence.profile!==selection.difficulty)throw Error('Stage plan is incompatible with this release.');
    const snapshot=runtimeSnapshot({...options,sequence});const pairs=await Promise.all(runtimeAssetKeys(snapshot).map(async key=>{const img=await loader.load(catalog.assets[key]);const size=catalog.dimensions[key];if(size&&(img.naturalWidth!==size.width||img.naturalHeight!==size.height))throw Error('Stage artwork is incompatible with this release.');return [key,img];}));loaded={run:new PlayRuntime(snapshot,{unlimitedLives:selection.unlimited}),images:Object.fromEntries(pairs)};
   }
-  if(token!==generation)return;run=loaded.run;images=loaded.images;auto=selection.demo?new AttractPlayback(run):null;
+  if(token!==generation)return;run=loaded.run;if(qaImmortal)run.unlimitedLives=true;images=loaded.images;auto=selection.demo?new AttractPlayback(run):null;
   $('run-hud').style.setProperty('--heart-sprite',`url("${images.hudHearts.src}")`);$('run-hud').style.setProperty('--character-sprite',`url("${images.hudCharacters.src}")`);$('run-path').src=images.hudPath.src;
   run.start();if(document.hidden||portrait.matches)pause();last=null;canvas.focus();
  }});
- $('boot').hidden=true;ui.open();rotation();request=requestAnimationFrame(tick);
+ $('boot').hidden=true;ui.open();rotation();request=requestAnimationFrame(tick);if(BUILD)setupQA();
 }
 $('retry').onclick=()=>location.reload();export const started=boot().catch(e=>{$('boot-text').textContent=e.message;$('retry').hidden=false;});rotation();
+// QA-START · QA mode + test hooks. Test builds only: tools/public-build.mjs cuts everything from QA-START to QA-END.
+// Open: tap the version label 5 times, or add #qa to the address. Hooks for tests and promo capture: window.__cc.
+function setupQA(){
+ const label=$('version'),STAGE_IDS=['NA','SA','EU','AF','AS','OC','AN'].flatMap(c=>[1,2,3].map(n=>c+'0'+n)),store=()=>ui.store;
+ const state=()=>({version:VERSION,build:BUILD,screen:ui.qa.screen(),speed:qaSpeed,cantDie:qaImmortal,run:run&&{kind:run.kind||'stage',stage:run.stage,status:run.status,lives:run.lives,time:+(run.time||0).toFixed(2),duration:run.duration,motion:run.motion?.state},journey:store().state.journey});
+ function unlockAll(){const st=store().state;for(const s of STAGE_IDS)st.ratings.standard[s]={claude:3,constance:3};if(st.journey)for(const s of STAGE_IDS)if(!st.journey.visited.includes(s))st.journey.visited.push(s);store().save();if(ui.qa.screen()==='start')ui.qa.start();}
+ function win(){if(!run||run.status!=='playing')return false;run.invulnerable=1e9;const end=run.duration-.02;let o=run,d;while(o&&!(d=Object.getOwnPropertyDescriptor(o,'time')))o=Object.getPrototypeOf(o);if(d?.get){const step=run.steps?run.time/run.steps:1/60;run.steps=Math.max(run.steps,Math.ceil(end/step));}else run.time=Math.max(run.time,end);return true;}
+ function lose(){if(!run||run.status!=='playing'||run.kind==='secret'||!run.damage)return false;run.unlimitedLives=false;run.lives=1;run.invulnerable=0;run.damage({item:{name:'QA',id:'qa'},serial:-1});return true;}
+ function cantDie(on){qaImmortal=!!on;if(run)run.unlimitedLives=qaImmortal||store().state.settings.unlimited;}
+ function reset(){for(const k of Object.keys(localStorage))if(k.startsWith('candc.'))localStorage.removeItem(k);location.hash='';location.reload();}
+ const info=()=>JSON.stringify({...state(),journey:undefined,ua:navigator.userAgent,viewport:innerWidth+'×'+innerHeight,dpr:devicePixelRatio,standalone:matchMedia('(display-mode: standalone)').matches,time:new Date().toISOString()});
+ window.__cc={state,goto:(id,who)=>ui.qa.goto(id,who),win,lose,cantDie,speed:n=>{qaSpeed=Math.max(.25,Math.min(8,+n||1));},unlockAll,reset,info,screens:ui.qa,store,open:()=>open()};
+ const box=document.createElement('div');box.id='qa';box.hidden=true;box.setAttribute('role','dialog');box.setAttribute('aria-label','QA mode');document.body.append(box);
+ const qaBtn=document.createElement('button');qaBtn.id='qa-open';qaBtn.type='button';qaBtn.textContent='QA';qaBtn.hidden=true;qaBtn.onclick=()=>open();document.body.append(qaBtn);
+ const b=(text,fn)=>{const n=document.createElement('button');n.type='button';n.textContent=text;n.onclick=()=>{fn(n);};return n;};
+ function open(){qaBtn.hidden=false;if(run?.status==='playing')pause();box.replaceChildren();const h=document.createElement('h2');h.textContent='QA · v'+VERSION+' · '+BUILD;
+  const pick=document.createElement('select');pick.setAttribute('aria-label','Stage');for(const id of [...STAGE_IDS,'SECRET01']){const o=document.createElement('option');o.value=id;o.textContent=id==='SECRET01'?'Beneath the Ice (secret)':id;pick.append(o);}if(run?.stage)pick.value=String(run.stage).toUpperCase();
+  const msg=document.createElement('p');msg.setAttribute('role','status');const say=t=>{msg.textContent=t;};
+  const rows=[[h,b('Close',close)],[pick,b('Play stage',async()=>{close();try{if(pick.value==='SECRET01'&&!store().state.secret&&!STAGE_IDS.every(s=>store().state.ratings.standard[s]))unlockAll();await ui.qa.goto(pick.value);}catch(e){ui.qa.tell('QA: '+e.message);}})],
+   [b('Win now',()=>{close();if(!win())ui.qa.tell('QA: start a stage first.');}),b('Lose now',()=>{close();if(!lose())ui.qa.tell('QA: start a normal stage first (not the secret level).');})],
+   [b("Can't die: "+(qaImmortal?'ON':'OFF'),n=>{cantDie(!qaImmortal);n.textContent="Can't die: "+(qaImmortal?'ON':'OFF');}),b('Speed ×'+qaSpeed,n=>{qaSpeed=qaSpeed>=4?1:qaSpeed*2;n.textContent='Speed ×'+qaSpeed;})],
+   [b('Unlock all',()=>{unlockAll();say('All stages, Hard, Level Select and Beneath the Ice unlocked (test save only).');}),b('Reset progress',n=>{if(n.dataset.sure){reset();return;}n.dataset.sure='1';n.textContent='Tap again to reset';})],
+   [b('Copy bug info',async()=>{try{await navigator.clipboard.writeText(info());say('Bug info copied.');}catch{say(info());}})],[msg]];
+  for(const r of rows){const row=document.createElement('div');row.className='qa-row';row.append(...r);box.append(row);}box.hidden=false;box.querySelector('button').focus();}
+ function close(){box.hidden=true;canvas.focus?.();}
+ box.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();close();}});
+ let taps=[];label.style.pointerEvents='auto';label.addEventListener('click',()=>{const now=Date.now();taps=[...taps.filter(t=>now-t<2500),now];if(taps.length>=5){taps=[];open();}});
+ if(location.hash==='#qa')open();addEventListener('hashchange',()=>{if(location.hash==='#qa')open();});
+}
+// QA-END

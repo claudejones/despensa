@@ -52,3 +52,11 @@ body:has(#surface[data-global-screen="start"]) #version,body:has(#surface[data-g
 #game .global-continent{transform:translate(-50%,-50%) scale(var(--map-k,1))}
 /* On Options the label sits in the header's empty right side (bottom-right covered a setting, fit.mjs). */
 body:has(#surface[data-global-screen="options"]) #version{bottom:auto;top:calc(env(safe-area-inset-top) + 20px * var(--uiz,1))}
+/* QA mode (test builds only; the public build has no #qa elements) */
+#qa{position:fixed;inset:calc(env(safe-area-inset-top) + 8px) auto auto calc(env(safe-area-inset-left) + 8px);z-index:3000;max-width:min(560px,calc(100vw - 16px));max-height:calc(100dvh - 16px);overflow:auto;padding:10px;border:2px solid #d8a83f;border-radius:8px;background:rgba(4,25,46,.96);color:#fff2cd;font:14px/1.3 system-ui,-apple-system,sans-serif}
+#qa[hidden],#qa-open[hidden]{display:none}
+#qa h2{font-size:15px;margin:0;flex:1}
+#qa .qa-row{display:flex;gap:8px;align-items:center;margin:6px 0;flex-wrap:wrap}
+#qa button,#qa select,#qa-open{min-height:44px;padding:0 12px;border:1px solid #d8a83f;border-radius:6px;background:#10283f;color:#fff2cd;font:inherit}
+#qa p{margin:0;max-width:520px;overflow-wrap:anywhere;font-size:12px}
+#qa-open{position:fixed;z-index:2900;left:calc(env(safe-area-inset-left) + 4px);top:50%;transform:translateY(-50%);min-width:44px;font:12px system-ui,sans-serif;opacity:.7}

@@ -1,0 +1,30 @@
+{
+  "id": "./",
+  "name": "Claude & Constance: Around the World (test)",
+  "short_name": "C&C test",
+  "description": "An 8-bit world-travel adventure.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "orientation": "landscape",
+  "background_color": "#04192e",
+  "theme_color": "#04192e",
+  "icons": [
+    {
+      "src": "../assets/global-ui/BRAND_PWA_ICON_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/global-ui/BRAND_PWA_ICON_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

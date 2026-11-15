@@ -224,4 +224,8 @@ body[data-mode=game] .play-heading{display:none;}
  .global-soundtrack-layout{margin-top:0}
  .global-soundtrack-playlist{max-height:min(76svh,390px)}
  .global-soundtrack-controls button{min-height:44px}
-}
+}.global-controls-switch{display:flex;justify-content:center;gap:10px;margin:0 0 10px;}
+.global-controls-list{display:grid;grid-template-columns:max-content 1fr;gap:10px 16px;align-items:baseline;margin:0;}
+.global-controls-list dt{color:#ffdc54;white-space:nowrap;}
+.global-controls-list dd{margin:0;line-height:1.7;}
+@media(max-height:500px){.global-controls-list{gap:6px 14px}.global-controls-list dd{line-height:1.45}}
