@@ -85,6 +85,17 @@ main{padding:0 var(--pad);
 .sectitle .ico{width:15px;height:15px;color:var(--store);opacity:.85;
   position:relative;top:-.5px}
 .seccount{font-size:11px;color:var(--muted);font-weight:650}
+/* A family row. No amount on it by design — the members span 32 to 87 and a
+   single figure would be a lie. The chevron is the only affordance. */
+.famrow{cursor:pointer}
+.famrow .nm{font-weight:650}
+.chev{flex:0 0 auto;width:10px;height:10px;margin-right:4px;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(45deg);transition:transform .15s ease}
+.famrow.open .chev{transform:rotate(-135deg)}
+.row.child{padding-left:16px;background:var(--card)}
+.row.child::before{content:'';position:absolute;left:5px;top:0;bottom:0;
+  width:2px;background:var(--rule)}
 .pad{padding:14px 2px 2px}
 
 /* rows */

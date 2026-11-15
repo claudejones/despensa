@@ -4,6 +4,31 @@
    hist = known price points from receipts. */
 var CATALOGUE_VERSION = 16;
 
+/* Variant families — a DISPLAY grouping and nothing else. It never reaches
+   Where it goes, price history or a trip record: a family is a way of
+   drawing a list, not a thing that holds money. So a wrong fam is a
+   cosmetic annoyance, never a number going quietly wrong.
+
+   Set explicitly, never derived from the name: grouping by first word puts
+   Papel Higiénico and Papel Aluminio in one family. The test is whether you
+   would buy one INSTEAD of the other on a trip. */
+var FAMS = {
+  pollo:     "Pollo Rostizado",
+  huevo:     "Huevo",
+  oliva:     "Aceite de Oliva",
+  arandano:  "Arándanos",
+  pera:      "Pera",
+  ciruela:   "Ciruela Pasa",
+  crema:     "Crema de frutos secos",
+  jarabe:    "Jarabe",
+  mermeladas:"Mermelada",
+  limon:     "Limón",
+  lechveg:   "Leche vegetal",
+  violife:   "Violife",
+  jabon:     "Jabón",
+  jugo:      "Jugo",
+};
+
 var CATS = [
   {id:"produce",  name:"Fruit & Veg",         ic:"leaf"},
   {id:"protein",  name:"Protein",             ic:"fish"},
@@ -46,17 +71,17 @@ var ITEMS = [
   hist:[["2026-09-13",24.61],["2026-09-20",26.81],["2026-09-30",18.48],["2026-10-08",25.88],["2026-10-14",18.34],["2026-10-25",27.45],["2026-11-01",30.04],["2026-11-14",50.08]]},
 {c:"produce", es:"Manzana", en:"Apple — whichever is good", q:1, p:49.11, ref:"59.90/kg", hint:"chedraui",
   hist:[["2026-08-30",22.16],["2026-09-30",23.96],["2026-10-08",74.87],["2026-10-25",65.59],["2026-11-01",51.81],["2026-11-14",49.11]]},
-{c:"produce", es:"Arándanos", en:"Blueberries", q:1, p:58.50, hint:"chedraui",
+{c:"produce", es:"Arándanos", fam:"arandano", en:"Blueberries", q:1, p:58.50, hint:"chedraui",
   hist:[["2026-09-20",58.50],["2026-09-30",58.50],["2026-10-08",58.50],["2026-10-25",58.50],["2026-11-01",58.50]]},
-{c:"produce", es:"Arándanos Jumbo", en:"Blueberries — jumbo punnet", q:1, p:129.00, hint:"chedraui",
+{c:"produce", es:"Arándanos Jumbo", fam:"arandano", en:"Blueberries — jumbo punnet", q:1, p:129.00, hint:"chedraui",
   hist:[["2026-11-14",129.00]]},
 {c:"produce", es:"Durazno Rojo", en:"Red peach — quality permitting", q:1, p:60.88, ref:"99.00/kg", hint:"chedraui",
   hist:[["2026-08-16",60.88]]},
 {c:"produce", es:"Piña Gota de Miel", en:"Pineapple", q:1, p:51.94, ref:"24.50/kg", hint:"chedraui",
   hist:[["2026-10-14",51.94]]},
-{c:"produce", es:"Pera Mantequilla/Anjou", en:"Anjou pear", q:1, p:41.25, ref:"80.90/kg", hint:"chedraui",
+{c:"produce", es:"Pera Mantequilla/Anjou", fam:"pera", en:"Anjou pear", q:1, p:41.25, ref:"80.90/kg", hint:"chedraui",
   hist:[["2026-10-14",32.80],["2026-10-25",41.25]]},
-{c:"produce", es:"Pera Bartlett", en:"Bartlett pear", q:1, p:41.33, ref:"88.90/kg", hint:"chedraui",
+{c:"produce", es:"Pera Bartlett", fam:"pera", en:"Bartlett pear", q:1, p:41.33, ref:"88.90/kg", hint:"chedraui",
   hist:[["2026-11-14",41.33]]},
 {c:"produce", es:"Tomate Saladette", en:"Roma tomato", q:1, p:38.78, ref:"72.50/kg", hint:"chedraui",
   hist:[["2026-09-05",5.83],["2026-09-20",20.08],["2026-09-30",24.68],["2026-10-08",21.26],["2026-10-14",15.90],["2026-10-25",22.54],["2026-11-01",33.66],["2026-11-14",38.78]]},
@@ -79,18 +104,18 @@ var ITEMS = [
   hist:[["2026-11-01",25.41]]},
 {c:"produce", es:"Ajo Granel", en:"Loose garlic", q:1, p:11.58, ref:"121.90/kg", hint:"chedraui",
   hist:[["2026-09-30",8.06],["2026-10-08",11.58]]},
-{c:"produce", es:"Limón Eureka", en:"Eureka lemon (yellow)", q:1, p:10.31, ref:"46.90/kg", hint:"chedraui",
+{c:"produce", es:"Limón Eureka", fam:"limon", en:"Eureka lemon (yellow)", q:1, p:10.31, ref:"46.90/kg", hint:"chedraui",
   hist:[["2026-11-01",12.11],["2026-11-14",10.31]]},
-{c:"produce", es:"Limón s/semilla", en:"Seedless lime (green)", q:1, p:6.25, ref:"30.50/kg", hint:"chedraui",
+{c:"produce", es:"Limón s/semilla", fam:"limon", en:"Seedless lime (green)", q:1, p:6.25, ref:"30.50/kg", hint:"chedraui",
   hist:[["2026-08-16",2.48],["2026-10-08",12.70],["2026-10-14",12.74],["2026-10-25",9.10],["2026-11-01",14.03],["2026-11-14",6.25]]},
 {c:"produce", es:"Coco Tostado", en:"Toasted coconut", q:1, p:54.60, ref:"520.00/kg", hint:"chedraui",
   hist:[["2026-08-30",52.50],["2026-10-08",54.60]]},
-{c:"produce", es:"Ciruela Pasa S/H", en:"Prunes, pitted", q:1, p:59.60, ref:"298.00/kg", hint:"chedraui",
+{c:"produce", es:"Ciruela Pasa S/H", fam:"ciruela", en:"Prunes, pitted", q:1, p:59.60, ref:"298.00/kg", hint:"chedraui",
   hist:[["2026-08-16",61.09],["2026-08-30",61.09],["2026-10-08",61.09],["2026-11-14",59.60]]},
 /* Stone-in, and a different thing at the scale: 210.00/kg against the
    pitted 298.00/kg. Two entries, because one history that alternates
    between them would read as a 30% price swing that never happened. */
-{c:"produce", es:"Ciruela Pasa C/H", en:"Prunes, stone-in", q:1, p:51.25, ref:"250.00/kg", hint:"chedraui",
+{c:"produce", es:"Ciruela Pasa C/H", fam:"ciruela", en:"Prunes, stone-in", q:1, p:51.25, ref:"250.00/kg", hint:"chedraui",
   hist:[["2026-10-25",42.00],["2026-11-01",51.25]]},
 {c:"produce", es:"Dátil Medjool", en:"Medjool dates", q:1, p:175.00, hint:"chedraui"},
 
@@ -102,19 +127,19 @@ var ITEMS = [
    real purchase, not a miscategorisation. */
 {c:"protein", es:"Suplemento Alimenticio Chocolate", en:"Whey protein, chocolate", q:1, p:989.00, hint:"chedraui",
   hist:[["2026-11-14",989.00]]},
-{c:"protein", es:"Pollo Rostizado Jumbo", en:"Rotisserie chicken — jumbo", q:1, p:149.00, hint:"chedraui",
+{c:"protein", es:"Pollo Rostizado Jumbo", fam:"pollo", en:"Rotisserie chicken — jumbo", q:1, p:149.00, hint:"chedraui",
   hist:[["2026-10-14",149.00]]},
-{c:"protein", es:"Pollo Rostizado", en:"Rotisserie chicken", q:1, p:99.90, hint:"chedraui",
+{c:"protein", es:"Pollo Rostizado", fam:"pollo", en:"Rotisserie chicken", q:1, p:99.90, hint:"chedraui",
   hist:[["2026-08-16",99.90],["2026-08-30",99.90],["2026-09-13",99.90],["2026-10-08",99.90],["2026-10-25",99.90],["2026-11-01",99.90],["2026-11-14",99.90]]},
 /* The 80.90 that used to sit here was "Huevo Webito 12 pz" on the 8 Oct
    receipt — a different brand that got name-matched into this entry and
    then read as a 161% price rise. The receipts carry four egg products
    (Criollo 18, Blanco 18, Blanco 12, Webito 12); only like goes with like. */
-{c:"protein", es:"Huevo Blanco 12 pz", en:"Eggs, 12 ct — brand varies", q:1, p:32.00, hint:"chedraui",
+{c:"protein", es:"Huevo Blanco 12 pz", fam:"huevo", en:"Eggs, 12 ct — brand varies", q:1, p:32.00, hint:"chedraui",
   hist:[["2026-09-05",32.00],["2026-09-13",30.00],["2026-10-08",32.00],["2026-10-25",32.00]]},
-{c:"protein", es:"Huevo Orgánico Blanco 12 pz", en:"Organic eggs, 12 ct", q:1, p:78.00, hint:"chedraui",
+{c:"protein", es:"Huevo Orgánico Blanco 12 pz", fam:"huevo", en:"Organic eggs, 12 ct", q:1, p:78.00, hint:"chedraui",
   hist:[["2026-11-01",78.00]]},
-{c:"protein", es:"Huevo Cvivo Rojo 12 pz", en:"Brown eggs, 12 ct — Cvivo", q:1, p:87.00, hint:"chedraui",
+{c:"protein", es:"Huevo Cvivo Rojo 12 pz", fam:"huevo", en:"Brown eggs, 12 ct — Cvivo", q:1, p:87.00, hint:"chedraui",
   hist:[["2026-11-14",87.00]]},
 {c:"protein", es:"Tofu firme House Foods", en:"Firm tofu, 396 g", q:1, p:109.04, hint:"dac"},
 {c:"protein", es:"Carne al Pastor veggie", en:"Veggie al pastor, 450 g", q:1, p:100.92, hint:"dac"},
@@ -128,13 +153,13 @@ var ITEMS = [
 /* ---------- Dairy & Chilled ---------- */
 {c:"chilled", es:"Bionda Manchego", en:"Manchego cheese", q:1, p:125.00, hint:"chedraui",
   hist:[["2026-11-01",125.00],["2026-11-14",125.00]]},
-{c:"chilled", es:"Violife Manchego", en:"Vegan manchego", q:1, p:110.00, hint:"chedraui",
+{c:"chilled", es:"Violife Manchego", fam:"violife", en:"Vegan manchego", q:1, p:110.00, hint:"chedraui",
   hist:[["2026-08-08",94.00],["2026-10-08",110.00]]},
-{c:"chilled", es:"Violife Panela", en:"Vegan panela", q:1, p:94.00, hint:"chedraui",
+{c:"chilled", es:"Violife Panela", fam:"violife", en:"Vegan panela", q:1, p:94.00, hint:"chedraui",
   hist:[["2026-11-01",94.00]]},
-{c:"chilled", es:"Leche de Almendra California Farms Vainilla 1.4 L", en:"Vanilla almond milk, 1.4 L", q:1, p:145.00, hint:"chedraui",
+{c:"chilled", es:"Leche de Almendra California Farms Vainilla 1.4 L", fam:"lechveg", en:"Vanilla almond milk, 1.4 L", q:1, p:145.00, hint:"chedraui",
   hist:[["2026-11-01",145.00],["2026-11-14",145.00]]},
-{c:"chilled", es:"Leche de Soya Güd", en:"Unsweetened soy milk, 1 L", q:2, p:61.48, hint:"dac"},
+{c:"chilled", es:"Leche de Soya Güd", fam:"lechveg", en:"Unsweetened soy milk, 1 L", q:2, p:61.48, hint:"dac"},
 {c:"chilled", es:"Mantequilla Vegana", en:"Vegan butter, 100 g", q:1, p:71.92, hint:"dac"},
 
 /* ---------- Bakery & Tortillas ---------- */
@@ -144,13 +169,13 @@ var ITEMS = [
   hist:[["2026-09-05",38.00],["2026-09-30",38.00],["2026-10-14",31.00]]},
 
 /* ---------- Pantry ---------- */
-{c:"pantry", es:"Crema Almendra Sun Harvest", en:"Almond butter, organic 454 g", q:1, p:198.00, hint:"chedraui",
+{c:"pantry", es:"Crema Almendra Sun Harvest", fam:"crema", en:"Almond butter, organic 454 g", q:1, p:198.00, hint:"chedraui",
   hist:[["2026-08-23",198.00],["2026-09-13",198.00],["2026-10-08",198.00]]},
-{c:"pantry", es:"Crema Barney Almendra", en:"Almond butter — Barney", q:1, p:278.00, hint:"chedraui",
+{c:"pantry", es:"Crema Barney Almendra", fam:"crema", en:"Almond butter — Barney", q:1, p:278.00, hint:"chedraui",
   hist:[["2026-11-14",278.00]]},
-{c:"pantry", es:"Crema Sun Harvest", en:"Nut butter", q:1, p:145.00, hint:"chedraui",
+{c:"pantry", es:"Crema Sun Harvest", fam:"crema", en:"Nut butter", q:1, p:145.00, hint:"chedraui",
   hist:[["2026-08-23",145.00],["2026-09-13",145.00],["2026-10-08",145.00],["2026-11-14",145.00]]},
-{c:"pantry", es:"Crema de Cacahuate", en:"Peanut butter — the cheaper shelf one", q:1, p:67.00, hint:"chedraui",
+{c:"pantry", es:"Crema de Cacahuate", fam:"crema", en:"Peanut butter — the cheaper shelf one", q:1, p:67.00, hint:"chedraui",
   hist:[["2026-10-25",69.00],["2026-11-01",67.00]]},
 {c:"pantry", es:"Avena Orgánica", en:"Organic oats, 300 g", q:2, p:97.50, hint:"chedraui",
   hist:[["2026-08-16",97.50],["2026-08-30",97.50],["2026-10-08",97.50],["2026-11-01",97.50]]},
@@ -168,19 +193,19 @@ var ITEMS = [
   hist:[["2026-09-20",100.00],["2026-10-08",158.00],["2026-11-01",158.00]]},
 {c:"pantry", es:"Pasta Rummo", en:"Rummo pasta — shape varies", q:1, p:84.00, hint:"chedraui",
   hist:[["2026-08-06",59.00],["2026-10-08",84.00]]},
-{c:"pantry", es:"Jarabe Mister Maple", en:"Maple syrup", q:1, p:172.00, hint:"chedraui",
+{c:"pantry", es:"Jarabe Mister Maple", fam:"jarabe", en:"Maple syrup", q:1, p:172.00, hint:"chedraui",
   hist:[["2026-08-08",172.00],["2026-09-05",172.00]]},
-{c:"pantry", es:"Jarabe de Agave", en:"Agave syrup", q:1, p:84.00, hint:"chedraui",
+{c:"pantry", es:"Jarabe de Agave", fam:"jarabe", en:"Agave syrup", q:1, p:84.00, hint:"chedraui",
   hist:[["2026-11-14",84.00]]},
 {c:"pantry", es:"Miel 7 Colores 500", en:"Honey, 500 g", q:1, p:78.00, hint:"chedraui",
   hist:[["2026-11-14",78.00]]},
 {c:"pantry", es:"Té Bigelow Limón", en:"Bigelow lemon tea", q:1, p:106.00, hint:"chedraui",
   hist:[["2026-11-14",106.00]]},
-{c:"pantry", es:"Jarabe Aires del Campo Orgánico 236 ml", en:"Organic maple syrup, 236 ml", q:1, p:200.00, hint:"chedraui",
+{c:"pantry", es:"Jarabe Aires del Campo Orgánico 236 ml", fam:"jarabe", en:"Organic maple syrup, 236 ml", q:1, p:200.00, hint:"chedraui",
   hist:[["2026-10-25",200.00]]},
-{c:"pantry", es:"Mermelada", en:"Jam — flavour varies", q:1, p:84.00, hint:"chedraui",
+{c:"pantry", es:"Mermelada", fam:"mermeladas", en:"Jam — flavour varies", q:1, p:84.00, hint:"chedraui",
   hist:[["2026-08-16",84.00],["2026-09-13",75.01]]},
-{c:"pantry", es:"Mermelada Bonne Maman Cereza 370 g", en:"Cherry preserve, 370 g", q:1, p:149.00, hint:"chedraui",
+{c:"pantry", es:"Mermelada Bonne Maman Cereza 370 g", fam:"mermeladas", en:"Cherry preserve, 370 g", q:1, p:149.00, hint:"chedraui",
   hist:[["2026-11-14",149.00]]},
 {c:"pantry", es:"Corazones de Alcachofa Pasiega", en:"Artichoke hearts, jarred", q:1, p:72.50, hint:"chedraui",
   hist:[["2026-11-01",72.50]]},
@@ -196,9 +221,9 @@ var ITEMS = [
    it was. It may belong on the larger entry; against the 125.00 below it
    reads as a 37% fall that probably never happened. Move it when the size
    is known rather than guessing it now. */
-{c:"pantry", es:"Aceite de Oliva", en:"Olive oil — the regular bottle", q:1, p:125.00, hint:"chedraui",
+{c:"pantry", es:"Aceite de Oliva", fam:"oliva", en:"Olive oil — the regular bottle", q:1, p:125.00, hint:"chedraui",
   hist:[["2026-09-13",199.00],["2026-10-08",125.00]]},
-{c:"pantry", es:"Aceite de Oliva Grande", en:"Olive oil — the larger bottle (Carbonell)", q:1, p:212.00, hint:"chedraui",
+{c:"pantry", es:"Aceite de Oliva Grande", fam:"oliva", en:"Olive oil — the larger bottle (Carbonell)", q:1, p:212.00, hint:"chedraui",
   hist:[["2026-11-01",212.00]]},
 {c:"pantry", es:"Sal Rosa Alta", en:"Pink salt, 400 g", q:1, p:179.00, hint:"chedraui",
   hist:[["2026-11-01",179.00]]},
@@ -226,8 +251,8 @@ var ITEMS = [
 {c:"drinks", es:"Tequila Azul 700 ml", en:"Tequila", q:1, p:199.00, hint:"chedraui"},
 {c:"drinks", es:"Cerveza Barrilito", en:"Barrilito beer, 6-pack", q:1, p:64.00, hint:"chedraui",
   hist:[["2026-08-16",59.00],["2026-08-30",64.00],["2026-10-08",64.00]]},
-{c:"drinks", es:"Jugo de naranja", en:"Orange juice", q:1, p:75.00, hint:"market"},
-{c:"drinks", es:"Jugo de toronja", en:"Grapefruit juice", q:1, p:75.00, hint:"market"},
+{c:"drinks", es:"Jugo de naranja", fam:"jugo", en:"Orange juice", q:1, p:75.00, hint:"market"},
+{c:"drinks", es:"Jugo de toronja", fam:"jugo", en:"Grapefruit juice", q:1, p:75.00, hint:"market"},
 
 /* ---------- Household ---------- */
 {c:"home", es:"Detergente Tide", en:"Laundry detergent", q:1, p:450.00, hint:"chedraui",
@@ -266,13 +291,13 @@ var ITEMS = [
 /* ---------- Personal Care ---------- */
 {c:"care", es:"Loción Protectora", en:"Sunscreen", q:1, p:287.00, hint:"chedraui",
   hist:[["2026-08-08",287.00],["2026-08-30",287.00],["2026-11-14",287.00]]},
-{c:"care", es:"Jabón Líquido", en:"Hand soap", q:1, p:78.00, hint:"chedraui"},
+{c:"care", es:"Jabón Líquido", fam:"jabon", en:"Hand soap", q:1, p:78.00, hint:"chedraui"},
 {c:"care", es:"Enjuague Listerine", en:"Mouthwash", q:1, p:98.00, hint:"chedraui"},
 {c:"care", es:"Kleenex Gel 450 ml", en:"Hand gel", q:1, p:54.00, hint:"chedraui"},
 {c:"care", es:"Desodorante", en:"Deodorant", q:1, p:97.00, hint:"chedraui",
   hist:[["2026-11-01",97.00]]},
-{c:"care", es:"Jabón de Barra", en:"Bar soap", q:1, p:21.00, hint:"chedraui"},
-{c:"care", es:"Jabón Tocador Eucalipto 120 g", en:"Eucalyptus bath soap, 120 g", q:1, p:56.00, hint:"chedraui",
+{c:"care", es:"Jabón de Barra", fam:"jabon", en:"Bar soap", q:1, p:21.00, hint:"chedraui"},
+{c:"care", es:"Jabón Tocador Eucalipto 120 g", fam:"jabon", en:"Eucalyptus bath soap, 120 g", q:1, p:56.00, hint:"chedraui",
   hist:[["2026-11-14",56.00]]},
 {c:"care", es:"Crema Dental Sensodyne", en:"Sensodyne toothpaste", q:2, p:145.00, hint:"chedraui",
   hist:[["2026-11-14",145.00]]},

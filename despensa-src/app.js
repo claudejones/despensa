@@ -1,5 +1,5 @@
 "use strict";
-var APP_VERSION = "4.26.0";
+var APP_VERSION = "4.27.0";
 var KEY = "despensa_v2";
 var LEGACY_KEY = "despensa_v1";
 
@@ -66,7 +66,7 @@ function seed(){
   ITEMS.forEach(function(it){
     var id = slug(it.es);
     st.items[id] = {id:id, cat:it.c, es:it.es, en:it.en, q:it.q, p:it.p,
-      ref:it.ref||null, hint:it.hint||null, active:true,
+      ref:it.ref||null, hint:it.hint||null, fam:it.fam||null, active:true,
       /* A history point is [date, price] or [date, price, shop]. The third
          slot names the shop when it is not the item's usual one — the
          jackfruit burger is a DAC item that Chedraui also carries. It used
@@ -170,6 +170,7 @@ function load(){
       mine.ref = fresh.items[id].ref;
       mine.cat = fresh.items[id].cat;
       mine.hint = fresh.items[id].hint;
+      mine.fam = fresh.items[id].fam;
       if(fresh.items[id].hist.length >= (mine.hist||[]).length) mine.hist = fresh.items[id].hist;
     });
     S.cat = CATALOGUE_VERSION;
@@ -1330,7 +1331,21 @@ function viewTrip(){
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
       +'<span class="secright"><span class="seccount">'+(planning? on+" / "+rows.length : rows.length)+'</span>'
       +'<button class="plus" data-newitem="'+c.id+'" aria-label="Add an item">+</button></span></div>';
-    rows.forEach(function(it){ html+=tripRow(it, t.lines[it.id], planning, t.shop); });
+    groupRows(rows).forEach(function(g){
+      if(g.fam){
+        var on=g.items.filter(function(x){ return t.lines[x.id]; }).length;
+        html+=famRow(g.fam, g.items, on);
+        if(!openFams[g.fam] && !on) return;   /* anything ticked stays visible */
+        if(!openFams[g.fam]){
+          g.items.filter(function(x){ return t.lines[x.id]; })
+                 .forEach(function(it){ html+=tripRow(it, t.lines[it.id], planning, t.shop, true); });
+          return;
+        }
+      }
+      (g.fam ? g.items : [g.solo]).forEach(function(it){
+        html+=tripRow(it, t.lines[it.id], planning, t.shop, !!g.fam);
+      });
+    });
     html+='</section>';
   });
 
@@ -1341,7 +1356,49 @@ function viewTrip(){
   return html;
 }
 
-function tripRow(it, L, planning, shop){
+/* Variant families, for display only.
+
+   A family groups items you would buy INSTEAD of one another — the regular
+   chicken or the jumbo, one of three eggs, one of four nut butters. It is a
+   way of drawing a list and nothing more: it never reaches Where it goes,
+   a price history or a trip record, so a wrong family is a cosmetic
+   annoyance rather than a number going quietly wrong.
+
+   Which items are open is deliberately NOT in S. It is how the screen looks
+   right now, not something about the household, and persisting it would mean
+   a tap in the aisle survives into next month for no reason. */
+var openFams = {};
+
+/* Rows in, rows and groups out. A family only forms when two or more of its
+   members are actually on screen: one ticked egg is a row, not a group of
+   one hiding behind a chevron. */
+function groupRows(rows){
+  var seen={}, out=[];
+  rows.forEach(function(it){
+    var f = it.fam && FAMS[it.fam] ? it.fam : null;
+    if(!f){ out.push({solo:it}); return; }
+    if(seen[f]===undefined){ seen[f]=out.length; out.push({fam:f, items:[it]}); }
+    else out[seen[f]].items.push(it);
+  });
+  return out.map(function(g){
+    return (g.fam && g.items.length < 2) ? {solo:g.items[0]} : g;
+  });
+}
+
+/* The parent carries no price. The family spans 32 to 87 for eggs and 99.90
+   to 149 for chicken, and a single figure on a collapsed row would be the
+   same lie `p` told for weighed items, one level up. A count says what is
+   inside; opening it says what each one costs. */
+function famRow(f, items, on){
+  var open = !!openFams[f];
+  return '<div class="row famrow'+(open?" open":"")+'" data-fam="'+f+'">'
+    +'<div class="namewrap"><div class="nm">'+esc(FAMS[f])+'</div>'
+    +'<div class="meta">'+items.length+' kinds'
+    +(on? ' · '+on+' on the list':'')+'</div></div>'
+    +'<span class="chev" aria-hidden="true"></span></div>';
+}
+
+function tripRow(it, L, planning, shop, child){
   var state = L ? L.state : null;
   var q = L && L.q!==undefined ? L.q : it.q;
   var paid = L && L.paid!==null && L.paid!==undefined ? L.paid : null;
@@ -1384,6 +1441,7 @@ function tripRow(it, L, planning, shop){
   var chart = (it.hist && it.hist.length>1)
     ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>' : '';
 
+  if(child) cls += " child";
   return '<div class="'+cls+'" data-id="'+it.id+'">'+ctrl
     +'<div class="namewrap" data-open="'+it.id+'"><div class="nm">'+esc(it.es)
     +(state==="skip"?'<span class="tag">skipped</span>':'')+'</div>'
@@ -1423,10 +1481,15 @@ function viewCatalogue(){
     html+='<section class="sec"><div class="sechead"><span class="sectitle">'+icon(c.ic)+esc(c.name)+'</span>'
       +'<span class="secright"><span class="seccount">'+rows.length+'</span>'
       +'<button class="plus" data-newitem="'+c.id+'" aria-label="Add an item">+</button></span></div>';
-    rows.forEach(function(it){
+    groupRows(rows).forEach(function(g){
+      if(g.fam){
+        html+=famRow(g.fam, g.items, 0);
+        if(!openFams[g.fam]) return;
+      }
+      (g.fam ? g.items : [g.solo]).forEach(function(it){
       var chart=(it.hist&&it.hist.length>1)
         ? '<button class="spark" data-hist="'+it.id+'" aria-label="Price history">'+sparkSVG(it.hist)+'</button>':'';
-      html+='<div class="row" data-id="'+it.id+'">'
+      html+='<div class="row'+(g.fam?" child":"")+'" data-id="'+it.id+'">'
         +'<div class="namewrap" data-open="'+it.id+'"><div class="nm">'+esc(it.es)+'</div>'
         +'<div class="en">'+esc(it.en)+'</div>'
         +'<div class="meta">'+(it.q>1?"Qty "+it.q+" · ":"")
@@ -1435,6 +1498,7 @@ function viewCatalogue(){
         + chart
         +'<button class="amt" data-open="'+it.id+'"><span class="mx">'+mx(it.p)+'</span>'
         +'<span class="us">'+usd(it.p)+'</span></button></div>';
+      });
     });
     html+='</section>';
   });
@@ -1771,6 +1835,13 @@ document.getElementById("main").addEventListener("click", function(e){
     quickTripSheet(el.dataset.editquick); return; }
   if((el=e.target.closest("#fixDupes"))){ fixDupesSheet(); return; }
   if((el=e.target.closest("#addMore"))){ addMoreSheet(); return; }
+  if((el=e.target.closest("[data-fam]"))){
+    var f=el.dataset.fam;
+    if(openFams[f]) delete openFams[f]; else openFams[f]=1;
+    render(); return;                     /* not saved: this is how the screen
+                                             looks now, not a fact about the
+                                             household */
+  }
   if((el=e.target.closest("[data-hist]"))){ histDrawer(el.dataset.hist); return; }
   if((el=e.target.closest("[data-price]"))){ priceSheet(el.dataset.price); return; }
   if((el=e.target.closest("[data-pick]"))){ togglePick(el.dataset.pick); return; }
