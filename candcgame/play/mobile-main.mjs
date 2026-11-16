@@ -12,7 +12,7 @@ let run=null,images={},ui=null,last=null,request=0,generation=0,auto=null;
 let qaSpeed=1,qaImmortal=false;// set only by QA mode (test builds)
 const slidePointers=new Set();
 // Version label (owner rule: visible on the title and Options). tools/public-build.mjs empties BUILD for the public game.
-export const VERSION='1.1.0',BUILD='';
+export const VERSION='1.1.1',BUILD='';
 $('version').textContent='v'+VERSION+(BUILD?' · '+BUILD:'');
 // Desktop: menu screens are laid out as if the window were at most ~960×600 and zoomed as one piece (up to 3×; 2× left big monitors half empty) to fill
 // bigger windows, like Pulse Kart's uiScale. Gameplay is untouched. --uiz is used by mobile.css.
@@ -42,8 +42,13 @@ $('run-pause').onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();toggl
 addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(e.target.tagName)||e.repeat)return;const a=['ArrowDown','KeyS'].includes(e.code)?'slide':['Space','ArrowUp','KeyW'].includes(e.code)?'jump':null;if(a||e.code==='KeyP'||e.code==='Escape'){e.preventDefault();if(a)action(a,a==='slide');else toggle();}
  else if(e.code==='KeyM'&&run&&ui&&!ui.blocked()&&!portrait.matches){e.preventDefault();document.querySelector('.global-run-menu button')?.click();}});
 addEventListener('keyup',e=>{if(['ArrowDown','KeyS'].includes(e.code))release();});addEventListener('blur',interrupt);addEventListener('pagehide',interrupt);document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();else{sharedAudio.visibility(portrait.matches);last=null;}});portrait.addEventListener('change',rotation);
-panel.addEventListener('dblclick',e=>e.preventDefault());
-panel.addEventListener('gesturestart',e=>{if(panel.querySelector('.global-confirm,.global-result:not([hidden]),.global-notice:not([hidden])'))e.preventDefault();},{passive:false});
+// No page zoom anywhere (owner 2026-11-16: "when I do tap on the screen it zoom in"). Two thumbs on Jump + Slide read as a pinch
+// and a quick double tap off the buttons as zoom-in. Safari ignores user-scalable=no, so stop the gestures themselves.
+// Taps on buttons are untouched (they already use touch-action: manipulation; gameplay buttons use pointer events).
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+for(const type of ['gesturestart','gesturechange','gestureend'])document.addEventListener(type,e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const now=e.timeStamp;if(now-lastTouchEnd<350&&!e.target.closest?.('button,a,input,select,textarea,[role=tab],[role=switch]'))e.preventDefault();lastTouchEnd=now;},{passive:false});
 // Gesture unlock is repeatable after OS audio interruptions. No extra Ready dialog.
 document.addEventListener('pointerdown',()=>{if(!portrait.matches)ui?.audio.unlock();},{capture:true});
 // Hold decoded map/UI artwork through the session so navigation cannot reveal partial art.
@@ -68,31 +73,34 @@ async function boot(){
  const response=await release;if(!response.ok)throw Error('The game could not load. Check your connection and retry.');const data=await response.json();
  const {config,draft,items,catalog}=data;
  const playerStorage={getItem:key=>localStorage.getItem('candc.mobile-test.'+key),setItem:(key,value)=>localStorage.setItem('candc.mobile-test.'+key,value)};
- ui=await setupGlobalGame({panel,surface,playerStorage,prepareWorld:()=>prepareScreens(true),isVisible:()=>!document.hidden&&!portrait.matches,guideData:{items,catalog,draft},getRun:()=>run,pause,cancelDemo:()=>{generation++;if(auto){run=null;images={};auto=null;}},launch:async selection=>{
+ ui=await setupGlobalGame({panel,surface,playerStorage,prepareWorld:()=>prepareScreens(true),isVisible:()=>!document.hidden&&!portrait.matches,guideData:{items,catalog,draft},getRun:()=>run,pause,cancelDemo:()=>{generation++;if(auto){run=null;images={};auto=null;}},launch:async(selection,progress=()=>{})=>{
   const token=++generation;pause();run=null;images={};auto=null;
   const options={config,draft,items,catalog,...selection},stage=selection.stage;let loaded;
   if(stage==='secret01')loaded=await loadLevel(options,loader,{unlimitedLives:selection.unlimited});
   else{
    const response=await fetch(`./plans/${stage}-${selection.difficulty}.json`);if(!response.ok)throw Error('Stage could not load. Check your connection and try again.');const sequence=await response.json();
    if(!sequence.verified||sequence.stage!==stage||sequence.profile!==selection.difficulty)throw Error('Stage plan is incompatible with this release.');
-   const snapshot=runtimeSnapshot({...options,sequence});const pairs=await Promise.all(runtimeAssetKeys(snapshot).map(async key=>{const img=await loader.load(catalog.assets[key]);const size=catalog.dimensions[key];if(size&&(img.naturalWidth!==size.width||img.naturalHeight!==size.height))throw Error('Stage artwork is incompatible with this release.');return [key,img];}));loaded={run:new PlayRuntime(snapshot,{unlimitedLives:selection.unlimited}),images:Object.fromEntries(pairs)};
+   const snapshot=runtimeSnapshot({...options,sequence}),keys=runtimeAssetKeys(snapshot);let done=0;progress(0,keys.length);const pairs=await Promise.all(keys.map(async key=>{const img=await loader.load(catalog.assets[key]);progress(++done,keys.length);const size=catalog.dimensions[key];if(size&&(img.naturalWidth!==size.width||img.naturalHeight!==size.height))throw Error('Stage artwork is incompatible with this release.');return [key,img];}));loaded={run:new PlayRuntime(snapshot,{unlimitedLives:selection.unlimited}),images:Object.fromEntries(pairs)};
   }
   if(token!==generation)return;run=loaded.run;if(qaImmortal)run.unlimitedLives=true;images=loaded.images;auto=selection.demo?new AttractPlayback(run):null;
   $('run-hud').style.setProperty('--heart-sprite',`url("${images.hudHearts.src}")`);$('run-hud').style.setProperty('--character-sprite',`url("${images.hudCharacters.src}")`);$('run-path').src=images.hudPath.src;
   run.start();if(document.hidden||portrait.matches)pause();last=null;canvas.focus();
  }});
- $('boot').hidden=true;ui.open();rotation();request=requestAnimationFrame(tick);void sharedAudio.prefetch('C_AND_C_TITLE');
- // 5. Stage art + music for the stage you are most likely to play next start loading while you are on the map or results,
- // so Play no longer waits for ~2.4 MB (owner test 4: "the loading stage and levels"). Same loader, so Play reuses it.
- const warmed=new Set();
- async function warm(){const j=ui.store.state.journey;if(!j)return;
-  const order=['NA','SA','EU','AF','AS','OC','AN'].flatMap(c=>[1,2,3].map(n=>c+'0'+n)),stage=j.visited.reduce((a,s)=>order.indexOf(s)>order.indexOf(a)?s:a,j.stage).toLowerCase(),key=stage+'-'+j.difficulty+'-'+j.character;
-  if(warmed.has(key))return;warmed.add(key);
-  try{const r=await fetch(`./plans/${stage}-${j.difficulty}.json`);if(!r.ok)throw Error();const sequence=await r.json();
-   const snapshot=runtimeSnapshot({config,draft,items,catalog,stage,character:j.character,difficulty:j.difficulty,sequence});
-   await Promise.all(runtimeAssetKeys(snapshot).map(k=>loader.load(catalog.assets[k])));
-   if(ui.store.state.settings.music)void sharedAudio.prefetch(stage.toUpperCase()+'_THEME');
-  }catch{warmed.delete(key);}}
+ $('boot').hidden=true;ui.open();rotation();request=requestAnimationFrame(tick);
+ // 5. Stage art + music for the stage you are most likely to play next start loading early, so Play rarely waits
+ // (owner test 4: "the loading stage and levels"; test 6: "fix the 12 s delay"). On the title: the next stage's pictures
+ // first (stage 1 for a new player), then the title song. On the map/results: pictures, then that stage's song.
+ // Same loader as launch, so Play reuses whatever has arrived.
+ const warmed=new Map();
+ async function warm(title=false){const j=ui.store.state.journey,pick=ui.choice();
+  const order=['NA','SA','EU','AF','AS','OC','AN'].flatMap(c=>[1,2,3].map(n=>c+'0'+n)),stage=(j?j.visited.reduce((a,s)=>order.indexOf(s)>order.indexOf(a)?s:a,j.stage):'NA01').toLowerCase(),
+   character=j?j.character:pick.character,difficulty=j?j.difficulty:pick.difficulty,key=stage+'-'+difficulty+'-'+character;
+  if(!warmed.has(key))warmed.set(key,(async()=>{const r=await fetch(`./plans/${stage}-${difficulty}.json`);if(!r.ok)throw Error();const sequence=await r.json();
+   const snapshot=runtimeSnapshot({config,draft,items,catalog,stage,character,difficulty,sequence});
+   await Promise.all(runtimeAssetKeys(snapshot).map(k=>loader.load(catalog.assets[k])));})().catch(()=>{warmed.delete(key);}));
+  await warmed.get(key);
+  if(!title&&ui.store.state.settings.music)void sharedAudio.prefetch(stage.toUpperCase()+'_THEME');}
+ warm(true).finally(()=>void sharedAudio.prefetch('C_AND_C_TITLE'));
  new MutationObserver(()=>{if(['map','result'].includes(surface.dataset.globalScreen))setTimeout(warm,300);}).observe(surface,{attributes:true,attributeFilter:['data-global-screen']});
 }
 $('retry').onclick=()=>location.reload();export const started=boot().catch(e=>{$('boot-text').textContent=e.message;$('retry').hidden=false;});rotation();

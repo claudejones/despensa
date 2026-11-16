@@ -12,7 +12,7 @@ let run=null,images={},ui=null,last=null,request=0,generation=0,auto=null;
 let qaSpeed=1,qaImmortal=false;// set only by QA mode (test builds)
 const slidePointers=new Set();
 // Version label (owner rule: visible on the title and Options). tools/public-build.mjs empties BUILD for the public game.
-export const VERSION='1.1.0',BUILD='t7';
+export const VERSION='1.1.1',BUILD='t8';
 $('version').textContent='v'+VERSION+(BUILD?' · '+BUILD:'');
 // Desktop: menu screens are laid out as if the window were at most ~960×600 and zoomed as one piece (up to 3×; 2× left big monitors half empty) to fill
 // bigger windows, like Pulse Kart's uiScale. Gameplay is untouched. --uiz is used by mobile.css.
@@ -42,8 +42,13 @@ $('run-pause').onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();toggl
 addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(e.target.tagName)||e.repeat)return;const a=['ArrowDown','KeyS'].includes(e.code)?'slide':['Space','ArrowUp','KeyW'].includes(e.code)?'jump':null;if(a||e.code==='KeyP'||e.code==='Escape'){e.preventDefault();if(a)action(a,a==='slide');else toggle();}
  else if(e.code==='KeyM'&&run&&ui&&!ui.blocked()&&!portrait.matches){e.preventDefault();document.querySelector('.global-run-menu button')?.click();}});
 addEventListener('keyup',e=>{if(['ArrowDown','KeyS'].includes(e.code))release();});addEventListener('blur',interrupt);addEventListener('pagehide',interrupt);document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();else{sharedAudio.visibility(portrait.matches);last=null;}});portrait.addEventListener('change',rotation);
-panel.addEventListener('dblclick',e=>e.preventDefault());
-panel.addEventListener('gesturestart',e=>{if(panel.querySelector('.global-confirm,.global-result:not([hidden]),.global-notice:not([hidden])'))e.preventDefault();},{passive:false});
+// No page zoom anywhere (owner 2026-11-16: "when I do tap on the screen it zoom in"). Two thumbs on Jump + Slide read as a pinch
+// and a quick double tap off the buttons as zoom-in. Safari ignores user-scalable=no, so stop the gestures themselves.
+// Taps on buttons are untouched (they already use touch-action: manipulation; gameplay buttons use pointer events).
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+for(const type of ['gesturestart','gesturechange','gestureend'])document.addEventListener(type,e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const now=e.timeStamp;if(now-lastTouchEnd<350&&!e.target.closest?.('button,a,input,select,textarea,[role=tab],[role=switch]'))e.preventDefault();lastTouchEnd=now;},{passive:false});
 // Gesture unlock is repeatable after OS audio interruptions. No extra Ready dialog.
 document.addEventListener('pointerdown',()=>{if(!portrait.matches)ui?.audio.unlock();},{capture:true});
 // Hold decoded map/UI artwork through the session so navigation cannot reveal partial art.

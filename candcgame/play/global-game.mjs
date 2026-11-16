@@ -95,16 +95,19 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   }section.append(cards);mapBody.append(section);root.append(el('p','global-map-help',store.state.settings.unlimited?'Assisted play · No new rewards. Select a continent to view its stages.':'Select a continent to view its stages.'));
  }
  function waitWorld(ready){
-  const token=++worldRequest;showLoading('Loading world…');
+  const token=++worldRequest;showLoading();
   return prepareWorld().then(()=>{worldReady=true;if(token===worldRequest&&screen==='loading')ready();}).catch(()=>{if(token!==worldRequest||screen!=='loading')return;root.replaceChildren();const f=frame('World could not load');f.append(el('p','','Check your connection and try again.'),button('Retry',()=>waitWorld(ready),true),button('Main Menu',start));root.append(f);});
  }
- function showLoading(title='Loading stage…'){show('loading');root.className='global-game global-menu global-loading';const f=frame(title);f.setAttribute('role','status');f.append(el('p','','Preparing your adventure'));root.append(f);}
+ // Owner 2026-11-16: "if there needs to be loading, have something that comes up that says loading game, please wait".
+ // The bar fills as stage pictures arrive (launch reports progress); until then it slides back and forth.
+ function showLoading(title='Loading game…'){show('loading');root.className='global-game global-menu global-loading';const f=frame(title);f.setAttribute('role','status');const bar=el('div','global-loading-bar');bar.append(el('i',''));f.append(el('p','','Please wait'),bar);root.append(f);}
+ function loadingProgress(done,total){const i=root.querySelector('.global-loading-bar i');if(!i||!total)return;i.parentNode.classList.add('known');i.style.width=Math.round(100*done/total)+'%';}
  async function enter(id){if(loading||!allowed(id))return;await enterLevel(id);}
  async function enterSecret(who=character){if(loading)return;await enterLevel('SECRET01',who);}
  async function enterLevel(id,who){
   const current=++entryToken;loading=true;activeRun=null;
-  try{attempt=id==='SECRET01'?store.beginSecret(who):store.begin(id);shownOutcome=null;committedResult=null;resultDestination=null;showLoading();if(audio.enabled&&audio.settings.music)void audio.engine.load(id==='SECRET01'?'SECRET_BOSS_THEME':id+'_THEME');
-   await launch({stage:id.toLowerCase(),character:attempt.character,difficulty:attempt.difficulty||'standard',unlimited:store.state.settings.unlimited});
+  try{attempt=id==='SECRET01'?store.beginSecret(who):store.begin(id);shownOutcome=null;committedResult=null;resultDestination=null;showLoading();
+   await launch({stage:id.toLowerCase(),character:attempt.character,difficulty:attempt.difficulty||'standard',unlimited:store.state.settings.unlimited},loadingProgress);
    if(current!==entryToken)return;activeRun=getRun();show('game');if(store.status==='error')saved();
   }catch(e){if(current===entryToken){id==='SECRET01'?start():map();tell(e.message);}}finally{if(current===entryToken)loading=false;}
  }
@@ -153,7 +156,7 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
    ['Continent passports','Complete all three stages in a continent to earn its passport. Record a three-heart best on each stage for a perfect passport. Replays can improve your results; you do not need one uninterrupted perfect journey.'],
    ['Unlock Hard and Level Select','Complete all 21 stages on Standard without Unlimited Health. Hard adds more demanding timing and encounters. Level Select lets you replay any stage from the world map. Easy completion does not unlock these features.'],
    ['Unlock Beneath the Ice','Earn all seven perfect Standard passports: a three-heart best on every Standard stage without Unlimited Health. The secret level then appears on the main menu. Survive its three-minute boss encounter without assistance to earn the secret passport.'],
-   ['Saving and assisted play','Progress is saved automatically in this browser on this device. Continue restarts an unfinished stage with three hearts. Unlimited Health is useful for practice, but that attempt cannot earn trophies, passports or unlocks. Previously earned rewards are kept.']
+   ['Saving and assisted play','Progress is saved automatically in this browser on this device. On iPhone, a copy added to your Home Screen keeps its own progress, separate from Safari. Continue restarts an unfinished stage with three hearts. Unlimited Health is useful for practice, but that attempt cannot earn trophies, passports or unlocks. Previously earned rewards are kept.']
   ];for(const [heading,text] of sections){const section=el('section','global-about-section');section.append(el('h4','',heading),el('p','',text));f.append(section);}body.append(f);
  }
    function soundtrack(back){
@@ -316,6 +319,7 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   }:undefined,
   setTravelProgress:previewStore?(value)=>previewTravel?.(Math.max(0,Math.min(1,value))*previewTravelDuration):undefined,
   travelDuration:()=>previewTravelDuration,
+  choice:()=>({character,difficulty}),
   audio,open(){opened=true;attract?.open();if(attract){cancelAnimationFrame(attractFrame);attractLast=null;attractFrame=requestAnimationFrame(attractTick);}audio.enable(true);audio.configure(store.state.settings);audio.unlock();start();},close(){opened=false;attract?.close();if(attract)cancelAnimationFrame(attractFrame);cancelDemo();audio.stop();entryToken++;loading=false;travelTarget=null;clearTimeout(travelTimer);root.hidden=true;results.hidden=true;notice.hidden=true;bar.hidden=true;demoHint.hidden=true;surface.hidden=false;},
   // QA mode + test hooks (test builds only; mobile-main.mjs decides whether to use them).
   qa:previewStore?undefined:{screen:()=>screen,start,map,options:()=>options(start),about:tab=>about(start,tab),menu:openMenu,tell,

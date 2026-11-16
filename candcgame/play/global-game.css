@@ -146,6 +146,12 @@ body[data-mode=game] .play-heading{display:none;}
 .global-achievements .global-reward-card{gap:5px;border-width:10px}
 .global-achievements .global-reward-card>p{margin:3px 0;min-height:2.7em;font-size:9px;line-height:1.35}
 .global-loading>.global-panel{min-height:180px;justify-content:center;text-align:center}
+.global-loading-bar{width:min(320px,80%);height:12px;margin:6px auto 0;border-radius:6px;background:rgba(0,0,0,.25);overflow:hidden;position:relative}
+.global-loading-bar i{position:absolute;inset:0 auto 0 0;width:30%;border-radius:6px;background:#ffd34d;animation:global-loading-slide 1.2s ease-in-out infinite alternate}
+.global-loading-bar.known i{animation:none;transition:width .2s}
+@keyframes global-loading-slide{from{left:0}to{left:70%}}
+.global-loading-bar.known i{left:0}
+@media(prefers-reduced-motion:reduce){.global-loading-bar i{animation:none}}
 @media(max-height:550px){.global-achievements .global-reward-art{max-width:clamp(55px,18svh,90px)}.global-achievements .global-reward-card{gap:2px}.global-achievements .global-reward-card>p{margin:0}.global-achievements .global-pages{padding-block:0}.global-achievements .global-reward-mode-help{height:3.4em;min-height:3.4em;max-height:3.4em}}
 
 /* Flight routes remain distinct; original stage dots and paths are unchanged. */
