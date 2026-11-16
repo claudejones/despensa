@@ -114,16 +114,24 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   for(const [key,label] of [['music','Music'],['sound','Sound Effects'],['continuousSlide','Continuous Slide'],['unlimited','Unlimited Health']]){const row=el('div','global-option-row'),on=store.state.settings[key],b=button('',()=>{const change=()=>{store.setOption(key,!on);audio.configure(store.state.settings);const run=getRun();if(run)run.unlimitedLives=store.state.settings.unlimited;options(back);saved();};if(key==='unlimited'&&!on)confirm('Enable Unlimited Health?','This attempt cannot earn or improve trophies, passports or permanent unlocks. Existing rewards are kept.',change,()=>options(back));else change();});b.className='global-switch';b.setAttribute('role','switch');b.setAttribute('aria-checked',String(on));b.setAttribute('aria-label',label);b.append(sprite('UI05_SWITCHES_ATLAS.png',0,on?1:0,4,2));row.append(el('span','',label),b);f.append(row);}
   f.append(button('Game Soundtrack',()=>soundtrack(()=>options(back))));const unlocked=unlocks(store.state).levelSelect,help=el('p','global-help global-level-select-help',unlocked?'Choose any stage from the world map.':'Complete all 21 stages on Standard without Unlimited Health to unlock Level Select.');help.setAttribute('role','status');const select=button('Level Select',()=>{if(unlocks(store.state).levelSelect){if(!store.state.journey)store.newJourney(character,difficulty);map();}else help.textContent='Level Select is locked. Complete all 21 Standard stages without Unlimited Health.';});if(!unlocked)select.append(picture('UI_ICON_LOCK.png','Locked','global-icon'));select.setAttribute('aria-describedby','level-select-help'+(previewStore?'-preview':''));help.id='level-select-help'+(previewStore?'-preview':'');f.append(el('p','global-help','Unlimited Health disables new achievements and permanent unlocks for this attempt.'),select,help);root.append(f);
  }
- let guideStage='NA01';
- function about(back,tab='game'){
+ let guideStage='NA01',controlsMode=null;
+ function about(back,tab='controls'){
   show('about');root.className='global-game global-menu global-about';root.append(header('HOW TO PLAY',back));
   const tabs=el('div','global-guide-tabs'),body=el('div','global-guide-body');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','How to Play');
   const prefix=previewStore?'preview-guide':'game-guide';
-  for(const [id,label] of [['game','Game Guide'],['hazards','Hazard Guide']]){
+  const TABS=[['controls','Controls'],['game','Game Guide'],['hazards','Hazard Guide']],ids=TABS.map(t=>t[0]);
+  for(const [id,label] of TABS){
    const b=button(label,()=>{about(back,id);root.querySelector('#'+prefix+'-'+id).focus();});b.id=prefix+'-'+id;b.classList.toggle('selected',id===tab);b.setAttribute('role','tab');b.setAttribute('aria-selected',String(id===tab));b.setAttribute('aria-controls',prefix+'-panel');b.tabIndex=id===tab?0:-1;
-   b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const target=e.key==='Home'?'game':e.key==='End'?'hazards':id==='game'?'hazards':'game';about(back,target);root.querySelector('#'+prefix+'-'+target).focus();}};tabs.append(b);
+   b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const i=ids.indexOf(id),target=e.key==='Home'?ids[0]:e.key==='End'?ids[ids.length-1]:ids[(i+(e.key==='ArrowRight'?1:ids.length-1))%ids.length];about(back,target);root.querySelector('#'+prefix+'-'+target).focus();}};tabs.append(b);
   }
   body.id=prefix+'-panel';body.setAttribute('role','tabpanel');body.setAttribute('aria-labelledby',prefix+'-'+tab);body.tabIndex=0;root.append(tabs,body);
+  if(tab==='controls'){
+   const mode=controlsMode??(typeof matchMedia==='function'&&matchMedia('(pointer: coarse)').matches?'touch':'keyboard'),f=frame(),sw=el('div','global-controls-switch');sw.setAttribute('role','group');sw.setAttribute('aria-label','Show controls for');
+   for(const [id,label] of [['touch','TOUCH'],['keyboard','KEYBOARD']]){const b=button(label,()=>{controlsMode=id;about(back,'controls');root.querySelector('.global-controls-switch')?.querySelector('.selected')?.focus();});b.classList.toggle('selected',id===mode);b.setAttribute('aria-pressed',String(id===mode));sw.append(b);}
+   const rows=mode==='touch'?[['JUMP','Clear low obstacles.'],['SLIDE','Pass beneath high birds or blasts. With Continuous Slide on, hold to keep sliding.'],['PAUSE / RESUME','Take a break.'],['Menu','The button in the corner opens the game menu.'],['Sideways','Turn your device sideways to play.']]
+    :[['Space · ↑ · W','Jump'],['↓ · S','Slide (hold with Continuous Slide)'],['P · Esc','Pause or resume'],['M','Game menu'],['Tab · Enter','Move between buttons and choose'],['Esc','Close a message']];
+   const list=el('dl','global-controls-list');for(const [k,v] of rows)list.append(el('dt','',k),el('dd','',v));f.append(sw,list);body.append(f);return;
+  }
   if(tab==='hazards'){
    const nav=el('nav','global-pages global-guide-pages'),heading=el('h3'),groups=el('div','global-hazard-groups');nav.setAttribute('aria-label','Hazard guide continents');heading.setAttribute('aria-live','polite');
    function turnPage(delta){const current=CONTINENTS.indexOf(guideStage.slice(0,2));guideStage=CONTINENTS[(current+delta+CONTINENTS.length)%CONTINENTS.length]+'01';drawPage();body.scrollTop=0;}
@@ -141,8 +149,6 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   const f=frame('Around the World');
   f.append(el('p','','Travel through seven continents and twenty-one stages. Reach the finish with at least one heart to pass. Each of the five sections becomes more challenging.'));
   const sections=[
-   ['Desktop controls','Jump: Space, ↑ or W. Slide: ↓ or S. Pause or resume: P. You can also click the on-screen controls.'],
-   ['Mobile controls','Turn your device sideways. Tap JUMP to clear low obstacles and SLIDE to pass beneath high birds or blasts. Use PAUSE / RESUME to take a break; the menu opens game options.'],
    ['Hearts and trophies','Start a stage with three hearts. A hit costs one heart and briefly protects you from another hit. Finish with one, two or three hearts to record your best stage rating. Three hearts earns a Perfect Stage Run. Your best result is kept when you replay.'],
    ['Continent passports','Complete all three stages in a continent to earn its passport. Record a three-heart best on each stage for a perfect passport. Replays can improve your results; you do not need one uninterrupted perfect journey.'],
    ['Unlock Hard and Level Select','Complete all 21 stages on Standard without Unlimited Health. Hard adds more demanding timing and encounters. Level Select lets you replay any stage from the world map. Easy completion does not unlock these features.'],
@@ -311,6 +317,10 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   setTravelProgress:previewStore?(value)=>previewTravel?.(Math.max(0,Math.min(1,value))*previewTravelDuration):undefined,
   travelDuration:()=>previewTravelDuration,
   audio,open(){opened=true;attract?.open();if(attract){cancelAnimationFrame(attractFrame);attractLast=null;attractFrame=requestAnimationFrame(attractTick);}audio.enable(true);audio.configure(store.state.settings);audio.unlock();start();},close(){opened=false;attract?.close();if(attract)cancelAnimationFrame(attractFrame);cancelDemo();audio.stop();entryToken++;loading=false;travelTarget=null;clearTimeout(travelTimer);root.hidden=true;results.hidden=true;notice.hidden=true;bar.hidden=true;demoHint.hidden=true;surface.hidden=false;},
+  // QA mode + test hooks (test builds only; mobile-main.mjs decides whether to use them).
+  qa:previewStore?undefined:{screen:()=>screen,start,map,options:()=>options(start),about:tab=>about(start,tab),menu:openMenu,tell,
+   async goto(id,who=character){if(id==='SECRET01')return enterSecret(who);if(!STAGES.includes(id))throw Error('Unknown stage '+id);
+    if(!store.state.journey)store.newJourney(who,difficulty==='hard'&&!unlocks(store.state).hard?'standard':difficulty);const j=store.state.journey;if(!j.visited.includes(id))j.visited.push(id);continent=id.slice(0,2);store.save();return enter(id);}},
   presenting:()=>screen==='game'||screen==='demo'||screen==='result',blocked:()=>screen!=='game',
   update(run){if(screen==='demo'){audio.update(run);return;}if(run===activeRun&&attempt)audio.update(run);if(run!==activeRun||!attempt||shownOutcome===attempt.id||!['complete','failed'].includes(run.status))return;
    committedResult??=(attempt.stage==='SECRET01'?store.finishSecret.bind(store):store.finish.bind(store))(attempt.id,{complete:run.status==='complete',hearts:run.lives});

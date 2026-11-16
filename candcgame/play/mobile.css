@@ -38,3 +38,25 @@ html,body,#game,#rotate{touch-action:manipulation}
 #game>.global-notice:not([hidden]){position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;max-width:none;margin:0;padding:24px;border:0;background:rgba(4,25,46,.88);touch-action:none}
 #game>.global-notice:not([hidden])>.global-message-panel{width:min(100%,600px);touch-action:manipulation}
 #game .global-result{touch-action:none}#game .global-result button,#game>.global-notice button,#game>.global-game.global-confirm button{touch-action:manipulation}
+
+/* Desktop (claude-library standard, 2026-11-15): menu screens zoom as one piece up to 3× (--uiz, uiScale in mobile-main.mjs). */
+/* Window units like Pulse Kart (a % size would be divided twice under zoom); only when zoomed, so phones keep the safe-area layout. */
+/* The world map is left out: its art already fills the window, and WebKit zooms its picture twice (fit.mjs, 2026-11-15). */
+html.uiz #game>.global-game:not(.global-result):not(.global-map){zoom:var(--uiz);width:calc(100vw / var(--uiz));height:calc(100dvh / var(--uiz))}
+/* Version label on the title and Options screens only; small plain font (owner 2026-11-15: "we don't need to have the version / build number just that large"). */
+#version{display:none;position:fixed;right:calc(env(safe-area-inset-right) + 8px);bottom:calc(env(safe-area-inset-bottom) + 4px);z-index:1500;font:calc(10px * var(--uiz,1))/1.2 system-ui,-apple-system,sans-serif;opacity:.75;padding:2px 6px;border-radius:4px;background:rgba(4,25,46,.82);color:#fff2cd;pointer-events:none}
+body:has(#surface[data-global-screen="start"]) #version,body:has(#surface[data-global-screen="options"]) #version{display:block}
+/* Difficulty buttons were 40 px tall on phones (fit.mjs); owner rule: taps at least 44 pt. */
+@media(orientation:landscape) and (max-height:500px){.global-start .global-difficulties .global-button{min-height:44px}}
+/* Map labels follow the map picture's size (--map-k from mobile-main.mjs). */
+#game .global-continent{transform:translate(-50%,-50%) scale(var(--map-k,1))}
+/* On Options the label sits in the header's empty right side (bottom-right covered a setting, fit.mjs). */
+body:has(#surface[data-global-screen="options"]) #version{bottom:auto;top:calc(env(safe-area-inset-top) + 20px * var(--uiz,1))}
+/* QA mode (test builds only; the public build has no #qa elements) */
+#qa{position:fixed;inset:calc(env(safe-area-inset-top) + 8px) auto auto calc(env(safe-area-inset-left) + 8px);z-index:3000;max-width:min(560px,calc(100vw - 16px));max-height:calc(100dvh - 16px);overflow:auto;padding:10px;border:2px solid #d8a83f;border-radius:8px;background:rgba(4,25,46,.96);color:#fff2cd;font:14px/1.3 system-ui,-apple-system,sans-serif}
+#qa[hidden],#qa-open[hidden]{display:none}
+#qa h2{font-size:15px;margin:0;flex:1}
+#qa .qa-row{display:flex;gap:8px;align-items:center;margin:6px 0;flex-wrap:wrap}
+#qa button,#qa select,#qa-open{min-height:44px;padding:0 12px;border:1px solid #d8a83f;border-radius:6px;background:#10283f;color:#fff2cd;font:inherit}
+#qa p{margin:0;max-width:520px;overflow-wrap:anywhere;font-size:12px}
+#qa-open{position:fixed;z-index:2900;left:calc(env(safe-area-inset-left) + 4px);top:50%;transform:translateY(-50%);min-width:44px;font:12px system-ui,sans-serif;opacity:.7}
