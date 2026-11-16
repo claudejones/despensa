@@ -321,6 +321,7 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   }:undefined,
   setTravelProgress:previewStore?(value)=>previewTravel?.(Math.max(0,Math.min(1,value))*previewTravelDuration):undefined,
   travelDuration:()=>previewTravelDuration,
+  choice:()=>({character,difficulty}),
   audio,open(){opened=true;attract?.open();if(attract){cancelAnimationFrame(attractFrame);attractLast=null;attractFrame=requestAnimationFrame(attractTick);}audio.enable(true);audio.configure(store.state.settings);audio.unlock();start();},close(){opened=false;attract?.close();if(attract)cancelAnimationFrame(attractFrame);cancelDemo();audio.stop();entryToken++;loading=false;travelTarget=null;clearTimeout(travelTimer);root.hidden=true;results.hidden=true;notice.hidden=true;bar.hidden=true;demoHint.hidden=true;surface.hidden=false;},
   // QA mode + test hooks (test builds only; mobile-main.mjs decides whether to use them).
   qa:previewStore?undefined:{screen:()=>screen,start,map,options:()=>options(start),about:tab=>about(start,tab),menu:openMenu,tell,
