@@ -95,16 +95,19 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
   }section.append(cards);mapBody.append(section);root.append(el('p','global-map-help',store.state.settings.unlimited?'Assisted play · No new rewards. Select a continent to view its stages.':'Select a continent to view its stages.'));
  }
  function waitWorld(ready){
-  const token=++worldRequest;showLoading('Loading world…');
+  const token=++worldRequest;showLoading();
   return prepareWorld().then(()=>{worldReady=true;if(token===worldRequest&&screen==='loading')ready();}).catch(()=>{if(token!==worldRequest||screen!=='loading')return;root.replaceChildren();const f=frame('World could not load');f.append(el('p','','Check your connection and try again.'),button('Retry',()=>waitWorld(ready),true),button('Main Menu',start));root.append(f);});
  }
- function showLoading(title='Loading stage…'){show('loading');root.className='global-game global-menu global-loading';const f=frame(title);f.setAttribute('role','status');f.append(el('p','','Preparing your adventure'));root.append(f);}
+ // Owner 2026-11-16: "if there needs to be loading, have something that comes up that says loading game, please wait".
+ // The bar fills as stage pictures arrive (launch reports progress); until then it slides back and forth.
+ function showLoading(title='Loading game…'){show('loading');root.className='global-game global-menu global-loading';const f=frame(title);f.setAttribute('role','status');const bar=el('div','global-loading-bar');bar.append(el('i',''));f.append(el('p','','Please wait'),bar);root.append(f);}
+ function loadingProgress(done,total){const i=root.querySelector('.global-loading-bar i');if(!i||!total)return;i.parentNode.classList.add('known');i.style.width=Math.round(100*done/total)+'%';}
  async function enter(id){if(loading||!allowed(id))return;await enterLevel(id);}
  async function enterSecret(who=character){if(loading)return;await enterLevel('SECRET01',who);}
  async function enterLevel(id,who){
   const current=++entryToken;loading=true;activeRun=null;
-  try{attempt=id==='SECRET01'?store.beginSecret(who):store.begin(id);shownOutcome=null;committedResult=null;resultDestination=null;showLoading();if(audio.enabled&&audio.settings.music)void audio.engine.load(id==='SECRET01'?'SECRET_BOSS_THEME':id+'_THEME');
-   await launch({stage:id.toLowerCase(),character:attempt.character,difficulty:attempt.difficulty||'standard',unlimited:store.state.settings.unlimited});
+  try{attempt=id==='SECRET01'?store.beginSecret(who):store.begin(id);shownOutcome=null;committedResult=null;resultDestination=null;showLoading();
+   await launch({stage:id.toLowerCase(),character:attempt.character,difficulty:attempt.difficulty||'standard',unlimited:store.state.settings.unlimited},loadingProgress);
    if(current!==entryToken)return;activeRun=getRun();show('game');if(store.status==='error')saved();
   }catch(e){if(current===entryToken){id==='SECRET01'?start():map();tell(e.message);}}finally{if(current===entryToken)loading=false;}
  }
@@ -130,7 +133,9 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
    for(const [id,label] of [['touch','TOUCH'],['keyboard','KEYBOARD']]){const b=button(label,()=>{controlsMode=id;about(back,'controls');root.querySelector('.global-controls-switch')?.querySelector('.selected')?.focus();});b.classList.toggle('selected',id===mode);b.setAttribute('aria-pressed',String(id===mode));sw.append(b);}
    const rows=mode==='touch'?[['JUMP','Clear low obstacles.'],['SLIDE','Pass beneath high birds or blasts. With Continuous Slide on, hold to keep sliding.'],['PAUSE / RESUME','Take a break.'],['Menu','The button in the corner opens the game menu.'],['Sideways','Turn your device sideways to play.']]
     :[['Space · ↑ · W','Jump'],['↓ · S','Slide (hold with Continuous Slide)'],['P · Esc','Pause or resume'],['M','Game menu'],['Tab · Enter','Move between buttons and choose'],['Esc','Close a message']];
-   const list=el('dl','global-controls-list');for(const [k,v] of rows)list.append(el('dt','',k),el('dd','',v));f.append(sw,list);body.append(f);return;
+   const list=el('dl','global-controls-list');for(const [k,v] of rows)list.append(el('dt','',k),el('dd','',v));f.append(sw,list);
+   // Owner 2026-11-16 ("ok" to keeping Home Screen play): iPhone keeps a Home Screen copy's progress apart from Safari's.
+   if(mode==='touch')f.append(el('p','global-help global-controls-note','On iPhone, a game added to your Home Screen keeps its own progress, separate from Safari.'));body.append(f);return;
   }
   if(tab==='hazards'){
    const nav=el('nav','global-pages global-guide-pages'),heading=el('h3'),groups=el('div','global-hazard-groups');nav.setAttribute('aria-label','Hazard guide continents');heading.setAttribute('aria-live','polite');

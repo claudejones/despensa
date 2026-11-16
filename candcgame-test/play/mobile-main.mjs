@@ -12,7 +12,7 @@ let run=null,images={},ui=null,last=null,request=0,generation=0,auto=null;
 let qaSpeed=1,qaImmortal=false;// set only by QA mode (test builds)
 const slidePointers=new Set();
 // Version label (owner rule: visible on the title and Options). tools/public-build.mjs empties BUILD for the public game.
-export const VERSION='1.1.0',BUILD='t5';
+export const VERSION='1.1.0',BUILD='t6';
 $('version').textContent='v'+VERSION+(BUILD?' · '+BUILD:'');
 // Desktop: menu screens are laid out as if the window were at most ~960×600 and zoomed as one piece (up to 3×; 2× left big monitors half empty) to fill
 // bigger windows, like Pulse Kart's uiScale. Gameplay is untouched. --uiz is used by mobile.css.
@@ -68,14 +68,14 @@ async function boot(){
  const response=await release;if(!response.ok)throw Error('The game could not load. Check your connection and retry.');const data=await response.json();
  const {config,draft,items,catalog}=data;
  const playerStorage={getItem:key=>localStorage.getItem('candc.test-build.'+key),setItem:(key,value)=>localStorage.setItem('candc.test-build.'+key,value)};
- ui=await setupGlobalGame({panel,surface,playerStorage,prepareWorld:()=>prepareScreens(true),isVisible:()=>!document.hidden&&!portrait.matches,guideData:{items,catalog,draft},getRun:()=>run,pause,cancelDemo:()=>{generation++;if(auto){run=null;images={};auto=null;}},launch:async selection=>{
+ ui=await setupGlobalGame({panel,surface,playerStorage,prepareWorld:()=>prepareScreens(true),isVisible:()=>!document.hidden&&!portrait.matches,guideData:{items,catalog,draft},getRun:()=>run,pause,cancelDemo:()=>{generation++;if(auto){run=null;images={};auto=null;}},launch:async(selection,progress=()=>{})=>{
   const token=++generation;pause();run=null;images={};auto=null;
   const options={config,draft,items,catalog,...selection},stage=selection.stage;let loaded;
   if(stage==='secret01')loaded=await loadLevel(options,loader,{unlimitedLives:selection.unlimited});
   else{
    const response=await fetch(`./plans/${stage}-${selection.difficulty}.json`);if(!response.ok)throw Error('Stage could not load. Check your connection and try again.');const sequence=await response.json();
    if(!sequence.verified||sequence.stage!==stage||sequence.profile!==selection.difficulty)throw Error('Stage plan is incompatible with this release.');
-   const snapshot=runtimeSnapshot({...options,sequence});const pairs=await Promise.all(runtimeAssetKeys(snapshot).map(async key=>{const img=await loader.load(catalog.assets[key]);const size=catalog.dimensions[key];if(size&&(img.naturalWidth!==size.width||img.naturalHeight!==size.height))throw Error('Stage artwork is incompatible with this release.');return [key,img];}));loaded={run:new PlayRuntime(snapshot,{unlimitedLives:selection.unlimited}),images:Object.fromEntries(pairs)};
+   const snapshot=runtimeSnapshot({...options,sequence}),keys=runtimeAssetKeys(snapshot);let done=0;progress(0,keys.length);const pairs=await Promise.all(keys.map(async key=>{const img=await loader.load(catalog.assets[key]);progress(++done,keys.length);const size=catalog.dimensions[key];if(size&&(img.naturalWidth!==size.width||img.naturalHeight!==size.height))throw Error('Stage artwork is incompatible with this release.');return [key,img];}));loaded={run:new PlayRuntime(snapshot,{unlimitedLives:selection.unlimited}),images:Object.fromEntries(pairs)};
   }
   if(token!==generation)return;run=loaded.run;if(qaImmortal)run.unlimitedLives=true;images=loaded.images;auto=selection.demo?new AttractPlayback(run):null;
   $('run-hud').style.setProperty('--heart-sprite',`url("${images.hudHearts.src}")`);$('run-hud').style.setProperty('--character-sprite',`url("${images.hudCharacters.src}")`);$('run-path').src=images.hudPath.src;
