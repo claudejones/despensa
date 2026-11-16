@@ -133,9 +133,7 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
    for(const [id,label] of [['touch','TOUCH'],['keyboard','KEYBOARD']]){const b=button(label,()=>{controlsMode=id;about(back,'controls');root.querySelector('.global-controls-switch')?.querySelector('.selected')?.focus();});b.classList.toggle('selected',id===mode);b.setAttribute('aria-pressed',String(id===mode));sw.append(b);}
    const rows=mode==='touch'?[['JUMP','Clear low obstacles.'],['SLIDE','Pass beneath high birds or blasts. With Continuous Slide on, hold to keep sliding.'],['PAUSE / RESUME','Take a break.'],['Menu','The button in the corner opens the game menu.'],['Sideways','Turn your device sideways to play.']]
     :[['Space · ↑ · W','Jump'],['↓ · S','Slide (hold with Continuous Slide)'],['P · Esc','Pause or resume'],['M','Game menu'],['Tab · Enter','Move between buttons and choose'],['Esc','Close a message']];
-   const list=el('dl','global-controls-list');for(const [k,v] of rows)list.append(el('dt','',k),el('dd','',v));f.append(sw,list);
-   // Owner 2026-11-16 ("ok" to keeping Home Screen play): iPhone keeps a Home Screen copy's progress apart from Safari's.
-   if(mode==='touch')f.append(el('p','global-help global-controls-note','On iPhone, a game added to your Home Screen keeps its own progress, separate from Safari.'));body.append(f);return;
+   const list=el('dl','global-controls-list');for(const [k,v] of rows)list.append(el('dt','',k),el('dd','',v));f.append(sw,list);body.append(f);return;
   }
   if(tab==='hazards'){
    const nav=el('nav','global-pages global-guide-pages'),heading=el('h3'),groups=el('div','global-hazard-groups');nav.setAttribute('aria-label','Hazard guide continents');heading.setAttribute('aria-live','polite');
@@ -158,7 +156,7 @@ export async function setupGlobalGame({panel,surface,launch,pause,resume,restart
    ['Continent passports','Complete all three stages in a continent to earn its passport. Record a three-heart best on each stage for a perfect passport. Replays can improve your results; you do not need one uninterrupted perfect journey.'],
    ['Unlock Hard and Level Select','Complete all 21 stages on Standard without Unlimited Health. Hard adds more demanding timing and encounters. Level Select lets you replay any stage from the world map. Easy completion does not unlock these features.'],
    ['Unlock Beneath the Ice','Earn all seven perfect Standard passports: a three-heart best on every Standard stage without Unlimited Health. The secret level then appears on the main menu. Survive its three-minute boss encounter without assistance to earn the secret passport.'],
-   ['Saving and assisted play','Progress is saved automatically in this browser on this device. Continue restarts an unfinished stage with three hearts. Unlimited Health is useful for practice, but that attempt cannot earn trophies, passports or unlocks. Previously earned rewards are kept.']
+   ['Saving and assisted play','Progress is saved automatically in this browser on this device. On iPhone, a copy added to your Home Screen keeps its own progress, separate from Safari. Continue restarts an unfinished stage with three hearts. Unlimited Health is useful for practice, but that attempt cannot earn trophies, passports or unlocks. Previously earned rewards are kept.']
   ];for(const [heading,text] of sections){const section=el('section','global-about-section');section.append(el('h4','',heading),el('p','',text));f.append(section);}body.append(f);
  }
    function soundtrack(back){

@@ -235,4 +235,3 @@ body[data-mode=game] .play-heading{display:none;}
 .global-controls-list dt{color:#ffdc54;white-space:nowrap;}
 .global-controls-list dd{margin:0;line-height:1.7;}
 @media(max-height:500px){.global-controls-list{gap:6px 14px}.global-controls-list dd{line-height:1.45}}
-.global-controls-note{margin:10px 0 0;font-size:.85em;opacity:.85;text-align:left}
