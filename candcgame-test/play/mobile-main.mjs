@@ -12,7 +12,7 @@ let run=null,images={},ui=null,last=null,request=0,generation=0,auto=null;
 let qaSpeed=1,qaImmortal=false;// set only by QA mode (test builds)
 const slidePointers=new Set();
 // Version label (owner rule: visible on the title and Options). tools/public-build.mjs empties BUILD for the public game.
-export const VERSION='1.1.0',BUILD='t4';
+export const VERSION='1.1.0',BUILD='t5';
 $('version').textContent='v'+VERSION+(BUILD?' · '+BUILD:'');
 // Desktop: menu screens are laid out as if the window were at most ~960×600 and zoomed as one piece (up to 3×; 2× left big monitors half empty) to fill
 // bigger windows, like Pulse Kart's uiScale. Gameplay is untouched. --uiz is used by mobile.css.
@@ -63,9 +63,9 @@ async function prepareScreens(world=false){
  await (world?worldAssets:work);await document.fonts?.ready;
 }
 async function boot(){
- void sharedAudio.prefetch('C_AND_C_TITLE');
+ const release=fetch('./release.json');for(const f of ['global-ui/stages.json','global-ui/map_layout.json','secret-level/asset_manifest.json','secret-level/encounter_config.json'])fetch('../assets/'+f).catch(()=>{});// start together with the title art
  await prepareScreens();
- const response=await fetch('./release.json');if(!response.ok)throw Error('The game could not load. Check your connection and retry.');const data=await response.json();
+ const response=await release;if(!response.ok)throw Error('The game could not load. Check your connection and retry.');const data=await response.json();
  const {config,draft,items,catalog}=data;
  const playerStorage={getItem:key=>localStorage.getItem('candc.test-build.'+key),setItem:(key,value)=>localStorage.setItem('candc.test-build.'+key,value)};
  ui=await setupGlobalGame({panel,surface,playerStorage,prepareWorld:()=>prepareScreens(true),isVisible:()=>!document.hidden&&!portrait.matches,guideData:{items,catalog,draft},getRun:()=>run,pause,cancelDemo:()=>{generation++;if(auto){run=null;images={};auto=null;}},launch:async selection=>{
@@ -81,7 +81,19 @@ async function boot(){
   $('run-hud').style.setProperty('--heart-sprite',`url("${images.hudHearts.src}")`);$('run-hud').style.setProperty('--character-sprite',`url("${images.hudCharacters.src}")`);$('run-path').src=images.hudPath.src;
   run.start();if(document.hidden||portrait.matches)pause();last=null;canvas.focus();
  }});
- $('boot').hidden=true;ui.open();rotation();request=requestAnimationFrame(tick);if(BUILD)setupQA();
+ $('boot').hidden=true;ui.open();rotation();request=requestAnimationFrame(tick);void sharedAudio.prefetch('C_AND_C_TITLE');
+ // 5. Stage art + music for the stage you are most likely to play next start loading while you are on the map or results,
+ // so Play no longer waits for ~2.4 MB (owner test 4: "the loading stage and levels"). Same loader, so Play reuses it.
+ const warmed=new Set();
+ async function warm(){const j=ui.store.state.journey;if(!j)return;
+  const order=['NA','SA','EU','AF','AS','OC','AN'].flatMap(c=>[1,2,3].map(n=>c+'0'+n)),stage=j.visited.reduce((a,s)=>order.indexOf(s)>order.indexOf(a)?s:a,j.stage).toLowerCase(),key=stage+'-'+j.difficulty+'-'+j.character;
+  if(warmed.has(key))return;warmed.add(key);
+  try{const r=await fetch(`./plans/${stage}-${j.difficulty}.json`);if(!r.ok)throw Error();const sequence=await r.json();
+   const snapshot=runtimeSnapshot({config,draft,items,catalog,stage,character:j.character,difficulty:j.difficulty,sequence});
+   await Promise.all(runtimeAssetKeys(snapshot).map(k=>loader.load(catalog.assets[k])));
+   if(ui.store.state.settings.music)void sharedAudio.prefetch(stage.toUpperCase()+'_THEME');
+  }catch{warmed.delete(key);}}
+ new MutationObserver(()=>{if(['map','result'].includes(surface.dataset.globalScreen))setTimeout(warm,300);}).observe(surface,{attributes:true,attributeFilter:['data-global-screen']});if(BUILD)setupQA();
 }
 $('retry').onclick=()=>location.reload();export const started=boot().catch(e=>{$('boot-text').textContent=e.message;$('retry').hidden=false;});rotation();
 // QA-START · QA mode + test hooks. Test builds only: tools/public-build.mjs cuts everything from QA-START to QA-END.
