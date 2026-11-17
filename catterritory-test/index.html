@@ -1126,6 +1126,12 @@ kbd{display:inline-grid;place-items:center;min-width:24px;height:26px;padding:0 
 @media (orientation:landscape) and (max-height:560px) and (max-width:760px){
  body.gameMode .appHeader h1{display:none!important}
 }
+/* V30 v1.1.0 (fix #6): Territory Complete + finale windows: smaller art on short screens, buttons always in view. */
+.modalbox.winModal{display:flex;flex-direction:column;max-height:calc(100dvh - 32px);padding-bottom:0}
+.winModal>*{flex-shrink:0}
+.winModal .modalactions{position:sticky;bottom:0;z-index:1;margin:6px -22px 0;padding:12px 22px 16px;background:linear-gradient(rgba(255,254,250,0),#fffefa 12px)}
+@media (max-height:900px){.winModal .assetHero.large{max-height:22vh}.winModal .unlockArt{max-height:11vh}.winModal .scorecards{margin:10px 0}.winModal h2{font-size:25px}}
+@media (max-height:560px){.winModal{width:min(680px,100%)}.winModal .assetHero.large{max-height:24vh}.winModal .unlockArt{display:none}.winModal p{margin:4px 0}.winModal h3{margin:6px 0 0}.winModal .scorecards{margin:8px 0}.winModal .score{padding:6px}.winModal .score strong{font-size:19px}}
 /* QA-START */
 #qa{position:fixed;inset:auto 10px max(10px,env(safe-area-inset-bottom)) 10px;z-index:200;max-width:520px;margin:auto;background:#26323c;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.35);font-size:13px}
 #qa[hidden]{display:none}
@@ -1193,7 +1199,7 @@ kbd{display:inline-grid;place-items:center;min-width:24px;height:26px;padding:0 
 <div class="modal" id="modal"><div class="modalbox" id="modalBox"></div></div><div class="confetti" id="confetti"></div>
 <script>
 (()=>{"use strict";
-const VERSION="v1.0.0",BUILD="t1 · 2026-11-17";
+const VERSION="v1.1.0",BUILD="t2 · 2026-11-17";
 const KEY="cat-territory-test-v29-75";
 const oldKey="cat-territory-test-v28-75";
 const tiers=[
@@ -1478,7 +1484,7 @@ function settingsPanel(){
  <label class="toggle"><input id="dAuto" type="checkbox" ${data.settings.auto!==false?"checked":""}> Auto-fill blocked X's</label><p class="settingHelp">Automatically marks only the eight cells touching a placed cat. Row, column, and territory deductions remain yours to solve. These marks recalculate when cats move.</p>
  <label class="toggle"><input id="dConflict" type="checkbox" ${data.settings.conflicts!==false?"checked":""}> Highlight conflicts</label></div>
  <div class="settingsSection"><h3>About Saving</h3><p>Your progress, records, and settings are stored locally in this browser.</p></div>
- <div class="settingsSection creditsSection"><h3>Credits</h3><p>Made by Claude Jones with Claude (Anthropic).</p><p>Pictures made with AI image tools, directed by Claude Jones.</p><p>No outside code libraries.</p><p class="versionLine">Cat Territory ${versionText()}</p></div>`;
+ <div class="settingsSection creditsSection"><h3>Credits</h3><p>Made by Claude Jones with Claude (Anthropic).</p><p>Pictures made with AI image tools, directed by Claude Jones.</p><p>Music made with Suno, picked by Claude Jones.</p><p>No outside code libraries.</p><p class="versionLine">Cat Territory ${versionText()}</p></div>`;
  openDrawer("Settings","Adjust how the puzzle behaves.","",content);
  $("dAuto").onchange=e=>{data.settings.auto=e.target.checked;save();if(cur)renderGame()};
  $("dConflict").onchange=e=>{data.settings.conflicts=e.target.checked;save();if(cur)renderGame()}
@@ -1653,6 +1659,128 @@ function startV30(){
  addEventListener("resize",refit);addEventListener("orientationchange",()=>setTimeout(fitBoard,250));
  const _home=home;home=function(){_home();kb.cell=null;if(kb.on)setTimeout(()=>document.querySelector("#tiers .ptile.active, #tiers .ptile:not([disabled])")?.focus({preventScroll:true}),60)};
 }
+/* V30 v1.1.0 (Claude, 2026-11-17): the owner's Suno songs (music/home.m4a on the territories, music/puzzle.m4a while
+   solving, optional music/jingle.m4a for Territory Complete; made by tools/make-music.mjs with baked loop points) plus
+   soft code-made sounds about 8 dB under the music, and Music / Sound effects switches in Settings.
+   Adapted from claude-library game-engine pixi-landscape 45-audio.js + 46-music.js (Pulse Kart). iOS rules kept: audio
+   wakes on a finger lifting or a key, and a silent looping <audio> clip lets it play with the ring/silent switch on. */
+const SND={ctx:null,out:null,mus:null,sfx:null,tag:null,meta:null,ab:{},buf:{},bad:{},src:null,gain:null,key:null,want:null,pos:{},t0:0,off:0,loop:false,last:null};
+const MUSIC_VOL=0.55,SFX_LEVEL=0.4;
+const sndPref=k=>data.settings[k]!==false;
+function silentClip(){const n=1600,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,t)=>{for(let i=0;i<t.length;i++)b[o+i]=t.charCodeAt(i)};
+ w(0,"RIFF");v.setUint32(4,36+n,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+ v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);
+ b.fill(128,44);let s="";for(let i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return"data:audio/wav;base64,"+btoa(s)}
+function sndTag(play){try{
+ if(!SND.tag){SND.tag=document.createElement("audio");SND.tag.src=silentClip();SND.tag.loop=true;SND.tag.setAttribute("playsinline","");SND.tag.preload="auto"}
+ if(play&&(sndPref("music")||sndPref("sfx"))&&!document.hidden){if(SND.tag.paused){const p=SND.tag.play();if(p&&p.catch)p.catch(()=>{})}}else if(!SND.tag.paused)SND.tag.pause();
+}catch(e){}}
+function sndUnlock(){
+ if(!sndPref("music")&&!sndPref("sfx"))return;
+ sndTag(true);
+ if(!SND.ctx){try{
+   const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+   try{if(navigator.audioSession)navigator.audioSession.type="playback"}catch(e){}
+   SND.ctx=new AC();SND.out=SND.ctx.createGain();SND.out.connect(SND.ctx.destination);
+   SND.mus=SND.ctx.createGain();SND.mus.connect(SND.out);SND.sfx=SND.ctx.createGain();SND.sfx.gain.value=SFX_LEVEL;SND.sfx.connect(SND.out);
+ }catch(e){SND.ctx=null;return}}
+ const go=()=>{if(SND.want&&!SND.src)mfPlay(SND.want,true,true)};
+ if(SND.ctx.state!=="running")SND.ctx.resume().then(go,()=>{});else go();
+}
+const sndOk=()=>SND.ctx&&SND.ctx.state==="running";
+function tone(f,dur,type,vol,delay,toF){
+ if(!sndPref("sfx")||!sndOk())return;
+ const c=SND.ctx,t=c.currentTime+(delay||0),o=c.createOscillator(),g=c.createGain();
+ o.type=type||"triangle";o.frequency.setValueAtTime(f,t);if(toF)o.frequency.exponentialRampToValueAtTime(toF,t+dur);
+ g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.15,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+ o.connect(g);g.connect(SND.sfx);o.start(t);o.stop(t+dur+0.03);
+}
+// soft, rounded sounds (triangle/sine), pitched to sit under the songs' major keys
+const SFX={
+ place:()=>{tone(660,0.11,"triangle",0.24);tone(990,0.16,"sine",0.14,0.05)},
+ remove:()=>tone(560,0.12,"triangle",0.16,0,400),
+ mark:()=>tone(1320,0.05,"sine",0.12),
+ unmark:()=>tone(990,0.05,"sine",0.08),
+ reject:()=>tone(196,0.18,"triangle",0.2,0,150),
+ win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,i===3?0.5:0.16,"triangle",0.2,i*0.09)),
+ fanfare:()=>{[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,i===6?0.9:0.16,"triangle",0.2,i*0.11));tone(262,1.2,"sine",0.12,0.66)},
+};
+function sfx(name){if(!sndPref("sfx"))return;SND.last=name;SFX[name]&&SFX[name]()}
+// songs
+function mfMeta(){if(!SND.metaP)SND.metaP=fetch("music/music.json").then(r=>r.ok?r.json():null).catch(()=>null).then(m=>SND.meta=m||{});return SND.metaP}
+const hasSong=k=>!!(SND.meta&&SND.meta[k])&&!SND.bad[k];
+function mfFetch(k){if(!SND.ab[k])SND.ab[k]=fetch("music/"+k+".m4a").then(r=>{if(!r.ok)throw Error(r.status);return r.arrayBuffer()}).catch(()=>{SND.bad[k]=true;return null});return SND.ab[k]}
+async function mfBuffer(k){
+ if(SND.buf[k])return SND.buf[k];
+ const ab=await mfFetch(k);if(!ab||!SND.ctx)return null;
+ try{SND.buf[k]=await new Promise((ok,no)=>SND.ctx.decodeAudioData(ab.slice(0),ok,no))}catch(e){SND.bad[k]=true;return null}
+ return SND.buf[k];
+}
+// AAC adds a little silence at the start in some browsers: shift the loop points by however much longer the clip decodes
+const mfShift=(b,m)=>{const d=b.duration-m.len;return d>0&&d<0.12?d:0};
+function mfPosNow(){
+ if(!SND.src||!SND.ctx)return 0;
+ const m=SND.meta[SND.key],b=SND.src.buffer,sh=mfShift(b,m),t=SND.ctx.currentTime-SND.t0+SND.off;
+ if(!SND.loop)return t;
+ const a=m.loopStart+sh,e=Math.min(b.duration,m.loopEnd+sh);return t<e?t:a+((t-a)%(e-a));
+}
+async function mfPlay(k,loop,resume){
+ await mfMeta();
+ if(SND.key===k&&SND.src)return;
+ if(!hasSong(k)||!sndPref("music")||!sndOk())return;
+ mfStop(0.4);SND.key=k;SND.loop=loop;
+ const b=await mfBuffer(k);
+ if(!b||SND.key!==k||SND.src||!sndPref("music")||!sndOk()){if(SND.key===k&&!SND.src)SND.key=null;return}
+ const c=SND.ctx,s=c.createBufferSource(),g=c.createGain(),m=SND.meta[k],sh=mfShift(b,m),now=c.currentTime;
+ s.buffer=b;if(loop){s.loop=true;s.loopStart=m.loopStart+sh;s.loopEnd=Math.min(b.duration,m.loopEnd+sh)}
+ const off=resume&&SND.pos[k]?SND.pos[k]:0;
+ g.gain.setValueAtTime(0.0001,now);g.gain.linearRampToValueAtTime(MUSIC_VOL*m.gain,now+(off?0.8:0.4));
+ s.connect(g);g.connect(SND.mus);s.start(now,off);
+ SND.src=s;SND.gain=g;SND.t0=now;SND.off=off;
+ if(!loop)s.onended=()=>{if(SND.src===s){SND.src=null;SND.key=null;setTimeout(()=>{if(!SND.src&&SND.want)mfPlay(SND.want,true,true)},400)}};
+}
+function mfStop(fade){
+ if(!SND.src||!SND.ctx){SND.src=null;SND.key=null;return}
+ if(SND.loop)SND.pos[SND.key]=mfPosNow();
+ const s=SND.src,g=SND.gain,t=SND.ctx.currentTime,f=fade||0.2;
+ g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(0.0001,t+f);
+ try{s.stop(t+f+0.02)}catch(e){}
+ SND.src=null;SND.key=null;
+}
+// the song for the screen in front: the puzzle song while solving, the home song everywhere else
+function screenMusic(){SND.want=$("game").classList.contains("active")?"puzzle":"home";if(sndPref("music"))mfPlay(SND.want,true,true);else mfStop(0.2)}
+// Territory Complete: the owner's jingle once (then the screen's song comes back), or a code-made fanfare
+async function jingle(){
+ await mfMeta();
+ if(sndPref("music")&&hasSong("jingle")&&sndOk()){SND.last="jingle";mfStop(0.3);mfPlay("jingle",false);return}
+ sfx("fanfare");
+}
+function soundSettings(){
+ const box=document.createElement("div");box.className="settingsSection";
+ box.innerHTML=`<h3>Sound</h3><label class="toggle"><input id="dMusic" type="checkbox" ${sndPref("music")?"checked":""}> Music</label><label class="toggle"><input id="dSfx" type="checkbox" ${sndPref("sfx")?"checked":""}> Sound effects</label>`;
+ const first=$("drawerContent").querySelector(".settingsSection");if(first)first.after(box);else $("drawerContent").prepend(box);
+ $("dMusic").onchange=e=>{data.settings.music=e.target.checked;save();if(e.target.checked){sndUnlock();screenMusic()}else{mfStop(0.3);sndTag(sndPref("sfx"))}};
+ $("dSfx").onchange=e=>{data.settings.sfx=e.target.checked;save();if(e.target.checked){sndUnlock();sfx("place")}else sndTag(sndPref("music"))};
+}
+function startAudio(){
+ mfMeta();
+ ["pointerup","touchend","keydown"].forEach(ev=>document.addEventListener(ev,sndUnlock,true));
+ document.addEventListener("visibilitychange",()=>{if(!SND.ctx)return;if(document.hidden){sndTag(false);SND.ctx.suspend().catch(()=>{})}else if(sndPref("music")||sndPref("sfx"))sndUnlock()});
+ const _cycle=cycle;cycle=function(i){
+   const before=cur&&!cur.done?cur.state[i]:null;_cycle(i);
+   if(before===null||!cur||cur.done)return;const now=cur.state[i];
+   if(now===before)return;
+   if(now===2)sfx("place");else if(before===2&&now===0)sfx("remove");else if(now===1)sfx("mark");else sfx("unmark");
+ };
+ const _shake=shakeCell;shakeCell=function(i){sfx("reject");_shake(i)};
+ const _win=puzzleWin;puzzleWin=function(...a){sfx("win");_win(...a)};
+ const _tw=territoryWin;territoryWin=function(t){_tw(t);$("modalBox").classList.add("winModal");jingle()};
+ const _fin=finale;finale=function(){_fin();$("modalBox").classList.add("winModal");jingle()};
+ // follow the screen itself (some buttons hold the original home/open functions)
+ new MutationObserver(()=>{const w=$("game").classList.contains("active")?"puzzle":"home";if(w!==SND.want)screenMusic()}).observe($("game"),{attributes:true,attributeFilter:["class"]});
+ const _set=settingsPanel;settingsPanel=function(){_set();soundSettings()};$("settingsTopBtn").onclick=()=>settingsPanel();
+ screenMusic();
+}
 /* QA-START */
 // QA mode + test hooks (source and test builds only; tools/build.mjs cuts this block from the public game).
 function qaScreen(){return $("modal").classList.contains("show")?"modal":$("drawer").classList.contains("show")?"drawer":$("game").classList.contains("active")?"game":"home"}
@@ -1670,10 +1798,11 @@ function setupQA(){
  if(location.hash==="#qa")setTimeout(show,300);
  window.__ct={state:()=>({screen:qaScreen(),version:VERSION,build:BUILD,saveKey:KEY,done:total(),unlocked:data.unlockedTiers.slice(),settings:{...data.settings},
    puzzle:cur&&$("game").classList.contains("active")?{t:cur.t,p:cur.p,n:cur.n,tool:cur.tool,done:!!cur.done,moves:cur.moves,cats:cats().length,state:cur.state.slice(),cursor:cellIndex(document.activeElement)}:null}),
-   open:(t,p)=>{hideModal();closeDrawer();open(t,p)},solve:qaSolve,unlockAll:qaUnlockAll,finishTerritory:qaFinishTerritory,clear:qaClear,showQA:show,solution:()=>cur?.sol.slice()};
+   open:(t,p)=>{hideModal();closeDrawer();open(t,p)},solve:qaSolve,unlockAll:qaUnlockAll,finishTerritory:qaFinishTerritory,clear:qaClear,showQA:show,solution:()=>cur?.sol.slice(),
+   audio:()=>({ctx:SND.ctx?SND.ctx.state:null,playing:SND.src?SND.key:null,want:SND.want,songs:SND.meta?Object.keys(SND.meta):null,bad:Object.keys(SND.bad),music:sndPref("music"),sfx:sndPref("sfx"),last:SND.last})};
 }
 setTimeout(setupQA,0);
 /* QA-END */
-load();renderHome();idlePreloadAssets();startV30();
+load();renderHome();idlePreloadAssets();startV30();startAudio();
 })();
 </script></body></html>

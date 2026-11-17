@@ -1,0 +1,18 @@
+{
+ "home": {
+  "kind": "loop",
+  "len": 93.185,
+  "gain": 0.901,
+  "loopStart": 18.1333,
+  "loopEnd": 93.1853,
+  "match": 1.435
+ },
+ "puzzle": {
+  "kind": "loop",
+  "len": 130.009,
+  "gain": 1.046,
+  "loopStart": 8.9173,
+  "loopEnd": 130.0089,
+  "match": 1.629
+ }
+}
