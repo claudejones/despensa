@@ -6,6 +6,9 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <meta name="theme-color" content="#f7f3ec">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cat Territory">
 <style>
 :root{--ink:#26323c;--muted:#6d7883;--paper:#f7f3ec;--card:#fffefa;--line:#dde2e6;--blue:#2f82d0;--green:#37a567;--orange:#e87842;--shadow:0 15px 38px rgba(39,50,60,.12)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 10% 0%,rgba(238,164,120,.15),transparent 28%),radial-gradient(circle at 95% 10%,rgba(80,184,171,.13),transparent 26%),var(--paper);color:var(--ink);font-family:ui-rounded,"SF Pro Rounded","Avenir Next",system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}button{touch-action:manipulation}.app{width:min(1180px,100%);margin:auto;padding:14px}.view{display:none}.view.active{display:block}
@@ -1053,6 +1056,77 @@ body.gameMode .navBtn.gameOnly{display:none!important}
   .puzzleStats .markToolBtn img{width:18px!important;height:18px!important}
 }
 
+/* V30 production standard (Claude, 2026-11-17): taps ≥ 44 px, text ≥ 12 px, keyboard cursor, controls help,
+   version label, Play Again, side layout for phones held sideways, reduced motion. */
+.navBtn,.backBtn,.puzzleIconBtn{min-width:44px!important;min-height:44px!important}
+.drawerCloseBtn,#drawerClose{min-width:44px!important;min-height:44px!important}
+.puzzleStats .markTool{width:auto!important;height:auto!important}
+.puzzleStats .markToolBtn,.markToolBtn{width:44px!important;height:44px!important;padding:8px!important}
+.puzzleStats .markToolBtn img,.markToolBtn img{width:26px!important;height:26px!important}
+.territoryPager{gap:0!important}
+.territoryDot,.territoryDot.active{width:44px!important;height:44px!important;background:transparent!important;border-radius:0!important;position:relative}
+.territoryDot::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:#cfd5d8;transform:translate(-50%,-50%);transition:.18s}
+.territoryDot.active::after{width:22px;border-radius:99px;background:#ee7e45}
+.eyebrow,.statbox small,.modebox small,.puzzleStats small{font-size:12px!important}
+.appHeader .brand p{font-size:12px!important}
+html body .gamebar .puzzleStats small,html body #movesLabel,html body #timeLabel,html body .gamebar #gameSub{font-size:12px!important}
+html body .completionScore small,html body .completionScore .newbest,html body .completionTop p{font-size:12px!important}
+html body .locknote,html body .locknote span,html body .locknote strong{font-size:12px!important}
+html body .statsTable th,html body .statsTable td{font-size:12px!important}
+html body .statsTable .recordActionBtn{width:44px!important;height:44px!important}
+html body .statsBack{min-height:44px!important;height:44px!important}
+.cell:focus{outline:none}
+body.kbUser .cell:focus{outline:4px solid #2f82d0;outline-offset:-4px;z-index:2}
+body.kbUser .ptile:focus,body.kbUser .btn:focus,body.kbUser button:focus{outline:3px solid #2f82d0;outline-offset:2px}
+.versionLabel{text-align:center;font-size:12px;color:var(--muted);padding:6px 0 10px;user-select:none;-webkit-user-select:none}
+.completionActions{display:flex;gap:8px;align-items:stretch}
+.completionActions .completionContinue{flex:2;width:auto}
+.completionActions .completionAgain{flex:1;min-height:44px}
+.modalactions .btn{min-height:44px}
+.guideTabs{display:flex;gap:6px}
+.guideTab{flex:1;min-height:44px;border:1px solid #d9dee2;background:#fff;border-radius:12px;font:inherit;font-weight:800;color:#52616c;cursor:pointer}
+.guideTab[aria-selected=true]{background:#fff0e7;border-color:#ef7a3d;color:#26323c}
+.controlsSwitch{display:flex;gap:6px;margin:0 0 10px}
+.controlsSwitch button{flex:1;min-height:44px;border:1px solid #d9dee2;background:#fff;border-radius:12px;font:inherit;font-weight:800;letter-spacing:.06em;color:#52616c;cursor:pointer}
+.controlsSwitch button[aria-pressed=true]{background:#26323c;border-color:#26323c;color:#fff}
+.controlsList{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.controlsList li{display:grid;grid-template-columns:minmax(118px,auto) 1fr;gap:10px;align-items:center;font-size:14px;line-height:1.35}
+.ctlKey{font-weight:800;display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ctlKey img{width:22px;height:22px;object-fit:contain}
+kbd{display:inline-grid;place-items:center;min-width:24px;height:26px;padding:0 6px;border:1px solid #c9d0d5;border-bottom-width:3px;border-radius:7px;background:#fff;font-family:inherit;font-weight:800;font-size:12px;line-height:1;color:#26323c;box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.confetti{display:none!important}}
+@media (orientation:landscape) and (max-height:560px){
+ body.gameMode .app{display:grid;grid-template-columns:minmax(260px,1fr) auto;grid-template-rows:auto auto 1fr;column-gap:12px;align-items:start;width:100%;max-width:none;min-height:100dvh;box-sizing:border-box;padding:8px max(10px,env(safe-area-inset-right)) 8px max(10px,env(safe-area-inset-left))!important}
+ body.gameMode .appHeader{grid-column:1;grid-row:1;margin:0 0 8px!important;min-height:0!important;height:auto!important;position:static!important;padding:4px 2px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+ body.gameMode .appHeader p{display:none!important}
+ body.gameMode .appHeader .brand{display:flex!important;flex-direction:row!important;align-items:center!important;gap:8px!important}
+ body.gameMode .appHeader .logo{width:46px!important;height:46px!important}
+ body.gameMode .appHeader h1{white-space:nowrap}
+ body.gameMode .gamebar .game-title strong{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.2}
+ body.gameMode #game.view.active{display:contents!important}
+ body.gameMode .gamebar{grid-column:1;grid-row:2;position:static!important;margin:0!important}
+ body.gameMode .gamecard{display:contents!important}
+ body.gameMode .boardwrap{grid-column:2;grid-row:1/4;align-self:start;margin:0!important;padding:6px;background:rgba(255,255,255,.93);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);box-sizing:content-box}
+ body.gameMode .appHeader h1{font-size:26px!important}
+ body.gameMode .gamebar{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;gap:8px!important;padding:8px!important}
+ body.gameMode .gamebar>.backBtn{grid-column:1!important;grid-row:1!important}
+ body.gameMode .gamebar>.game-title{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column;min-width:0}
+ body.gameMode .gamebar>.puzzleActions{grid-column:3!important;grid-row:1!important;display:flex!important}
+ body.gameMode .gamebar>.puzzleStats{grid-column:1/-1!important;grid-row:2!important;display:grid!important;grid-template-columns:1fr 1fr auto 1fr!important;grid-template-rows:auto!important;align-items:center;gap:0!important;border-top:1px solid #e2e5e7;padding-top:6px!important;margin:0!important;width:auto!important}
+ body.gameMode .puzzleStats>*{grid-row:1!important;grid-column:auto!important;border-left:0!important;padding:0 4px!important;text-align:center;display:flex!important;flex-direction:column;align-items:center;justify-content:center;min-width:0!important}
+ body.gameMode .puzzleStats>.movesbox{order:1}body.gameMode .puzzleStats>.timebox{order:2}body.gameMode .puzzleStats>.modebox{order:3}body.gameMode .puzzleStats>.catsbox{order:4}
+ body.gameMode .boardfoot{display:none}
+ body.gameMode .completionPanel.show{grid-column:1;grid-row:3;margin:8px 0 0!important;padding:8px 10px 10px!important}
+ body.gameMode:has(.completionPanel.show) .gamebar>.puzzleStats{display:none!important}
+ body.gameMode .completionPanel .completionTop{margin-bottom:6px!important}
+ body.gameMode .completionPanel .completionTop img{width:44px!important;height:44px!important}
+ body.gameMode .completionPanel .completionScores{margin-bottom:8px!important;gap:6px!important}
+ body.gameMode .completionPanel .completionScore{padding:5px!important}
+}
+@media (orientation:landscape) and (max-height:560px) and (max-width:760px){
+ body.gameMode .appHeader h1{display:none!important}
+}
+
 </style>
 
 <link rel="preload" as="image" href="assets/CT-BRAND-01.png">
@@ -1078,7 +1152,7 @@ body.gameMode .navBtn.gameOnly{display:none!important}
     <button class="navBtn" id="settingsTopBtn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg></button>
   </nav>
 </header>
-<section id="home" class="view active"><div id="tiers" class="tiers"></div><div id="territoryPager" class="territoryPager" aria-label="Territory carousel"></div></section>
+<section id="home" class="view active"><div id="tiers" class="tiers"></div><div id="territoryPager" class="territoryPager" aria-label="Territory carousel"></div><div class="versionLabel" id="version"></div></section>
 <section id="game" class="view">
  <div class="gamebar puzzleHeader">
   <button class="backBtn" id="homeBtn" aria-label="Back to territories" title="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
@@ -1113,6 +1187,7 @@ body.gameMode .navBtn.gameOnly{display:none!important}
 <div class="modal" id="modal"><div class="modalbox" id="modalBox"></div></div><div class="confetti" id="confetti"></div>
 <script>
 (()=>{"use strict";
+const VERSION="v1.0.0",BUILD="";
 const KEY="cat-territory-v29-75";
 const oldKey="cat-territory-v28-75";
 const tiers=[
@@ -1125,11 +1200,11 @@ function R(seed){return()=>{let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=
 function solution(n,seed){const q=R(seed),a=[...Array(n).keys()];for(let z=0;z<800;z++){for(let i=n-1;i;i--){let j=Math.floor(q()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(a.every((c,r)=>r===0||Math.abs(c-a[r-1])>1))return a.slice()}throw Error("solution")}
 function regions(sol,seed){let n=sol.length,q=R(seed),g=Array.from({length:n},()=>Array(n).fill(-1)),cs=Array.from({length:n},()=>[]),ds=[[1,0],[-1,0],[0,1],[0,-1]];for(let r=0;r<n;r++){g[r][sol[r]]=r;cs[r].push([r,sol[r]])}let left=n*n-n;while(left){let min=Math.min(...cs.map(x=>x.length)),choices=[];for(let id=0;id<n;id++){if(cs[id].length>min+2)continue;let f=[],s=new Set;for(let [r,c]of cs[id])for(let[d,e]of ds){let rr=r+d,cc=c+e,k=rr+","+cc;if(rr>=0&&cc>=0&&rr<n&&cc<n&&g[rr][cc]<0&&!s.has(k)){s.add(k);f.push([rr,cc])}}if(f.length)choices.push([id,f])}if(!choices.length){for(let id=0;id<n;id++){let f=[];for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(g[r][c]<0&&ds.some(([d,e])=>r+d>=0&&c+e>=0&&r+d<n&&c+e<n&&g[r+d][c+e]===id))f.push([r,c]);if(f.length)choices.push([id,f])}}let[id,f]=choices[Math.floor(q()*choices.length)],p=f[Math.floor(q()*f.length)];g[p[0]][p[1]]=id;cs[id].push(p);left--}return g}
 function def(t,p){let n=tiers[t].sizes[p],seed=9001+t*100000+p*3371,s=solution(n,seed);return{t,p,n,key:tiers[t].id+"-"+p,sol:s,regions:regions(s,seed+771)}}
-function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x?.puzzles)data=x;else{let o=JSON.parse(localStorage.getItem(oldKey));if(o?.puzzles){data.puzzles=o.puzzles;data.settings=o.settings||data.settings}}}catch(e){}
+function load(){try{let x=null;try{x=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!x?.puzzles){try{x=JSON.parse(localStorage.getItem(KEY+"-backup"))}catch(e){}}if(x?.puzzles)data=x;else{let o=JSON.parse(localStorage.getItem(oldKey));if(o?.puzzles){data.puzzles=o.puzzles;data.settings=o.settings||data.settings}}}catch(e){}
  // V20 no longer stores or exposes solved boards. Keep records, but discard legacy solved-state snapshots.
  Object.values(data.puzzles||{}).forEach(r=>{if(r?.done){delete r.state;delete r.moves;delete r.elapsed}});
  syncUnlocks()}
-function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function save(){try{const j=JSON.stringify(data);localStorage.setItem(KEY,j);localStorage.setItem(KEY+"-backup",j)}catch(e){}}
 function count(t){let n=0;for(let p=0;p<25;p++)if(data.puzzles[tiers[t].id+"-"+p]?.done)n++;return n}
 function syncUnlocks(){data.unlockedTiers=[true,count(0)===25||data.unlockedTiers?.[1],count(1)===25||data.unlockedTiers?.[2]]}
 function puzzleUnlocked(t,p){if(!data.unlockedTiers[t])return false;if(p===0)return true;return !!data.puzzles[tiers[t].id+"-"+(p-1)]?.done}
@@ -1245,6 +1320,7 @@ function renderGame(){
  $("catToolBtn").setAttribute("aria-pressed",tool==="cat"?"true":"false");
  $("xToolBtn").setAttribute("aria-pressed",tool==="x"?"true":"false");
  $("catToolBtn").disabled=!!cur.done; $("xToolBtn").disabled=!!cur.done;
+ fitBoard();restoreCursor();
 }
 function cycle(i){
  if(cur.done)return;
@@ -1311,11 +1387,14 @@ function puzzleWin(nt,nm,ot,om){
    <div class="completionScore"><small>TIME</small><strong>${fmt(cur.elapsed)}</strong>${nt?'<div class="newbest">NEW BEST</div>':'<div class="newbest"></div>'}</div>
    <div class="completionScore"><small>MOVES</small><strong>${cur.moves}</strong>${nm?'<div class="newbest">NEW BEST</div>':'<div class="newbest"></div>'}</div>
  </div>
- ${next!==null?`<button class="btn primary completionContinue" id="continueInlineBtn">Continue to Puzzle ${globalPuzzleNumber(cur.t,next)}</button>`:''}`;
+ <div class="completionActions">${next!==null?`<button class="btn primary completionContinue" id="continueInlineBtn">Continue to Puzzle ${globalPuzzleNumber(cur.t,next)}</button>`:''}<button class="btn completionAgain" id="againInlineBtn">Play Again</button></div>`;
  panel.classList.add("show");
  if(next!==null){
    $("continueInlineBtn").onclick=()=>open(cur.t,next);
  }
+ $("againInlineBtn").onclick=replay;
+ fitBoard();
+ if(kb.on)setTimeout(()=>($("continueInlineBtn")||$("againInlineBtn"))?.focus({preventScroll:true}),60);
  // Keep the player at the top of the completion state: celebration/CTA first,
  // with the solved board directly below for review.
  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:"smooth"}));
@@ -1328,8 +1407,9 @@ function territoryWin(t){
  <p><strong>25 / 25 puzzles mastered.</strong><br>Every completed puzzle remains available for replay and record chasing.</p>
  <div class="scorecards"><div class="score"><small>TOTAL SOLVES</small><strong>${tierSolves(t)}</strong></div><div class="score"><small>TERRITORY</small><strong>25/25</strong></div></div>
  ${next<3?`<img class="unlockArt" src="assets/${unlockArt}" alt=""><h3>New Territory Unlocked</h3><p><strong>${tiers[next].name}</strong><br>${tiers[next].desc}</p>`:""}
- <div class="modalactions">${next<3?'<button class="btn primary" id="enterBtn">Enter '+tiers[next].name+'</button>':""}<button class="btn" id="mapBtn">Back to Map</button></div>`;
+ <div class="modalactions">${next<3?'<button class="btn primary" id="enterBtn">Enter '+tiers[next].name+'</button>':""}<button class="btn" id="againModalBtn">Play Again</button><button class="btn" id="mapBtn">Back to Map</button></div>`;
  showModal();
+ $("againModalBtn").onclick=()=>{hideModal();replay()};
  if(next<3)$("enterBtn").onclick=()=>{hideModal();home();setTimeout(()=>document.querySelectorAll(".tier")[next]?.scrollIntoView({behavior:"smooth"}),50)};
  $("mapBtn").onclick=()=>{hideModal();home()}
 }
@@ -1338,8 +1418,9 @@ function finale(){
  <h2>Territory Master!</h2>
  <p>You completed all 75 Cat Territory puzzles. Every puzzle is now available for replay — chase faster times and fewer moves.</p>
  <div class="scorecards"><div class="score"><small>PUZZLES</small><strong>75/75</strong></div><div class="score"><small>TOTAL SOLVES</small><strong>${tierSolves(0)+tierSolves(1)+tierSolves(2)}</strong></div></div>
- <div class="modalactions"><button class="btn primary" id="mapBtn">View All Territories</button><button class="btn" id="statsModal">View Stats</button></div>`;
+ <div class="modalactions"><button class="btn primary" id="mapBtn">View All Territories</button><button class="btn" id="againModalBtn">Play Again</button><button class="btn" id="statsModal">View Stats</button></div>`;
  showModal();
+ $("againModalBtn").onclick=()=>{hideModal();replay()};
  $("mapBtn").onclick=()=>{hideModal();home()};
  $("statsModal").onclick=()=>{hideModal();openStats()}
 }
@@ -1356,11 +1437,11 @@ function replay(){
  renderGame()
 }
 function reset(){
- const box=$("modalBox"); box.className="modalbox resetModalBox"; box.innerHTML=`<img class="resetArt" src="assets/CT-RESET-01.png" alt="Reset Puzzle? This will clear the current puzzle and you’ll start fresh. Your progress for this puzzle won’t be saved."><div class="resetActions"><div class="modalactions"><button class="btn primary" id="confirmReset">Reset Puzzle</button><button class="btn" id="cancelReset">Keep Playing</button></div></div>`; $("modal").classList.add("show"); $("confirmReset").onclick=()=>{cur.state=Array(cur.n*cur.n).fill(0);cur.moves=0;cur.elapsed=0;cur.done=false;lastTick=Date.now();start();saveCur();renderGame();hideModal()}; $("cancelReset").onclick=hideModal;
+ const box=$("modalBox"); box.className="modalbox resetModalBox"; box.innerHTML=`<img class="resetArt" src="assets/CT-RESET-01.png" alt="Reset Puzzle? This will clear the current puzzle and you’ll start fresh. Your progress for this puzzle won’t be saved."><div class="resetActions"><div class="modalactions"><button class="btn primary" id="confirmReset">Reset Puzzle</button><button class="btn" id="cancelReset">Keep Playing</button></div></div>`; $("modal").classList.add("show"); if(kb.on)setTimeout(()=>$("cancelReset")?.focus({preventScroll:true}),60); $("confirmReset").onclick=()=>{cur.state=Array(cur.n*cur.n).fill(0);cur.moves=0;cur.elapsed=0;cur.done=false;lastTick=Date.now();start();saveCur();renderGame();hideModal()}; $("cancelReset").onclick=hideModal;
 }
 function fmt(s){s=Math.max(0,s||0);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function start(){stop();timer=setInterval(()=>{if(cur&&!cur.done&&!document.hidden){let n=Date.now();if(n-lastTick>900){cur.elapsed++;lastTick=n;$("timer").textContent=fmt(cur.elapsed);if(cur.elapsed%5===0)saveCur()}}else lastTick=Date.now()},1000)}function stop(){if(timer){clearInterval(timer);timer=null}}
-function showModal(){$("modal").classList.add("show")}function hideModal(){$("modal").classList.remove("show");$("modalBox").className="modalbox"}
+function showModal(){$("modal").classList.add("show");if(kb.on)setTimeout(()=>$("modalBox").querySelector(".btn.primary,.btn")?.focus({preventScroll:true}),60)}function hideModal(){$("modal").classList.remove("show");$("modalBox").className="modalbox"}
 function confetti(n){let box=$("confetti");box.innerHTML="";let cc=["#e87842","#38a697","#6b6ee7","#f2c94c","#ef7992"];for(let i=0;i<n;i++){let x=document.createElement("i");x.style.cssText=`left:${Math.random()*100}%;--d:${1.7+Math.random()*2.3}s;--x:${-100+Math.random()*200}px;--r:${Math.random()*360}deg;--c:${cc[i%cc.length]}`;box.appendChild(x)}setTimeout(()=>box.innerHTML="",4300)}
 function openDrawer(title,subtitle,tabs,content){
  $("drawerTitle").textContent=title;
@@ -1371,17 +1452,27 @@ function openDrawer(title,subtitle,tabs,content){
  $("shade").classList.add("show");$("drawer").classList.add("show")
 }
 function closeDrawer(){$("shade").classList.remove("show");$("drawer").classList.remove("show")}
-function guide(){
- let content=`<img class="guideMascot" src="assets/CT-HELP-01.png" alt="">
+function guide(tab="controls",input=null){
+ if(typeof tab!=="string")tab="controls";if(typeof input!=="string")input=null;
+ input=input||(kb.on||!matchMedia("(pointer:coarse)").matches?"keyboard":"touch");
+ const tabs=`<div class="guideTabs" role="tablist"><button role="tab" class="guideTab" aria-selected="${tab==="controls"}" data-gtab="controls">Controls</button><button role="tab" class="guideTab" aria-selected="${tab==="rules"}" data-gtab="rules">Rules</button></div>`;
+ const k=(x)=>`<kbd>${x}</kbd>`;
+ const touch=`<ul class="controlsList"><li><span class="ctlKey">Tap a square</span><span>CAT mode: place a cat, or tap the cat again to remove it. X mode: mark an X, or tap again to clear it.</span></li><li><span class="ctlKey"><img src="assets/CT-GAME-01.png" alt=""> / <img src="assets/UI-X-01.png" alt=""></span><span>Mode: choose what a tap places.</span></li><li><span class="ctlKey">← and ↻</span><span>Back to the territories · Reset the puzzle (Replay once solved).</span></li><li><span class="ctlKey">Top icons</span><span>Statistics · How to Play · Settings.</span></li></ul>`;
+ const keys=`<ul class="controlsList"><li><span class="ctlKey">${k("←")}${k("↑")}${k("→")}${k("↓")}</span><span>Move around the board (and the puzzle list).</span></li><li><span class="ctlKey">${k("Space")} ${k("Enter")}</span><span>Same as a tap on the square or button.</span></li><li><span class="ctlKey">${k("C")} ${k("X")} ${k("M")}</span><span>CAT mode · X mode · switch mode.</span></li><li><span class="ctlKey">${k("R")}</span><span>Reset the puzzle (Play Again once solved).</span></li><li><span class="ctlKey">${k("N")}</span><span>Next puzzle, after a win.</span></li><li><span class="ctlKey">${k("Esc")}</span><span>Close a panel · back to the territories.</span></li><li><span class="ctlKey">${k("H")} ${k("S")} ${k("G")}</span><span>How to Play · Statistics · Settings.</span></li></ul>`;
+ const controls=`<div class="guideSection"><h3>Controls</h3><div class="controlsSwitch" role="group" aria-label="Controls for"><button data-input="touch" aria-pressed="${input==="touch"}">TOUCH</button><button data-input="keyboard" aria-pressed="${input==="keyboard"}">KEYBOARD</button></div>${input==="touch"?touch:keys}</div>`;
+ const rules=`<img class="guideMascot" src="assets/CT-HELP-01.png" alt="">
  <div class="guideSection"><h3>How to Play</h3><ol><li>Exactly one cat in every row.</li><li>Exactly one cat in every column.</li><li>Exactly one cat in every colored territory.</li><li>Cats cannot touch, even diagonally.</li></ol></div>
-<div class="guideSection"><h3>Cell Cycle</h3><p><strong>Tap 1:</strong> X → <strong>Tap 2:</strong> Cat → <strong>Tap 3:</strong> Empty</p><p><strong>Moves count cat decisions only:</strong> placing, repositioning, swapping, or removing a cat counts as one move. X marks—manual or Auto-X—do not count.</p><p>Once the required number of cats is placed, additional cats cannot be added until one is removed or repositioned within a territory.</p></div>`;
- openDrawer("How to Play","The rules are simple. The deductions get harder.","",content)
+<div class="guideSection"><h3>Placing Cats and X's</h3><p><strong>CAT mode</strong> (the cat button, on at the start): tap a square to place a cat; tap the cat again to remove it. Tap another square in a territory that already has a cat to move that cat there.</p><p><strong>X mode</strong> (the X button): tap a square to mark it with an X; tap it again to clear it.</p><p><strong>Moves count cat decisions only:</strong> placing, repositioning, swapping, or removing a cat counts as one move. X marks—manual or Auto-X—do not count.</p><p>Once the required number of cats is placed, additional cats cannot be added until one is removed or repositioned within a territory.</p></div>`;
+ openDrawer("How to Play","The rules are simple. The deductions get harder.",tabs,tab==="controls"?controls:rules);
+ document.querySelectorAll("[data-gtab]").forEach(b=>b.onclick=()=>guide(b.dataset.gtab,input));
+ document.querySelectorAll(".controlsSwitch [data-input]").forEach(b=>b.onclick=()=>guide("controls",b.dataset.input));
 }
 function settingsPanel(){
  let content=`<div class="settingsSection"><h3>Gameplay Settings</h3>
  <label class="toggle"><input id="dAuto" type="checkbox" ${data.settings.auto!==false?"checked":""}> Auto-fill blocked X's</label><p class="settingHelp">Automatically marks only the eight cells touching a placed cat. Row, column, and territory deductions remain yours to solve. These marks recalculate when cats move.</p>
  <label class="toggle"><input id="dConflict" type="checkbox" ${data.settings.conflicts!==false?"checked":""}> Highlight conflicts</label></div>
- <div class="settingsSection"><h3>About Saving</h3><p>Your progress, records, and settings are stored locally in this browser.</p></div>`;
+ <div class="settingsSection"><h3>About Saving</h3><p>Your progress, records, and settings are stored locally in this browser.</p></div>
+ <div class="settingsSection creditsSection"><h3>Credits</h3><p>Made by Claude Jones with Claude (Anthropic).</p><p>Pictures made with AI image tools, directed by Claude Jones.</p><p>No outside code libraries.</p><p class="versionLine">Cat Territory ${versionText()}</p></div>`;
  openDrawer("Settings","Adjust how the puzzle behaves.","",content);
  $("dAuto").onchange=e=>{data.settings.auto=e.target.checked;save();if(cur)renderGame()};
  $("dConflict").onchange=e=>{data.settings.conflicts=e.target.checked;save();if(cur)renderGame()}
@@ -1476,6 +1567,87 @@ function idlePreloadAssets(){
  if("requestIdleCallback" in window)requestIdleCallback(load,{timeout:1800});else setTimeout(load,700)
 }
 
-load();renderHome();idlePreloadAssets();
+/* V30 production standard (Claude, 2026-11-17): board fits the screen, keyboard play, version label. */
+const kb={on:false,cell:null,pending:null};
+function versionText(){return VERSION+(BUILD?" · "+BUILD:"")}
+function sideLayout(){return matchMedia("(orientation:landscape) and (max-height:560px)").matches}
+// Big desktop windows: the home screen zooms as one piece (up to 2×) so it keeps its balance; the puzzle view sizes itself.
+function zoomHome(){
+ const app=document.querySelector(".app");app.style.zoom="";
+ if(!$("home").classList.contains("active")||innerWidth<1300)return;
+ const z=Math.min(2,innerWidth/1240,(innerHeight-8)/app.getBoundingClientRect().height);
+ if(z>1.05)app.style.zoom=z.toFixed(3);
+}
+function fitBoard(){
+ zoomHome();
+ const g=$("game");if(!cur||!g.classList.contains("active"))return;
+ const w=g.querySelector(".boardwrap"),card=g.querySelector(".gamecard"),panel=$("completionPanel"),foot=w.querySelector(".boardfoot");
+ w.style.width="";
+ let natural=w.getBoundingClientRect().width;
+ if(sideLayout())natural=Math.min(880,innerWidth-parseFloat(getComputedStyle(document.querySelector(".app")).paddingLeft)*2-280);
+ const ps=getComputedStyle(panel),inFlow=!sideLayout()&&panel.classList.contains("show")&&ps.position!=="fixed"?panel.getBoundingClientRect().height+parseFloat(ps.marginBottom||0):0;
+ const top=w.getBoundingClientRect().top+scrollY-inFlow;
+ const fs=getComputedStyle(foot),footH=fs.display==="none"?0:foot.getBoundingClientRect().height+parseFloat(fs.marginTop||0);
+ let below;
+ if(sideLayout()){const ws=getComputedStyle(w);below=2*(parseFloat(ws.paddingTop)+parseFloat(ws.borderTopWidth))+8}
+ else{const cs=getComputedStyle(card);below=parseFloat(cs.paddingBottom)+parseFloat(cs.borderBottomWidth)+14}
+ const avail=innerHeight-top-footH-below;
+ w.style.width=Math.floor(Math.max(Math.min(natural,avail),Math.min(natural,240)))+"px";
+}
+function restoreCursor(){if(kb.pending===null||!cur)return;const c=$("board").children[kb.pending];kb.pending=null;c?.focus({preventScroll:true})}
+function cellIndex(el){const b=$("board");return el&&el.parentElement===b?[...b.children].indexOf(el):-1}
+function moveHome(dir){
+ const tiles=[...document.querySelectorAll("#tiers .ptile")];if(!tiles.length)return;
+ let i=tiles.indexOf(document.activeElement);
+ if(i<0){(document.querySelector("#tiers .ptile.active")||tiles.find(t=>!t.disabled))?.focus();return}
+ const card=Math.floor(i/25),pos=i%25,col=pos%5;
+ let j=dir==="ArrowLeft"?i-1:dir==="ArrowRight"?i+1:dir==="ArrowUp"?(pos>=5?i-5:i):(pos<20?i+5:i);
+ if(j<0||j>=tiles.length||tiles[j].disabled)return;
+ if(Math.floor(j/25)!==card)tiles[j].closest(".tier")?.scrollIntoView({behavior:"smooth",inline:"start",block:"nearest"});
+ tiles[j].focus();
+}
+function onKey(e){
+ if(e.metaKey||e.ctrlKey||e.altKey)return;
+ const t=e.target;if(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))return;
+ kb.on=true;document.body.classList.add("kbUser");
+ const key=e.key,low=key.length===1?key.toLowerCase():key,arrow=/^Arrow/.test(key);
+ if($("modal").classList.contains("show")){
+   if(key==="Escape"){e.preventDefault();const c=$("cancelReset")||$("mapBtn");c?c.click():hideModal()}
+   else if(arrow){e.preventDefault();const bs=[...$("modalBox").querySelectorAll("button")];let i=bs.indexOf(document.activeElement);i=(i+(key==="ArrowLeft"||key==="ArrowUp"?-1:1)+bs.length)%bs.length;bs[i]?.focus()}
+   return;
+ }
+ if(low==="h"||key==="?"){e.preventDefault();guide();return}
+ if(low==="s"){e.preventDefault();openStats("overview");return}
+ if(low==="g"){e.preventDefault();settingsPanel();return}
+ if($("drawer").classList.contains("show")){if(key==="Escape"){e.preventDefault();closeDrawer()}return}
+ if($("game").classList.contains("active")&&cur){
+   const b=$("board"),n=cur.n;let i=cellIndex(document.activeElement);
+   if(arrow){
+     e.preventDefault();
+     if(i<0)i=kb.cell??0;
+     else{let r=Math.floor(i/n),c=i%n;if(key==="ArrowLeft")c=Math.max(0,c-1);if(key==="ArrowRight")c=Math.min(n-1,c+1);if(key==="ArrowUp")r=Math.max(0,r-1);if(key==="ArrowDown")r=Math.min(n-1,r+1);i=r*n+c}
+     kb.cell=i;b.children[i]?.focus();return;
+   }
+   if((key===" "||key==="Enter")&&i>=0){e.preventDefault();kb.cell=i;kb.pending=i;cycle(i);if(kb.pending!==null)kb.pending=null;return}
+   if((low==="c"||low==="x"||low==="m")&&!cur.done){e.preventDefault();cur.tool=low==="m"?(cur.tool==="x"?"cat":"x"):low==="c"?"cat":"x";kb.pending=i>=0?i:null;renderGame();return}
+   if(low==="r"){e.preventDefault();cur.done?replay():reset();return}
+   if(low==="n"&&cur.done){const nx=$("continueInlineBtn");if(nx){e.preventDefault();nx.click()}return}
+   if(key==="Escape"||key==="Backspace"){e.preventDefault();home();return}
+   return;
+ }
+ if($("home").classList.contains("active")&&arrow){e.preventDefault();moveHome(key)}
+}
+function startV30(){
+ $("version").textContent=versionText();
+ document.addEventListener("keydown",onKey);
+ document.addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse"||e.isPrimary){kb.on=false;document.body.classList.remove("kbUser")}},true);
+ $("board").addEventListener("focusin",e=>{const i=cellIndex(e.target);if(i>=0)kb.cell=i});
+ const _renderHome=renderHome;renderHome=function(){_renderHome();zoomHome()};zoomHome();
+ let raf=0;const refit=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(fitBoard)};
+ addEventListener("resize",refit);addEventListener("orientationchange",()=>setTimeout(fitBoard,250));
+ const _home=home;home=function(){_home();kb.cell=null;if(kb.on)setTimeout(()=>document.querySelector("#tiers .ptile.active, #tiers .ptile:not([disabled])")?.focus({preventScroll:true}),60)};
+}
+
+load();renderHome();idlePreloadAssets();startV30();
 })();
 </script></body></html>
