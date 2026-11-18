@@ -14,5 +14,10 @@
   "loopStart": 8.9173,
   "loopEnd": 130.0089,
   "match": 1.629
+ },
+ "jingle": {
+  "kind": "once",
+  "len": 8.6,
+  "gain": 1.074
  }
 }
