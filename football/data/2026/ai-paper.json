@@ -2697,6 +2697,36 @@
       "archivedAt": "2026-11-14T13:06:32.288148+00:00",
       "archiveMode": "prospective",
       "researchVersion": "2026-11-14-week10-weekend-1"
+    },
+    {
+      "id": "2026:11:single:ind-hou",
+      "kind": "single",
+      "title": "Houston Texans",
+      "publishedAt": "2026-11-19T08:06:32-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Houston lean based on recent form, home field and Indianapolis offensive-line absences.",
+      "legs": [
+        {
+          "gameId": "ind-hou",
+          "team": "Houston Texans",
+          "side": "YES",
+          "kickoff": "2026-11-19T20:15:00-05:00",
+          "record": "3-6-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV19INDHOU-HOU",
+        "capturedAt": "2026-11-19T08:06:36-05:00",
+        "price": 0.85,
+        "payout": 2.3529411764705883,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-19T13:07:53.167945+00:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-19-week11-thursday-1"
     }
   ]
 }

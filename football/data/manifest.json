@@ -49,11 +49,17 @@
       "researchVersion": "2026-11-14-week10-weekend-1",
       "dataVersion": "2026-11-15-week10-sunday",
       "resultsVersion": "2026-11-15-week10-sunday-scores"
+    },
+    "11": {
+      "path": "2026/week-11.json",
+      "status": "preliminary",
+      "researchVersion": "2026-11-19-week11-thursday-1",
+      "dataVersion": "2026-11-19-week11-thursday-1"
     }
   },
-  "lastSuccessfulPublication": "2026-11-15T23:03:31-05:00",
-  "notice": "Week 10: 11 Sunday finals and Thursday verified. Cincinnati led Pittsburgh 38–11 with 9:29 left at capture. Chargers–Ravens scheduled Monday. Week open.",
+  "lastSuccessfulPublication": "2026-11-19T08:07:53-05:00",
+  "notice": "Week 11: all 13 games available. Thursday Houston lean; weekend picks pending.",
   "scoresCheckedAt": "2026-11-15T23:01:44-05:00",
-  "marketsCheckedAt": "2026-11-15T23:02:03-05:00",
-  "recordsCheckedAt": "2026-11-15T23:01:44-05:00"
+  "marketsCheckedAt": "2026-11-19T08:06:39-05:00",
+  "recordsCheckedAt": "2026-11-19T08:06:02-05:00"
 }
