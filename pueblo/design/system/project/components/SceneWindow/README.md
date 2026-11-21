@@ -1,8 +1,9 @@
-The scene window is the framed stage at the top of a screen where the place and its character appear in pixel art.
+The scene window is a framed pixel-art view of a place with no speech, for moments that are about the place itself.
 
 ## When to use
 
-- Every screen inside a place.
+- The title screen and a place's first-visit view.
+- When a character is speaking, use the encounter instead.
 
 ## When not to use
 

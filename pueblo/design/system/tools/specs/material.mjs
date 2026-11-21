@@ -260,6 +260,36 @@ i.addEventListener('input', set); set();`,
     },
   },
   {
+    name: 'SideSheet', group: 'Containers', height: 460, max: 780, subtitle: 'A panel at the edge on wide screens',
+    html: `
+<div style="position:relative;height:420px;border-radius:28px;overflow:hidden;background:var(--cal-container)">
+  <div style="padding:24px;max-width:340px"><p class="headline">Town</p><p class="body" style="color:var(--ink-muted)">The town stays visible beside the panel.</p></div>
+  <div class="pb-overlay pb-overlay--end">
+    <aside class="pb-sidesheet" aria-label="Settings">
+      <div class="pb-sidesheet__head"><h2 class="pb-sidesheet__title">Settings</h2><button class="pb-iconbtn" aria-label="Close settings"><span data-ic="x"></span></button></div>
+      <div class="pb-sidesheet__body">
+        <div class="pb-setrow" style="padding-left:0;padding-right:0"><span data-ic="captions"></span><div class="pb-setrow__body"><p class="pb-setrow__title">English subtitles</p><p class="pb-setrow__text">Show the English under what people say.</p></div><label class="pb-switch"><input type="checkbox" checked aria-label="English subtitles"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+        <div class="pb-setrow" style="padding-left:0;padding-right:0"><span data-ic="timer"></span><div class="pb-setrow__body"><p class="pb-setrow__title">Timed replies</p><p class="pb-setrow__text">People lose patience if you take too long.</p></div><label class="pb-switch"><input type="checkbox" aria-label="Timed replies"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+      </div>
+    </aside>
+  </div>
+</div>`,
+    doc: {
+      sum: 'A side sheet is a panel at the trailing edge of a wide screen that holds what would be a bottom sheet or a whole screen on a phone.',
+      use: ['Settings, the phrasebook, a hint or a word\'s details, on screens 600 wide and up.', 'Standard: content that sits beside the main screen and stays open.', 'Modal: content that must be dealt with or closed, over a scrim.'],
+      not: ['Phones. Use a bottom sheet or a full screen there.', 'Confirming something that cannot be undone. Use a dialog.'],
+      anatomy: ['Container: `card`, 360 wide and never more than 400, 24 padding, full height.', 'Header: title in `headline` and a close icon button.', 'Body that scrolls on its own.', 'Modal: rounded leading corners and a soft shadow over a scrim. Standard: a hairline divider and no shadow.'],
+      place: 'Against the trailing edge. A standard sheet pushes the main content narrower; a modal sheet covers it.',
+      states: ['Closed.', 'Open.'],
+      motion: 'Slides in from the edge with the default spatial spring.',
+      do: ['Always show the close button.', 'Turn a phone\'s bottom sheet into a side sheet when the screen is wide enough.'],
+      dont: ['Scroll sideways inside it.', 'Open one sheet over another.'],
+      a11y: ['Focus moves into a modal sheet and returns when it closes.', 'Escape and the close button both close it.'],
+      provide: 'The title, the content, and whether it is standard or modal.',
+      source: src('SideSheet'),
+    },
+  },
+  {
     name: 'Dialog', group: 'Containers', height: 300, subtitle: 'Only for what cannot be undone',
     html: `
 <div class="pb-dialog">

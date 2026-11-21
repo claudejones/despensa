@@ -1,10 +1,10 @@
-<!-- @dsCard group="Foundations" height=1170 width=960 page subtitle="Three faces, nine styles" -->
+<!-- @dsCard group="Foundations" height=1170 width=960 page subtitle="Two faces, nine styles" -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; background: var(--cal); }
   .board { width: 960px; padding: 32px; }
@@ -17,7 +17,7 @@
   .row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--outline-soft); }
   .row:first-of-type { border-top: 0; }
   .row b { font-size: 16px; line-height: 24px; font-weight: 800; display: block; }
-  .faces { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+  .faces { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 8px; }
   .face { border-radius: var(--radius-xl); padding: 16px; background: var(--cal-low); }
   .face .big { font-size: 44px; line-height: 52px; }
 </style>
@@ -25,12 +25,11 @@
 <body>
 <div class="pb board">
   <section>
-    <h2>Three faces</h2>
-    <p class="lede">A sign-painter face for place names, a pixel face for what townspeople say, and a rounded face for everything else. All three carry Spanish accents and opening marks.</p>
+    <h2>Two faces</h2>
+    <p class="lede">A sign-painter face for place names and a rounded face for everything else, including what townspeople say. Both carry Spanish accents and opening marks. Pixels are for pictures, never for type.</p>
     <div class="faces">
       <div class="face"><div class="big" style="font-family:var(--font-rotulo)">¡Añil!</div><p class="meta">Lilita One · place names only</p></div>
-      <div class="face"><div class="big" style="font-family:var(--font-pixel)">¿Qué?</div><p class="meta">Pixelify Sans · dialogue only</p></div>
-      <div class="face"><div class="big" style="font-family:var(--font-ui);font-weight:900">Señor</div><p class="meta">Nunito · the interface</p></div>
+      <div class="face"><div class="big" style="font-family:var(--font-ui);font-weight:900">Señor</div><p class="meta">Nunito · the interface and all speech</p></div>
     </div>
   </section>
   <section>
@@ -46,7 +45,7 @@
     ['rotulo-small', 'rotulo', '24 / 32', 'Banco · Clínica · Escuela'],
     ['headline', 'ui', '24 / 32 · 900', 'Your shopping list'],
     ['word', 'ui', '22 / 28 · 800', 'zanahorias · plátanos · jitomates'],
-    ['dialogue', 'pixel', '22 / 28', '¿Qué va a llevar? Son ciento veinte pesos.'],
+    ['dialogue', 'ui', '22 / 28 · 800', '¿Qué va a llevar? Son ciento veinte pesos.'],
     ['title', 'ui', '16 / 24 · 800', 'carrots · Go back to town'],
     ['body', 'ui', '16 / 24 · 400', 'Drag the Spanish word to each item on your list.'],
     ['label', 'ui', '14 / 20 · 700', 'What would you like? · Correct · Not this one'],

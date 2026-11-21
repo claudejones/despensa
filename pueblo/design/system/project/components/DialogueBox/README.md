@@ -12,13 +12,13 @@ The dialogue box shows what a townsperson says in Spanish, with an English subti
 
 - Box: `card`, `radius-lg-inc`, soft shadow.
 - Name: `label-small` in `ink-muted`.
-- Spanish line: `dialogue` style, the pixel face.
+- Spanish line: `dialogue` style, the rounded face at word size.
 - English subtitle: `label` in `ink-muted`.
 - Speaker button beside the box.
 
 ## Placement
 
-Overlapping the lower edge of the scene window by 24.
+Beside the character inside an encounter. On its own only where there is no character on screen.
 
 ## States
 
@@ -34,11 +34,11 @@ A new line replaces the old with the default effects spring. The Spanish line is
 - Do: Keep a line to two rows of text.
 - Do: Let the player replay the audio as often as they like, outside timed checks.
 - Don't: Put the English first or larger than the Spanish.
-- Don't: Use the pixel face anywhere else.
+- Don't: Set speech in a pixel or novelty face; it is the text the player is learning to read.
 
 ## Accessibility
 
-- The pixel face is 22px with full accents.
+- Speech is 22px with full accents.
 - The subtitle setting lives in Settings and is on by default.
 - Audio is never the only carrier of a line.
 

@@ -17,7 +17,7 @@ Five colours have five jobs. Keep each job on its colour and never lend the colo
 ## Type
 
 - Set place names in `rotulo-large` or `rotulo-small`. Nothing else uses the rótulo face.
-- Set what a townsperson says in `dialogue`, inside the dialogue box only.
+- Set what a townsperson says in `dialogue`, inside the speech box. It is the same rounded face and size as a Spanish word tile, because it is the Spanish the player is learning to read.
 - Set Spanish you are learning in `word` or larger: tiles, filled slots, the primary button.
 - Set everything else in the interface styles: `headline`, `title`, `body`, `label`, `label-small`. Never set Spanish content in `label-small`.
 - Spanish game content always shows its accents and opening marks: ¿ ¡ á é í ó ú ü ñ.
@@ -37,12 +37,25 @@ A picture or icon sits only beside the English. Spanish answers are text only. I
 
 ## Pixels and Material
 
-- Characters and scenes are pixel art inside the scene window.
+- Characters, scenes and item pictures are pixel art. Type is never pixel type.
 - Controls, sheets and progress are Material. No pixels in a button, no Material shapes inside a scene.
+- A pixel-art picture sits straight on its row with no tile behind it.
+
+## Overlays
+
+Use the lightest one that does the job.
+
+- Info tip: one or two sentences about a thing on screen, opened by its info button.
+- Snackbar: something just happened; at most one action, such as Undo.
+- Bottom sheet: hints, results, short choices. It rises over the screen and can be dragged away.
+- Dialog: only to confirm something that cannot be undone, such as leaving a check or resetting progress.
+- Side sheet: on wide screens, what would be a bottom sheet or a whole settings screen on a phone opens as a panel at the trailing edge.
+- One overlay at a time. Every overlay can be closed without a gesture.
+- Nothing is ever locked. Suggest a next step instead.
 
 ## Building a screen
 
-- Follow the scaffold top to bottom: top bar, scene window, dialogue box, the challenge, one primary button. The bottom bar hides during a challenge.
+- Follow the scaffold top to bottom: top bar, the encounter (character on the left, speech on the right), the challenge, one primary button. The bottom bar hides during a challenge.
 - One filled cobalt button per screen, 56 high, at the bottom.
 - Every touch target is at least 48 high, even where the visible control is 40.
 - Hints and results rise in a bottom sheet. Use a dialog only to confirm something that cannot be undone.

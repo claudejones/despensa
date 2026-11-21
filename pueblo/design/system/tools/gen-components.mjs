@@ -5,7 +5,7 @@ import { GAME } from './specs/game.mjs';
 let M3 = [];
 try { M3 = (await import('./specs/material.mjs')).MATERIAL; } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e; }
 
-const FONTS = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap';
+const FONTS = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap';
 const out = new URL('../project/components/', import.meta.url);
 let HEIGHTS = {};
 try { HEIGHTS = JSON.parse(fs.readFileSync(new URL('./heights.json', import.meta.url), 'utf8')); } catch (e) {}

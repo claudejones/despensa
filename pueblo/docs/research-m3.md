@@ -77,3 +77,12 @@ Each component's README ends with a Source section naming the Material component
 - No native-speaker review is available; lists are verified by research (dictionary lookups).
 - Market vocabulary scope: fruit and vegetables (plus the measure words the challenges need). Kale and nectarina stay.
 - The sign-up question about gender must drive agreement in three places: what you say about yourself, how people address you, and words about other people.
+
+## 2026-11-21, later: changes after rendering the screens
+
+- Side sheets read live (specs, guidelines): standard and modal; 400 maximum width, 24 padding, close icon button recommended; modal preferred on compact, standard on medium and expanded.
+- Speech is set in the interface face (Nunito 800, 22/28). The pixel face (Pixelify Sans) was hard to read in full sentences and is removed. Pixels are for pictures only.
+- New components: Encounter (character left, speech right), Side sheet. New foundation board: Overlays.
+- The rough MarketScreen board was retired; the design canvas replaces it.
+- Screens canvas: https://claude.ai/artifact/L7kiab86wXSpqT2R3GNbgN (12 boards, including a hint sheet, a leave dialog and a wide-screen settings side sheet).
+- The canvas boards are checked by rendering their markup locally with the design system's styles (not through the canvas runtime).

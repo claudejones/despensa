@@ -55,14 +55,13 @@
   --radius-full: 999px;
   --font-ui: "Nunito", system-ui, sans-serif;
   --font-rotulo: "Lilita One", "Nunito", system-ui, sans-serif;
-  --font-pixel: "Pixelify Sans", ui-monospace, monospace;
 }
 .rotulo-large { font-family: var(--font-rotulo); font-size: 36px; line-height: 44px; font-weight: 400; }
 .rotulo-small { font-family: var(--font-rotulo); font-size: 24px; line-height: 32px; font-weight: 400; }
 .headline { font-family: var(--font-ui); font-size: 24px; line-height: 32px; font-weight: 900; }
 .word { font-family: var(--font-ui); font-size: 22px; line-height: 28px; font-weight: 800; }
+.dialogue { font-family: var(--font-ui); font-size: 22px; line-height: 28px; font-weight: 800; }
 .title { font-family: var(--font-ui); font-size: 16px; line-height: 24px; font-weight: 800; letter-spacing: 0.15px; }
 .body { font-family: var(--font-ui); font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: 0.5px; }
 .label { font-family: var(--font-ui); font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: 0.1px; }
 .label-small { font-family: var(--font-ui); font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.5px; }
-.dialogue { font-family: var(--font-pixel); font-size: 22px; line-height: 28px; font-weight: 400; }

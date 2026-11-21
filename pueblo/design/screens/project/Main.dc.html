@@ -10,7 +10,7 @@
 <body>
 <x-dc>
 <helmet>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#1B3FB5}a:hover{color:#0C2470}
@@ -33,16 +33,12 @@ a{color:#1B3FB5}a:hover{color:#0C2470}
     <h1 style="margin: 0; font-family: var(--font-rotulo); font-weight: 400; font-size: 88px; line-height: 88px; color: var(--ink)">Pueblo</h1>
     <p class="body" style="color: var(--ink-muted); max-width: 300px">Learn Spanish by living in a Mexican town.</p>
   </div>
-  <div style="flex: 1; display: flex; align-items: flex-end; padding: 0 16px">
-    <div class="pb-scene" style="width: 100%; height: 300px" role="img" aria-label="The market, with Doña Carmen at her stall">
-      <div class="pb-scene__wall"></div>
-      <div style="position: absolute; left: 24px; right: 24px; top: 70px; height: 28px; border-radius: 4px 4px 0 0; background: repeating-linear-gradient(90deg, var(--wall-rosa) 0 24px, var(--wall-cal) 24px 48px)"></div>
-      <img class="pb-px" src="/_blob/5357e49a49d615a871075fd9e2d36e3a" alt="" style="position: absolute; left: 68px; bottom: 40px; width: 222px; height: 232px">
-      <div class="pb-scene__counter" style="height: 44px"></div>
-      <span class="pb-scene__tag">Placeholder scene</span>
+  <div style="flex: 1; display: flex; align-items: stretch; padding: 20px 16px 0; min-height: 0">
+    <div style="flex: 1; border-radius: var(--radius-xl); overflow: hidden; background: var(--wall-maya); display: flex; align-items: flex-end; justify-content: center">
+      <img class="pb-px" src="/_blob/b0c7374b99e171168d51861798f64b5c" alt="The plaza of the town: painted houses, a bandstand, a market stall and people walking" style="width: 576px; height: 384px; flex: none">
     </div>
   </div>
-  <div style="padding: 24px 16px 12px; display: flex; flex-direction: column; gap: 8px; align-items: center">
+  <div style="padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 8px; align-items: center">
     <a class="pb-btn" href="TownMap.dc.html" style="text-decoration: none; box-sizing: border-box">Play
       <svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
     </a>

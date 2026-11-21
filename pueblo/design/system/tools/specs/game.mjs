@@ -160,6 +160,37 @@ Pueblo.pay(t);`,
     },
   },
   {
+    name: 'Encounter', group: 'Dialogue', height: 420, subtitle: 'Character left, speech right',
+    html: `
+<div class="pb-encounter" data-place="mercado">
+  <div class="pb-encounter__who pb-encounter__who--blank" role="img" aria-label="Doña Carmen"></div>
+  <div class="pb-dialogue"><p class="pb-dialogue__who">Doña Carmen</p><p class="pb-dialogue__es">¿Qué va a llevar?</p><p class="pb-dialogue__en">What would you like?</p></div>
+  <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again" data-say="¿Qué va a llevar?"><span data-ic="volume-2"></span></button>
+</div>
+<p class="cap">Compact, for a challenge. The dark block stands in for the character's sprite.</p>
+<div class="pb-encounter pb-encounter--tall" data-place="banco">
+  <div class="pb-encounter__who pb-encounter__who--blank" role="img" aria-label="The bank teller"></div>
+  <div class="pb-dialogue"><p class="pb-dialogue__who">Don Rafael</p><p class="pb-dialogue__es">Buenas tardes. ¿En qué le puedo servir?</p><p class="pb-dialogue__en">Good afternoon. How can I help you?</p></div>
+  <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again" data-say="Buenas tardes. ¿En qué le puedo servir?"><span data-ic="volume-2"></span></button>
+  <span class="pb-encounter__hud pb-patience"><span data-ic="timer" data-size="18"></span>Patience<span class="pb-patience__pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></span>
+</div>
+<p class="cap">Tall, for a place's home screen, with the patience meter.</p>`,
+    doc: {
+      sum: 'An encounter puts a townsperson and what they are saying side by side in one band at the top of the screen.',
+      use: ['Every screen where a character speaks: a place\'s home, each challenge, results.'],
+      not: ['Screens with no character, such as Progress or Settings.'],
+      anatomy: ['Band: `radius-xl`, in the place\'s wall colour under a strip of sky, at least 148 high (196 for the tall size).', 'Character: a pixel-art portrait at the left, 111 by 116, standing on the band\'s lower edge.', 'Speech box at the right, vertically centred.', 'Speaker button on the speech box\'s lower right corner.', 'Patience meter, when timed, at the top right.'],
+      place: 'Directly under the top bar, inside the 16 gutters.',
+      states: ['The character\'s expression: neutral, talking, happy, confused, impatient, surprised.', 'One wall colour per place, set with `data-place`.'],
+      motion: 'A new line replaces the old with the default effects spring. Expressions are a sprite swap with no tween.',
+      do: ['Keep a line to two rows of Spanish.', 'Use the compact size during a challenge so the task has room.'],
+      dont: ['Cover the character with the speech box.', 'Put anything the player must act on inside the band.'],
+      a11y: ['The portrait has the character\'s name as its label.', 'The speaker button has a 48 touch target.'],
+      provide: 'The place, the character\'s sprite and name, the Spanish line, its English and the text to speak.',
+      source: OWN,
+    },
+  },
+  {
     name: 'SceneWindow', group: 'Dialogue', height: 320, subtitle: 'The pixel-art stage',
     html: `
 <div class="pb-scene" data-place="mercado">${sceneBlocks}
@@ -174,8 +205,8 @@ var sc = document.querySelector('.pb-scene'), pl = document.getElementById('pl')
 pl.innerHTML = P.map(function (p) { return '<button class="sw" title="' + p[0] + '" aria-label="' + p[0] + '" data-p="' + p[0] + '" style="background:var(--' + p[1] + ')"></button>'; }).join('');
 pl.addEventListener('click', function (e) { var b = e.target.closest('[data-p]'); if (b) sc.setAttribute('data-place', b.getAttribute('data-p')); });`,
     doc: {
-      sum: 'The scene window is the framed stage at the top of a screen where the place and its character appear in pixel art.',
-      use: ['Every screen inside a place.'],
+      sum: 'The scene window is a framed pixel-art view of a place with no speech, for moments that are about the place itself.',
+      use: ['The title screen and a place\'s first-visit view.', 'When a character is speaking, use the encounter instead.'],
       not: ['The town map, which is its own full-screen scene.'],
       anatomy: ['Frame: `radius-xl`, 196 high, full width inside the 16 gutters.', 'Scene: pixel art, scaled by whole multiples and never smoothed.', 'Character: centred, with expression sprites.', 'Heads-up items: patience top left.'],
       place: 'Directly under the top bar. The dialogue box overlaps its lower edge by 24.',
@@ -204,13 +235,13 @@ b.addEventListener('click', function () { var off = d.getAttribute('data-subtitl
       sum: 'The dialogue box shows what a townsperson says in Spanish, with an English subtitle beneath it.',
       use: ['Every line a character speaks, including instructions given in character.'],
       not: ['Interface instructions such as "Drag the word". Those are plain `body` text.'],
-      anatomy: ['Box: `card`, `radius-lg-inc`, soft shadow.', 'Name: `label-small` in `ink-muted`.', 'Spanish line: `dialogue` style, the pixel face.', 'English subtitle: `label` in `ink-muted`.', 'Speaker button beside the box.'],
-      place: 'Overlapping the lower edge of the scene window by 24.',
+      anatomy: ['Box: `card`, `radius-lg-inc`, soft shadow.', 'Name: `label-small` in `ink-muted`.', 'Spanish line: `dialogue` style, the rounded face at word size.', 'English subtitle: `label` in `ink-muted`.', 'Speaker button beside the box.'],
+      place: 'Beside the character inside an encounter. On its own only where there is no character on screen.',
       states: ['Subtitles on, the default: Spanish and English together.', 'Subtitles off: Spanish only.'],
       motion: 'A new line replaces the old with the default effects spring. The Spanish line is spoken as it appears.',
       do: ['Keep a line to two rows of text.', 'Let the player replay the audio as often as they like, outside timed checks.'],
-      dont: ['Put the English first or larger than the Spanish.', 'Use the pixel face anywhere else.'],
-      a11y: ['The pixel face is 22px with full accents.', 'The subtitle setting lives in Settings and is on by default.', 'Audio is never the only carrier of a line.'],
+      dont: ['Put the English first or larger than the Spanish.', 'Set speech in a pixel or novelty face; it is the text the player is learning to read.'],
+      a11y: ['Speech is 22px with full accents.', 'The subtitle setting lives in Settings and is on by default.', 'Audio is never the only carrier of a line.'],
       provide: 'The speaker\'s name, the Spanish line, its English, and the text to speak.',
       source: OWN,
     },

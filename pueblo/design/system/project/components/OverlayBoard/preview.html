@@ -1,0 +1,103 @@
+<!-- @dsCard group="Foundations" height=1180 width=960 page subtitle="Tips, snackbars, sheets, dialogs and side panels" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 680px; }
+  section { margin-bottom: 40px; } section:last-child { margin-bottom: 0; }
+  .five { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .ov b { display: block; font-size: 16px; line-height: 24px; font-weight: 800; margin-top: 10px; }
+  .ov p { font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: .1px; color: var(--ink-muted); }
+  .ov em { font-style: normal; color: var(--ink); }
+  .mini { position: relative; height: 250px; border-radius: 20px; background: var(--card); box-shadow: var(--shadow-soft); overflow: hidden; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .blk { border-radius: 8px; background: var(--cal-low); }
+  .scr { position: absolute; inset: 0; background: rgba(31,27,22,.32); }
+  .lay { position: absolute; background: var(--card); }
+  .bar { height: 6px; border-radius: 99px; background: var(--outline-soft); }
+  .act { height: 14px; border-radius: 99px; background: var(--cobalto); }
+  .pair { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
+  .phone { position: relative; height: 380px; border-radius: 28px; background: var(--cal-container); overflow: hidden; }
+  .wide { position: relative; height: 380px; border-radius: 28px; background: var(--cal-container); overflow: hidden; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); margin-top: 8px; }
+  .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .rules div { background: var(--cal-low); border-radius: var(--radius-xl); padding: 16px; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: .1px; }
+  .rules b { display: block; font-size: 16px; line-height: 24px; font-weight: 800; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="pb board">
+  <section>
+    <h2>Five overlays, lightest first</h2>
+    <p class="lede">Use the lightest one that does the job. Each is a component with its own page; this board says which to reach for.</p>
+    <div class="five">
+      <div class="ov">
+        <div class="mini"><div class="blk" style="height:20px"></div><div class="blk" style="height:70px;background:var(--wall-ocre)"></div><div class="blk" style="flex:1"></div><div class="act"></div>
+          <div class="lay" style="left:22px;top:104px;width:112px;border-radius:12px;padding:8px;background:var(--cal-container);box-shadow:var(--shadow-soft);display:grid;gap:5px"><div class="bar" style="width:50%;background:var(--ink)"></div><div class="bar"></div><div class="bar" style="width:80%"></div></div></div>
+        <b>Info tip</b><p><em>Explains one thing</em> when its info button is pressed. Two sentences at most.</p>
+      </div>
+      <div class="ov">
+        <div class="mini"><div class="blk" style="height:20px"></div><div class="blk" style="height:70px;background:var(--wall-ocre)"></div><div class="blk" style="flex:1"></div><div class="act"></div>
+          <div class="lay" style="left:10px;right:10px;bottom:32px;height:22px;border-radius:8px;background:var(--ink);display:flex;align-items:center;padding:0 8px;gap:6px"><div class="bar" style="flex:1;background:var(--cal)"></div><div class="bar" style="width:22px;background:var(--cobalto-container)"></div></div></div>
+        <b>Snackbar</b><p><em>Something just happened.</em> One line, at most one action such as Undo. It leaves by itself.</p>
+      </div>
+      <div class="ov">
+        <div class="mini"><div class="blk" style="height:20px"></div><div class="blk" style="height:70px;background:var(--wall-ocre)"></div><div class="blk" style="flex:1"></div><div class="act"></div>
+          <div class="scr"></div><div class="lay" style="left:0;right:0;bottom:0;height:128px;border-radius:20px 20px 0 0;padding:8px 12px;display:grid;gap:7px;align-content:start"><div class="bar" style="width:24px;height:3px;margin:0 auto;background:var(--outline)"></div><div class="bar" style="width:40%;background:var(--ink)"></div><div class="blk" style="height:34px"></div><div class="act" style="background:var(--cobalto-container)"></div></div></div>
+        <b>Bottom sheet</b><p><em>Hints, results, short choices.</em> Rises over the screen; drag it down or tap outside to close.</p>
+      </div>
+      <div class="ov">
+        <div class="mini"><div class="blk" style="height:20px"></div><div class="blk" style="height:70px;background:var(--wall-ocre)"></div><div class="blk" style="flex:1"></div><div class="act"></div>
+          <div class="scr"></div><div class="lay" style="left:16px;right:16px;top:70px;border-radius:20px;padding:12px;display:grid;gap:7px"><div class="bar" style="width:70%;background:var(--ink)"></div><div class="bar"></div><div class="bar" style="width:80%"></div><div style="display:flex;justify-content:flex-end;gap:6px;margin-top:6px"><div class="bar" style="width:36px;background:var(--cobalto-container)"></div><div class="act" style="width:36px;height:10px"></div></div></div></div>
+        <b>Dialog</b><p><em>Cannot be undone.</em> Leaving a check, resetting progress. Two named actions, never OK and Cancel.</p>
+      </div>
+      <div class="ov">
+        <div class="mini" style="flex-direction:row"><div style="flex:1;display:flex;flex-direction:column;gap:6px"><div class="blk" style="height:20px"></div><div class="blk" style="flex:1;background:var(--wall-maya)"></div></div>
+          <div class="lay" style="right:0;top:0;bottom:0;width:78px;border-radius:16px 0 0 16px;padding:10px 8px;display:grid;gap:7px;align-content:start;box-shadow:-2px 0 10px rgba(31,27,22,.12)"><div class="bar" style="width:60%;background:var(--ink)"></div><div class="blk" style="height:18px"></div><div class="blk" style="height:18px"></div><div class="blk" style="height:18px"></div></div></div>
+        <b>Side sheet</b><p><em>Wide screens only.</em> What is a bottom sheet or a whole screen on a phone opens as a panel at the edge.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The same hint, phone and wide</h2>
+    <p class="lede">A bottom sheet on a phone becomes a side sheet at 600 wide and up. The content is the same; only where it sits changes.</p>
+    <div class="pair">
+      <div>
+        <div class="phone">
+          <div style="padding:16px"><p class="title">Match the list</p></div>
+          <div class="pb-overlay pb-overlay--bottom"><div class="pb-scrim"></div>
+            <div class="pb-sheet"><div class="pb-sheet__grab"><div class="pb-sheet__handle"></div></div><p class="pb-sheet__title">Hint</p>
+              <div class="pb-decode"><div class="pb-decode__w"><b>¿Qué</b><span>what</span></div><div class="pb-decode__w"><b>va a</b><span>are you going to</span></div><div class="pb-decode__w"><b>llevar?</b><span>take</span></div></div>
+              <div style="margin-top:16px"><button class="pb-btn pb-btn--medium pb-btn--tonal">Got it</button></div></div></div>
+        </div>
+        <p class="cap">Phone: bottom sheet over a scrim.</p>
+      </div>
+      <div>
+        <div class="wide">
+          <div style="padding:16px"><p class="title">Match the list</p><p class="label" style="color:var(--ink-muted)">The challenge stays usable beside the panel.</p></div>
+          <div class="pb-overlay pb-overlay--end">
+            <aside class="pb-sidesheet pb-sidesheet--standard" style="width:320px" aria-label="Hint"><div class="pb-sidesheet__head"><h3 class="pb-sidesheet__title" style="margin:0">Hint</h3><button class="pb-iconbtn" aria-label="Close hint"><span data-ic="x"></span></button></div>
+              <div class="pb-decode"><div class="pb-decode__w"><b>¿Qué</b><span>what</span></div><div class="pb-decode__w"><b>va a</b><span>are you going to</span></div><div class="pb-decode__w"><b>llevar?</b><span>take</span></div></div></aside></div>
+        </div>
+        <p class="cap">Wide: a standard side sheet, no scrim, with a close button.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rules for all of them</h2>
+    <div class="rules">
+      <div><b>One at a time</b>Never a sheet over a sheet or a dialog over a sheet. Close the first, then open the next.</div>
+      <div><b>Always a way out</b>Every overlay closes with a visible control, not only by dragging or tapping outside.</div>
+      <div><b>Never for right or wrong</b>An answer's result is shown on the answer itself, never in a pop-up.</div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

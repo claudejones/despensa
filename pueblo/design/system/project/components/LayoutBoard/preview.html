@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; background: var(--cal); }
   .board { width: 960px; padding: 32px; }
@@ -41,12 +41,11 @@
 <div class="pb board">
   <section>
     <h2>The phone scaffold</h2>
-    <p class="lede">Phone first, one-handed. The scene sits at the top where you look, the action sits at the bottom where your thumb is.</p>
+    <p class="lede">Phone first, one-handed. The character sits at the top where you look, the action sits at the bottom where your thumb is.</p>
     <div class="two">
       <div class="phone">
         <div class="z z1">Top bar<small>back · place name · coins</small></div>
-        <div class="z z2">Scene window<small>pixel art · radius-xl</small></div>
-        <div class="z z3">Dialogue box<small>overlaps the scene by 24</small></div>
+        <div class="z z2" style="height:120px">The encounter<small>character on the left · speech on the right</small></div>
         <div class="z z4">The challenge<small>list, tiles, slider or coins · scrolls if needed</small></div>
         <div class="z z5">One primary button</div>
         <div class="z z6">Bottom bar<small>hidden during a challenge</small></div>
@@ -54,7 +53,7 @@
       <div class="notes">
         <div><b>Size classes</b>Compact under 600 wide: the layout shown. Medium 600 to 839 and expanded 840 and up: the same column centred at 480, with the town map beside it on expanded.</div>
         <div><b>Gutters and targets</b>16 at the sides. Every touch target is at least 48 high. The primary button is 56, Material's medium size.</div>
-        <div><b>One hero per screen</b>The scene and its character are the hero. Everything else stays flat and quiet.</div>
+        <div><b>One hero per screen</b>The character and what they say are the hero. Everything else stays flat and quiet.</div>
         <div><b>Shadow</b>One soft ambient shadow, on cards and the dialogue box only. Separation comes from tone first.</div>
         <div><b>Sheets and dialogs</b>A bottom sheet for hints and results. A dialog only to confirm something you cannot undo, such as resetting progress.</div>
       </div>

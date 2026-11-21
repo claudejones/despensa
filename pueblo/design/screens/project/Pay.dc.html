@@ -10,7 +10,7 @@
 <body>
 <x-dc>
 <helmet>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#1F1B16}a:hover{color:#1B3FB5}
@@ -26,19 +26,14 @@ a{color:#1F1B16}a:hover{color:#1B3FB5}
     <div class="pb-progress pb-progress--steps" style="height: 8px" role="img" aria-label="Step 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></div>
   </div>
 
-  <div style="padding: 0 16px">
-    <div class="pb-scene" style="height: 150px" role="img" aria-label="The market, with Doña Carmen at her stall">
-      <div class="pb-scene__wall"></div>
-      <div style="position: absolute; left: 24px; right: 24px; top: 48px; height: 20px; border-radius: 4px 4px 0 0; background: repeating-linear-gradient(90deg, var(--wall-rosa) 0 24px, var(--wall-cal) 24px 48px)"></div>
-      <img class="pb-px" src="/_blob/5357e49a49d615a871075fd9e2d36e3a" alt="" style="position: absolute; left: 124px; bottom: 0; width: 111px; height: 116px">
-      <span class="pb-scene__tag">Placeholder scene</span>
-    </div>
-    <div class="pb-talk pb-talk--over">
+  <div style="padding: 0 16px 14px">
+    <div class="pb-encounter" data-place="mercado">
+      <img class="pb-px pb-encounter__who" src="/_blob/5357e49a49d615a871075fd9e2d36e3a" alt="Doña Carmen">
       <div class="pb-dialogue">
         <p class="pb-dialogue__es">Son ochenta y cinco pesos.</p>
         <p class="pb-dialogue__en">That comes to ··· pesos.</p>
       </div>
-      <button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear it again"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg></button>
+      <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg></button>
     </div>
   </div>
 
@@ -54,6 +49,8 @@ a{color:#1F1B16}a:hover{color:#1B3FB5}
       <div class="pb-till__head"><span>Your wallet</span></div>
       <div class="pb-till__zone">
         <button class="pb-note" aria-label="20 pesos">20</button>
+      </div>
+      <div class="pb-till__zone" style="margin-top: 8px">
         <button class="pb-coin" aria-label="10 pesos">10</button>
         <button class="pb-coin" aria-label="5 pesos">5</button>
         <button class="pb-coin pb-coin--sm" aria-label="2 pesos">2</button>
