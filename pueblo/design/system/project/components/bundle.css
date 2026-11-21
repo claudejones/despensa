@@ -1,0 +1,77 @@
+/* Pueblo shared styles. Loaded after tokens.css. */
+
+:root {
+  /* Motion: Material 3 Expressive springs as web curves (m3.material.io, read 2026-11-21). */
+  --spring-spatial-fast: 350ms cubic-bezier(0.42, 1.67, 0.21, 0.90);
+  --spring-spatial: 500ms cubic-bezier(0.38, 1.21, 0.22, 1.00);
+  --spring-spatial-slow: 650ms cubic-bezier(0.39, 1.29, 0.35, 0.98);
+  --spring-effects-fast: 150ms cubic-bezier(0.31, 0.94, 0.34, 1.00);
+  --spring-effects: 200ms cubic-bezier(0.34, 0.80, 0.34, 1.00);
+  --spring-effects-slow: 300ms cubic-bezier(0.34, 0.88, 0.34, 1.00);
+  /* Shadow: ambient only, low alpha. Tonal separation comes first. */
+  --shadow-soft: 0 2px 10px rgba(31, 27, 22, 0.07);
+}
+
+:where(.pb) { font-family: var(--font-ui); color: var(--ink); -webkit-font-smoothing: antialiased; }
+:where(.pb) :where(*) { box-sizing: border-box; }
+:where(.pb) :where(button) { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:where(.pb) :where(p, h1, h2, h3) { margin: 0; }
+
+.pb-ic { display: block; flex: none; }
+.pb-row { display: flex; align-items: center; }
+
+/* Primary button: one per screen, low on the screen, extra large. */
+.pb-btn {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+  width: 100%; min-height: 64px; padding: 0 var(--space-6);
+  border-radius: var(--radius-full);
+  background: var(--cobalto); color: var(--on-cobalto);
+  font-family: var(--font-ui); font-size: 18px; line-height: 24px; font-weight: 800;
+  transition: border-radius var(--spring-spatial-fast), transform var(--spring-spatial-fast), background var(--spring-effects);
+}
+.pb-btn:active { border-radius: var(--radius-xl-inc); transform: scale(0.97); }
+.pb-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.pb-btn--tonal { background: var(--cobalto-container); color: var(--on-cobalto-container); }
+
+/* Spanish word tile: text only, never a picture. */
+.pb-tile {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--cobalto-container); color: var(--on-cobalto-container);
+  font-size: 18px; line-height: 24px; font-weight: 800;
+  transition: transform var(--spring-spatial-fast), border-radius var(--spring-spatial-fast);
+}
+.pb-tile:active { transform: scale(1.06) rotate(-2deg); border-radius: var(--radius-lg-inc); }
+
+/* Blank slot: where a Spanish tile lands. */
+.pb-slot {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1);
+  min-width: 132px; min-height: 48px; padding: 0 var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--outline); background: var(--cal-container);
+  font-size: 18px; line-height: 24px; font-weight: 800; color: var(--ink-muted);
+}
+.pb-slot--filled { border: 2px solid transparent; background: var(--cobalto-container); color: var(--on-cobalto-container); }
+.pb-slot--correct { border: 2px solid transparent; background: var(--nopal); color: var(--on-nopal); }
+.pb-slot--wrong { border: 2px solid transparent; background: var(--cochinilla); color: var(--on-cochinilla); }
+
+/* Chips */
+.pb-chip {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  min-height: 32px; padding: 0 var(--space-3); border-radius: var(--radius-full);
+  font-size: 14px; line-height: 20px; font-weight: 700;
+  background: var(--cal-container); color: var(--ink);
+}
+.pb-chip--coins { background: var(--ocre); color: var(--on-ocre); }
+
+/* Dialogue box: pixel type for the Spanish line, interface type for the English subtitle. */
+.pb-dialogue {
+  background: var(--card); border-radius: var(--radius-lg-inc); padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-soft);
+}
+.pb-dialogue__es { font-family: var(--font-pixel); font-size: 20px; line-height: 26px; color: var(--ink); }
+.pb-dialogue__en { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--ink-muted); margin-top: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-btn, .pb-tile { transition: none; }
+}
