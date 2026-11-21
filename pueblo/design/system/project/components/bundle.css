@@ -380,8 +380,8 @@
   border-radius: var(--radius-xl); background: var(--wall-maya); --wall: var(--wall-ocre); }
 .pb-encounter::before { content: ""; position: absolute; left: 0; right: 0; top: 36px; bottom: 0; background: var(--wall); border-top: 8px solid var(--wall-cal); border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
 .pb-encounter > * { position: relative; }
-.pb-encounter__who { width: 111px; height: 116px; flex: none; display: block; }
-.pb-encounter__who--blank { border-radius: 12px 12px 0 0; background: var(--ink); opacity: .85; }
+.pb-encounter__who { flex: none; display: block; }
+.pb-encounter__who--blank { width: 117px; height: 124px; border-radius: 12px 12px 0 0; background: var(--ink); opacity: .85; }
 .pb-encounter .pb-dialogue { flex: 1; min-width: 0; align-self: center; margin-bottom: var(--space-3); }
 .pb-encounter__say { position: absolute; right: -6px; bottom: -14px; }
 .pb-encounter__hud { position: absolute; left: 10px; top: 8px; }
@@ -389,6 +389,18 @@
 .pb-encounter[data-place="restaurante"] { --wall: var(--wall-rosa); } .pb-encounter[data-place="sitio"] { --wall: var(--wall-caribe); }
 .pb-encounter[data-place="clinica"] { --wall: var(--wall-jade); } .pb-encounter[data-place="casa"] { --wall: var(--wall-terracota); }
 .pb-encounter[data-place="plaza"] { --wall: var(--wall-cal); } .pb-encounter[data-place="escuela"] { --wall: var(--wall-purpura); } .pb-encounter[data-place="banco"] { --wall: var(--wall-anil); }
+
+/* Town map: the painted town, with a label on each place. */
+.pb-map { position: relative; overflow: hidden; border-radius: var(--radius-xl); background: #F1E7C9; }
+.pb-map__art { position: absolute; display: block; }
+.pb-maplabel { position: absolute; transform: translateX(-50%); display: grid; justify-items: center; padding: 3px 10px 4px; border-radius: var(--radius-md);
+  background: var(--card); color: var(--ink); box-shadow: var(--shadow-soft); text-decoration: none; white-space: nowrap; }
+.pb-maplabel::before { content: ""; position: absolute; left: -8px; right: -8px; top: -84px; bottom: -6px; }
+.pb-maplabel b { font-family: var(--font-rotulo); font-weight: 400; font-size: 16px; line-height: 20px; }
+.pb-maplabel span { font-size: 11px; line-height: 14px; font-weight: 700; letter-spacing: 0.5px; color: var(--ink-muted); }
+.pb-maplabel--next { background: var(--cobalto); color: var(--on-cobalto); }
+.pb-maplabel--next span { color: var(--on-cobalto); }
+.pb-maplabel--done b::after { content: ""; }
 
 /* Overlays */
 .pb-overlay { position: absolute; inset: 0; display: flex; }

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Achievements</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden">
+  <header class="pb-topbar">
+    <a class="pb-iconbtn" href="Progress.dc.html" aria-label="Back"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></a>
+    <h1 class="pb-topbar__title pb-topbar__title--plain">Achievements</h1>
+    <div class="pb-topbar__end"></div>
+  </header>
+  <div style="flex: 1; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
+    <p class="body" style="color: var(--ink-muted)">Things you can now do in Spanish. Each one was shown in play, with no hints.</p>
+    <p class="label" style="color: var(--ink-muted); margin-top: 4px">Done</p>
+    <div class="pb-badge"><div class="pb-badge__shape pb-shape-burst"><svg class="pb-ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9" /><path d="m19 11-4-7" /><path d="M2 11h20" /><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4" /><path d="M4.5 15.5h15" /><path d="m5 11 4-7" /><path d="m9 11 1 9" /></svg></div><div><p class="pb-badge__name">Shopped without help</p><p class="pb-badge__how">A full list at the market, no hints.</p></div></div>
+    <div class="pb-badge"><div class="pb-badge__shape pb-shape-burst"><svg class="pb-ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></svg></div><div><p class="pb-badge__name">Paid the exact amount</p><p class="pb-badge__how">Understood a spoken total and paid it with no change.</p></div></div>
+    <p class="label" style="color: var(--ink-muted); margin-top: 8px">Still to do</p>
+    <div class="pb-badge" data-earned="no"><div class="pb-badge__shape pb-shape-circle"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg></div><div><p class="pb-badge__name">Understood her by ear</p><p class="pb-badge__how">Six things Doña Carmen says, with no text.</p></div></div>
+    <div class="pb-badge" data-earned="no"><div class="pb-badge__shape pb-shape-circle"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg></div><div><p class="pb-badge__name">Ordered a meal</p><p class="pb-badge__how">A full order at the restaurant, your way.</p></div></div>
+    <div class="pb-badge" data-earned="no"><div class="pb-badge__shape pb-shape-circle"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2h4" /><path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8" /><path d="M7 14h.01" /><path d="M17 14h.01" /><rect width="18" height="8" x="3" y="10" rx="2" /><path d="M5 18v2" /><path d="M19 18v2" /></svg></div><div><p class="pb-badge__name">Got where you were going</p><p class="pb-badge__how">Told a driver where to go and agreed the fare.</p></div></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

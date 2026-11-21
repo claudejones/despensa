@@ -13,10 +13,11 @@ A map marker is one place on the town map, showing how far along you are there.
 - Emblem: 72 across, in the place's wall colour, with the place icon.
 - Name in the rótulo face.
 - State line in `label-small`.
+- On the painted map the building is the emblem, so the marker is a label under it (`pb-maplabel`): the name and the state on a small card. The suggested next place gets a cobalt label.
 
 ## Placement
 
-On the map at the place's building.
+On the map at the place's building. The label's touch area reaches up over the building.
 
 ## States
 

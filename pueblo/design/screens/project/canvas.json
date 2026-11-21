@@ -105,6 +105,54 @@
    "h": 720,
    "title": "17 Settings on a wide screen (side sheet)",
    "radius": 16
+  },
+  "SetUp.dc.html": {
+   "x": 0,
+   "y": 3360,
+   "w": 390,
+   "h": 844,
+   "title": "2 Set-up",
+   "radius": 28
+  },
+  "Errands.dc.html": {
+   "x": 470,
+   "y": 3360,
+   "w": 390,
+   "h": 844,
+   "title": "5 Today's errands",
+   "radius": 28
+  },
+  "Progress.dc.html": {
+   "x": 940,
+   "y": 3360,
+   "w": 390,
+   "h": 844,
+   "title": "13 Progress",
+   "radius": 28
+  },
+  "Phrasebook.dc.html": {
+   "x": 1410,
+   "y": 3360,
+   "w": 390,
+   "h": 844,
+   "title": "14 Phrasebook",
+   "radius": 28
+  },
+  "Achievements.dc.html": {
+   "x": 1880,
+   "y": 3360,
+   "w": 390,
+   "h": 844,
+   "title": "15 Achievements",
+   "radius": 28
+  },
+  "Expressions.dc.html": {
+   "x": 2044,
+   "y": 2160,
+   "w": 780,
+   "h": 280,
+   "title": "Character expressions (test art)",
+   "radius": 16
   }
  },
  "order": [
@@ -119,7 +167,13 @@
   "Results.dc.html",
   "HintSheet.dc.html",
   "LeaveDialog.dc.html",
-  "WideSettings.dc.html"
+  "WideSettings.dc.html",
+  "SetUp.dc.html",
+  "Errands.dc.html",
+  "Progress.dc.html",
+  "Phrasebook.dc.html",
+  "Achievements.dc.html",
+  "Expressions.dc.html"
  ],
  "notes": {
   "heading": {
@@ -133,7 +187,7 @@
    "x": 1880,
    "y": 964,
    "w": 390,
-   "text": "The vendor, the produce pictures and the town on the title screen are test art from the image tool, cleaned into small pixel sprites. The map is still a placeholder grid. Numbers in the frame titles match the screen list.",
+   "text": "All pictures are test art from the image tool, cleaned into small pixel sprites: Doña Carmen and her six expressions, the produce, the town on the title screen and the painted map. Numbers in the frame titles match the screen list.",
    "size": "m",
    "fill": "orange"
   },
@@ -143,6 +197,13 @@
    "text": "Overlays in use",
    "kind": "title1",
    "maxW": 1964
+  },
+  "rest": {
+   "x": 0,
+   "y": 3080,
+   "text": "Around the town: set-up, errands, progress, phrasebook, achievements",
+   "kind": "title1",
+   "maxW": 2270
   }
  },
  "designSystems": [
@@ -150,8 +211,8 @@
    "title": "Pueblo Design System",
    "namespace": "pueblo",
    "artifact": "https://claude.ai/artifact/HJzmVnaVs5aQFM2pMs2jxL",
-   "version": "1795239084-e85c",
-   "copiedAt": "2026-11-21T05:31:42Z"
+   "version": "1795239629-e38c",
+   "copiedAt": "2026-11-21T05:40:42Z"
   }
  ]
 }

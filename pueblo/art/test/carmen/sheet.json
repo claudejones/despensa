@@ -1,0 +1,15 @@
+{
+ "frame": [
+  117,
+  124
+ ],
+ "order": [
+  "neutral",
+  "talking",
+  "happy",
+  "confused",
+  "impatient",
+  "surprised"
+ ],
+ "note": "Head-and-shoulders, bottom edge is the crop line. Each frame keeps its own palette."
+}

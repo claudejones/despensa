@@ -11,7 +11,7 @@ An encounter puts a townsperson and what they are saying side by side in one ban
 ## Anatomy
 
 - Band: `radius-xl`, in the place's wall colour under a strip of sky, at least 148 high (196 for the tall size).
-- Character: a pixel-art portrait at the left, 111 by 116, standing on the band's lower edge.
+- Character: a pixel-art portrait at the left, about 117 by 124 at its natural size, standing on the band's lower edge.
 - Speech box at the right, vertically centred.
 - Speaker button on the speech box's lower right corner.
 - Patience meter, when timed, at the top right.

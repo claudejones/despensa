@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Progress</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden">
+  <header class="pb-topbar">
+    <h1 class="pb-topbar__title pb-topbar__title--plain" style="padding-left: 12px">Progress</h1>
+    <div class="pb-topbar__end"><a class="pb-iconbtn" href="WideSettings.dc.html" aria-label="Settings"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg></a></div>
+  </header>
+  <div style="flex: 1; padding: 0 16px; display: flex; flex-direction: column; gap: 14px; min-height: 0; overflow: hidden">
+    <div class="pb-stat">
+      <div><b>23</b><span>words known</span></div>
+      <div><b>14</b><span>being learned</span></div>
+      <div><b>2</b><span>things you can do</span></div>
+    </div>
+    <a class="pb-badge" href="Achievements.dc.html" style="text-decoration: none"><div class="pb-badge__shape pb-shape-burst"><svg class="pb-ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9" /><path d="m19 11-4-7" /><path d="M2 11h20" /><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4" /><path d="M4.5 15.5h15" /><path d="m5 11 4-7" /><path d="m9 11 1 9" /></svg></div><div style="flex: 1"><p class="pb-badge__name">Shopped without help</p><p class="pb-badge__how">Your latest. See all achievements</p></div><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></a>
+    <div class="pb-card" style="display: flex; flex-direction: column; gap: 12px">
+      <p class="title">By place</p>
+      <div style="display: flex; align-items: center; gap: 12px"><span style="width: 12px; height: 12px; border-radius: 4px; background: var(--wall-ocre); flex: none"></span><span class="title" style="width: 104px">Mercado</span><div class="pb-progress" style="flex: 1" role="img" aria-label="62 percent known"><div class="pb-progress__fill" style="width: 62%"></div></div><span class="label" style="width: 36px; text-align: right; color: var(--ink-muted)">62%</span></div>
+      <div style="display: flex; align-items: center; gap: 12px"><span style="width: 12px; height: 12px; border-radius: 4px; background: var(--wall-maya); flex: none"></span><span class="title" style="width: 104px">Plaza</span><div class="pb-progress" style="flex: 1" role="img" aria-label="18 percent known"><div class="pb-progress__fill" style="width: 18%"></div></div><span class="label" style="width: 36px; text-align: right; color: var(--ink-muted)">18%</span></div>
+      <div style="display: flex; align-items: center; gap: 12px"><span style="width: 12px; height: 12px; border-radius: 4px; background: var(--wall-terracota); flex: none"></span><span class="title" style="width: 104px">Casa</span><div class="pb-progress" style="flex: 1" role="img" aria-label="5 percent known"><div class="pb-progress__fill" style="width: 5%"></div></div><span class="label" style="width: 36px; text-align: right; color: var(--ink-muted)">5%</span></div>
+      <div style="display: flex; align-items: center; gap: 12px"><span style="width: 12px; height: 12px; border-radius: 4px; background: var(--wall-rosa); flex: none"></span><span class="title" style="width: 104px">Restaurante</span><div class="pb-progress" style="flex: 1" role="img" aria-label="0 percent known"><div class="pb-progress__fill" style="width: 0%"></div></div><span class="label" style="width: 36px; text-align: right; color: var(--ink-muted)">0%</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <p class="title">Your words</p>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 4px">
+        <div style="display: grid; justify-items: center; gap: 4px"><div class="pb-token pb-shape-sunny" data-state="known">Known</div><span class="label">limones</span></div><div style="display: grid; justify-items: center; gap: 4px"><div class="pb-token pb-shape-cookie" data-state="familiar">Familiar</div><span class="label">plátanos</span></div><div style="display: grid; justify-items: center; gap: 4px"><div class="pb-token pb-shape-clover" data-state="learning">Learning</div><span class="label">zanahorias</span></div><div style="display: grid; justify-items: center; gap: 4px"><div class="pb-token pb-shape-circle" data-state="new">New</div><span class="label">cebollas</span></div>
+      </div>
+    </div>
+  </div>
+  <nav class="pb-navbar" aria-label="Main">
+    <a class="pb-navbar__item" href="TownMap.dc.html" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></span>Town</a>
+    <a class="pb-navbar__item" href="Errands.dc.html" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4" /><path d="m3 7 2 2 4-4" /><path d="M13 6h8" /><path d="M13 12h8" /><path d="M13 18h8" /></svg></span>Errands<span class="pb-navbar__dot">4</span></a>
+    <a class="pb-navbar__item" href="Progress.dc.html" aria-current="page" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span>Progress</a>
+    <a class="pb-navbar__item" href="Phrasebook.dc.html" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></svg></span>Phrasebook</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

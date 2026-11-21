@@ -86,3 +86,5 @@ Each component's README ends with a Source section naming the Material component
 - The rough MarketScreen board was retired; the design canvas replaces it.
 - Screens canvas: https://claude.ai/artifact/L7kiab86wXSpqT2R3GNbgN (12 boards, including a hint sheet, a leave dialog and a wide-screen settings side sheet).
 - The canvas boards are checked by rendering their markup locally with the design system's styles (not through the canvas runtime).
+- Canvas now has 18 boards: the market trip, three overlay boards, set-up, errands, progress, phrasebook, achievements, and an expressions board. The town map is painted, with a label under each building; the suggested next place has a cobalt label.
+- Set-up asks "Which forms should Spanish use for you?" (cansado / cansada) rather than asking for gender, and the greeting on that screen changes with the answer.
