@@ -1,0 +1,116 @@
+<!-- @dsCard group="Foundations" height=1340 width=960 page subtitle="Roles, pairs and contrast" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; color: var(--ink-muted); margin: 0 0 20px; max-width: 640px; }
+  section { margin-bottom: 40px; }
+
+  .code { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .job { border-radius: var(--radius-xl); padding: 16px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; }
+  .job b { font-size: 18px; line-height: 24px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .job span { font-size: 14px; line-height: 20px; font-weight: 700; }
+  .job small { font-size: 12px; line-height: 16px; font-weight: 700; opacity: .92; }
+
+  .pairs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .pair { border-radius: var(--radius-lg); padding: 14px 16px; min-height: 96px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--outline-soft); }
+  .pair b { font-size: 16px; line-height: 22px; font-weight: 800; }
+  .pair code { font-family: var(--font-ui); font-size: 12px; line-height: 16px; font-weight: 700; }
+  .pair i { font-style: normal; font-size: 12px; line-height: 16px; font-weight: 800; }
+
+  .walls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .wall { border-radius: var(--radius-lg); overflow: hidden; background: var(--card); border: 1px solid var(--outline-soft); }
+  .wall .paint { height: 96px; display: flex; align-items: flex-end; padding: 10px 12px; position: relative; }
+  .wall .paint::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 10px; background: var(--wall-cal); }
+  .wall .paint em { font-family: var(--font-rotulo); font-style: normal; font-size: 24px; line-height: 28px; }
+  .wall p { margin: 0; padding: 8px 12px 10px; font-size: 12px; line-height: 16px; font-weight: 700; color: var(--ink-muted); }
+  .wall p b { color: var(--ink); display: block; font-size: 14px; line-height: 20px; }
+  .note { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--ink-muted); margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="pb board">
+
+  <section>
+    <h2>The colour code</h2>
+    <p class="lede">Five colours, five jobs. Each job keeps its colour everywhere in the game, and every status also carries an icon and a word.</p>
+    <div class="code">
+      <div class="job" style="background:var(--cobalto);color:var(--on-cobalto)">
+        <b><span data-ic="chevron-right" data-size="20"></span>Act</b>
+        <span>cobalto</span><small>Talavera cobalt on white glaze. Buttons, selection.</small>
+      </div>
+      <div class="job" style="background:var(--nopal);color:var(--on-nopal)">
+        <b><span data-ic="check" data-size="20" data-sw="3"></span>Correct</b>
+        <span>nopal</span><small>Cactus green. Always with a check.</small>
+      </div>
+      <div class="job" style="background:var(--cochinilla);color:var(--on-cochinilla)">
+        <b><span data-ic="x" data-size="20" data-sw="3"></span>Wrong</b>
+        <span>cochinilla</span><small>Cochineal red. Nothing else is ever red.</small>
+      </div>
+      <div class="job" style="background:var(--ocre);color:var(--on-ocre)">
+        <b><span data-ic="coins" data-size="20"></span>Money</b>
+        <span>ocre</span><small>Izamal ochre. Coins and prices only.</small>
+      </div>
+      <div class="job" style="background:var(--rosa);color:var(--on-rosa)">
+        <b><span data-ic="sparkles" data-size="20"></span>Celebrate</b>
+        <span>rosa</span><small>Rosa mexicano. A passed check, a new place.</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Grounds and text</h2>
+    <p class="lede">The interface stays quiet so the town's art carries the colour. Ratios are WCAG contrast of the text on its ground.</p>
+    <div class="pairs" id="pairs"></div>
+  </section>
+
+  <section>
+    <h2>Place walls</h2>
+    <p class="lede">Every building is painted one flat colour with white trim, as in a Yucatán town. These live in the pixel art and on the map only, never in a button.</p>
+    <div class="walls" id="walls"></div>
+    <p class="note">Sources for the names: Talavera cobalt, cochineal red, Maya blue, añil indigo, Izamal ochre, rosa mexicano and sea-snail purple are all traditional Mexican colours.</p>
+  </section>
+
+</div>
+<script>
+(function () {
+  var css = getComputedStyle(document.documentElement);
+  function tok(n) { return css.getPropertyValue('--' + n).trim(); }
+  function hex(n) {
+    var v = tok(n), d = document.createElement('i');
+    d.style.color = 'var(--' + n + ')'; document.body.appendChild(d);
+    var m = getComputedStyle(d).color.match(/[\d.]+/g).map(Number); d.remove();
+    return m;
+  }
+  function lum(c) { var a = c.slice(0, 3).map(function (v) { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * a[0] + .7152 * a[1] + .0722 * a[2]; }
+  function ratio(a, b) { var x = lum(hex(a)), y = lum(hex(b)); return ((Math.max(x, y) + .05) / (Math.min(x, y) + .05)).toFixed(1); }
+
+  var pairs = [
+    ['ink', 'cal', 'Body text'], ['ink-muted', 'cal', 'Subtitles'], ['ink', 'cal-low', 'List rows'], ['ink-muted', 'cal-container', 'Empty slot'],
+    ['ink', 'card', 'Cards'], ['on-cobalto-container', 'cobalto-container', 'Word tile'], ['cobalto', 'cal', 'Links'], ['ocre-ink', 'cal', 'A price'],
+    ['nopal-ink', 'nopal-container', 'Correct row'], ['on-cochinilla-container', 'cochinilla-container', 'Wrong row'], ['on-rosa-container', 'rosa-container', 'Celebration'], ['cochinilla', 'card', 'Wrong, as text']
+  ];
+  var title = '';
+  document.getElementById('pairs').innerHTML = pairs.map(function (p) {
+    return '<div class="pair" style="background:var(--' + p[1] + ');color:var(--' + p[0] + ')"><b>' + p[2] + '</b>' +
+      '<code>' + p[0] + ' on ' + p[1] + '</code><i>' + ratio(p[0], p[1]) + ' : 1</i></div>';
+  }).join('');
+
+  var walls = [
+    ['wall-ocre', 'Mercado', 'Market', 'ink'], ['wall-rosa', 'Restaurante', 'Restaurant', 'on-rosa'], ['wall-caribe', 'Sitio', 'Taxi stand', 'ink'], ['wall-jade', 'Clínica', 'Clinic and pharmacy', 'ink'],
+    ['wall-terracota', 'Casa', 'Home', 'on-cobalto'], ['wall-maya', 'Plaza', 'Plaza', 'ink'], ['wall-purpura', 'Escuela', 'School', 'on-cobalto'], ['wall-anil', 'Banco', 'Bank', 'on-cobalto']
+  ];
+  document.getElementById('walls').innerHTML = walls.map(function (w) {
+    return '<div class="wall"><div class="paint" style="background:var(--' + w[0] + ');color:var(--' + w[3] + ')"><em>' + w[1] + '</em></div>' +
+      '<p><b>' + w[2] + '</b>' + w[0] + ' · ' + tok(w[0]).toUpperCase() + '</p></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!-- @dsCard group="Challenge" height=492 subtitle="Try it: drag or tap to match" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div data-match id="m">
+  <div class="pb-list">
+    <div class="pb-listrow"><span class="pb-listrow__pic" data-ic="citrus"></span><span class="pb-listrow__en">limes<small class="ok">Correct</small><small class="no">Not this one</small></span><span class="pb-slot" data-answer="limones"></span></div>
+    <div class="pb-listrow"><span class="pb-listrow__pic" data-ic="carrot"></span><span class="pb-listrow__en">carrots<small class="ok">Correct</small><small class="no">Not this one</small></span><span class="pb-slot" data-answer="zanahorias"></span></div>
+    <div class="pb-listrow"><span class="pb-listrow__pic" data-ic="banana"></span><span class="pb-listrow__en">bananas<small class="ok">Correct</small><small class="no">Not this one</small></span><span class="pb-slot" data-answer="plátanos"></span></div>
+  </div>
+  <div class="pb-tray" data-tray style="margin-top:12px">
+    <span class="pb-tray__label">The stalls</span>
+    <span class="pb-tile" data-word="zanahorias">zanahorias</span><span class="pb-tile" data-word="manzanas">manzanas</span><span class="pb-tile" data-word="plátanos">plátanos</span><span class="pb-tile" data-word="limones">limones</span><span class="pb-tile" data-word="cerezas">cerezas</span>
+  </div>
+</div>
+<button class="pb-btn" id="chk" disabled>Check</button>
+</div>
+<script>
+(function () {
+var root = document.getElementById('m'), btn = document.getElementById('chk'), m = Pueblo.match(root), done = false;
+root.addEventListener('pb-change', function (e) { done = false; btn.textContent = 'Check'; btn.disabled = e.detail.filled < e.detail.total; });
+btn.addEventListener('click', function () {
+  if (done) { m.reset(); return; }
+  var r = m.check(); done = true; btn.textContent = r.correct === r.total ? 'All correct. Play again' : 'Start over';
+});
+})();
+</script>
+</body>
+</html>

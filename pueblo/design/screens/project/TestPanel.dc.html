@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Test panel</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden; position: relative">
+  <header class="pb-topbar">
+    <a class="pb-iconbtn" href="TownMap.dc.html" aria-label="Close the test panel"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></a>
+    <h1 class="pb-topbar__title pb-topbar__title--plain">Test panel</h1>
+    <div class="pb-topbar__end"><span class="pb-chip">Build v0.1</span></div>
+  </header>
+  <div style="flex: 1; padding: 0 16px 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0">
+    <p class="label" style="color: var(--ink-muted)">For testing only. Opened by five taps on the build label. Never in a public build.</p>
+    <div class="pb-card" style="padding: 0 16px">
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">Jump to</p><p class="pb-setrow__text">Any place, challenge or step</p></div><span class="pb-chip">Mercado · Pay</span></div>
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">All words</p><p class="pb-setrow__text">Set every word to one state</p></div><div class="pb-group" role="group" aria-label="All words" style="width: 150px"><button class="pb-group__btn" aria-pressed="false">New</button><button class="pb-group__btn" aria-pressed="false">Known</button></div></div>
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">Skip ahead</p><p class="pb-setrow__text">Make words come due</p></div><span class="pb-chip">+3 days</span></div>
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">Pesos</p><p class="pb-setrow__text">Set your balance</p></div><span class="pb-chip pb-chip--coins">$500</span></div>
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">Show answers</p><p class="pb-setrow__text">Mark the right tile</p></div><label class="pb-switch"><input type="checkbox" aria-label="Show answers"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" x2="14" y1="2" y2="2" /><line x1="12" x2="15" y1="14" y2="11" /><circle cx="12" cy="14" r="8" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">Patience never runs out</p><p class="pb-setrow__text"></p></div><label class="pb-switch"><input type="checkbox" checked aria-label="Patience never runs out"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+      <div class="pb-setrow" style="padding-left: 0; padding-right: 0"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg><div class="pb-setrow__body"><p class="pb-setrow__title">Speed</p><p class="pb-setrow__text">Run speech and motion faster</p></div><div class="pb-group" role="group" aria-label="Speed" style="width: 130px"><button class="pb-group__btn" aria-pressed="true">×1</button><button class="pb-group__btn" aria-pressed="false">×2</button></div></div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <button class="pb-btn pb-btn--small pb-btn--tonal">Win this step</button>
+      <button class="pb-btn pb-btn--small pb-btn--tonal">Copy bug info</button>
+      <button class="pb-btn pb-btn--small pb-btn--outline">Reset everything</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

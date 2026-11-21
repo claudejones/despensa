@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Escuela: sound it out</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden; position: relative">
+  <header class="pb-topbar">
+    <a class="pb-iconbtn" href="TownMap.dc.html" aria-label="Back to town"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></a>
+    <h1 class="pb-topbar__title">Escuela</h1>
+    <div class="pb-topbar__end"><span class="pb-chip pb-chip--coins"><svg class="pb-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></svg>$120</span></div>
+  </header>
+  <div style="padding: 0 16px 10px"><div class="pb-progress pb-progress--steps" style="height: 8px" role="img" aria-label="Step 2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
+  <div style="padding: 0 16px 14px">
+    <div class="pb-encounter" data-place="escuela">
+      <div class="pb-encounter__who pb-encounter__who--blank" role="img" aria-label="Maestra Elena, portrait to come"></div>
+      <div class="pb-dialogue">
+        <p class="pb-dialogue__who">Maestra Elena</p>
+        <p class="pb-dialogue__es">Vamos a separar en sílabas.</p>
+        <p class="pb-dialogue__en">Let's split it into syllables.</p>
+      </div>
+      <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg></button>
+    </div>
+  </div>
+  <div style="flex: 1; padding: 0 16px 12px; display: flex; flex-direction: column; gap: 12px; min-height: 0">
+    <div><p class="label" style="color: var(--ink-muted)">The word</p><p class="headline">zanahoria</p></div>
+    <p class="body">Put the parts in order, then tap the one you stress.</p>
+    <div class="pb-answer" style="min-height: 72px"><button class="pb-tile">za</button><button class="pb-tile">na</button></div>
+    <div class="pb-tray">
+      <span class="pb-tray__label">The parts</span>
+      <button class="pb-tile">ria</button>
+      <button class="pb-tile">ho</button>
+      <button class="pb-tile">ha</button>
+      <button class="pb-tile">no</button>
+    </div>
+    <div class="pb-card pb-card--flat" style="display: flex; gap: 12px; align-items: center"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg><p class="label">A word ending in a vowel is stressed on the part before last.</p></div>
+  </div>
+  <div style="padding: 0 16px 24px; display: flex; gap: 8px; align-items: center">
+    <button class="pb-iconbtn pb-iconbtn--tonal pb-iconbtn--lg" aria-label="Hint, costs 5 pesos"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></button>
+    <button class="pb-iconbtn pb-iconbtn--tonal pb-iconbtn--lg" aria-label="How the words sound"><span class="title" aria-hidden="true">Abc</span></button>
+    <a class="pb-btn" href="Escuela.dc.html" style="text-decoration: none; box-sizing: border-box; flex: 1">Check</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

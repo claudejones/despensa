@@ -1,0 +1,33 @@
+<!-- @dsCard group="Dialogue" height=288 subtitle="The pixel-art stage" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .sw { width: 36px; height: 36px; border-radius: 12px; border: 2px solid var(--outline-soft); cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-scene" data-place="mercado"><div class="pb-scene__wall"></div><div class="pb-scene__who"></div><div class="pb-scene__counter"></div>
+  <span class="pb-scene__hud pb-patience"><span data-ic="timer" data-size="18"></span>Patience<span class="pb-patience__pips"><i></i><i></i><i></i><i></i><i class="off"></i></span></span>
+  <span class="pb-scene__tag">Placeholder scene</span>
+</div>
+<div class="line" id="pl"></div>
+</div>
+<script>
+(function () {
+var P = [['mercado','wall-ocre'],['restaurante','wall-rosa'],['sitio','wall-caribe'],['clinica','wall-jade'],['casa','wall-terracota'],['plaza','wall-cal'],['escuela','wall-purpura'],['banco','wall-anil']];
+var sc = document.querySelector('.pb-scene'), pl = document.getElementById('pl');
+pl.innerHTML = P.map(function (p) { return '<button class="sw" title="' + p[0] + '" aria-label="' + p[0] + '" data-p="' + p[0] + '" style="background:var(--' + p[1] + ')"></button>'; }).join('');
+pl.addEventListener('click', function (e) { var b = e.target.closest('[data-p]'); if (b) sc.setAttribute('data-place', b.getAttribute('data-p')); });
+})();
+</script>
+</body>
+</html>

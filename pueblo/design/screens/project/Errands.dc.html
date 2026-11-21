@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Errands</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden">
+  <header class="pb-topbar">
+    <h1 class="pb-topbar__title pb-topbar__title--plain" style="padding-left: 12px">Errands</h1>
+    <div class="pb-topbar__end"><span class="pb-chip pb-chip--coins"><svg class="pb-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></svg>$120</span></div>
+  </header>
+  <div style="flex: 1; padding: 0 16px; display: flex; flex-direction: column; gap: 12px; min-height: 0">
+    <p class="body" style="color: var(--ink-muted)">Six words are starting to slip. A few minutes at each place brings them back.</p>
+    <a class="pb-place" href="PlaceHome.dc.html" style="--wall: var(--wall-ocre); text-decoration: none"><span class="pb-place__swatch"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" /><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" /><path d="M2 7h20" /><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7" /></svg></span><div class="pb-place__body"><p class="pb-place__name">Mercado</p><p class="pb-place__sub">4 words · about 2 minutes</p></div><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></a>
+    <a class="pb-place" href="PlaceHome.dc.html" style="--wall: var(--wall-maya); text-decoration: none"><span class="pb-place__swatch"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z" /><path d="M7 16v6" /><path d="M13 19v3" /><path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5" /></svg></span><div class="pb-place__body"><p class="pb-place__name">Plaza</p><p class="pb-place__sub">2 words · about 1 minute</p></div><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></a>
+    <div class="pb-card pb-card--flat" style="display: flex; flex-direction: column; gap: 10px">
+      <p class="label" style="color: var(--ink-muted)">Slipping at the Mercado</p>
+      <div style="display: flex; gap: 12px; align-items: center"><div class="pb-token pb-shape-clover" data-state="learning">Learning</div><div><p class="word">zanahorias</p><p class="label" style="color: var(--ink-muted)">carrots · was familiar</p></div></div>
+      <div style="display: flex; gap: 12px; align-items: center"><div class="pb-token pb-shape-cookie" data-state="familiar">Familiar</div><div><p class="word">kilo y medio</p><p class="label" style="color: var(--ink-muted)">a kilo and a half · was known</p></div></div>
+    </div>
+    <p class="label" style="color: var(--ink-muted)">Nothing is waiting at the Casa.</p>
+  </div>
+  <div style="padding: 12px 16px 16px">
+    <a class="pb-btn" href="PlaceHome.dc.html" style="text-decoration: none; box-sizing: border-box">Start at the Mercado</a>
+  </div>
+  <nav class="pb-navbar" aria-label="Main">
+    <a class="pb-navbar__item" href="TownMap.dc.html" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></span>Town</a>
+    <a class="pb-navbar__item" href="Errands.dc.html" aria-current="page" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4" /><path d="m3 7 2 2 4-4" /><path d="M13 6h8" /><path d="M13 12h8" /><path d="M13 18h8" /></svg></span>Errands<span class="pb-navbar__dot">4</span></a>
+    <a class="pb-navbar__item" href="Progress.dc.html" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span>Progress</a>
+    <a class="pb-navbar__item" href="Phrasebook.dc.html" style="text-decoration: none"><span class="pb-navbar__pill"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></svg></span>Phrasebook</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

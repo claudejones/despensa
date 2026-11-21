@@ -1,0 +1,25 @@
+<!-- @dsCard group="Challenge" height=256 subtitle="English and icon, then the blank" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-list">
+  <div class="pb-listrow"><span class="pb-listrow__pic" data-ic="citrus"></span><span class="pb-listrow__en">limes<span class="pb-listrow__qty">half a kilo</span></span><span class="pb-slot"></span></div>
+  <div class="pb-listrow" data-result="correct"><span class="pb-listrow__pic" data-ic="banana"></span><span class="pb-listrow__en">bananas<small class="ok">Correct</small></span><span class="pb-slot pb-slot--correct"><span data-ic="check" data-size="18" data-sw="3"></span>plátanos</span></div>
+  <div class="pb-listrow" data-result="wrong"><span class="pb-listrow__pic" data-ic="carrot"></span><span class="pb-listrow__en">carrots<small class="no">Not this one</small></span><span class="pb-slot pb-slot--wrong"><span data-ic="x" data-size="18" data-sw="3"></span>manzanas</span></div>
+</div>
+</div>
+</body>
+</html>

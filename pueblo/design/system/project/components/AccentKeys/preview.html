@@ -1,0 +1,24 @@
+<!-- @dsCard group="Controls" height=184 subtitle="Try it: type with accents" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<label class="pb-field"><span class="pb-field__label">Type it in Spanish</span><input class="pb-field__input" id="t" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="carrots"></label>
+<div class="pb-keys" data-keys data-for="t" data-max="40">
+  <button class="pb-key" data-key="á">á</button><button class="pb-key" data-key="é">é</button><button class="pb-key" data-key="í">í</button><button class="pb-key" data-key="ó">ó</button><button class="pb-key" data-key="ú">ú</button><button class="pb-key" data-key="ñ">ñ</button><button class="pb-key" data-key="¿">¿</button><button class="pb-key" data-key="¡">¡</button>
+</div>
+</div>
+</body>
+</html>

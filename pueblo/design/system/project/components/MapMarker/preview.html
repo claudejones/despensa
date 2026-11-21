@@ -1,0 +1,26 @@
+<!-- @dsCard group="Navigation" height=160 subtitle="A place on the town map" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="line" style="gap:4px">
+  <div class="pb-marker" data-state="open" style="--wall:var(--wall-anil)"><div class="pb-marker__shape" data-shape="squircle" style="color:var(--card)"><span data-ic="landmark"></span></div><span class="pb-marker__name">Banco</span><span class="pb-marker__state">New</span></div>
+  <div class="pb-marker" data-state="open" style="--wall:var(--wall-ocre)"><div class="pb-marker__shape" data-shape="squircle"><span data-ic="store"></span></div><span class="pb-marker__name">Mercado</span><span class="pb-marker__state">2 of 5</span></div>
+  <div class="pb-marker" data-state="open" style="--wall:var(--wall-caribe)"><div class="pb-marker__shape" data-shape="squircle"><span data-ic="car-taxi-front"></span></div><span class="pb-marker__name">Sitio</span><span class="pb-marker__state">New</span></div>
+  <div class="pb-marker" data-state="mastered" style="--wall:var(--wall-maya)"><div class="pb-marker__shape" data-shape="sunny"><span data-ic="trees"></span></div><span class="pb-marker__name">Plaza</span><span class="pb-marker__state">Mastered</span></div>
+</div>
+</div>
+</body>
+</html>

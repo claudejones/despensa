@@ -1,0 +1,27 @@
+<!-- @dsCard group="Feedback" height=362 subtitle="Try it: syllables, stress and sound" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-card">
+  <p class="label" style="color:var(--ink-muted);margin-bottom:4px">Words on this screen</p>
+  <div class="pb-sound"><div class="pb-sound__body"><div class="pb-syl"><i>za</i><i>na</i><i class="is-stress">ho</i><i>rias</i></div><p class="pb-sound__say">sah-nah-<b>OH</b>-ryahs</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear zanahorias" data-say="zanahorias"><span data-ic="volume-2"></span></button></div>
+  <div class="pb-sound"><div class="pb-sound__body"><div class="pb-syl"><i class="is-stress">plá</i><i>ta</i><i>nos</i></div><p class="pb-sound__say"><b>PLAH</b>-tah-nohs</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear plátanos" data-say="plátanos"><span data-ic="volume-2"></span></button></div>
+  <div class="pb-sound"><div class="pb-sound__body"><div class="pb-syl"><i>ce</i><i class="is-stress">bo</i><i>llas</i></div><p class="pb-sound__say">seh-<b>BOH</b>-yahs</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear cebollas" data-say="cebollas"><span data-ic="volume-2"></span></button></div>
+</div>
+<p class="cap">The dark chip is the stressed syllable. The speaker uses your device's Spanish voice.</p>
+</div>
+</body>
+</html>
