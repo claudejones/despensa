@@ -8,7 +8,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville has continuity from staying in London and enters 4–1 after beating Philadelphia.",
+      "rationale": "Jacksonville has continuity from staying in London and enters 4\u20131 after beating Philadelphia.",
       "legs": [
         {
           "gameId": "hou-jax",
@@ -128,7 +128,7 @@
       "title": "Baltimore Ravens",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Baltimore’s returning pass rusher can exploit Cleveland’s protection problems.",
+      "rationale": "Baltimore\u2019s returning pass rusher can exploit Cleveland\u2019s protection problems.",
       "legs": [
         {
           "gameId": "bal-cle",
@@ -188,7 +188,7 @@
       "title": "Chicago Bears",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "A Williams return could improve Chicago’s passing threat against Atlanta’s depleted corners.",
+      "rationale": "A Williams return could improve Chicago\u2019s passing threat against Atlanta\u2019s depleted corners.",
       "legs": [
         {
           "gameId": "chi-atl",
@@ -308,7 +308,7 @@
       "title": "Buffalo Bills",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Buffalo’s 158 rushing yards per game faces a defense allowing 140.6.",
+      "rationale": "Buffalo\u2019s 158 rushing yards per game faces a defense allowing 140.6.",
       "legs": [
         {
           "gameId": "buf-lv",
@@ -368,7 +368,7 @@
       "title": "San Francisco 49ers",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "San Francisco’s continuity and home venue support the lean despite receiver uncertainty.",
+      "rationale": "San Francisco\u2019s continuity and home venue support the lean despite receiver uncertainty.",
       "legs": [
         {
           "gameId": "was-sf",
@@ -398,7 +398,7 @@
       "title": "Chicago Bears",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Chicago has won three of its last four and is 2–1 at home.",
+      "rationale": "Chicago has won three of its last four and is 2\u20131 at home.",
       "legs": [
         {
           "gameId": "ne-chi",
@@ -488,7 +488,7 @@
       "title": "Cleveland Browns",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Cleveland has won four of its last five, including a 13–10 win over Baltimore.",
+      "rationale": "Cleveland has won four of its last five, including a 13\u201310 win over Baltimore.",
       "legs": [
         {
           "gameId": "cle-ten",
@@ -518,7 +518,7 @@
       "title": "Minnesota Vikings",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Minnesota is 5–0 and has allowed 16 or fewer points in each of its last four games.",
+      "rationale": "Minnesota is 5\u20130 and has allowed 16 or fewer points in each of its last four games.",
       "legs": [
         {
           "gameId": "ind-min",
@@ -578,7 +578,7 @@
       "title": "Carolina Panthers",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Carolina has consecutive wins over Detroit and Philadelphia and is 3–2.",
+      "rationale": "Carolina has consecutive wins over Detroit and Philadelphia and is 3\u20132.",
       "legs": [
         {
           "gameId": "tb-car",
@@ -758,7 +758,7 @@
       "title": "Kansas City Chiefs",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Kansas City is 5–0 and held the Chargers to six points in its latest win.",
+      "rationale": "Kansas City is 5\u20130 and held the Chargers to six points in its latest win.",
       "legs": [
         {
           "gameId": "kc-sea",
@@ -946,7 +946,7 @@
     {
       "id": "2026:7:combo:E1",
       "kind": "combo",
-      "title": "Miami Dolphins — NO + Tampa Bay Buccaneers — NO",
+      "title": "Miami Dolphins \u2014 NO + Tampa Bay Buccaneers \u2014 NO",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
       "strategy": "E",
@@ -980,7 +980,7 @@
       "title": "Green Bay Packers",
       "publishedAt": "2026-10-29T08:02:24-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Narrow Green Bay home lean given Carolina’s depleted line and missing defensive starters.",
+      "rationale": "Narrow Green Bay home lean given Carolina\u2019s depleted line and missing defensive starters.",
       "legs": [
         {
           "gameId": "car-gb",
@@ -1010,7 +1010,7 @@
       "title": "Buffalo Bills",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Buffalo’s home field, bye-week rest and four wins in five games give a narrow lean.",
+      "rationale": "Buffalo\u2019s home field, bye-week rest and four wins in five games give a narrow lean.",
       "legs": [
         {
           "gameId": "bal-buf",
@@ -1100,7 +1100,7 @@
       "title": "Minnesota Vikings",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Minnesota’s recent wins have held opponents to 16 points or fewer; Detroit is missing safety Joseph.",
+      "rationale": "Minnesota\u2019s recent wins have held opponents to 16 points or fewer; Detroit is missing safety Joseph.",
       "legs": [
         {
           "gameId": "min-det",
@@ -1190,7 +1190,7 @@
       "title": "Atlanta Falcons",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Atlanta’s 29-20 win over San Francisco supports a narrow lean; Tampa Bay is missing Egbuka.",
+      "rationale": "Atlanta\u2019s 29-20 win over San Francisco supports a narrow lean; Tampa Bay is missing Egbuka.",
       "legs": [
         {
           "gameId": "atl-tb",
@@ -1280,7 +1280,7 @@
       "title": "Kansas City Chiefs",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Kansas City’s 5-1 start supports a narrow rebound lean; Denver is without Harvey and Hufanga.",
+      "rationale": "Kansas City\u2019s 5-1 start supports a narrow rebound lean; Denver is without Harvey and Hufanga.",
       "legs": [
         {
           "gameId": "kc-den",
@@ -1370,7 +1370,7 @@
       "title": "Seattle Seahawks",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Seattle’s 20-3 win over Kansas City and home field support a narrow lean.",
+      "rationale": "Seattle\u2019s 20-3 win over Kansas City and home field support a narrow lean.",
       "legs": [
         {
           "gameId": "chi-sea",
@@ -1555,7 +1555,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-11-05T08:07:41-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville lean based on recent form and Baltimore’s quarterback absences; short-week road risk remains.",
+      "rationale": "Jacksonville lean based on recent form and Baltimore\u2019s quarterback absences; short-week road risk remains.",
       "legs": [
         {
           "gameId": "jax-bal",
@@ -1645,7 +1645,7 @@
       "title": "Kansas City Chiefs",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Kansas City is 5–2 and at home. The Jets have lost three straight and will be without Garrett Wilson.",
+      "rationale": "Kansas City is 5\u20132 and at home. The Jets have lost three straight and will be without Garrett Wilson.",
       "legs": [
         {
           "gameId": "nyj-kc",
@@ -1795,7 +1795,7 @@
       "title": "Denver Broncos",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Denver has won four straight. Carolina is missing Lewis on its line and three defenders, limiting its options against a 6–2 visitor.",
+      "rationale": "Denver has won four straight. Carolina is missing Lewis on its line and three defenders, limiting its options against a 6\u20132 visitor.",
       "legs": [
         {
           "gameId": "den-car",
@@ -1855,7 +1855,7 @@
       "title": "New England Patriots",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Both teams are 5–3 and have won four of five. Home field and Green Bay’s absences on the offensive line and at edge give New England a narrow advantage.",
+      "rationale": "Both teams are 5\u20133 and have won four of five. Home field and Green Bay\u2019s absences on the offensive line and at edge give New England a narrow advantage.",
       "legs": [
         {
           "gameId": "gb-ne",
@@ -1885,7 +1885,7 @@
       "title": "San Francisco 49ers",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "San Francisco is 6–1, rested after its bye and at home. Las Vegas lost four straight before edging the Jets.",
+      "rationale": "San Francisco is 6\u20131, rested after its bye and at home. Las Vegas lost four straight before edging the Jets.",
       "legs": [
         {
           "gameId": "lv-sf",
@@ -1945,7 +1945,7 @@
       "title": "Chicago Bears",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Chicago is 6–2, has won three straight and returns home after beating Seattle 34–17. Tampa Bay is without Diaby.",
+      "rationale": "Chicago is 6\u20132, has won three straight and returns home after beating Seattle 34\u201317. Tampa Bay is without Diaby.",
       "legs": [
         {
           "gameId": "tb-chi",
@@ -1975,7 +1975,7 @@
       "title": "Buffalo Bills",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Buffalo just won 36–10 and faces a quarterback change: Minnesota says Murray will miss Monday and Wentz will start.",
+      "rationale": "Buffalo just won 36\u201310 and faces a quarterback change: Minnesota says Murray will miss Monday and Wentz will start.",
       "legs": [
         {
           "gameId": "buf-min",
@@ -2310,7 +2310,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-11-14T08:04:45-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville won its last two by a combined 75–17. Tennessee is missing Skoronski and two linebackers.",
+      "rationale": "Jacksonville won its last two by a combined 75\u201317. Tennessee is missing Skoronski and two linebackers.",
       "legs": [
         {
           "gameId": "jax-ten",
@@ -2490,7 +2490,7 @@
       "title": "San Francisco 49ers",
       "publishedAt": "2026-11-14T08:04:45-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "San Francisco is 7–1 after a 38–17 win. Dallas is missing Ferguson and has multiple defensive backs on the injury report.",
+      "rationale": "San Francisco is 7\u20131 after a 38\u201317 win. Dallas is missing Ferguson and has multiple defensive backs on the injury report.",
       "legs": [
         {
           "gameId": "sf-dal",
@@ -3004,7 +3004,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-11-21T08:03:13-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville Jaguars lean. Jacksonville won three straight, most recently 40–23. The Giants lost last week.",
+      "rationale": "Jacksonville Jaguars lean. Jacksonville won three straight, most recently 40\u201323. The Giants lost last week.",
       "legs": [
         {
           "gameId": "jax-nyg",
