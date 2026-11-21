@@ -52,14 +52,15 @@
     },
     "11": {
       "path": "2026/week-11.json",
-      "status": "preliminary",
-      "researchVersion": "2026-11-19-week11-thursday-1",
-      "dataVersion": "2026-11-19-week11-thursday-1"
+      "status": "refreshed-open",
+      "researchVersion": "2026-11-21-week11-weekend-1",
+      "dataVersion": "2026-11-21-week11-weekend-1",
+      "resultsVersion": "2026-11-21-week11-thursday-final"
     }
   },
-  "lastSuccessfulPublication": "2026-11-19T08:07:53-05:00",
-  "notice": "Week 11: all 13 games available. Thursday Houston lean; weekend picks pending.",
-  "scoresCheckedAt": "2026-11-15T23:01:44-05:00",
-  "marketsCheckedAt": "2026-11-19T08:06:39-05:00",
-  "recordsCheckedAt": "2026-11-19T08:06:02-05:00"
+  "lastSuccessfulPublication": "2026-11-21T08:05:07-05:00",
+  "notice": "Week 11: all 12 upcoming Sunday/Monday games researched; Thursday final verified. Week remains open.",
+  "scoresCheckedAt": "2026-11-21T07:57:06-05:00",
+  "marketsCheckedAt": "2026-11-21T08:03:30-05:00",
+  "recordsCheckedAt": "2026-11-21T07:57:06-05:00"
 }
