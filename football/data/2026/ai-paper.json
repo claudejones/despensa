@@ -8,7 +8,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville has continuity from staying in London and enters 4\u20131 after beating Philadelphia.",
+      "rationale": "Jacksonville has continuity from staying in London and enters 4–1 after beating Philadelphia.",
       "legs": [
         {
           "gameId": "hou-jax",
@@ -128,7 +128,7 @@
       "title": "Baltimore Ravens",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Baltimore\u2019s returning pass rusher can exploit Cleveland\u2019s protection problems.",
+      "rationale": "Baltimore’s returning pass rusher can exploit Cleveland’s protection problems.",
       "legs": [
         {
           "gameId": "bal-cle",
@@ -188,7 +188,7 @@
       "title": "Chicago Bears",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "A Williams return could improve Chicago\u2019s passing threat against Atlanta\u2019s depleted corners.",
+      "rationale": "A Williams return could improve Chicago’s passing threat against Atlanta’s depleted corners.",
       "legs": [
         {
           "gameId": "chi-atl",
@@ -308,7 +308,7 @@
       "title": "Buffalo Bills",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Buffalo\u2019s 158 rushing yards per game faces a defense allowing 140.6.",
+      "rationale": "Buffalo’s 158 rushing yards per game faces a defense allowing 140.6.",
       "legs": [
         {
           "gameId": "buf-lv",
@@ -368,7 +368,7 @@
       "title": "San Francisco 49ers",
       "publishedAt": "2026-10-17T23:00:17-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "San Francisco\u2019s continuity and home venue support the lean despite receiver uncertainty.",
+      "rationale": "San Francisco’s continuity and home venue support the lean despite receiver uncertainty.",
       "legs": [
         {
           "gameId": "was-sf",
@@ -398,7 +398,7 @@
       "title": "Chicago Bears",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Chicago has won three of its last four and is 2\u20131 at home.",
+      "rationale": "Chicago has won three of its last four and is 2–1 at home.",
       "legs": [
         {
           "gameId": "ne-chi",
@@ -488,7 +488,7 @@
       "title": "Cleveland Browns",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Cleveland has won four of its last five, including a 13\u201310 win over Baltimore.",
+      "rationale": "Cleveland has won four of its last five, including a 13–10 win over Baltimore.",
       "legs": [
         {
           "gameId": "cle-ten",
@@ -518,7 +518,7 @@
       "title": "Minnesota Vikings",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Minnesota is 5\u20130 and has allowed 16 or fewer points in each of its last four games.",
+      "rationale": "Minnesota is 5–0 and has allowed 16 or fewer points in each of its last four games.",
       "legs": [
         {
           "gameId": "ind-min",
@@ -578,7 +578,7 @@
       "title": "Carolina Panthers",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Carolina has consecutive wins over Detroit and Philadelphia and is 3\u20132.",
+      "rationale": "Carolina has consecutive wins over Detroit and Philadelphia and is 3–2.",
       "legs": [
         {
           "gameId": "tb-car",
@@ -758,7 +758,7 @@
       "title": "Kansas City Chiefs",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Kansas City is 5\u20130 and held the Chargers to six points in its latest win.",
+      "rationale": "Kansas City is 5–0 and held the Chargers to six points in its latest win.",
       "legs": [
         {
           "gameId": "kc-sea",
@@ -946,7 +946,7 @@
     {
       "id": "2026:7:combo:E1",
       "kind": "combo",
-      "title": "Miami Dolphins \u2014 NO + Tampa Bay Buccaneers \u2014 NO",
+      "title": "Miami Dolphins — NO + Tampa Bay Buccaneers — NO",
       "publishedAt": "2026-10-19T06:05:00-05:00",
       "model": "source-based-qualitative-v1",
       "strategy": "E",
@@ -980,7 +980,7 @@
       "title": "Green Bay Packers",
       "publishedAt": "2026-10-29T08:02:24-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Narrow Green Bay home lean given Carolina\u2019s depleted line and missing defensive starters.",
+      "rationale": "Narrow Green Bay home lean given Carolina’s depleted line and missing defensive starters.",
       "legs": [
         {
           "gameId": "car-gb",
@@ -1010,7 +1010,7 @@
       "title": "Buffalo Bills",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Buffalo\u2019s home field, bye-week rest and four wins in five games give a narrow lean.",
+      "rationale": "Buffalo’s home field, bye-week rest and four wins in five games give a narrow lean.",
       "legs": [
         {
           "gameId": "bal-buf",
@@ -1100,7 +1100,7 @@
       "title": "Minnesota Vikings",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Minnesota\u2019s recent wins have held opponents to 16 points or fewer; Detroit is missing safety Joseph.",
+      "rationale": "Minnesota’s recent wins have held opponents to 16 points or fewer; Detroit is missing safety Joseph.",
       "legs": [
         {
           "gameId": "min-det",
@@ -1190,7 +1190,7 @@
       "title": "Atlanta Falcons",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Atlanta\u2019s 29-20 win over San Francisco supports a narrow lean; Tampa Bay is missing Egbuka.",
+      "rationale": "Atlanta’s 29-20 win over San Francisco supports a narrow lean; Tampa Bay is missing Egbuka.",
       "legs": [
         {
           "gameId": "atl-tb",
@@ -1280,7 +1280,7 @@
       "title": "Kansas City Chiefs",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Kansas City\u2019s 5-1 start supports a narrow rebound lean; Denver is without Harvey and Hufanga.",
+      "rationale": "Kansas City’s 5-1 start supports a narrow rebound lean; Denver is without Harvey and Hufanga.",
       "legs": [
         {
           "gameId": "kc-den",
@@ -1370,7 +1370,7 @@
       "title": "Seattle Seahawks",
       "publishedAt": "2026-10-31T07:59:59-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Seattle\u2019s 20-3 win over Kansas City and home field support a narrow lean.",
+      "rationale": "Seattle’s 20-3 win over Kansas City and home field support a narrow lean.",
       "legs": [
         {
           "gameId": "chi-sea",
@@ -1555,7 +1555,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-11-05T08:07:41-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville lean based on recent form and Baltimore\u2019s quarterback absences; short-week road risk remains.",
+      "rationale": "Jacksonville lean based on recent form and Baltimore’s quarterback absences; short-week road risk remains.",
       "legs": [
         {
           "gameId": "jax-bal",
@@ -1645,7 +1645,7 @@
       "title": "Kansas City Chiefs",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Kansas City is 5\u20132 and at home. The Jets have lost three straight and will be without Garrett Wilson.",
+      "rationale": "Kansas City is 5–2 and at home. The Jets have lost three straight and will be without Garrett Wilson.",
       "legs": [
         {
           "gameId": "nyj-kc",
@@ -1795,7 +1795,7 @@
       "title": "Denver Broncos",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Denver has won four straight. Carolina is missing Lewis on its line and three defenders, limiting its options against a 6\u20132 visitor.",
+      "rationale": "Denver has won four straight. Carolina is missing Lewis on its line and three defenders, limiting its options against a 6–2 visitor.",
       "legs": [
         {
           "gameId": "den-car",
@@ -1855,7 +1855,7 @@
       "title": "New England Patriots",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Both teams are 5\u20133 and have won four of five. Home field and Green Bay\u2019s absences on the offensive line and at edge give New England a narrow advantage.",
+      "rationale": "Both teams are 5–3 and have won four of five. Home field and Green Bay’s absences on the offensive line and at edge give New England a narrow advantage.",
       "legs": [
         {
           "gameId": "gb-ne",
@@ -1885,7 +1885,7 @@
       "title": "San Francisco 49ers",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "San Francisco is 6\u20131, rested after its bye and at home. Las Vegas lost four straight before edging the Jets.",
+      "rationale": "San Francisco is 6–1, rested after its bye and at home. Las Vegas lost four straight before edging the Jets.",
       "legs": [
         {
           "gameId": "lv-sf",
@@ -1945,7 +1945,7 @@
       "title": "Chicago Bears",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Chicago is 6\u20132, has won three straight and returns home after beating Seattle 34\u201317. Tampa Bay is without Diaby.",
+      "rationale": "Chicago is 6–2, has won three straight and returns home after beating Seattle 34–17. Tampa Bay is without Diaby.",
       "legs": [
         {
           "gameId": "tb-chi",
@@ -1975,7 +1975,7 @@
       "title": "Buffalo Bills",
       "publishedAt": "2026-11-07T08:02:48-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Buffalo just won 36\u201310 and faces a quarterback change: Minnesota says Murray will miss Monday and Wentz will start.",
+      "rationale": "Buffalo just won 36–10 and faces a quarterback change: Minnesota says Murray will miss Monday and Wentz will start.",
       "legs": [
         {
           "gameId": "buf-min",
@@ -2310,7 +2310,7 @@
       "title": "Jacksonville Jaguars",
       "publishedAt": "2026-11-14T08:04:45-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "Jacksonville won its last two by a combined 75\u201317. Tennessee is missing Skoronski and two linebackers.",
+      "rationale": "Jacksonville won its last two by a combined 75–17. Tennessee is missing Skoronski and two linebackers.",
       "legs": [
         {
           "gameId": "jax-ten",
@@ -2490,7 +2490,7 @@
       "title": "San Francisco 49ers",
       "publishedAt": "2026-11-14T08:04:45-05:00",
       "model": "source-based-qualitative-v1",
-      "rationale": "San Francisco is 7\u20131 after a 38\u201317 win. Dallas is missing Ferguson and has multiple defensive backs on the injury report.",
+      "rationale": "San Francisco is 7–1 after a 38–17 win. Dallas is missing Ferguson and has multiple defensive backs on the injury report.",
       "legs": [
         {
           "gameId": "sf-dal",
@@ -2727,6 +2727,490 @@
       "archivedAt": "2026-11-19T13:07:53.167945+00:00",
       "archiveMode": "prospective",
       "researchVersion": "2026-11-19-week11-thursday-1"
+    },
+    {
+      "id": "2026:11:single:mia-buf",
+      "kind": "single",
+      "title": "Buffalo Bills",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Buffalo Bills lean. Buffalo has won five straight and hosts a Miami team with one win in its last five.",
+      "legs": [
+        {
+          "gameId": "mia-buf",
+          "team": "Buffalo Bills",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "8-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22MIABUF-BUF",
+        "capturedAt": "2026-11-21T08:03:18-05:00",
+        "price": 0.92,
+        "payout": 2.1739130434782608,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:no-chi",
+      "kind": "single",
+      "title": "Chicago Bears",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Chicago Bears lean. Chicago has won four straight; New Orleans has lost three of five and is missing three offensive linemen.",
+      "legs": [
+        {
+          "gameId": "no-chi",
+          "team": "Chicago Bears",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22NOCHI-CHI",
+        "capturedAt": "2026-11-21T08:03:18-05:00",
+        "price": 0.85,
+        "payout": 2.3529411764705883,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:ten-dal",
+      "kind": "single",
+      "title": "Dallas Cowboys",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Dallas Cowboys lean. Dallas has won two of four; Tennessee has lost three straight. Dallas scored 40 in its last game.",
+      "legs": [
+        {
+          "gameId": "ten-dal",
+          "team": "Dallas Cowboys",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "4-6-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22TENDAL-DAL",
+        "capturedAt": "2026-11-21T08:03:18-05:00",
+        "price": 0.77,
+        "payout": 2.5974025974025974,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:tb-det",
+      "kind": "single",
+      "title": "Detroit Lions",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Detroit Lions lean. Detroit has won five straight and hosts Tampa Bay with Baker Mayfield questionable.",
+      "legs": [
+        {
+          "gameId": "tb-det",
+          "team": "Detroit Lions",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22TBDET-DET",
+        "capturedAt": "2026-11-21T08:03:23-05:00",
+        "price": 0.7,
+        "payout": 2.857142857142857,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:ari-kc",
+      "kind": "single",
+      "title": "Kansas City Chiefs",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Kansas City Chiefs lean. Kansas City won its last two by 23 and 22 points; Arizona lost its last two by 14 and 28.",
+      "legs": [
+        {
+          "gameId": "ari-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22ARIKC-KC",
+        "capturedAt": "2026-11-21T08:03:23-05:00",
+        "price": 0.92,
+        "payout": 2.1739130434782608,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:pit-phi",
+      "kind": "single",
+      "title": "Pittsburgh Steelers",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Pittsburgh Steelers lean. Pittsburgh won four of five while Philadelphia lost five straight.",
+      "legs": [
+        {
+          "gameId": "pit-phi",
+          "team": "Pittsburgh Steelers",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "6-3-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22PITPHI-PIT",
+        "capturedAt": "2026-11-21T08:03:23-05:00",
+        "price": 0.66,
+        "payout": 3.0303030303030303,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:bal-car",
+      "kind": "single",
+      "title": "Carolina Panthers",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Carolina Panthers lean. Carolina won last week; Baltimore lost five straight and is missing Nnamdi Madubuike and Marlon Humphrey.",
+      "legs": [
+        {
+          "gameId": "bal-car",
+          "team": "Carolina Panthers",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "4-5-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22BALCAR-CAR",
+        "capturedAt": "2026-11-21T08:03:23-05:00",
+        "price": 0.59,
+        "payout": 3.3898305084745766,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:nyj-lac",
+      "kind": "single",
+      "title": "Los Angeles Chargers",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Los Angeles Chargers lean. Los Angeles ended its losing streak last week; the Jets lost five straight. Home field provides a small qualitative edge.",
+      "legs": [
+        {
+          "gameId": "nyj-lac",
+          "team": "Los Angeles Chargers",
+          "side": "YES",
+          "kickoff": "2026-11-22T16:05:00-05:00",
+          "record": "1-8-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22NYJLAC-LAC",
+        "capturedAt": "2026-11-21T08:03:27-05:00",
+        "price": 0.61,
+        "payout": 3.278688524590164,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:lv-den",
+      "kind": "single",
+      "title": "Denver Broncos",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Denver Broncos lean. Denver won five straight while Las Vegas lost four of five.",
+      "legs": [
+        {
+          "gameId": "lv-den",
+          "team": "Denver Broncos",
+          "side": "YES",
+          "kickoff": "2026-11-22T16:25:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22LVDEN-DEN",
+        "capturedAt": "2026-11-21T08:03:27-05:00",
+        "price": 0.83,
+        "payout": 2.4096385542168677,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:jax-nyg",
+      "kind": "single",
+      "title": "Jacksonville Jaguars",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Jacksonville Jaguars lean. Jacksonville won three straight, most recently 40–23. The Giants lost last week.",
+      "legs": [
+        {
+          "gameId": "jax-nyg",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "kickoff": "2026-11-22T16:25:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22JACNYG-JAC",
+        "capturedAt": "2026-11-21T08:03:27-05:00",
+        "price": 0.71,
+        "payout": 2.8169014084507045,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:min-sf",
+      "kind": "single",
+      "title": "San Francisco 49ers",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "San Francisco 49ers lean. San Francisco won four of five and scored 46 last week. Minnesota is without Kyler Murray and Jordan Addison.",
+      "legs": [
+        {
+          "gameId": "min-sf",
+          "team": "San Francisco 49ers",
+          "side": "YES",
+          "kickoff": "2026-11-22T20:20:00-05:00",
+          "record": "8-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV22MINSF-SF",
+        "capturedAt": "2026-11-21T08:03:27-05:00",
+        "price": 0.62,
+        "payout": 3.2258064516129035,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:single:cin-wsh",
+      "kind": "single",
+      "title": "Cincinnati Bengals",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Cincinnati Bengals lean. Cincinnati won five straight, scoring at least 31 in each. Joe Burrow practiced fully Friday.",
+      "legs": [
+        {
+          "gameId": "cin-wsh",
+          "team": "Cincinnati Bengals",
+          "side": "YES",
+          "kickoff": "2026-11-23T20:15:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV23CINWAS-CIN",
+        "capturedAt": "2026-11-21T08:03:30-05:00",
+        "price": 0.73,
+        "payout": 2.73972602739726,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:combo:A2",
+      "kind": "combo",
+      "title": "Chicago and Denver",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "A",
+      "legs": [
+        {
+          "gameId": "no-chi",
+          "team": "Chicago Bears",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "7-2-0"
+        },
+        {
+          "gameId": "lv-den",
+          "team": "Denver Broncos",
+          "side": "YES",
+          "kickoff": "2026-11-22T16:25:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:combo:B1",
+      "kind": "combo",
+      "title": "Detroit and Kansas City",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "B",
+      "legs": [
+        {
+          "gameId": "tb-det",
+          "team": "Detroit Lions",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "7-2-0"
+        },
+        {
+          "gameId": "ari-kc",
+          "team": "Kansas City Chiefs",
+          "side": "YES",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:combo:C1",
+      "kind": "combo",
+      "title": "Jacksonville to Cincinnati",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "C",
+      "legs": [
+        {
+          "gameId": "jax-nyg",
+          "team": "Jacksonville Jaguars",
+          "side": "YES",
+          "kickoff": "2026-11-22T16:25:00-05:00",
+          "record": "7-2-0"
+        },
+        {
+          "gameId": "cin-wsh",
+          "team": "Cincinnati Bengals",
+          "side": "YES",
+          "kickoff": "2026-11-23T20:15:00-05:00",
+          "record": "7-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:11:combo:E1",
+      "kind": "combo",
+      "title": "Miami NO and New Orleans NO",
+      "publishedAt": "2026-11-21T08:03:13-05:00",
+      "model": "source-based-qualitative-v1",
+      "strategy": "E",
+      "legs": [
+        {
+          "gameId": "mia-buf",
+          "team": "Miami Dolphins",
+          "side": "NO",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "1-8-0"
+        },
+        {
+          "gameId": "no-chi",
+          "team": "New Orleans Saints",
+          "side": "NO",
+          "kickoff": "2026-11-22T13:00:00-05:00",
+          "record": "3-6-0"
+        }
+      ],
+      "season": 2026,
+      "week": 11,
+      "stake": 2,
+      "quote": null,
+      "archivedAt": "2026-11-21T08:05:07.593158-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-21-week11-weekend-1"
     }
   ]
 }
