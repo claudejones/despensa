@@ -4,7 +4,7 @@ Working title. A mobile-first game set in a Yucatán-peninsula town, where you l
 
 - Design system: https://claude.ai/artifact/HJzmVnaVs5aQFM2pMs2jxL
 - Screens: https://claude.ai/artifact/L7kiab86wXSpqT2R3GNbgN
-- Research notes: `docs/research-m3.md`. Art notes: `art/README.md`. Market word list: `content/mercado.json`.
+- Research notes: `docs/research-m3.md`. Art notes: `art/README.md`. Market word list: `content/mercado.json`. Plan: `docs/production-plan.md`.
 
 Marks used below: **Decided** (you said so), **Proposed** (my design, not yet confirmed by you), **VERIFY** (unproven; must be checked before it is relied on).
 
@@ -20,7 +20,7 @@ Marks used below: **Decided** (you said so), **Proposed** (my design, not yet co
 
 ## 2. The town
 
-Eight places, each with one townsperson, one wall colour and one signature challenge. **Decided:** the eight places. **Proposed:** the characters' names and each signature challenge.
+Eight places, each with one townsperson, one wall colour and one signature challenge. **Decided:** the eight places and the characters' names. **Proposed:** each signature challenge.
 
 | Place | Character | Signature challenge | What it trains |
 |---|---|---|---|
@@ -28,7 +28,7 @@ Eight places, each with one townsperson, one wall colour and one signature chall
 | Restaurante | Luis | Order from a Spanish-only menu under a dietary rule | Dishes, drinks, polite requests |
 | Sitio (taxi stand) | Don Beto | Tell the driver where to go, agree the fare, give directions | Places, directions, fares |
 | Clínica | Dra. Morales | Say what hurts and since when; follow the dose | Body, symptoms, time spans |
-| Casa | Lupita | Plan the day's tasks; name what is in each room | Rooms, furniture, polite commands |
+| Casa | Doña Lupe | Plan the day's tasks; name what is in each room | Rooms, furniture, polite commands |
 | Plaza | Don Chucho | Tell the time; small talk | Time, greetings, weather |
 | Escuela | Maestra Elena | Split a word into syllables and find the stress | Sounds, letters, reading |
 | Banco | Don Rafael | Key in an amount you hear | Large numbers, money |
@@ -56,7 +56,7 @@ List length is a difficulty setting: 3 items on a first visit, then 4, 5, 6 and 
 ## 4. Help
 
 - **Subtitles.** English under what a character says, shown with the Spanish. On by default; a setting turns them off. They apply to dialogue only. **Decided.**
-- **Open question for you:** in number challenges the subtitle currently hides the amount ("That comes to ··· pesos"), because showing it gives the answer away. Keep it hidden, or show it?
+- In number challenges (Pay, Banco) the subtitle hides only the amount: "That comes to ··· pesos". It is shown after a wrong try. Everywhere else subtitles are complete. **Decided.**
 - **Pronunciation drawer.** The Abc button opens a drawer listing every Spanish word on screen with its syllables, the stressed one marked, a sound-it-out spelling and a speaker. Free, and hidden in listening challenges. **Decided** in principle; layout **Proposed.**
 - **Hints.** The lightbulb decodes the line word by word and gives one clue. Costs 5 pesos. Off during a check. **Proposed.**
 - **Info tips.** An info button explains a game idea the first time it appears.
@@ -113,12 +113,12 @@ Off-script moments (an item is sold out, the price changed, a stranger greets yo
 
 ## 8. Economy
 
-**Proposed.**
+**Decided:** a trip's budget is separate from savings. The rest is **Proposed.**
 
 - You earn pesos by finishing challenges (about $20 to $35), passing checks, and replying to people in the street ($2).
 - A shopping trip's budget is given for that trip and is not taken from your savings, so practising never makes you poorer.
 - Hints cost $5 from savings.
-- Savings buy things for your home. Each item is a Spanish noun and appears in the room with its name, so your home shows your vocabulary. Lupita's tasks then refer to your own things.
+- Savings buy things for your home. Each item is a Spanish noun and appears in the room with its name, so your home shows your vocabulary. Doña Lupe's tasks then refer to your own things.
 - No real money, no ads, no timers that sell skips.
 - First build: one room and about a dozen items. More rooms later.
 - An avatar is out of scope for the first build. If added later: pick from ready-made characters and recolour them. **Decided** as the simple version.
@@ -173,7 +173,6 @@ Off-script moments (an item is sold out, the price changed, a stranger greets yo
 
 ## 15. Open decisions for you
 
-1. Hide or show the amount in subtitles during number challenges (section 4).
-2. The character names in section 2.
-3. The economy rule that a trip's budget is separate from savings (section 8).
-4. A name for the game.
+1. A name for the game. "Pueblo" stays as the placeholder.
+
+Settled on 2026-11-21: the amount is hidden in subtitles during number challenges; the eight character names (the cleaner is Doña Lupe, addressed with usted like everyone else); a trip's budget is separate from savings.

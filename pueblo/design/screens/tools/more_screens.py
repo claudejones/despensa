@@ -254,7 +254,7 @@ page('Clinica','Clínica: say what hurts', topbar('Clínica')+steps(1,3)+encount
     <div class="pb-list">
 '''+row(ic('frown'),'My head hurts','<span class="pb-slot pb-slot--filled" style="font-size: 16px; line-height: 24px">Me duele la cabeza</span>')+row(ic('zap'),'I have a fever',EMPTY)+row(ic('clock'),'Since yesterday',EMPTY)+'''    </div>
 '''+tiles(['Tengo fiebre','Desde ayer','Me duele el estómago','Desde hace una semana'],'What you can say'))+footer('Check','Clinica'))
-page('Casa','Casa: plan the day', topbar('Casa')+steps(1,3)+encounter('casa','Lupita','¿Qué hago hoy?','What shall I do today?')+body('''    <p class="body">Drag what to ask her.</p>
+page('Casa','Casa: plan the day', topbar('Casa')+steps(1,3)+encounter('casa','Doña Lupe','¿Qué hago hoy?','What shall I do today?')+body('''    <p class="body">Drag what to ask her.</p>
     <div class="pb-list">
 '''+row(ic('utensils'),'Clean the kitchen',EMPTY)+row(ic('house'),'Wash the sheets','<span class="pb-slot pb-slot--filled" style="font-size: 16px; line-height: 24px">Lave las sábanas</span>')+row(ic('x'),'Not the bathroom today',EMPTY)+'''    </div>
 '''+tiles(['Limpie la cocina','El baño no, gracias','Barra la sala'],'What you can say'))+footer('Check','Casa'))
