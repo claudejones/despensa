@@ -1,0 +1,61 @@
+<!-- @dsCard group="Foundations" height=1170 width=960 page subtitle="Three faces, nine styles" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 660px; }
+  section { margin-bottom: 40px; } section:last-child { margin-bottom: 0; }
+  .meta { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .panel { background: var(--card); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-soft); }
+
+  .row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--outline-soft); }
+  .row:first-of-type { border-top: 0; }
+  .row b { font-size: 16px; line-height: 24px; font-weight: 800; display: block; }
+  .faces { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+  .face { border-radius: var(--radius-xl); padding: 16px; background: var(--cal-low); }
+  .face .big { font-size: 44px; line-height: 52px; }
+</style>
+</head>
+<body>
+<div class="pb board">
+  <section>
+    <h2>Three faces</h2>
+    <p class="lede">A sign-painter face for place names, a pixel face for what townspeople say, and a rounded face for everything else. All three carry Spanish accents and opening marks.</p>
+    <div class="faces">
+      <div class="face"><div class="big" style="font-family:var(--font-rotulo)">¡Añil!</div><p class="meta">Lilita One · place names only</p></div>
+      <div class="face"><div class="big" style="font-family:var(--font-pixel)">¿Qué?</div><p class="meta">Pixelify Sans · dialogue only</p></div>
+      <div class="face"><div class="big" style="font-family:var(--font-ui);font-weight:900">Señor</div><p class="meta">Nunito · the interface</p></div>
+    </div>
+  </section>
+  <section>
+    <h2>The styles</h2>
+    <p class="lede">Sizes and line heights are Material 3's own steps. Spanish you are learning is always set at word size or larger.</p>
+    <div class="panel" id="rows"></div>
+  </section>
+</div>
+<script>
+(function () {
+  var S = [
+    ['rotulo-large', 'rotulo', '36 / 44', 'Mercado de la Plaza'],
+    ['rotulo-small', 'rotulo', '24 / 32', 'Banco · Clínica · Escuela'],
+    ['headline', 'ui', '24 / 32 · 900', 'Your shopping list'],
+    ['word', 'ui', '22 / 28 · 800', 'zanahorias · plátanos · jitomates'],
+    ['dialogue', 'pixel', '22 / 28', '¿Qué va a llevar? Son ciento veinte pesos.'],
+    ['title', 'ui', '16 / 24 · 800', 'carrots · Go back to town'],
+    ['body', 'ui', '16 / 24 · 400', 'Drag the Spanish word to each item on your list.'],
+    ['label', 'ui', '14 / 20 · 700', 'What would you like? · Correct · Not this one'],
+    ['label-small', 'ui', '12 / 16 · 700', 'Placeholder scene · 3 of 8']
+  ];
+  document.getElementById('rows').innerHTML = S.map(function (s) {
+    return '<div class="row"><div><b>' + s[0] + '</b><span class="meta">' + s[2] + '</span></div><div class="' + s[0] + '">' + s[3] + '</div></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

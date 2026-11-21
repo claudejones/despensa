@@ -1,0 +1,83 @@
+<!-- @dsCard group="Foundations" height=820 width=960 page subtitle="Radius scale, shapes and the morph" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 660px; }
+  section { margin-bottom: 40px; } section:last-child { margin-bottom: 0; }
+  .meta { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .panel { background: var(--card); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-soft); }
+
+  .radii { display: grid; grid-template-columns: repeat(9, 1fr); gap: 10px; }
+  .radii div { height: 84px; background: var(--cobalto-container); color: var(--on-cobalto-container); display: grid; place-items: center; text-align: center; font-size: 12px; line-height: 16px; font-weight: 700; }
+  .set { display: flex; gap: 16px; flex-wrap: wrap; }
+  .set figure { margin: 0; text-align: center; }
+  .set .s { width: 88px; height: 88px; background: var(--ink); margin-bottom: 6px; }
+  .mast { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ladder { display: flex; gap: 20px; align-items: center; }
+  .ladder figure { margin: 0; text-align: center; }
+  .ladder figcaption { margin-top: 6px; }
+  .live { display: flex; align-items: center; gap: 20px; }
+  .live .pb-token { width: 120px; height: 120px; font-size: 14px; line-height: 20px; }
+  .live p { font-size: 16px; line-height: 24px; letter-spacing: .5px; }
+  .word { font-size: 22px; line-height: 28px; font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="pb board">
+  <section>
+    <h2>Corner radius scale</h2>
+    <p class="lede">Material 3's ten steps. Controls take their corners from this scale and nowhere else.</p>
+    <div class="radii" id="radii"></div>
+  </section>
+  <section>
+    <h2>The shape set</h2>
+    <p class="lede">Seven shapes for things that are mostly visual: word tokens, place emblems, celebration. Never for a container that holds a sentence. Each is sampled at the same number of points, so any one can morph into any other.</p>
+    <div class="set" id="set"></div>
+  </section>
+  <section>
+    <h2>The shape is the state</h2>
+    <p class="lede">Every Spanish word has a token. Its shape tells you how well you know it, and it changes back when the word starts to slip. The state word always appears with it.</p>
+    <div class="mast">
+      <div class="panel"><div class="ladder" id="ladder"></div></div>
+      <div class="panel">
+        <div class="live">
+          <div class="pb-token" id="tok" data-state="new" data-shape="circle">New</div>
+          <div>
+            <p class="word">zanahorias</p>
+            <p style="margin:4px 0 12px">Press the button to see it morph.</p>
+            <button class="pb-btn pb-btn--small" id="go">Practise this word</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+(function () {
+  var R = [['xs', 4], ['sm', 8], ['md', 12], ['lg', 16], ['lg-inc', 20], ['xl', 28], ['xl-inc', 32], ['xxl', 48], ['full', 999]];
+  document.getElementById('radii').innerHTML = R.map(function (r) {
+    return '<div style="border-radius:var(--radius-' + r[0] + ')">' + r[0] + '<br>' + (r[1] === 999 ? 'full' : r[1] + 'px') + '</div>';
+  }).join('');
+  document.getElementById('set').innerHTML = Pueblo.shapes.map(function (s) {
+    return '<figure><div class="s" data-shape="' + s + '"></div><figcaption class="meta">' + s + '</figcaption></figure>';
+  }).join('');
+  document.getElementById('ladder').innerHTML = Pueblo.MASTERY.map(function (m) {
+    return '<figure><div class="pb-token" data-state="' + m.id + '" data-shape="' + m.shape + '">' + m.label + '</div><figcaption class="meta">' + m.shape + '</figcaption></figure>';
+  }).join('');
+  Pueblo.applyShapes();
+  var i = 0, tok = document.getElementById('tok');
+  document.getElementById('go').addEventListener('click', function () {
+    i = (i + 1) % Pueblo.MASTERY.length; var m = Pueblo.MASTERY[i];
+    tok.dataset.state = m.id; tok.textContent = m.label; tok.style.clipPath = Pueblo.shape(m.shape);
+  });
+})();
+</script>
+</body>
+</html>

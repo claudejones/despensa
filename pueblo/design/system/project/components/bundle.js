@@ -8,3 +8,24 @@ function hydrate(root){(root||document).querySelectorAll("[data-ic]").forEach(fu
 window.Pueblo={icons:ICONS,icon:icon,hydrate:hydrate};
 if(document.readyState!=="loading")hydrate();else document.addEventListener("DOMContentLoaded",function(){hydrate();});
 })();
+
+/* Shapes: Pueblo own polar shapes, every one sampled at the same point count so any two morph with a clip-path transition.
+   Not the Material shape library (Google does not publish it for web); drawn in its manner. */
+(function(){
+var N=96;
+function tri(x){x=x/(2*Math.PI);x=x-Math.floor(x);return 1-4*Math.abs(x-0.5);}
+var F={
+ circle:function(a){return 1;},
+ squircle:function(a){var c=Math.abs(Math.cos(a)),s=Math.abs(Math.sin(a));return Math.min(1.16,1/Math.pow(Math.pow(c,4)+Math.pow(s,4),0.25))*0.86;},
+ clover:function(a){return 0.80+0.20*Math.cos(4*a);},
+ flower:function(a){return 0.72+0.28*Math.abs(Math.cos(3*a));},
+ cookie:function(a){return 0.91+0.09*Math.cos(9*a);},
+ sunny:function(a){return 0.86+0.14*tri(12*a);},
+ burst:function(a){return 0.78+0.22*tri(8*a);}
+};
+function shape(name){var f=F[name]||F.circle,p=[];for(var i=0;i<N;i++){var a=i/N*2*Math.PI-Math.PI/2,r=f(a)*50;p.push((50+r*Math.cos(a)).toFixed(2)+"% "+(50+r*Math.sin(a)).toFixed(2)+"%");}return "polygon("+p.join(",")+")";}
+function applyShapes(root){(root||document).querySelectorAll("[data-shape]").forEach(function(el){el.style.clipPath=shape(el.getAttribute("data-shape"));});}
+window.Pueblo.shape=shape;window.Pueblo.shapes=Object.keys(F);window.Pueblo.applyShapes=applyShapes;
+window.Pueblo.MASTERY=[{id:"new",label:"New",shape:"circle"},{id:"learning",label:"Learning",shape:"clover"},{id:"familiar",label:"Familiar",shape:"cookie"},{id:"known",label:"Known",shape:"sunny"}];
+if(document.readyState!=="loading")applyShapes();else document.addEventListener("DOMContentLoaded",function(){applyShapes();});
+})();

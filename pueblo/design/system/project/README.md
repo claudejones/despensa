@@ -18,7 +18,8 @@ Five colours have five jobs. Keep each job on its colour and never lend the colo
 
 - Set place names in `rotulo-large` or `rotulo-small`. Nothing else uses the rótulo face.
 - Set what a townsperson says in `dialogue`, inside the dialogue box only.
-- Set everything else in the interface styles: `headline`, `title`, `body`, `label`.
+- Set Spanish you are learning in `word` or larger: tiles, filled slots, the primary button.
+- Set everything else in the interface styles: `headline`, `title`, `body`, `label`, `label-small`. Never set Spanish content in `label-small`.
 - Spanish game content always shows its accents and opening marks: ¿ ¡ á é í ó ú ü ñ.
 
 ## The picture rule
@@ -29,6 +30,8 @@ A picture or icon sits only beside the English. Spanish answers are text only. I
 
 - Controls use the radius scale. Buttons are `radius-full`, cards and the scene window `radius-xl`, tiles `radius-md`.
 - Things you move (tiles, coins, sliders) use the spatial springs in `bundle.css` and may overshoot. Colour and opacity use the effects springs and never bounce.
+- Use the shape set (`Pueblo.shape(name)` or `data-shape`) for word tokens, place emblems and celebration only, never for a container that holds a sentence.
+- A word's mastery token changes shape with its state: circle for new, clover for learning, cookie for familiar, sunny for known. Always show the state word with it.
 - One hero moment per screen.
 - Respect reduced motion: replace every spring with a plain change.
 

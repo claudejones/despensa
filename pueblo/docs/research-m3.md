@@ -11,7 +11,7 @@ Read live on 2026-11-21 from m3.material.io. Design system artifact: https://cla
 | /styles/motion/overview/specs | Read. Web curve conversions (below). |
 | /styles/shape/corner-radius-scale | Read. Ten-step scale. |
 | /styles/shape/shape-morph | Read. Web: "not currently available". |
-| /styles/typography/type-scale-tokens | Partly read. Guidance yes; per-style sizes sit in collapsed tables, NOT captured. |
+| /styles/typography/type-scale-tokens | Read, tables expanded. Sizes/line heights: display 57/64, 45/52, 36/44; headline 32/40, 28/36, 24/32; title 22/28, 16/24, 14/20; body 16/24, 14/20, 12/16; label 14/20, 12/16, 11/16. Emphasized weights 500 or 700. |
 | /foundations/usability/applying-m-3-expressive | Read. Worked example (Aura app). |
 | /develop/web | Read. Material Web in maintenance mode; M3 Expressive not implemented on web. |
 | /blog/building-with-m3-expressive | Read. Announcement, 13 May 2025. |
@@ -28,7 +28,11 @@ Not yet read: every component page, layout (window size classes; the old URL 404
 
 ## Applied from memory (verify)
 
-- Interface type sizes 24/32, 18/24, 16/24, 14/20 are chosen near the M3 scale; the exact M3 token values were not captured.
+- None. Type sizes now use the captured M3 steps.
+
+## Own work, not Material's
+
+- The seven morphable shapes are Pueblo's own polar shapes, morphed with a clip-path polygon transition. Google does not publish its shape library for web.
 
 ## Other verified platform facts (2026-11-21)
 

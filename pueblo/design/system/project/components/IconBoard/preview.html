@@ -1,0 +1,66 @@
+<!-- @dsCard group="Foundations" height=900 width=960 page subtitle="Lucide, embedded" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 660px; }
+  section { margin-bottom: 40px; } section:last-child { margin-bottom: 0; }
+  .meta { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .panel { background: var(--card); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-soft); }
+
+  .map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .m { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: var(--radius-lg); padding: 12px; box-shadow: var(--shadow-soft); }
+  .m .i { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--cal-low); display: grid; place-items: center; flex: none; }
+  .m b { font-size: 16px; line-height: 24px; font-weight: 800; display: block; }
+  .all { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; }
+  .all div { background: var(--cal-low); border-radius: var(--radius-md); padding: 10px 4px 6px; display: grid; justify-items: center; gap: 4px; }
+  .all span.n { font-size: 11px; line-height: 14px; font-weight: 700; color: var(--ink-muted); text-align: center; word-break: break-word; }
+  .nav { display: flex; background: var(--cal-low); border-radius: var(--radius-xl); padding: 8px; max-width: 412px; }
+  .nav div { flex: 1; display: grid; justify-items: center; gap: 2px; padding: 6px 0; font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .nav .on { color: var(--ink); }
+  .nav .pill { width: 64px; height: 32px; border-radius: var(--radius-full); display: grid; place-items: center; }
+  .nav .on .pill { background: var(--cobalto-container); color: var(--on-cobalto-container); }
+</style>
+</head>
+<body>
+<div class="pb board">
+  <section>
+    <h2>Places</h2>
+    <p class="lede">One icon per place, used on the map, in the top bar and in lists. Icons are one colour, ink, unless they sit on a status colour. No emoji anywhere.</p>
+    <div class="map" id="places"></div>
+  </section>
+  <section>
+    <h2>Navigation</h2>
+    <p class="lede">Four destinations in the bottom bar. It hides during a challenge.</p>
+    <div class="nav" id="nav"></div>
+  </section>
+  <section>
+    <h2>The set in the bundle</h2>
+    <p class="lede">Thirty icons so far, embedded as SVG with no network call. More are added as screens need them.</p>
+    <div class="all" id="all"></div>
+  </section>
+</div>
+<script>
+(function () {
+  var P = [['store', 'Mercado', 'Market'], ['utensils', 'Restaurante', 'Restaurant'], ['car-taxi-front', 'Sitio', 'Taxi stand'], ['cross', 'Clínica', 'Clinic and pharmacy'],
+           ['house', 'Casa', 'Home'], ['trees', 'Plaza', 'Plaza'], ['school', 'Escuela', 'School'], ['landmark', 'Banco', 'Bank']];
+  document.getElementById('places').innerHTML = P.map(function (p) {
+    return '<div class="m"><span class="i">' + Pueblo.icon(p[0], 24) + '</span><div><b>' + p[1] + '</b><span class="meta">' + p[2] + ' · ' + p[0] + '</span></div></div>';
+  }).join('');
+  var N = [['map', 'Town', 1], ['list-checks', 'Errands'], ['sparkles', 'Progress'], ['book-open', 'Phrasebook']];
+  document.getElementById('nav').innerHTML = N.map(function (n) {
+    return '<div class="' + (n[2] ? 'on' : '') + '"><span class="pill">' + Pueblo.icon(n[0], 22) + '</span>' + n[1] + '</div>';
+  }).join('');
+  document.getElementById('all').innerHTML = Object.keys(Pueblo.icons).map(function (k) {
+    return '<div>' + Pueblo.icon(k, 24) + '<span class="n">' + k + '</span></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

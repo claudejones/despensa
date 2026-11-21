@@ -1,0 +1,71 @@
+<!-- @dsCard group="Foundations" height=780 width=960 page subtitle="Six springs" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 660px; }
+  section { margin-bottom: 40px; } section:last-child { margin-bottom: 0; }
+  .meta { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .panel { background: var(--card); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-soft); }
+
+  .tracks { display: grid; gap: 10px; }
+  .track { display: grid; grid-template-columns: 220px 1fr; gap: 16px; align-items: center; }
+  .track b { font-size: 16px; line-height: 24px; font-weight: 800; display: block; }
+  .lane { height: 56px; border-radius: var(--radius-full); background: var(--cal-low); position: relative; }
+  .dot { position: absolute; left: 4px; top: 4px; width: 48px; height: 48px; border-radius: var(--radius-full); background: var(--cobalto); }
+  .on .dot { left: calc(100% - 52px); }
+  .fx .dot { left: calc(50% - 24px); background: var(--cal-container); }
+  .fx.on .dot { background: var(--cobalto); left: calc(50% - 24px); }
+  .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .rules div { background: var(--cal-low); border-radius: var(--radius-xl); padding: 16px; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: .1px; }
+  .rules b { display: block; font-size: 16px; line-height: 24px; font-weight: 800; margin-bottom: 4px; }
+  .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+</style>
+</head>
+<body>
+<div class="pb board">
+  <section>
+    <div class="head">
+      <div><h2>Springs</h2>
+      <p class="lede">Google's own web conversions of the Material 3 Expressive springs. Things that move may overshoot. Colour never bounces.</p></div>
+      <button class="pb-btn pb-btn--small" id="play" style="margin-bottom:20px">Play</button>
+    </div>
+    <div class="panel"><div class="tracks" id="tracks"></div></div>
+  </section>
+  <section>
+    <h2>Where each one goes</h2>
+    <div class="rules">
+      <div><b>Fast</b>Small things: a tile picked up, a button pressed, a coin dropped.</div>
+      <div><b>Default</b>Part of the screen: a sheet rising, a word landing in its blank, a token morphing.</div>
+      <div><b>Slow</b>The whole screen: entering a place, the one hero moment.</div>
+    </div>
+  </section>
+</div>
+<script>
+(function () {
+  var T = [
+    ['spring-spatial-fast', 'Spatial fast', '350 ms · overshoots', 0],
+    ['spring-spatial', 'Spatial default', '500 ms · overshoots', 0],
+    ['spring-spatial-slow', 'Spatial slow', '650 ms · overshoots', 0],
+    ['spring-effects-fast', 'Effects fast', '150 ms · colour, no bounce', 1],
+    ['spring-effects', 'Effects default', '200 ms · colour, no bounce', 1],
+    ['spring-effects-slow', 'Effects slow', '300 ms · colour, no bounce', 1]
+  ];
+  var el = document.getElementById('tracks');
+  el.innerHTML = T.map(function (t) {
+    return '<div class="track"><div><b>' + t[1] + '</b><span class="meta">' + t[2] + '</span></div>' +
+      '<div class="lane' + (t[3] ? ' fx' : '') + '"><div class="dot" style="transition:left var(--' + t[0] + '),background var(--' + t[0] + ')"></div></div></div>';
+  }).join('');
+  document.getElementById('play').addEventListener('click', function () {
+    el.querySelectorAll('.lane').forEach(function (l) { l.classList.toggle('on'); });
+  });
+})();
+</script>
+</body>
+</html>

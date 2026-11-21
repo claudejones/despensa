@@ -26,19 +26,21 @@
   width: 100%; min-height: 64px; padding: 0 var(--space-6);
   border-radius: var(--radius-full);
   background: var(--cobalto); color: var(--on-cobalto);
-  font-family: var(--font-ui); font-size: 18px; line-height: 24px; font-weight: 800;
+  font-family: var(--font-ui); font-size: 22px; line-height: 28px; font-weight: 800;
   transition: border-radius var(--spring-spatial-fast), transform var(--spring-spatial-fast), background var(--spring-effects);
 }
 .pb-btn:active { border-radius: var(--radius-xl-inc); transform: scale(0.97); }
 .pb-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .pb-btn--tonal { background: var(--cobalto-container); color: var(--on-cobalto-container); }
+.pb-btn--small { min-height: 48px; width: auto; font-size: 16px; line-height: 24px; letter-spacing: 0.15px; padding: 0 var(--space-6); }
+.pb-btn[disabled] { background: var(--cal-container); color: var(--ink-muted); cursor: default; }
 
 /* Spanish word tile: text only, never a picture. */
 .pb-tile {
   display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   background: var(--cobalto-container); color: var(--on-cobalto-container);
-  font-size: 18px; line-height: 24px; font-weight: 800;
+  font-size: 22px; line-height: 28px; font-weight: 800;
   transition: transform var(--spring-spatial-fast), border-radius var(--spring-spatial-fast);
 }
 .pb-tile:active { transform: scale(1.06) rotate(-2deg); border-radius: var(--radius-lg-inc); }
@@ -49,7 +51,7 @@
   min-width: 132px; min-height: 48px; padding: 0 var(--space-3);
   border-radius: var(--radius-lg);
   border: 2px dashed var(--outline); background: var(--cal-container);
-  font-size: 18px; line-height: 24px; font-weight: 800; color: var(--ink-muted);
+  font-size: 22px; line-height: 28px; font-weight: 800; color: var(--ink-muted);
 }
 .pb-slot--filled { border: 2px solid transparent; background: var(--cobalto-container); color: var(--on-cobalto-container); }
 .pb-slot--correct { border: 2px solid transparent; background: var(--nopal); color: var(--on-nopal); }
@@ -69,9 +71,20 @@
   background: var(--card); border-radius: var(--radius-lg-inc); padding: var(--space-3) var(--space-4);
   box-shadow: var(--shadow-soft);
 }
-.pb-dialogue__es { font-family: var(--font-pixel); font-size: 20px; line-height: 26px; color: var(--ink); }
-.pb-dialogue__en { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--ink-muted); margin-top: 2px; }
+.pb-dialogue__es { font-family: var(--font-pixel); font-size: 22px; line-height: 28px; color: var(--ink); }
+.pb-dialogue__en { font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: 0.1px; color: var(--ink-muted); margin-top: 2px; }
+
+/* Mastery token: the shape is the state. Always paired with the state word. */
+.pb-token {
+  width: 72px; height: 72px; display: grid; place-items: center; flex: none;
+  font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.5px; text-align: center;
+  background: var(--cal-container); color: var(--ink-muted);
+  transition: clip-path var(--spring-spatial), background var(--spring-effects), color var(--spring-effects);
+}
+.pb-token[data-state="learning"] { background: var(--outline-soft); color: var(--ink); }
+.pb-token[data-state="familiar"] { background: var(--ink-muted); color: var(--card); }
+.pb-token[data-state="known"] { background: var(--ink); color: var(--card); }
 
 @media (prefers-reduced-motion: reduce) {
-  .pb-btn, .pb-tile { transition: none; }
+  .pb-btn, .pb-tile, .pb-token { transition: none; }
 }
