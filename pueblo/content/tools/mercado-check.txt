@@ -29,6 +29,7 @@ ok | cereza | la | cereza | s f | Fruto comestible del cerezo, redondo y liso, d
 ok | higo | el | higo | s m, pl | Fruto de la higuera, de forma semejante a la de una pera, pero más pequeño, blando, con una piel fina y delgada de color verde, morado o negro; su pulpa de colo
 ok | granada | la | granada | s f | Fruto del granado, globoso, de 10 cm de diámetro y con una corteza delgada de color amarillo rojizo, que encierra gran cantidad de granos rojos, dulces y jugoso
 ok | chabacano | el | chabacano | s m, adj | (Prunus armeniaca) Árbol frutal pequeño de la familia de las rosáceas, de corteza rojiza, flores rosadas y fruto amarillo rojizo
+no headword | nectarina | la | - |  | 
 ok | tuna | la | tuna | s f | Fruto carnoso del nopal, planta de la familia de las cactáceas, que mide entre 3 y 8 cm; es de forma globosa o ligeramente ovoide y su pulpa es de color verde, 
 ok | pitahaya | la | pitahaya | s f | Pitaya
 ok | mamey | el | mamey | s m | Fruto comestible de forma ovoide de 8 a 20 cm de largo, de cáscara café rojiza, quebradiza, rasposa y fácilmente desprendible; pulpa de color rojo anaranjado o 

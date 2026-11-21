@@ -779,6 +779,23 @@
    }
   },
   {
+   "id": "nectarina",
+   "es": "nectarina",
+   "article": "la",
+   "plural": "nectarinas",
+   "en": "nectarine",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "note": "Not in the Diccionario del español de México; a standard word elsewhere.",
+   "price": {
+    "pesos": 100,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   }
+  },
+  {
    "id": "tuna",
    "es": "tuna",
    "article": "la",

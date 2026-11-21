@@ -39,6 +39,7 @@ export const GROUPS = {
     ['higo', 'el', 'higos', 'fig', 'kilo', 2, [120, P], null, 'higo', ''],
     ['granada', 'la', 'granadas', 'pomegranate', 'pieza', 2, [25, P], null, 'granada', ''],
     ['chabacano', 'el', 'chabacanos', 'apricot', 'kilo', 2, [90, P], null, 'chabacano', 'The Mexican word; elsewhere albaricoque.'],
+    ['nectarina', 'la', 'nectarinas', 'nectarine', 'kilo', 2, [100, P], null, null, 'Not in the Diccionario del español de México; a standard word elsewhere.'],
     ['tuna', 'la', 'tunas', 'prickly pear', 'kilo', 2, [35, P], null, 'tuna', 'The cactus fruit. The fish is atún.'],
     ['pitahaya', 'la', 'pitahayas', 'dragon fruit', 'pieza', 2, [40, P], null, 'pitahaya', 'Also spelled pitaya.'],
     ['mamey', 'el', 'mameyes', 'mamey', 'kilo', 2, [60, P], null, 'mamey', ''],
