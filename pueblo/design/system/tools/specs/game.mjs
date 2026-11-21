@@ -247,6 +247,74 @@ b.addEventListener('click', function () { var off = d.getAttribute('data-subtitl
     },
   },
   {
+    name: 'Pronunciation', group: 'Feedback', height: 420, subtitle: 'Try it: syllables, stress and sound',
+    html: `
+<div class="pb-card">
+  <p class="label" style="color:var(--ink-muted);margin-bottom:4px">Words on this screen</p>
+  <div class="pb-sound"><div class="pb-sound__body"><div class="pb-syl"><i>za</i><i>na</i><i class="is-stress">ho</i><i>rias</i></div><p class="pb-sound__say">sah-nah-<b>OH</b>-ryahs</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear zanahorias" data-say="zanahorias"><span data-ic="volume-2"></span></button></div>
+  <div class="pb-sound"><div class="pb-sound__body"><div class="pb-syl"><i class="is-stress">plá</i><i>ta</i><i>nos</i></div><p class="pb-sound__say"><b>PLAH</b>-tah-nohs</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear plátanos" data-say="plátanos"><span data-ic="volume-2"></span></button></div>
+  <div class="pb-sound"><div class="pb-sound__body"><div class="pb-syl"><i>ce</i><i class="is-stress">bo</i><i>llas</i></div><p class="pb-sound__say">seh-<b>BOH</b>-yahs</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear cebollas" data-say="cebollas"><span data-ic="volume-2"></span></button></div>
+</div>
+<p class="cap">The dark chip is the stressed syllable. The speaker uses your device's Spanish voice.</p>`,
+    doc: {
+      sum: 'A pronunciation row shows how one Spanish word is said: its syllables, which one is stressed, a sound-it-out spelling and a speaker button.',
+      use: ['The pronunciation drawer, opened with the Abc button on any screen that shows Spanish.', 'The phrasebook.', 'Beside the target line in a say-it-aloud challenge.'],
+      not: ['Listening challenges, where reading the word would defeat the task.', 'Giving meaning. It never shows the English.'],
+      anatomy: ['Syllable chips in `word` style on `cal-low`; the stressed syllable is `ink` with `card` text.', 'Sound-it-out spelling in `label`, the stressed part in capitals.', 'Speaker icon button.', 'In the drawer: one row for each Spanish word on screen, tiles first, then the line just spoken.'],
+      place: 'In a bottom sheet on a phone, and a side sheet on a wide screen, where it can stay open beside the challenge.',
+      states: ['Rest.', 'Speaking: the chips light up one at a time as the word is said.'],
+      motion: 'Each chip takes the fast effects spring as it is spoken.',
+      do: ['Keep it free. It tells how a word sounds, not what it means.', 'Offer a slower speed.'],
+      dont: ['Mark stress with colour alone; the sound-it-out spelling capitalises it too.', 'Use the five job colours for the chips.'],
+      a11y: ['Each speaker button names its word.', 'Stress is shown by tone and by capitals.', 'Chips are text and can be read by a screen reader as one word.'],
+      provide: 'For each word: its syllables, the index of the stressed one, the sound-it-out spelling and the text to speak.',
+      source: OWN,
+    },
+  },
+  {
+    name: 'AnswerLine', group: 'Challenge', height: 330, subtitle: 'Tiles arranged into a sentence',
+    html: `
+<p class="cap">I would like half a kilo of limes, please.</p>
+<div class="pb-answer"><span class="pb-tile">Quisiera</span><span class="pb-tile">medio kilo</span><span class="pb-tile">de</span></div>
+<div class="pb-tray"><span class="pb-tray__label">Your words</span><span class="pb-tile">limones</span><span class="pb-tile">por favor</span><span class="pb-tile">un</span><span class="pb-tile">tomates</span></div>`,
+    doc: {
+      sum: 'An answer line is the space where the player arranges tiles, in order, into a Spanish sentence.',
+      use: ['Building a sentence from an English prompt.', 'Ordering syllables at the school.'],
+      not: ['Matching single words to a list. Use blank slots.'],
+      anatomy: ['Zone: `card` with a 2px dashed `outline` border, `radius-lg`, at least two rows of tiles high.', 'Tiles sit in the order placed and can be dragged to reorder.', 'The tile tray beneath holds the remaining words, with one or two that do not belong.'],
+      place: 'Under the English prompt, above the tile tray.',
+      states: ['Empty.', 'Filling.', 'Correct: `nopal-container` with a solid border.', 'Wrong: `cochinilla-container`; the misplaced tiles shake once.'],
+      motion: 'Tiles make room for a dragged tile with the fast spatial spring.',
+      do: ['Accept every correct word order, not just one.'],
+      dont: ['Show the number of blanks; that gives away the sentence length.'],
+      a11y: ['Tap a tile to add it to the end; tap it in the line to send it back.', 'The result is announced in words.'],
+      provide: 'The English prompt, the tiles, and every accepted order.',
+      source: OWN,
+    },
+  },
+  {
+    name: 'ChatBubble', group: 'Dialogue', height: 230, subtitle: 'What has been said so far',
+    html: `
+<div class="pb-chat">
+  <div class="pb-bubble"><small>Doña Carmen</small>Aquí tiene sus limones.</div>
+  <div class="pb-bubble pb-bubble--you"><small>You</small>Gracias.</div>
+  <div class="pb-bubble"><small>Doña Carmen</small>¿Algo más?</div>
+</div>`,
+    doc: {
+      sum: 'Chat bubbles keep the earlier lines of a conversation on screen so the player can follow the thread.',
+      use: ['Conversations of more than two turns.'],
+      not: ['The current line. That is in the encounter, with its speaker button.'],
+      anatomy: ['Theirs: `card`, at the left. Yours: `cobalto-container`, at the right.', 'Speaker name in `label-small`, the line in `title`.', 'At most the last three lines; older ones scroll away.'],
+      place: 'Between the encounter and the reply tiles.',
+      motion: 'A new bubble rises in with the default spatial spring.',
+      do: ['Show your own lines as you said them.'],
+      dont: ['Add English to past bubbles during a check.'],
+      a11y: ['Read in order as a list of who said what.'],
+      provide: 'The lines so far and who said each.',
+      source: OWN,
+    },
+  },
+  {
     name: 'CelebrationBanner', group: 'Feedback', height: 250, subtitle: 'Papel picado for a passed check',
     html: `
 <div class="pb-fiesta" id="f">

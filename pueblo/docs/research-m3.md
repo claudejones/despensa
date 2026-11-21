@@ -88,3 +88,6 @@ Each component's README ends with a Source section naming the Material component
 - The canvas boards are checked by rendering their markup locally with the design system's styles (not through the canvas runtime).
 - Canvas now has 18 boards: the market trip, three overlay boards, set-up, errands, progress, phrasebook, achievements, and an expressions board. The town map is painted, with a label under each building; the suggested next place has a cobalt label.
 - Set-up asks "Which forms should Spanish use for you?" (cansado / cansada) rather than asking for gender, and the greeting on that screen changes with the answer.
+- Canvas now has 35 boards. Added: pronunciation drawer, arrival, street encounter, typing, sentence building, conversation (the check), say-it-aloud, two-player set-up, pause, test panel, and one signature challenge for each of Sitio, Restaurante, Clínica, Casa, Plaza, Escuela and Banco. Boards after the first twelve are written by `design/screens/tools/more_screens.py`.
+- New components: Pronunciation, Answer line, Chat bubble. Owner confirmed on 2026-11-21 that dragging tiles works on their phone.
+- The written spec is `specs/SPEC.md`.

@@ -153,6 +153,142 @@
    "h": 280,
    "title": "Character expressions (test art)",
    "radius": 16
+  },
+  "SoundDrawer.dc.html": {
+   "x": 0,
+   "y": 4560,
+   "w": 390,
+   "h": 844,
+   "title": "Pronunciation drawer",
+   "radius": 28
+  },
+  "Arrival.dc.html": {
+   "x": 470,
+   "y": 4560,
+   "w": 390,
+   "h": 844,
+   "title": "3 Arrival",
+   "radius": 28
+  },
+  "StreetEncounter.dc.html": {
+   "x": 940,
+   "y": 4560,
+   "w": 390,
+   "h": 844,
+   "title": "6 Street encounter",
+   "radius": 28
+  },
+  "Typing.dc.html": {
+   "x": 1410,
+   "y": 4560,
+   "w": 390,
+   "h": 844,
+   "title": "9 Typing",
+   "radius": 28
+  },
+  "SentenceBuild.dc.html": {
+   "x": 1880,
+   "y": 4560,
+   "w": 390,
+   "h": 844,
+   "title": "9e Build a sentence",
+   "radius": 28
+  },
+  "Conversation.dc.html": {
+   "x": 0,
+   "y": 5524,
+   "w": 390,
+   "h": 844,
+   "title": "9f Conversation (the check)",
+   "radius": 28
+  },
+  "SayAloud.dc.html": {
+   "x": 470,
+   "y": 5524,
+   "w": 390,
+   "h": 844,
+   "title": "9g Say it aloud",
+   "radius": 28
+  },
+  "TwoPlayer.dc.html": {
+   "x": 940,
+   "y": 5524,
+   "w": 390,
+   "h": 844,
+   "title": "16 Two-player set-up",
+   "radius": 28
+  },
+  "Pause.dc.html": {
+   "x": 1410,
+   "y": 5524,
+   "w": 390,
+   "h": 844,
+   "title": "18 Pause",
+   "radius": 28
+  },
+  "TestPanel.dc.html": {
+   "x": 1880,
+   "y": 5524,
+   "w": 390,
+   "h": 844,
+   "title": "19 Test panel",
+   "radius": 28
+  },
+  "Sitio.dc.html": {
+   "x": 0,
+   "y": 6768,
+   "w": 390,
+   "h": 844,
+   "title": "Sitio · tell the driver",
+   "radius": 28
+  },
+  "Restaurante.dc.html": {
+   "x": 470,
+   "y": 6768,
+   "w": 390,
+   "h": 844,
+   "title": "Restaurante · order from the menu",
+   "radius": 28
+  },
+  "Clinica.dc.html": {
+   "x": 940,
+   "y": 6768,
+   "w": 390,
+   "h": 844,
+   "title": "Clínica · say what hurts",
+   "radius": 28
+  },
+  "Casa.dc.html": {
+   "x": 1410,
+   "y": 6768,
+   "w": 390,
+   "h": 844,
+   "title": "Casa · plan the day",
+   "radius": 28
+  },
+  "Plaza.dc.html": {
+   "x": 1880,
+   "y": 6768,
+   "w": 390,
+   "h": 844,
+   "title": "Plaza · what time is it",
+   "radius": 28
+  },
+  "Escuela.dc.html": {
+   "x": 0,
+   "y": 7732,
+   "w": 390,
+   "h": 844,
+   "title": "Escuela · sound it out",
+   "radius": 28
+  },
+  "Banco.dc.html": {
+   "x": 470,
+   "y": 7732,
+   "w": 390,
+   "h": 844,
+   "title": "Banco · key in the amount",
+   "radius": 28
   }
  },
  "order": [
@@ -173,7 +309,24 @@
   "Progress.dc.html",
   "Phrasebook.dc.html",
   "Achievements.dc.html",
-  "Expressions.dc.html"
+  "Expressions.dc.html",
+  "SoundDrawer.dc.html",
+  "Arrival.dc.html",
+  "StreetEncounter.dc.html",
+  "Typing.dc.html",
+  "SentenceBuild.dc.html",
+  "Conversation.dc.html",
+  "SayAloud.dc.html",
+  "TwoPlayer.dc.html",
+  "Pause.dc.html",
+  "TestPanel.dc.html",
+  "Sitio.dc.html",
+  "Restaurante.dc.html",
+  "Clinica.dc.html",
+  "Casa.dc.html",
+  "Plaza.dc.html",
+  "Escuela.dc.html",
+  "Banco.dc.html"
  ],
  "notes": {
   "heading": {
@@ -204,6 +357,28 @@
    "text": "Around the town: set-up, errands, progress, phrasebook, achievements",
    "kind": "title1",
    "maxW": 2270
+  },
+  "more": {
+   "x": 0,
+   "y": 4280,
+   "text": "The rest of the game: help, new ways to answer, and the system screens",
+   "kind": "title1",
+   "maxW": 2270
+  },
+  "places": {
+   "x": 0,
+   "y": 6488,
+   "text": "One signature challenge for each of the other seven places",
+   "kind": "title1",
+   "maxW": 2270
+  },
+  "portraits": {
+   "x": 940,
+   "y": 7732,
+   "w": 390,
+   "text": "The dark blocks stand in for characters who have not been drawn yet. Only Doña Carmen has art so far.",
+   "size": "m",
+   "fill": "orange"
   }
  },
  "designSystems": [
@@ -211,8 +386,8 @@
    "title": "Pueblo Design System",
    "namespace": "pueblo",
    "artifact": "https://claude.ai/artifact/HJzmVnaVs5aQFM2pMs2jxL",
-   "version": "1795239629-e38c",
-   "copiedAt": "2026-11-21T05:40:42Z"
+   "version": "1795241933-d8d5",
+   "copiedAt": "2026-11-21T06:19:06Z"
   }
  ]
 }
