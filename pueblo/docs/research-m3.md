@@ -51,3 +51,20 @@ Not yet read: every component page, layout (window size classes; the old URL 404
 - English subtitles on dialogue: shown with the Spanish, on by default, can be switched off.
 - Picture rule: pictures beside English only; Spanish answers are text only.
 - Working title "Pueblo" is a placeholder.
+
+## Component pages (read live 2026-11-21)
+
+Specs, guidelines and accessibility tabs read for: sliders, bottom sheets, dialogs, navigation bar, app bars, buttons, button groups, icon buttons, chips, switch, progress indicators, loading indicator, snackbar, text fields, tooltips, cards, lists, badges. All loaded.
+
+Not readable on those pages (shown as graphics): most corner radii in token tables, type-style names, measurement diagrams. Where a radius was not readable, Pueblo's own scale value is used and the component's Source note says so.
+
+Key numbers applied: button M 56 high / S 40 high with pressed corners 12 / 8; connected button group 2 gap, 8 inner corners, 4 pressed; icon button 40 and 56 with 24 icon; flexible navigation bar 64 high with 56x32 indicator; small app bar 64; switch 52x32 with 16/24/28 handle; slider XS 16 track, 4x44 handle, 6 gap; bottom sheet 32x4 handle, 640 max; dialog 28 corners, 280-560 wide, 24 padding; snackbar 48; text field 56; list item 72 two-line; loading indicator 38 in 48; rich tooltip padding 12/8/16.
+
+Each component's README ends with a Source section naming the Material component it follows and every deliberate departure.
+
+## How the design system is built
+
+- `design/system/project/` is what is published to the artifact.
+- `design/system/tools/specs/*.mjs` hold every component's preview and guidelines; `node tools/gen-components.mjs` writes them.
+- `design/system/src/behaviours.js` plus the Lucide icons become `bundle.js` via `node tools/build-bundle.mjs <lucide-static/icons>`.
+- Render check and interaction tests were run with Playwright from the session scratchpad; they are not yet saved in the repository.

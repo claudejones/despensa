@@ -28,7 +28,7 @@ A picture or icon sits only beside the English. Spanish answers are text only. I
 
 ## Shape and motion
 
-- Controls use the radius scale. Buttons are `radius-full`, cards and the scene window `radius-xl`, tiles `radius-md`.
+- Controls use the radius scale. Buttons are `radius-full` and square off to a 12 corner when pressed; cards and the scene window are `radius-xl`; tiles `radius-md`.
 - Things you move (tiles, coins, sliders) use the spatial springs in `bundle.css` and may overshoot. Colour and opacity use the effects springs and never bounce.
 - Use the shape set (`Pueblo.shape(name)` or `data-shape`) for word tokens, place emblems and celebration only, never for a container that holds a sentence.
 - A word's mastery token changes shape with its state: circle for new, clover for learning, cookie for familiar, sunny for known. Always show the state word with it.
@@ -39,6 +39,15 @@ A picture or icon sits only beside the English. Spanish answers are text only. I
 
 - Characters and scenes are pixel art inside the scene window.
 - Controls, sheets and progress are Material. No pixels in a button, no Material shapes inside a scene.
+
+## Building a screen
+
+- Follow the scaffold top to bottom: top bar, scene window, dialogue box, the challenge, one primary button. The bottom bar hides during a challenge.
+- One filled cobalt button per screen, 56 high, at the bottom.
+- Every touch target is at least 48 high, even where the visible control is 40.
+- Hints and results rise in a bottom sheet. Use a dialog only to confirm something that cannot be undone.
+- State the amount, the quantity or the request in Spanish in the dialogue box; the player answers with tiles, the slider, coins, the number pad or the typing field.
+- Each component's own page says where it follows Material 3 and where it departs.
 
 ## Iconography
 

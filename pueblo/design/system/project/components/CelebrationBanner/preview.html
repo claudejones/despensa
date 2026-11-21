@@ -1,0 +1,33 @@
+<!-- @dsCard group="Feedback" height=258 subtitle="Papel picado for a passed check" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-fiesta" id="f">
+  <div class="pb-fiesta__string" id="s"></div>
+  <p class="pb-fiesta__es">¡Lo lograste!</p>
+  <p class="pb-fiesta__en">You can shop at the market on your own.</p>
+</div>
+<div class="line"><button class="pb-btn pb-btn--small pb-btn--tonal" id="again"><span data-ic="rotate-ccw" data-size="20"></span>Play it again</button></div>
+</div>
+<script>
+(function () {
+var C = ['wall-rosa','wall-ocre','wall-caribe','wall-purpura','wall-jade','wall-anil','wall-terracota','wall-rosa'], s = document.getElementById('s');
+function draw() { s.innerHTML = C.map(function (c) { return '<i class="pb-fiesta__flag" style="background:var(--' + c + ')"></i>'; }).join(''); }
+draw(); document.getElementById('again').addEventListener('click', draw);
+})();
+</script>
+</body>
+</html>

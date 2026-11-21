@@ -1,0 +1,27 @@
+<!-- @dsCard group="Feedback" height=198 subtitle="A short explanation on request" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="line"><span class="pb-chip"><span data-ic="timer" data-size="18"></span>Patience</span><button class="pb-iconbtn" aria-label="What is patience?" id="b"><span data-ic="info"></span></button></div>
+<div class="pb-tip" id="t" role="tooltip"><p class="pb-tip__title">Patience</p><p class="pb-tip__text">Doña Carmen will only wait so long. Answer before the pips run out, or switch timing off in Settings.</p></div>
+</div>
+<script>
+(function () {
+var t = document.getElementById('t'); document.getElementById('b').addEventListener('click', function () { t.hidden = !t.hidden; });
+})();
+</script>
+</body>
+</html>

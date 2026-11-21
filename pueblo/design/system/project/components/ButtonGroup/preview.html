@@ -1,0 +1,36 @@
+<!-- @dsCard group="Controls" height=192 subtitle="Try it: one choice among a few" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<p class="cap">How did saying it go?</p>
+<div class="pb-group" role="group" aria-label="How did it go">
+  <button class="pb-group__btn" aria-pressed="false"><span data-ic="frown" data-size="20"></span>Missed</button>
+  <button class="pb-group__btn" aria-pressed="true"><span data-ic="meh" data-size="20"></span>Almost</button>
+  <button class="pb-group__btn" aria-pressed="false"><span data-ic="smile" data-size="20"></span>Got it</button>
+</div>
+<p class="cap">Speaking as</p>
+<div class="pb-group" role="group" aria-label="Speaking as" style="max-width:240px">
+  <button class="pb-group__btn" aria-pressed="true">él</button><button class="pb-group__btn" aria-pressed="false">ella</button>
+</div>
+</div>
+<script>
+(function () {
+document.querySelectorAll('.pb-group').forEach(function (g) { g.addEventListener('click', function (e) { var b = e.target.closest('.pb-group__btn'); if (!b) return;
+  g.querySelectorAll('.pb-group__btn').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); }); });
+})();
+</script>
+</body>
+</html>

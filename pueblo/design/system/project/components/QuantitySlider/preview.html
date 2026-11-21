@@ -1,0 +1,34 @@
+<!-- @dsCard group="Challenge" height=266 subtitle="Try it: you need a kilo and a half" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-talk"><div class="pb-dialogue"><p class="pb-dialogue__es">¿Cuánto le doy?</p><p class="pb-dialogue__en">How much shall I give you?</p></div></div>
+<p class="cap">Your list says: a kilo and a half of tomatoes</p>
+<div class="pb-slider" id="q">
+  <div class="pb-slider__value" aria-live="polite"></div>
+  <div class="pb-slider__rail"><div class="pb-slider__track"></div><input type="range" min="0" max="4" step="1" value="1" aria-label="Quantity"><div class="pb-slider__handle"></div></div>
+  <div class="pb-slider__stops"><span>¼</span><span>½</span><span>1</span><span>1½</span><span>2</span></div>
+</div>
+</div>
+<script>
+(function () {
+var S = ['un cuarto de kilo', 'medio kilo', 'un kilo', 'kilo y medio', 'dos kilos'], q = document.getElementById('q'), i = q.querySelector('input'), v = q.querySelector('.pb-slider__value');
+function set() { q.style.setProperty('--pct', (i.value / i.max * 100) + '%'); v.textContent = S[i.value]; }
+i.addEventListener('input', set); set();
+})();
+</script>
+</body>
+</html>

@@ -22,7 +22,7 @@
   .z2 { height: 150px; background: var(--wall-ocre); color: var(--ink); }
   .z3 { height: 56px; background: var(--cal-container); margin: -24px 14px 0; position: relative; }
   .z4 { flex: 1; background: var(--cal-low); }
-  .z5 { height: 56px; border-radius: var(--radius-full); background: var(--cobalto); color: var(--on-cobalto); }
+  .z5 { height: 52px; border-radius: var(--radius-full); background: var(--cobalto); color: var(--on-cobalto); }
   .z6 { height: 52px; background: var(--cal-low); border: 2px dashed var(--outline); }
   .notes { display: grid; gap: 10px; }
   .notes div { background: var(--cal-low); border-radius: var(--radius-lg); padding: 12px 16px; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: .1px; }
@@ -30,10 +30,10 @@
   .states { display: grid; grid-template-columns: 150px repeat(4, 1fr); gap: 12px 16px; align-items: center; }
   .states .h { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
   .states b { font-size: 16px; line-height: 24px; font-weight: 800; }
-  .pressed.pb-btn { border-radius: var(--radius-xl-inc); transform: scale(.97); }
   .pressed.pb-tile { transform: scale(1.06) rotate(-2deg); border-radius: var(--radius-lg-inc); }
   .focus { outline: 3px solid var(--ink); outline-offset: 3px; }
   .states .pb-btn { min-height: 48px; font-size: 16px; line-height: 24px; }
+  .pressed.pb-btn { border-radius: var(--radius-md); transform: none; }
   .states .pb-slot { min-width: 0; width: 100%; }
 </style>
 </head>
@@ -53,7 +53,7 @@
       </div>
       <div class="notes">
         <div><b>Size classes</b>Compact under 600 wide: the layout shown. Medium 600 to 839 and expanded 840 and up: the same column centred at 480, with the town map beside it on expanded.</div>
-        <div><b>Gutters and targets</b>16 at the sides. Every touch target is at least 48 high. The primary button is 64.</div>
+        <div><b>Gutters and targets</b>16 at the sides. Every touch target is at least 48 high. The primary button is 56, Material's medium size.</div>
         <div><b>One hero per screen</b>The scene and its character are the hero. Everything else stays flat and quiet.</div>
         <div><b>Shadow</b>One soft ambient shadow, on cards and the dialogue box only. Separation comes from tone first.</div>
         <div><b>Sheets and dialogs</b>A bottom sheet for hints and results. A dialog only to confirm something you cannot undo, such as resetting progress.</div>

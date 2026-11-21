@@ -1,0 +1,25 @@
+<!-- @dsCard group="Containers" height=260 subtitle="One setting per row" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-card" style="padding:0">
+  <div class="pb-setrow"><span data-ic="captions"></span><div class="pb-setrow__body"><p class="pb-setrow__title">English subtitles</p><p class="pb-setrow__text">Show the English under what people say.</p></div><label class="pb-switch"><input type="checkbox" checked aria-label="English subtitles"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+  <div class="pb-setrow"><span data-ic="timer"></span><div class="pb-setrow__body"><p class="pb-setrow__title">Timed replies</p><p class="pb-setrow__text">People lose patience if you take too long.</p></div><label class="pb-switch"><input type="checkbox" aria-label="Timed replies"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+  <div class="pb-setrow"><span data-ic="volume-2"></span><div class="pb-setrow__body"><p class="pb-setrow__title">Voice speed</p><p class="pb-setrow__text">Slower</p></div><span data-ic="chevron-right"></span></div>
+</div>
+</div>
+</body>
+</html>

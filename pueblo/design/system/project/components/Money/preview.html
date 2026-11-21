@@ -1,0 +1,38 @@
+<!-- @dsCard group="Challenge" height=442 subtitle="Try it: pay 145 pesos" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-talk"><div class="pb-dialogue"><p class="pb-dialogue__es">Son ciento cuarenta y cinco pesos.</p><p class="pb-dialogue__en">That's 145 pesos.</p></div></div>
+<div class="pb-till" id="till">
+  <div class="pb-till__head"><span>On the counter</span><b data-paid>$0</b></div>
+  <div class="pb-till__zone pb-till__zone--counter" data-counter></div>
+  <div class="pb-till__head"><span>Your wallet</span></div>
+  <div class="pb-till__zone" data-wallet>
+    <span class="pb-note" data-value="100">100</span><span class="pb-note" data-value="50">50</span><span class="pb-note" data-value="20">20</span><span class="pb-note" data-value="20">20</span>
+    <span class="pb-coin" data-value="10">10</span><span class="pb-coin" data-value="5">5</span><span class="pb-coin pb-coin--sm" data-value="2">2</span><span class="pb-coin pb-coin--sm" data-value="1">1</span>
+  </div>
+</div>
+<p class="cap" id="msg">Tap notes and coins to put them on the counter.</p>
+</div>
+<script>
+(function () {
+var t = document.getElementById('till'), msg = document.getElementById('msg');
+t.addEventListener('pb-change', function (e) { var p = e.detail.paid; msg.textContent = p === 145 ? 'Exact. No change needed.' : p > 145 ? 'Your change would be $' + (p - 145) + '.' : 'Tap notes and coins to put them on the counter.'; });
+Pueblo.pay(t);
+})();
+</script>
+</body>
+</html>

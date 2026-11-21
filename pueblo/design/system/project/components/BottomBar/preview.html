@@ -1,0 +1,32 @@
+<!-- @dsCard group="Navigation" height=110 subtitle="Four destinations" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<nav class="pb-navbar" style="margin:0 -16px" aria-label="Main" id="n">
+  <button class="pb-navbar__item" aria-current="page"><span class="pb-navbar__pill" data-ic="map"></span>Town</button>
+  <button class="pb-navbar__item"><span class="pb-navbar__pill" data-ic="list-checks"></span>Errands<span class="pb-navbar__dot">4</span></button>
+  <button class="pb-navbar__item"><span class="pb-navbar__pill" data-ic="sparkles"></span>Progress</button>
+  <button class="pb-navbar__item"><span class="pb-navbar__pill" data-ic="book-open"></span>Phrasebook</button>
+</nav>
+</div>
+<script>
+(function () {
+var n = document.getElementById('n');
+n.addEventListener('click', function (e) { var b = e.target.closest('.pb-navbar__item'); if (!b) return; n.querySelectorAll('.pb-navbar__item').forEach(function (x) { x.removeAttribute('aria-current'); }); b.setAttribute('aria-current', 'page'); });
+})();
+</script>
+</body>
+</html>
