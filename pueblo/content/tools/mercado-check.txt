@@ -1,0 +1,99 @@
+ok | aguacate | el | aguacate | s m | Fruto comestible que tiene forma oval, cáscara verde, verdinegra o negra, con una sola semilla en forma de huevo y pulpa verdosa y suave. Es muy apreciado por s
+ok | plátano | el | plátano | s m | Fruto comestible en forma de baya, casi cilíndrico, largo y ligeramente arqueado, que crece en racimos que se agrupan en torno a un eje y forman la penca. Su cá
+ok | manzana | la | manzana | s f | Fruto del manzano, comestible, de forma redondeada con una hendidura en cada uno de sus polos; su cáscara es delgada, de color rojo, amarillo o verdoso, y su pu
+ok | pera | la | pera | s f | Fruto del peral, comestible, de forma más o menos cónica, y redondeado en la parte inferior, que es la más ancha; su cáscara es delgada, de color verde amarille
+ok | durazno | el | durazno | s m | Fruto comestible, redondo, carnoso y de sabor dulce. Su color depende de la variedad de la planta de que procede: los hay amarillos con manchas rojizas, y de di
+ok | piña | la | piña | s f | Fruto comestible de forma oval que mide aproximadamente 20 cm de largo, de pulpa amarilla, jugosa y aromática; su cáscara es dura, llena de pequeñas salientes y
+ok | limón | el | limón | s m | Fruto del limonero, de color amarillo o verde, esférico, de 4 a 6 cm de diámetro, con una pequeña saliente en su base, de pulpa jugosa y ácida reunida en diez g
+head noun only | limón amarillo | el | limón | s m | Fruto del limonero, de color amarillo o verde, esférico, de 4 a 6 cm de diámetro, con una pequeña saliente en su base, de pulpa jugosa y ácida reunida en diez g
+ok | naranja | la | naranja | s f, adj m y f y s m | Fruta redonda de color amarillo rojizo, que mide de 8 a 10 cm de diámetro y cuya pulpa, jugosa y agridulce, está encerrada en gajos contenidos a su vez en una c
+ok | mandarina | la | mandarina | s f | Fruta redonda y ligeramente achatada, de color naranja por dentro y por fuera, de cáscara gruesa, cuya pulpa, jugosa y aromática, está contenida en gajos:
+ok | toronja | la | toronja | s f | Fruta redonda, de 10 a 15 cm de diámetro, de cáscara gruesa verde o amarillo claro, y pulpa jugosa en gajos del color amarillo claro o rosa, de sabor agridulce 
+ok | lima | la | lima | s f | Fruta parecida al limón, pero de mayor tamaño, que tiene la cáscara gruesa, lisa, de color amarillento verdoso, y una tetilla o saliente muy abultada en una de 
+ok | sandía | la | sandía | s f | Fruta de gran tamaño, de forma casi esférica u ovoide, que llega a pesar hasta 18 kg; de cáscara dura, muy gruesa, lisa y brillante, de color verde, a veces ray
+ok | melón | el | melón | s m, adj | Fruto comestible de forma casi esférica, de distintas variedades, que mide entre 20 y 25 cm de diámetro, de cáscara gruesa, rugosa o lisa, de color amarillento,
+ok | papaya | la | papaya | s f | Fruto comestible de forma oblonga, que mide de 20 a 40 cm de largo; su cáscara es de color verde amarillento y su pulpa carnosa, generalmente amarilla o anaranj
+ok | mango | el | mango | s m, s m y f | Parte por donde se agarra un instrumento, una herramienta, un arma, etc:
+ok | fresa | la | fresa | s f, adj m y f | Fruta pequeña de color rojo y forma de corazón, con granitos en toda su superficie, de tres a cinco centímetros de largo, de sabor agridulce y aroma agradable. 
+ok | arándano | el | arándano | s m | (Vaccinium myrtillus) Arbusto de la familia de la ericáceas, de ramas angulosas, hojas alternas, flores blancas o rosadas y fruto en una baya de color negro o a
+ok | frambuesa | la | frambuesa | s f | Fruta globosa, de aspecto granulado, con vello, semejante a la zarzamora pero de color rojo carmín, de sabor agridulce, con la que se elaboran mermeladas y otro
+ok | zarzamora | la | zarzamora | s f | Fruto comestible formado por numerosas drupas pequeñas y jugosas, de color rojo o negro, dependiendo de la variedad de planta de la que procede:
+ok | uva | la | uva | s f | Fruto de la vid en forma de pequeño globo ligeramente alargado, que crece en racimos unidos a un pequeño tallo; es de piel delgada y lisa, de color verde o mora
+ok | guayaba | la | guayaba | s f | Fruta comestible del guayabo, del tamaño de un limón grande, de cáscara generalmente amarilla con pintas cafés; su pulpa, amarilla o rosa, está llena de semilli
+ok | coco | el | coco | s m, adj y s | Fruto del cocotero, más o menos redondo, de unos 30 cm de diámetro. Consta de un epicarpio color verde amarillento lustroso, un mesocarpio fibroso (de 4 a 5 cm 
+ok | ciruela | la | ciruela | s f | Fruto comestible del ciruelo, de forma esférica u ovoide, con cáscara suave y delgada, de color rojo o amarillo, pulpa jugosa y agridulce, que tiende a ser muy 
+head noun only | ciruela pasa | la | ciruela | s f | Fruto comestible del ciruelo, de forma esférica u ovoide, con cáscara suave y delgada, de color rojo o amarillo, pulpa jugosa y agridulce, que tiende a ser muy 
+ok | dátil | el | dátil | s m | (Phoenix dactylifera) Palma que crece en lugares cálidos con suelo húmedo; alcanza hasta los 30 m de altura; tiene una corona de hojas rígidas pinadas, ascenden
+ok | kiwi | el | kiwi | s m | (Actinidia chinensis) Planta trepadora originaria de China que mide hasta 9 metros de altura; tiene hojas ovales y pecioladas de entre 7.5 y 12.5 cm de largo, c
+ok | cereza | la | cereza | s f | Fruto comestible del cerezo, redondo y liso, de color rojo brillante, muy jugoso y de sabor dulce; mide de 2 a 3 cm de diámetro; contiene un hueso redondo con u
+ok | higo | el | higo | s m, pl | Fruto de la higuera, de forma semejante a la de una pera, pero más pequeño, blando, con una piel fina y delgada de color verde, morado o negro; su pulpa de colo
+ok | granada | la | granada | s f | Fruto del granado, globoso, de 10 cm de diámetro y con una corteza delgada de color amarillo rojizo, que encierra gran cantidad de granos rojos, dulces y jugoso
+ok | chabacano | el | chabacano | s m, adj | (Prunus armeniaca) Árbol frutal pequeño de la familia de las rosáceas, de corteza rojiza, flores rosadas y fruto amarillo rojizo
+ok | tuna | la | tuna | s f | Fruto carnoso del nopal, planta de la familia de las cactáceas, que mide entre 3 y 8 cm; es de forma globosa o ligeramente ovoide y su pulpa es de color verde, 
+ok | pitahaya | la | pitahaya | s f | Pitaya
+ok | mamey | el | mamey | s m | Fruto comestible de forma ovoide de 8 a 20 cm de largo, de cáscara café rojiza, quebradiza, rasposa y fácilmente desprendible; pulpa de color rojo anaranjado o 
+ok | guanábana | la | guanábana | s f | Fruto comestible, de corteza verde hasta la madurez y cubierta de espinas tuberculadas flexibles; tiene forma ovoide o acorazonada, de aproximadamente 20 cm de 
+ok | maracuyá | el | maracuyá | s m o f | Pasionaria (Passiflora caerulea)
+ok | tamarindo | el | tamarindo | s m | Fruto de un árbol asiático, de vaina gruesa de cáscara quebradiza con semillas rodeadas de una pulpa café rojiza, ácida y de sabor agradable; se emplea para hac
+head noun only | plátano macho | el | plátano | s m | Fruto comestible en forma de baya, casi cilíndrico, largo y ligeramente arqueado, que crece en racimos que se agrupan en torno a un eje y forman la penca. Su cá
+ok | tomate | el | tomate | s m | Fruto redondo, de aproximadamente 5 cm de diámetro, verde o amarillento, lustroso, algo ácido, cuya cáscara quebradiza, no comestible, es un cáliz persistente. 
+head noun only | tomate verde | el | tomate | s m | Fruto redondo, de aproximadamente 5 cm de diámetro, verde o amarillento, lustroso, algo ácido, cuya cáscara quebradiza, no comestible, es un cáliz persistente. 
+ok | cebolla | la | cebolla | s f, s f pl | Bulbo comestible de forma ovoide o esférica, por lo general de color blanco (aunque a veces morado), formado por numerosas capas. Es de sabor y olor muy penetra
+head noun only | cebolla morada | la | cebolla | s f, s f pl | Bulbo comestible de forma ovoide o esférica, por lo general de color blanco (aunque a veces morado), formado por numerosas capas. Es de sabor y olor muy penetra
+head noun only | cebolla cambray | la | cambray | adj m y f, s m, s m o f | Que proviene o es natural de Cambray, ciudad francesa:
+ok | ajo | el | ajo | s m | Bulbo comestible, muy usado como condimento, de olor y sabor fuertes, formado por pequeños gajos o dientes recubiertos individualmente por una piel delgada:
+ok | papa | la | papa | s f, s m | Tubérculo carnoso, rico en almidón y muy apreciado como alimento. Mide de 3 a 8 cm de diámetro, es de color amarillo con una cáscara delgada, rojiza o blanqueci
+ok | camote | el | camote | s m | Tubérculo carnoso de aproximadamente 25 cm de largo, de color amarillo, morado o blanco, que se prepara principalmente como dulce ya sea en pasta o entero, coci
+ok | zanahoria | la | zanahoria | s f | Raíz comestible de color anaranjado y en forma de cono alargado; mide entre 5 y 20 cm y contiene mucha azúcar:
+ok | calabacita | la | calabacita | s f | (Cucurbita pepo) Planta rastrera o trepadora de la familia de las cucurbitáceas, provista de zarcillos o filamentos en forma de resortes, hojas anchas redondead
+ok | calabaza | la | calabaza | s f | (Cucurbita maxima) Planta herbácea rastrera, de tallo acanalado, velloso y a veces espinoso, hojas de formas variadas y flores amarillas. Sus raíces brotan de l
+ok | chayote | el | chayote | s m | (Sechium edule) Planta cucurbitácea de tallos trepadores y vellosos; sus hojas son grandes, con nervaduras de color claro y de superficie áspera; produce un fru
+ok | pepino | el | pepino | s m | Fruto comestible, alargado y cilíndrico, de cáscara delgada, color verde oscuro y generalmente lisa, de pulpa blanca, carnosa y jugosa, con varias pepitas en su
+ok | lechuga | la | lechuga | s f | (Lactuca sativa) Planta herbácea de la familia de las compuestas, con tallo ramoso de 40 a 60 cm de altura, de hojas comestibles, grandes y blandas. Se cultivan
+ok | espinaca | la | espinaca | s f | (Spinacia oleracea) Planta herbácea anual de la familia de las quenopodiáceas, de distintas variedades, de hojas radicales, grandes y de color verde oscuro, que
+ok | acelga | la | acelga | s f | (Beta vulgaris) Planta hortense de la familia de las quenopodiáceas; sus hojas son grandes y carnosas, y se comen como verdura, al igual que sus raíces. Da flor
+ok | col | la | col | s f | (Brassica oleracea) Planta europea de la familia de las crucíferas, comestible, de hasta 50 cm de altura; de tallo erguido, carnoso y poco ramificado; con hojas
+no headword | kale | el | - |  | 
+ok | brócoli | el | brócoli | s m | Verdura comestible semejante a la coliflor, constituida por numerosos ramitos de inflorescencias, de color verde oscuro y con tallos largos:
+ok | coliflor | la | coliflor | s f | Especie de col que se caracteriza por tener, en el centro de la planta, numerosas ramificaciones blancas y carnosas. Es comestible cruda o cocida:
+ok | apio | el | apio | s m | (Apium graveolens) Planta herbácea comestible, de la familia de las umbelíferas, de color verde, de unos 75 cm de alto, con el tallo y los pedúnculos jugosos, l
+ok | elote | el | elote | s m | Mazorca tierna del maíz:
+ok | champiñón | el | champiñón | s m | Hongo comestible del género Agaricus, cuya especie más conocida es Agaricus campestris; tiene pie corto y ancho, sombrero convexo, y es generalmente de color bl
+ok | seta | la | seta | s f | Hongo comestible de distintas especies (Pleurotus ostrectus, Pleurotus albicans, Lactarius deliciosus) que se caracteriza por estar formado por un pedúnculo o e
+ok | nopal | el | nopal | s m | Cada una de las plantas cactáceas de los géneros Opuntia y Nopalea, cuyo tallo consta de pencas o segmentos aplanados, ovales u orbiculares, que solamente cuand
+ok | ejote | el | ejote | s m | Vaina comestible del frijol, cuando está verde y tierna:
+ok | chícharo | el | chícharo | s m | (Pisumsativum) Planta anual trepadora de la familia de las leguminosas, que tiene hojas compuestas por uno a tres pares de hojillas, terminadas en un largo zarc
+ok | betabel | el | betabel | s m | (Beta vulgaris) Planta herbácea anual, de la familia de las quenopodiáceas, que llega a medir hasta 1 m de altura y cuya raíz, grande, redonda o alargada, es ca
+ok | rábano | el | rábano | s m | Raíz comestible, carnosa, redonda y pequeña, o cilíndrica y alargada, blanca por dentro y generalmente roja por fuera, que tiene un sabor picante y suele comers
+head noun only | pimiento morrón | el | pimiento | s m | (Capsicum annum) Variedad de chile que no pica, verde o rojo; pimiento morrón:
+ok | berenjena | la | berenjena | s f | (Solanum melongena) Planta herbácea anual o perenne de la familia de las solanáceas, originaria de la India, propia de climas cálidos y templados; de tallo ergu
+ok | espárrago | el | espárrago | s m | Brote o yema comestible, carnosa, larga y de varios gruesos, de color blanco verdoso o morado, muy apreciada por su sabor delicado y dulce:
+ok | poro | el | poro | s m | Hueco muy pequeño que se forma entre las moléculas de algunos cuerpos, particularmente cada uno de los orificios que hay en la superficie de los tejidos animale
+ok | jengibre | el | jengibre | s m | (Zingiber officinale) Planta herbácea de rizoma perenne, de hojas lanceoladas y flores amarillas; es originaria de la India y otras regiones cálidas de Asia; se
+ok | jícama | la | jícama | s f | Tubérculo comestible semejante por su forma a una cebolla, aunque de mayor diámetro pues alcanza hasta 20 cm. Es muy jugoso, duro y quebradizo, blanco por dentr
+ok | yuca | la | yuca | s f | Planta de la familia Agavaceae y del género Yucca, de aspecto parecido al de las palmas; mide hasta 10 m de altura y tiene hojas verdes y rígidas, de 30 a 45 cm
+head noun only | flor de calabaza | la | flor | s f | Parte de las plantas fanerógamas, en donde están sus órganos reproductores. Suele ser de formas y colores variados y vistosos, y producir un olor agradable. Con
+ok | verdolaga | la | verdolaga | s f | (Portulaca oleracea) Planta comestible, herbácea, anual, de tallos tendidos que llegan a medir hasta 40 cm de largo, gruesos y carnosos; hojas redondas, verdes 
+ok | chile | el | chile | s m | (Capsicum annum) Planta de la familia de las solanáceas, herbácea y anual, de hojas alternas y flores blancas, violetas o verdosas, que tiene muchas variedades 
+head noun only | chile jalapeño | el | jalapeño | adj y s | Que es de Xalapa o Jalapa de Enríquez, capital del estado de Veracruz; que pertenece a esta ciudad o se relaciona con ella:
+head noun only | chile serrano | el | serrano | adj y s, s y adj m | Que se relaciona con la sierra o la serranía, que habita ahí o es propio de ellas:
+head noun only | chile habanero | el | habanero | adj y s, s m | Que es originario de La Habana, pertenece a esta ciudad cubana o se relaciona con ella:
+head noun only | chile poblano | el | poblano | adj y s | Que es natural de Puebla, que pertenece o se relaciona con este estado o con su capital, la ciudad del mismo nombre:
+ok | cilantro | el | cilantro | s m | (Coriandrum sativum) Planta herbácea de la familia de las umbelíferas, de 60 a 80 cm de altura, hojas muy olorosas, divididas y dentadas, pequeñas flores blanca
+ok | perejil | el | perejil | s m | (Patroselium sativum) Planta herbácea de la familia de las umbelíferas que crece hasta 70 cm de altura; sus tallos son delgados y ramificados; sus hojas, oloros
+ok | epazote | el | epazote | s m | (Chenopodium graveolens) Planta herbácea de hojas alternas en forma de elipse o de lanza, irregularmente dentadas, con flores muy pequeñas en espigas, que crece
+ok | hierbabuena | la | hierbabuena | s f | Yerbabuena:
+ok | albahaca | la | albahaca | s f | (Ocimum basilicum) Planta labiada, de tallos ramosos y velludos, flores blancas, pequeñas, y hojas muy verdes y olor osas que se usan como condimento
+ok | romero | el | romero | s m, s | (Rosmarinus officinalis) Arbusto de la familia de las labiadas, de alrededor de 2 m de altura, hojas lineares, opuestas, coriáceas, de unos 2 cm, muy aromáticas
+ok | fruta | la | fruta | s f | Fruto comestible de las plantas, como la manzana, el melón, el mango, el plátano, la nuez, etc:
+ok | verdura | la | verdura | s f | Hoja o fruto comestible de las plantas herbáceas, como el chayote, las espinacas, los ejotes y los nopales:
+ok | kilo | el | kilo | s m | Unidad de peso equivalente a mil gramos o a un decímetro cúbico de agua destilada; kilogramo:
+head noun only | medio kilo | el | medio | adj, adv, s m | Que es, tiene o ha llegado a la mitad de algo:
+head noun only | cuarto de kilo | el | cuarto | s m, adj | Habitación de una casa o de un hotel:
+ok | pieza | la | pieza | s f | Cada uno de los elementos que constituyen una unidad o un conjunto:
+ok | manojo | el | manojo | s m | Conjunto de objetos, especialmente de tallos con hojas, flores, plantas comestibles, etc, que se pueden coger de una vez con la mano:
+ok | docena | la | docena | s f | Conjunto de doce elementos o cosas:
+ok | bolsa | la | bolsa | s f | Objeto que sirve para contener y llevar cosas dentro de él, hecho de algún material flexible como papel, tela o piel; es cerrado por todos sus lados, excepto po
+ok | caja | la | caja | s f | Recipiente de cartón, de madera, de metal, etc, generalmente con tapa, que sirve para guardar y transportar cosas:
+ok | cabeza | la | cabeza | s f | Parte superior del cuerpo humano, y anterior y superior de los animales, donde se encuentran el encéfalo y los principales órganos de los sentidos
+ok | charola | la | charola | s f | Recipiente generalmente de metal, plano, con un borde pequeño alrededor, que sirve para transportar platos, tazas, etc, para hornear alimentos o, en las oficina

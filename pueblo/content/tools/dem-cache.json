@@ -1,0 +1,675 @@
+{
+ "aguacate": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto comestible que tiene forma oval, cáscara verde, verdinegra o negra, con una sola semilla en forma de huevo y pulpa verdosa y suave. Es muy apreciado por s"
+ },
+ "plátano": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto comestible en forma de baya, casi cilíndrico, largo y ligeramente arqueado, que crece en racimos que se agrupan en torno a un eje y forman la penca. Su cá"
+ },
+ "manzana": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto del manzano, comestible, de forma redondeada con una hendidura en cada uno de sus polos; su cáscara es delgada, de color rojo, amarillo o verdoso, y su pu"
+ },
+ "pera": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto del peral, comestible, de forma más o menos cónica, y redondeado en la parte inferior, que es la más ancha; su cáscara es delgada, de color verde amarille"
+ },
+ "durazno": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto comestible, redondo, carnoso y de sabor dulce. Su color depende de la variedad de la planta de que procede: los hay amarillos con manchas rojizas, y de di"
+ },
+ "piña": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible de forma oval que mide aproximadamente 20 cm de largo, de pulpa amarilla, jugosa y aromática; su cáscara es dura, llena de pequeñas salientes y"
+ },
+ "limón": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto del limonero, de color amarillo o verde, esférico, de 4 a 6 cm de diámetro, con una pequeña saliente en su base, de pulpa jugosa y ácida reunida en diez g"
+ },
+ "naranja": {
+  "ok": true,
+  "cats": [
+   "s f",
+   "adj m y f y s m"
+  ],
+  "def": "Fruta redonda de color amarillo rojizo, que mide de 8 a 10 cm de diámetro y cuya pulpa, jugosa y agridulce, está encerrada en gajos contenidos a su vez en una c"
+ },
+ "mandarina": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruta redonda y ligeramente achatada, de color naranja por dentro y por fuera, de cáscara gruesa, cuya pulpa, jugosa y aromática, está contenida en gajos:"
+ },
+ "toronja": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruta redonda, de 10 a 15 cm de diámetro, de cáscara gruesa verde o amarillo claro, y pulpa jugosa en gajos del color amarillo claro o rosa, de sabor agridulce "
+ },
+ "lima": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruta parecida al limón, pero de mayor tamaño, que tiene la cáscara gruesa, lisa, de color amarillento verdoso, y una tetilla o saliente muy abultada en una de "
+ },
+ "sandía": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruta de gran tamaño, de forma casi esférica u ovoide, que llega a pesar hasta 18 kg; de cáscara dura, muy gruesa, lisa y brillante, de color verde, a veces ray"
+ },
+ "melón": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "adj"
+  ],
+  "def": "Fruto comestible de forma casi esférica, de distintas variedades, que mide entre 20 y 25 cm de diámetro, de cáscara gruesa, rugosa o lisa, de color amarillento,"
+ },
+ "papaya": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible de forma oblonga, que mide de 20 a 40 cm de largo; su cáscara es de color verde amarillento y su pulpa carnosa, generalmente amarilla o anaranj"
+ },
+ "mango": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "s m y f"
+  ],
+  "def": "Parte por donde se agarra un instrumento, una herramienta, un arma, etc:"
+ },
+ "fresa": {
+  "ok": true,
+  "cats": [
+   "s f",
+   "adj m y f"
+  ],
+  "def": "Fruta pequeña de color rojo y forma de corazón, con granitos en toda su superficie, de tres a cinco centímetros de largo, de sabor agridulce y aroma agradable. "
+ },
+ "arándano": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Vaccinium myrtillus) Arbusto de la familia de la ericáceas, de ramas angulosas, hojas alternas, flores blancas o rosadas y fruto en una baya de color negro o a"
+ },
+ "frambuesa": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruta globosa, de aspecto granulado, con vello, semejante a la zarzamora pero de color rojo carmín, de sabor agridulce, con la que se elaboran mermeladas y otro"
+ },
+ "zarzamora": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible formado por numerosas drupas pequeñas y jugosas, de color rojo o negro, dependiendo de la variedad de planta de la que procede:"
+ },
+ "uva": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto de la vid en forma de pequeño globo ligeramente alargado, que crece en racimos unidos a un pequeño tallo; es de piel delgada y lisa, de color verde o mora"
+ },
+ "guayaba": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruta comestible del guayabo, del tamaño de un limón grande, de cáscara generalmente amarilla con pintas cafés; su pulpa, amarilla o rosa, está llena de semilli"
+ },
+ "coco": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "adj y s"
+  ],
+  "def": "Fruto del cocotero, más o menos redondo, de unos 30 cm de diámetro. Consta de un epicarpio color verde amarillento lustroso, un mesocarpio fibroso (de 4 a 5 cm "
+ },
+ "ciruela": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible del ciruelo, de forma esférica u ovoide, con cáscara suave y delgada, de color rojo o amarillo, pulpa jugosa y agridulce, que tiende a ser muy "
+ },
+ "dátil": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Phoenix dactylifera) Palma que crece en lugares cálidos con suelo húmedo; alcanza hasta los 30 m de altura; tiene una corona de hojas rígidas pinadas, ascenden"
+ },
+ "kiwi": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Actinidia chinensis) Planta trepadora originaria de China que mide hasta 9 metros de altura; tiene hojas ovales y pecioladas de entre 7.5 y 12.5 cm de largo, c"
+ },
+ "cereza": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible del cerezo, redondo y liso, de color rojo brillante, muy jugoso y de sabor dulce; mide de 2 a 3 cm de diámetro; contiene un hueso redondo con u"
+ },
+ "higo": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "pl"
+  ],
+  "def": "Fruto de la higuera, de forma semejante a la de una pera, pero más pequeño, blando, con una piel fina y delgada de color verde, morado o negro; su pulpa de colo"
+ },
+ "granada": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto del granado, globoso, de 10 cm de diámetro y con una corteza delgada de color amarillo rojizo, que encierra gran cantidad de granos rojos, dulces y jugoso"
+ },
+ "chabacano": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "adj"
+  ],
+  "def": "(Prunus armeniaca) Árbol frutal pequeño de la familia de las rosáceas, de corteza rojiza, flores rosadas y fruto amarillo rojizo"
+ },
+ "nectarina": {
+  "ok": false,
+  "cats": [],
+  "def": ""
+ },
+ "tuna": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto carnoso del nopal, planta de la familia de las cactáceas, que mide entre 3 y 8 cm; es de forma globosa o ligeramente ovoide y su pulpa es de color verde, "
+ },
+ "pitahaya": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Pitaya"
+ },
+ "mamey": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto comestible de forma ovoide de 8 a 20 cm de largo, de cáscara café rojiza, quebradiza, rasposa y fácilmente desprendible; pulpa de color rojo anaranjado o "
+ },
+ "guanábana": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible, de corteza verde hasta la madurez y cubierta de espinas tuberculadas flexibles; tiene forma ovoide o acorazonada, de aproximadamente 20 cm de "
+ },
+ "maracuyá": {
+  "ok": true,
+  "cats": [
+   "s m o f"
+  ],
+  "def": "Pasionaria (Passiflora caerulea)"
+ },
+ "tamarindo": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto de un árbol asiático, de vaina gruesa de cáscara quebradiza con semillas rodeadas de una pulpa café rojiza, ácida y de sabor agradable; se emplea para hac"
+ },
+ "tomate": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto redondo, de aproximadamente 5 cm de diámetro, verde o amarillento, lustroso, algo ácido, cuya cáscara quebradiza, no comestible, es un cáliz persistente. "
+ },
+ "cebolla": {
+  "ok": true,
+  "cats": [
+   "s f",
+   "s f pl"
+  ],
+  "def": "Bulbo comestible de forma ovoide o esférica, por lo general de color blanco (aunque a veces morado), formado por numerosas capas. Es de sabor y olor muy penetra"
+ },
+ "cambray": {
+  "ok": true,
+  "cats": [
+   "adj m y f",
+   "s m",
+   "s m o f"
+  ],
+  "def": "Que proviene o es natural de Cambray, ciudad francesa:"
+ },
+ "ajo": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Bulbo comestible, muy usado como condimento, de olor y sabor fuertes, formado por pequeños gajos o dientes recubiertos individualmente por una piel delgada:"
+ },
+ "papa": {
+  "ok": true,
+  "cats": [
+   "s f",
+   "s m"
+  ],
+  "def": "Tubérculo carnoso, rico en almidón y muy apreciado como alimento. Mide de 3 a 8 cm de diámetro, es de color amarillo con una cáscara delgada, rojiza o blanqueci"
+ },
+ "camote": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Tubérculo carnoso de aproximadamente 25 cm de largo, de color amarillo, morado o blanco, que se prepara principalmente como dulce ya sea en pasta o entero, coci"
+ },
+ "zanahoria": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Raíz comestible de color anaranjado y en forma de cono alargado; mide entre 5 y 20 cm y contiene mucha azúcar:"
+ },
+ "calabacita": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Cucurbita pepo) Planta rastrera o trepadora de la familia de las cucurbitáceas, provista de zarcillos o filamentos en forma de resortes, hojas anchas redondead"
+ },
+ "calabaza": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Cucurbita maxima) Planta herbácea rastrera, de tallo acanalado, velloso y a veces espinoso, hojas de formas variadas y flores amarillas. Sus raíces brotan de l"
+ },
+ "chayote": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Sechium edule) Planta cucurbitácea de tallos trepadores y vellosos; sus hojas son grandes, con nervaduras de color claro y de superficie áspera; produce un fru"
+ },
+ "pepino": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Fruto comestible, alargado y cilíndrico, de cáscara delgada, color verde oscuro y generalmente lisa, de pulpa blanca, carnosa y jugosa, con varias pepitas en su"
+ },
+ "lechuga": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Lactuca sativa) Planta herbácea de la familia de las compuestas, con tallo ramoso de 40 a 60 cm de altura, de hojas comestibles, grandes y blandas. Se cultivan"
+ },
+ "espinaca": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Spinacia oleracea) Planta herbácea anual de la familia de las quenopodiáceas, de distintas variedades, de hojas radicales, grandes y de color verde oscuro, que"
+ },
+ "acelga": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Beta vulgaris) Planta hortense de la familia de las quenopodiáceas; sus hojas son grandes y carnosas, y se comen como verdura, al igual que sus raíces. Da flor"
+ },
+ "col": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Brassica oleracea) Planta europea de la familia de las crucíferas, comestible, de hasta 50 cm de altura; de tallo erguido, carnoso y poco ramificado; con hojas"
+ },
+ "brócoli": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Verdura comestible semejante a la coliflor, constituida por numerosos ramitos de inflorescencias, de color verde oscuro y con tallos largos:"
+ },
+ "coliflor": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Especie de col que se caracteriza por tener, en el centro de la planta, numerosas ramificaciones blancas y carnosas. Es comestible cruda o cocida:"
+ },
+ "apio": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Apium graveolens) Planta herbácea comestible, de la familia de las umbelíferas, de color verde, de unos 75 cm de alto, con el tallo y los pedúnculos jugosos, l"
+ },
+ "elote": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Mazorca tierna del maíz:"
+ },
+ "champiñón": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Hongo comestible del género Agaricus, cuya especie más conocida es Agaricus campestris; tiene pie corto y ancho, sombrero convexo, y es generalmente de color bl"
+ },
+ "seta": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Hongo comestible de distintas especies (Pleurotus ostrectus, Pleurotus albicans, Lactarius deliciosus) que se caracteriza por estar formado por un pedúnculo o e"
+ },
+ "nopal": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Cada una de las plantas cactáceas de los géneros Opuntia y Nopalea, cuyo tallo consta de pencas o segmentos aplanados, ovales u orbiculares, que solamente cuand"
+ },
+ "ejote": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Vaina comestible del frijol, cuando está verde y tierna:"
+ },
+ "chícharo": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Pisumsativum) Planta anual trepadora de la familia de las leguminosas, que tiene hojas compuestas por uno a tres pares de hojillas, terminadas en un largo zarc"
+ },
+ "betabel": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Beta vulgaris) Planta herbácea anual, de la familia de las quenopodiáceas, que llega a medir hasta 1 m de altura y cuya raíz, grande, redonda o alargada, es ca"
+ },
+ "rábano": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Raíz comestible, carnosa, redonda y pequeña, o cilíndrica y alargada, blanca por dentro y generalmente roja por fuera, que tiene un sabor picante y suele comers"
+ },
+ "pimiento": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Capsicum annum) Variedad de chile que no pica, verde o rojo; pimiento morrón:"
+ },
+ "berenjena": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Solanum melongena) Planta herbácea anual o perenne de la familia de las solanáceas, originaria de la India, propia de climas cálidos y templados; de tallo ergu"
+ },
+ "espárrago": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Brote o yema comestible, carnosa, larga y de varios gruesos, de color blanco verdoso o morado, muy apreciada por su sabor delicado y dulce:"
+ },
+ "poro": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Hueco muy pequeño que se forma entre las moléculas de algunos cuerpos, particularmente cada uno de los orificios que hay en la superficie de los tejidos animale"
+ },
+ "jengibre": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Zingiber officinale) Planta herbácea de rizoma perenne, de hojas lanceoladas y flores amarillas; es originaria de la India y otras regiones cálidas de Asia; se"
+ },
+ "jícama": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Tubérculo comestible semejante por su forma a una cebolla, aunque de mayor diámetro pues alcanza hasta 20 cm. Es muy jugoso, duro y quebradizo, blanco por dentr"
+ },
+ "yuca": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Planta de la familia Agavaceae y del género Yucca, de aspecto parecido al de las palmas; mide hasta 10 m de altura y tiene hojas verdes y rígidas, de 30 a 45 cm"
+ },
+ "flor": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Parte de las plantas fanerógamas, en donde están sus órganos reproductores. Suele ser de formas y colores variados y vistosos, y producir un olor agradable. Con"
+ },
+ "verdolaga": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Portulaca oleracea) Planta comestible, herbácea, anual, de tallos tendidos que llegan a medir hasta 40 cm de largo, gruesos y carnosos; hojas redondas, verdes "
+ },
+ "chile": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Capsicum annum) Planta de la familia de las solanáceas, herbácea y anual, de hojas alternas y flores blancas, violetas o verdosas, que tiene muchas variedades "
+ },
+ "jalapeño": {
+  "ok": true,
+  "cats": [
+   "adj y s"
+  ],
+  "def": "Que es de Xalapa o Jalapa de Enríquez, capital del estado de Veracruz; que pertenece a esta ciudad o se relaciona con ella:"
+ },
+ "serrano": {
+  "ok": true,
+  "cats": [
+   "adj y s",
+   "s y adj m"
+  ],
+  "def": "Que se relaciona con la sierra o la serranía, que habita ahí o es propio de ellas:"
+ },
+ "habanero": {
+  "ok": true,
+  "cats": [
+   "adj y s",
+   "s m"
+  ],
+  "def": "Que es originario de La Habana, pertenece a esta ciudad cubana o se relaciona con ella:"
+ },
+ "poblano": {
+  "ok": true,
+  "cats": [
+   "adj y s"
+  ],
+  "def": "Que es natural de Puebla, que pertenece o se relaciona con este estado o con su capital, la ciudad del mismo nombre:"
+ },
+ "cilantro": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Coriandrum sativum) Planta herbácea de la familia de las umbelíferas, de 60 a 80 cm de altura, hojas muy olorosas, divididas y dentadas, pequeñas flores blanca"
+ },
+ "perejil": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Patroselium sativum) Planta herbácea de la familia de las umbelíferas que crece hasta 70 cm de altura; sus tallos son delgados y ramificados; sus hojas, oloros"
+ },
+ "epazote": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "(Chenopodium graveolens) Planta herbácea de hojas alternas en forma de elipse o de lanza, irregularmente dentadas, con flores muy pequeñas en espigas, que crece"
+ },
+ "hierbabuena": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Yerbabuena:"
+ },
+ "albahaca": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "(Ocimum basilicum) Planta labiada, de tallos ramosos y velludos, flores blancas, pequeñas, y hojas muy verdes y olor osas que se usan como condimento"
+ },
+ "romero": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "s"
+  ],
+  "def": "(Rosmarinus officinalis) Arbusto de la familia de las labiadas, de alrededor de 2 m de altura, hojas lineares, opuestas, coriáceas, de unos 2 cm, muy aromáticas"
+ },
+ "fruta": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Fruto comestible de las plantas, como la manzana, el melón, el mango, el plátano, la nuez, etc:"
+ },
+ "verdura": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Hoja o fruto comestible de las plantas herbáceas, como el chayote, las espinacas, los ejotes y los nopales:"
+ },
+ "kilo": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Unidad de peso equivalente a mil gramos o a un decímetro cúbico de agua destilada; kilogramo:"
+ },
+ "medio": {
+  "ok": true,
+  "cats": [
+   "adj",
+   "adv",
+   "s m"
+  ],
+  "def": "Que es, tiene o ha llegado a la mitad de algo:"
+ },
+ "cuarto": {
+  "ok": true,
+  "cats": [
+   "s m",
+   "adj"
+  ],
+  "def": "Habitación de una casa o de un hotel:"
+ },
+ "pieza": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Cada uno de los elementos que constituyen una unidad o un conjunto:"
+ },
+ "manojo": {
+  "ok": true,
+  "cats": [
+   "s m"
+  ],
+  "def": "Conjunto de objetos, especialmente de tallos con hojas, flores, plantas comestibles, etc, que se pueden coger de una vez con la mano:"
+ },
+ "docena": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Conjunto de doce elementos o cosas:"
+ },
+ "bolsa": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Objeto que sirve para contener y llevar cosas dentro de él, hecho de algún material flexible como papel, tela o piel; es cerrado por todos sus lados, excepto po"
+ },
+ "caja": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Recipiente de cartón, de madera, de metal, etc, generalmente con tapa, que sirve para guardar y transportar cosas:"
+ },
+ "cabeza": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Parte superior del cuerpo humano, y anterior y superior de los animales, donde se encuentran el encéfalo y los principales órganos de los sentidos"
+ },
+ "charola": {
+  "ok": true,
+  "cats": [
+   "s f"
+  ],
+  "def": "Recipiente generalmente de metal, plano, con un borde pequeño alrededor, que sirve para transportar platos, tazas, etc, para hornear alimentos o, en las oficina"
+ }
+}
