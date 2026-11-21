@@ -16,7 +16,7 @@ export const GAME = [
       place: 'In a tile tray, or inside a blank slot once placed.',
       states: ['Rest.', 'Pressed: grows, tilts 2 degrees, corners round to `radius-lg-inc`.', 'Picked: 3px `cobalto` outline.', 'Placed: takes the slot\'s colours.'],
       motion: 'Fast spatial spring on press; default spatial spring when it lands.',
-      do: ['Keep a tile to one to three words.', 'Show accents and opening marks exactly.'],
+      do: ['Keep a tile to one to three words; a reply in a conversation may be a full sentence.', 'Left-align the text, including when a long reply wraps to two lines.', 'Show accents and opening marks exactly.'],
       dont: ['Put an icon or picture on a tile.', 'Colour a tile green or red before the player checks.'],
       a11y: ['48 high touch target.', 'Tap a tile then tap a blank as the alternative to dragging.', 'The outline, not colour alone, marks the picked tile.'],
       provide: 'The Spanish text, and `data-word` with the same text for checking.',

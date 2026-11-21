@@ -39,7 +39,7 @@
 
 /* Spanish word tile: text only, never a picture. */
 .pb-tile {
-  display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--space-4);
+  display: inline-flex; align-items: center; justify-content: flex-start; text-align: left; min-height: 48px; padding: 10px var(--space-4);
   border-radius: var(--radius-md);
   background: var(--cobalto-container); color: var(--on-cobalto-container);
   font-size: 22px; line-height: 28px; font-weight: 800;

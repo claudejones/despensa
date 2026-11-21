@@ -107,8 +107,8 @@ page('Arrival','Arrival', '''  <div style="height: 300px; overflow: hidden; disp
 '''+'''  <div style="padding: 16px 16px 4px"><h1 class="headline">Your first morning in town</h1><p class="body" style="color: var(--ink-muted)">You have just moved here. Your neighbour stops to say hello.</p></div>
 '''+encounter('mercado','Doña Carmen','¡Hola, vecina! ¿Es nueva aquí?','Hello, neighbour! Are you new here?','happy')+body('''    <p class="body">Pick a reply. Either one is fine.</p>
     <div style="display: flex; flex-direction: column; gap: 8px">
-      <button class="pb-tile" style="justify-content: center; width: 100%; outline: 3px solid var(--cobalto); outline-offset: -3px">Sí, soy nueva. Mucho gusto.</button>
-      <button class="pb-tile" style="justify-content: center; width: 100%">Perdón, no entiendo.</button>
+      <button class="pb-tile" style="width: 100%; outline: 3px solid var(--cobalto); outline-offset: -3px">Sí, soy nueva. Mucho gusto.</button>
+      <button class="pb-tile" style="width: 100%">Perdón, no entiendo.</button>
     </div>
 ''')+footer('Say it','TownMap'))
 
@@ -126,9 +126,9 @@ street='''  <div class="pb-overlay pb-overlay--bottom">
 '''+patience(4)+'''      </div>
       <p class="body" style="margin: 20px 0 8px">What do you say back?</p>
       <div style="display: flex; flex-direction: column; gap: 8px">
-        <button class="pb-tile" style="justify-content: center; width: 100%">Bien, gracias. ¿Y usted?</button>
-        <button class="pb-tile" style="justify-content: center; width: 100%">¿Cuánto cuesta?</button>
-        <button class="pb-tile" style="justify-content: center; width: 100%">A la derecha.</button>
+        <button class="pb-tile" style="width: 100%">Bien, gracias. ¿Y usted?</button>
+        <button class="pb-tile" style="width: 100%">¿Cuánto cuesta?</button>
+        <button class="pb-tile" style="width: 100%">A la derecha.</button>
       </div>
       <div style="display: flex; gap: 8px; align-items: center; margin-top: 16px"><button class="pb-btn pb-btn--text">Just wave</button><span class="pb-chip pb-chip--coins" style="margin-left: auto">Earn $2</span></div>
     </div>

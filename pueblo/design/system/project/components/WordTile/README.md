@@ -31,7 +31,8 @@ Fast spatial spring on press; default spatial spring when it lands.
 
 ## Do and don't
 
-- Do: Keep a tile to one to three words.
+- Do: Keep a tile to one to three words; a reply in a conversation may be a full sentence.
+- Do: Left-align the text, including when a long reply wraps to two lines.
 - Do: Show accents and opening marks exactly.
 - Don't: Put an icon or picture on a tile.
 - Don't: Colour a tile green or red before the player checks.
