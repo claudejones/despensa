@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mercado: place home</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden">
+  <header class="pb-topbar">
+    <a class="pb-iconbtn" href="TownMap.dc.html" aria-label="Back to town"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></a>
+    <h1 class="pb-topbar__title">Mercado</h1>
+    <div class="pb-topbar__end"><span class="pb-chip pb-chip--coins"><svg class="pb-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></svg>$120</span></div>
+  </header>
+
+  <div style="padding: 0 16px">
+    <div class="pb-scene" style="height: 176px" role="img" aria-label="The market, with Doña Carmen at her stall">
+      <div class="pb-scene__wall"></div>
+      <div style="position: absolute; left: 24px; right: 24px; top: 54px; height: 24px; border-radius: 4px 4px 0 0; background: repeating-linear-gradient(90deg, var(--wall-rosa) 0 24px, var(--wall-cal) 24px 48px)"></div>
+      <img class="pb-px" src="/_blob/5357e49a49d615a871075fd9e2d36e3a" alt="" style="position: absolute; left: 124px; bottom: 0; width: 111px; height: 116px">
+      <span class="pb-scene__tag">Placeholder scene</span>
+    </div>
+    <div class="pb-talk pb-talk--over">
+      <div class="pb-dialogue">
+        <p class="pb-dialogue__who">Doña Carmen</p>
+        <p class="pb-dialogue__es">¡Buenos días! ¿Qué le doy?</p>
+        <p class="pb-dialogue__en">Good morning! What can I get you?</p>
+      </div>
+      <button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear it again"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg></button>
+    </div>
+  </div>
+
+  <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <h2 class="headline">At the market</h2>
+      <span class="label" style="color: var(--ink-muted)">2 of 5 done</span>
+    </div>
+    <div class="pb-progress pb-progress--steps" style="height: 8px" role="img" aria-label="2 of 5 challenges done"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+
+    <div class="pb-list" style="margin-top: 4px">
+      <div class="pb-listrow">
+        <span class="pb-listrow__pic" style="background: var(--nopal-container); color: var(--nopal-ink)"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></span>
+        <span class="pb-listrow__en">The shopping list<span class="pb-listrow__qty">Match the words · done</span></span>
+      </div>
+      <div class="pb-listrow">
+        <span class="pb-listrow__pic" style="background: var(--nopal-container); color: var(--nopal-ink)"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></span>
+        <span class="pb-listrow__en">How much?<span class="pb-listrow__qty">Kilos and bunches · done</span></span>
+      </div>
+      <a class="pb-listrow" href="ChallengeIntro.dc.html" style="text-decoration: none; background: var(--cobalto-container); color: var(--on-cobalto-container)">
+        <span class="pb-listrow__pic" style="background: var(--card); color: var(--on-cobalto-container)"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 11-1 9" /><path d="m19 11-4-7" /><path d="M2 11h20" /><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4" /><path d="M4.5 15.5h15" /><path d="m5 11 4-7" /><path d="m9 11 1 9" /></svg></span>
+        <span class="pb-listrow__en">A full trip<span class="pb-listrow__qty" style="color: var(--on-cobalto-container)">List, amounts and paying · next</span></span>
+        <svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+      </a>
+      <div class="pb-listrow" style="color: var(--ink-muted)">
+        <span class="pb-listrow__pic" style="color: var(--ink-muted)"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
+        <span class="pb-listrow__en">By ear<span class="pb-listrow__qty">Understand her at full speed</span></span>
+      </div>
+      <div class="pb-listrow" style="color: var(--ink-muted)">
+        <span class="pb-listrow__pic" style="color: var(--ink-muted)"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
+        <span class="pb-listrow__en">The check<span class="pb-listrow__qty">Shop on your own, no subtitles</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 0 16px 24px">
+    <a class="pb-btn" href="ChallengeIntro.dc.html" style="text-decoration: none; box-sizing: border-box">Start a full trip</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

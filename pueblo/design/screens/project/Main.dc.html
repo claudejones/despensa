@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pueblo title screen</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1B3FB5}a:hover{color:#0C2470}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <div style="position: relative; height: 64px">
+    <div class="pb-fiesta__string" style="border-top-color: var(--ink)" aria-hidden="true">
+      <i class="pb-fiesta__flag" style="background: var(--wall-rosa)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-ocre)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-caribe)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-purpura)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-jade)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-anil)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-terracota)"></i>
+      <i class="pb-fiesta__flag" style="background: var(--wall-maya)"></i>
+    </div>
+  </div>
+  <div style="padding: 24px 24px 0; display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-family: var(--font-rotulo); font-weight: 400; font-size: 88px; line-height: 88px; color: var(--ink)">Pueblo</h1>
+    <p class="body" style="color: var(--ink-muted); max-width: 300px">Learn Spanish by living in a Mexican town.</p>
+  </div>
+  <div style="flex: 1; display: flex; align-items: flex-end; padding: 0 16px">
+    <div class="pb-scene" style="width: 100%; height: 300px" role="img" aria-label="The market, with Doña Carmen at her stall">
+      <div class="pb-scene__wall"></div>
+      <div style="position: absolute; left: 24px; right: 24px; top: 70px; height: 28px; border-radius: 4px 4px 0 0; background: repeating-linear-gradient(90deg, var(--wall-rosa) 0 24px, var(--wall-cal) 24px 48px)"></div>
+      <img class="pb-px" src="/_blob/5357e49a49d615a871075fd9e2d36e3a" alt="" style="position: absolute; left: 68px; bottom: 40px; width: 222px; height: 232px">
+      <div class="pb-scene__counter" style="height: 44px"></div>
+      <span class="pb-scene__tag">Placeholder scene</span>
+    </div>
+  </div>
+  <div style="padding: 24px 16px 12px; display: flex; flex-direction: column; gap: 8px; align-items: center">
+    <a class="pb-btn" href="TownMap.dc.html" style="text-decoration: none; box-sizing: border-box">Play
+      <svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+    </a>
+    <button class="pb-btn pb-btn--text">Restore a backup</button>
+    <p class="label-small" style="color: var(--ink-muted)">Build v0.1 · design</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

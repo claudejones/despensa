@@ -1,0 +1,26 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-21T04:44:51Z" },
+  "title": "Pueblo screens: Mercado",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "1 Title", "radius": 28 },
+    "TownMap.dc.html": { "x": 470, "y": 0, "w": 390, "h": 844, "title": "4 Town map", "radius": 28 },
+    "PlaceHome.dc.html": { "x": 940, "y": 0, "w": 390, "h": 844, "title": "7 Place home", "radius": 28 },
+    "ChallengeIntro.dc.html": { "x": 1410, "y": 0, "w": 390, "h": 844, "title": "8 Challenge intro", "radius": 28 },
+    "Match.dc.html": { "x": 1880, "y": 0, "w": 390, "h": 844, "title": "9a Match into the blank", "radius": 28 },
+    "Quantity.dc.html": { "x": 0, "y": 964, "w": 390, "h": 844, "title": "9b Quantity", "radius": 28 },
+    "Pay.dc.html": { "x": 470, "y": 964, "w": 390, "h": 844, "title": "9c Pay", "radius": 28 },
+    "Listen.dc.html": { "x": 940, "y": 964, "w": 390, "h": 844, "title": "9d Listen and act", "radius": 28 },
+    "Results.dc.html": { "x": 1410, "y": 964, "w": 390, "h": 844, "title": "11 Results", "radius": 28 }
+  },
+  "order": ["Main.dc.html", "TownMap.dc.html", "PlaceHome.dc.html", "ChallengeIntro.dc.html", "Match.dc.html", "Quantity.dc.html", "Pay.dc.html", "Listen.dc.html", "Results.dc.html"],
+  "notes": {
+    "heading": { "x": 0, "y": -300, "text": "Mercado: one trip, start to finish", "kind": "title1", "maxW": 2270 },
+    "art": { "x": 1880, "y": 964, "w": 390, "text": "The vendor and the produce pictures are test art from the image tool, cleaned into small pixel sprites. Scene backgrounds are still flat-block placeholders. Numbers in the frame titles match the screen list.", "size": "m", "fill": "orange" }
+  },
+  "designSystems": [
+    { "title": "Pueblo Design System", "namespace": "pueblo", "artifact": "https://claude.ai/artifact/HJzmVnaVs5aQFM2pMs2jxL", "version": "1795236278-9d29", "copiedAt": "2026-11-21T04:44:51Z" }
+  ]
+}
