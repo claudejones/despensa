@@ -21,7 +21,7 @@ On the Achievements screen and in results when first earned.
 ## States
 
 - Earned.
-- Not yet earned: neutral circle with a lock, and the way to earn it.
+- Not yet earned: neutral circle, and the way to earn it.
 
 ## Motion
 

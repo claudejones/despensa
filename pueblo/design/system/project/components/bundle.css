@@ -102,6 +102,8 @@
 .pb-listrow { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2); border-radius: var(--radius-md); min-height: 64px;
   transition: background var(--spring-effects); }
 .pb-listrow__pic { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--cal-low); display: grid; place-items: center; flex: none; color: var(--ink); }
+/* A pixel-art picture sits straight on the row: no tile behind it. */
+.pb-listrow__pic--art { background: none; border-radius: 0; }
 .pb-listrow__en { flex: 1; min-width: 0; font-size: 16px; line-height: 24px; font-weight: 800; letter-spacing: 0.15px; }
 .pb-listrow__en small { display: none; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: 0.1px; }
 .pb-listrow__qty { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--ink-muted); display: block; }

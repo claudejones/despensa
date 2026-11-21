@@ -1,4 +1,4 @@
-A map marker is one place on the town map, showing whether it is locked, open or mastered.
+A map marker is one place on the town map, showing how far along you are there.
 
 ## When to use
 
@@ -20,17 +20,20 @@ On the map at the place's building.
 
 ## States
 
-- Locked: neutral circle with a lock.
-- Open: squircle in the wall colour, with progress.
+- New: squircle in the wall colour.
+- In progress: the same, with how many challenges are done.
 - Mastered: sunny shape in the wall colour.
+- Nothing is ever locked. Every place is open from the first day.
 
 ## Motion
 
-Unlocking morphs circle to squircle; mastering morphs squircle to sunny. This is the map's hero moment.
+Mastering a place morphs its squircle to sunny. This is the map's hero moment.
 
 ## Do and don't
 
 - Do: Use the wall colour here; the map is art, not a control surface.
+- Do: Use a white icon on the dark walls: rosa, terracota, purpura and anil.
+- Do: Point to a suggested next place instead of locking the others.
 - Don't: Rely on the shape alone. The state line is always shown.
 
 ## Accessibility

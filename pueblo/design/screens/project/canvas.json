@@ -21,6 +21,6 @@
     "art": { "x": 1880, "y": 964, "w": 390, "text": "The vendor and the produce pictures are test art from the image tool, cleaned into small pixel sprites. Scene backgrounds are still flat-block placeholders. Numbers in the frame titles match the screen list.", "size": "m", "fill": "orange" }
   },
   "designSystems": [
-    { "title": "Pueblo Design System", "namespace": "pueblo", "artifact": "https://claude.ai/artifact/HJzmVnaVs5aQFM2pMs2jxL", "version": "1795236278-9d29", "copiedAt": "2026-11-21T04:44:51Z" }
+    { "title": "Pueblo Design System", "namespace": "pueblo", "artifact": "https://claude.ai/artifact/HJzmVnaVs5aQFM2pMs2jxL", "version": "1795237067-5b20", "copiedAt": "2026-11-21T04:58:04Z" }
   ]
 }

@@ -56,7 +56,7 @@ export const GAME = [
       sum: 'A list row pairs one English prompt and its icon with one blank slot.',
       use: ['Shopping lists, menus, symptoms, tasks: any set of things to say in Spanish.'],
       not: ['Showing Spanish on the left. The left side is always the side you already understand.'],
-      anatomy: ['Icon tile: 44 square, `cal-low`.', 'English: `title` style, with an optional quantity line in `label`.', 'Blank slot on the right.', 'Rows sit inside one `card` container with `radius-xl`.'],
+      anatomy: ['Picture: a line icon on a 44 square `cal-low` tile, or a pixel-art picture straight on the row with no tile (`pb-listrow__pic--art`).', 'English: `title` style, with an optional quantity line in `label`.', 'Blank slot on the right.', 'Rows sit inside one `card` container with `radius-xl`.'],
       place: 'In the challenge area, under the dialogue box.',
       states: ['Rest.', 'Correct: `nopal-container` row with the word "Correct".', 'Wrong: `cochinilla-container` row with "Not this one".'],
       do: ['Use an icon only when it is unambiguous.', 'Keep a list to six rows or fewer on one screen.'],
@@ -268,20 +268,20 @@ Pueblo.applyShapes();`,
     name: 'MapMarker', group: 'Navigation', height: 200, subtitle: 'A place on the town map',
     html: `
 <div class="line" style="gap:4px">
-  <div class="pb-marker" data-state="locked"><div class="pb-marker__shape" data-shape="circle"><span data-ic="lock"></span></div><span class="pb-marker__name">Banco</span><span class="pb-marker__state">Locked</span></div>
+  <div class="pb-marker" data-state="open" style="--wall:var(--wall-anil)"><div class="pb-marker__shape" data-shape="squircle" style="color:var(--card)"><span data-ic="landmark"></span></div><span class="pb-marker__name">Banco</span><span class="pb-marker__state">New</span></div>
   <div class="pb-marker" data-state="open" style="--wall:var(--wall-ocre)"><div class="pb-marker__shape" data-shape="squircle"><span data-ic="store"></span></div><span class="pb-marker__name">Mercado</span><span class="pb-marker__state">2 of 5</span></div>
   <div class="pb-marker" data-state="open" style="--wall:var(--wall-caribe)"><div class="pb-marker__shape" data-shape="squircle"><span data-ic="car-taxi-front"></span></div><span class="pb-marker__name">Sitio</span><span class="pb-marker__state">New</span></div>
   <div class="pb-marker" data-state="mastered" style="--wall:var(--wall-maya)"><div class="pb-marker__shape" data-shape="sunny"><span data-ic="trees"></span></div><span class="pb-marker__name">Plaza</span><span class="pb-marker__state">Mastered</span></div>
 </div>`,
     doc: {
-      sum: 'A map marker is one place on the town map, showing whether it is locked, open or mastered.',
+      sum: 'A map marker is one place on the town map, showing how far along you are there.',
       use: ['The town map.'],
       not: ['Lists. Use the place card there.'],
       anatomy: ['Emblem: 72 across, in the place\'s wall colour, with the place icon.', 'Name in the rótulo face.', 'State line in `label-small`.'],
       place: 'On the map at the place\'s building.',
-      states: ['Locked: neutral circle with a lock.', 'Open: squircle in the wall colour, with progress.', 'Mastered: sunny shape in the wall colour.'],
-      motion: 'Unlocking morphs circle to squircle; mastering morphs squircle to sunny. This is the map\'s hero moment.',
-      do: ['Use the wall colour here; the map is art, not a control surface.'],
+      states: ['New: squircle in the wall colour.', 'In progress: the same, with how many challenges are done.', 'Mastered: sunny shape in the wall colour.', 'Nothing is ever locked. Every place is open from the first day.'],
+      motion: 'Mastering a place morphs its squircle to sunny. This is the map\'s hero moment.',
+      do: ['Use the wall colour here; the map is art, not a control surface.', 'Use a white icon on the dark walls: rosa, terracota, purpura and anil.', 'Point to a suggested next place instead of locking the others.'],
       dont: ['Rely on the shape alone. The state line is always shown.'],
       a11y: ['Markers are 96 wide and at least 48 high to tap.', 'State is given in words.'],
       provide: 'The place, its state and its progress.',
@@ -311,14 +311,14 @@ Pueblo.applyShapes();`,
     name: 'AchievementBadge', group: 'Feedback', height: 220, subtitle: 'For something you can now do',
     html: `
 <div class="pb-badge"><div class="pb-badge__shape" data-shape="burst"><span data-ic="shopping-basket" data-size="28"></span></div><div><p class="pb-badge__name">Shopped without help</p><p class="pb-badge__how">A full list at the market, no hints.</p></div></div>
-<div class="pb-badge" data-earned="no"><div class="pb-badge__shape" data-shape="circle"><span data-ic="lock" data-size="24"></span></div><div><p class="pb-badge__name">Paid the exact fare</p><p class="pb-badge__how">Understand a spoken fare and pay it with no change.</p></div></div>`,
+<div class="pb-badge" data-earned="no"><div class="pb-badge__shape" data-shape="circle"><span data-ic="award" data-size="24"></span></div><div><p class="pb-badge__name">Paid the exact fare</p><p class="pb-badge__how">Understand a spoken fare and pay it with no change.</p></div></div>`,
     doc: {
       sum: 'An achievement badge marks something the player can now do in Spanish.',
       use: ['Can-do checks passed and skills shown in play.'],
       not: ['Counting taps, days or points. Volume is not an achievement.'],
       anatomy: ['Emblem: burst shape in `rosa`, 64 across, with an icon.', 'Name: what you did, in `title`.', 'How: one line in `label`.'],
       place: 'On the Achievements screen and in results when first earned.',
-      states: ['Earned.', 'Not yet earned: neutral circle with a lock, and the way to earn it.'],
+      states: ['Earned.', 'Not yet earned: neutral circle, and the way to earn it.'],
       motion: 'Earning morphs circle to burst with the slow spatial spring.',
       do: ['Name the ability in the past tense, as something done.'],
       dont: ['Hide how a badge is earned.'],

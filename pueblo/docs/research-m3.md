@@ -68,3 +68,12 @@ Each component's README ends with a Source section naming the Material component
 - `design/system/tools/specs/*.mjs` hold every component's preview and guidelines; `node tools/gen-components.mjs` writes them.
 - `design/system/src/behaviours.js` plus the Lucide icons become `bundle.js` via `node tools/build-bundle.mjs <lucide-static/icons>`.
 - Render check and interaction tests were run with Playwright from the session scratchpad; they are not yet saved in the repository.
+
+## Owner decisions, 2026-11-21 (screens review)
+
+- Nothing is locked. Every place and every challenge is open from the first day; the game suggests a next step instead.
+- Pixel-art pictures sit directly on a row, with no tile behind them.
+- Working title stays "Pueblo".
+- No native-speaker review is available; lists are verified by research (dictionary lookups).
+- Market vocabulary scope: fruit and vegetables (plus the measure words the challenges need). Kale and nectarina stay.
+- The sign-up question about gender must drive agreement in three places: what you say about yourself, how people address you, and words about other people.

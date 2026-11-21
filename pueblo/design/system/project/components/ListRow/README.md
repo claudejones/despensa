@@ -10,7 +10,7 @@ A list row pairs one English prompt and its icon with one blank slot.
 
 ## Anatomy
 
-- Icon tile: 44 square, `cal-low`.
+- Picture: a line icon on a 44 square `cal-low` tile, or a pixel-art picture straight on the row with no tile (`pb-listrow__pic--art`).
 - English: `title` style, with an optional quantity line in `label`.
 - Blank slot on the right.
 - Rows sit inside one `card` container with `radius-xl`.
