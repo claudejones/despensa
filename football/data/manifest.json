@@ -56,11 +56,17 @@
       "researchVersion": "2026-11-22-week11-sunday-1",
       "dataVersion": "2026-11-22-week11-sunday-1",
       "resultsVersion": "2026-11-22-week11-sunday-1-scores"
+    },
+    "12": {
+      "path": "2026/week-12.json",
+      "status": "preliminary",
+      "researchVersion": "2026-11-26-week12-thursday-1",
+      "dataVersion": "2026-11-26-week12-thursday-1"
     }
   },
-  "lastSuccessfulPublication": "2026-11-22T22:57:50-05:00",
-  "notice": "Week 11: 10 Sunday finals verified; 1 Sunday game live; Monday scheduled. Original picks preserved.",
-  "scoresCheckedAt": "2026-11-22T22:56:41-05:00",
-  "marketsCheckedAt": "2026-11-22T22:56:52-05:00",
-  "recordsCheckedAt": "2026-11-22T22:56:41-05:00"
+  "lastSuccessfulPublication": "2026-11-26T07:59:08-05:00",
+  "notice": "Week 12: three Thanksgiving picks; full 16-game schedule. Friday/weekend research preliminary; Wednesday final recorded without retrospective pick.",
+  "scoresCheckedAt": "2026-11-26T07:57:04-05:00",
+  "marketsCheckedAt": "2026-11-26T07:57:45-05:00",
+  "recordsCheckedAt": "2026-11-26T07:57:04-05:00"
 }

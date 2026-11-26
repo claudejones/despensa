@@ -3211,6 +3211,96 @@
       "archivedAt": "2026-11-21T08:05:07.593158-05:00",
       "archiveMode": "prospective",
       "researchVersion": "2026-11-21-week11-weekend-1"
+    },
+    {
+      "id": "2026:12:single:chi-det",
+      "kind": "single",
+      "title": "Detroit Lions",
+      "publishedAt": "2026-11-26T07:57:33-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Detroit Lions lean based on football form, availability and venue; independent of market prices.",
+      "legs": [
+        {
+          "gameId": "chi-det",
+          "team": "Detroit Lions",
+          "side": "YES",
+          "kickoff": "2026-11-26T13:00:00-05:00",
+          "record": "8-2-0"
+        }
+      ],
+      "season": 2026,
+      "week": 12,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV26CHIDET-DET",
+        "capturedAt": "2026-11-26T07:57:37-05:00",
+        "price": 0.49,
+        "payout": 4.081632653061225,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-26T07:59:08.691198-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-26-week12-thursday-1"
+    },
+    {
+      "id": "2026:12:single:phi-dal",
+      "kind": "single",
+      "title": "Dallas Cowboys",
+      "publishedAt": "2026-11-26T07:57:33-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Dallas Cowboys lean based on football form, availability and venue; independent of market prices.",
+      "legs": [
+        {
+          "gameId": "phi-dal",
+          "team": "Dallas Cowboys",
+          "side": "YES",
+          "kickoff": "2026-11-26T16:30:00-05:00",
+          "record": "5-6-0"
+        }
+      ],
+      "season": 2026,
+      "week": 12,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV26PHIDAL-DAL",
+        "capturedAt": "2026-11-26T07:57:37-05:00",
+        "price": 0.8,
+        "payout": 2.5,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-26T07:59:08.691198-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-26-week12-thursday-1"
+    },
+    {
+      "id": "2026:12:single:kc-buf",
+      "kind": "single",
+      "title": "Buffalo Bills",
+      "publishedAt": "2026-11-26T07:57:33-05:00",
+      "model": "source-based-qualitative-v1",
+      "rationale": "Buffalo Bills lean based on football form, availability and venue; independent of market prices.",
+      "legs": [
+        {
+          "gameId": "kc-buf",
+          "team": "Buffalo Bills",
+          "side": "YES",
+          "kickoff": "2026-11-26T20:20:00-05:00",
+          "record": "9-1-0"
+        }
+      ],
+      "season": 2026,
+      "week": 12,
+      "stake": 2,
+      "quote": {
+        "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXNFLGAME-26NOV26KCBUF-BUF",
+        "capturedAt": "2026-11-26T07:57:37-05:00",
+        "price": 0.59,
+        "payout": 3.3898305084745766,
+        "method": "Fractional $2 price benchmark; before trading costs"
+      },
+      "archivedAt": "2026-11-26T07:59:08.691198-05:00",
+      "archiveMode": "prospective",
+      "researchVersion": "2026-11-26-week12-thursday-1"
     }
   ]
 }
