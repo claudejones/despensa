@@ -1,0 +1,82 @@
+<!-- @dsCard group="Foundations" height=1200 width=960 page subtitle="The phone scaffold and control states" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .board { width: 960px; padding: 32px; }
+  h2 { font-size: 24px; line-height: 32px; font-weight: 900; margin: 0 0 4px; }
+  .lede { font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 660px; }
+  section { margin-bottom: 40px; } section:last-child { margin-bottom: 0; }
+  .meta { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .panel { background: var(--card); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-soft); }
+
+  .two { display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start; }
+  .phone { width: 300px; height: 620px; border-radius: 28px; background: var(--card); box-shadow: var(--shadow-soft); padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .z { border-radius: var(--radius-lg); display: grid; place-items: center; text-align: center; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: .1px; padding: 6px; }
+  .z small { display: block; font-size: 12px; line-height: 16px; color: inherit; opacity: .85; }
+  .z1 { height: 48px; background: var(--cal-low); }
+  .z2 { height: 150px; background: var(--wall-ocre); color: var(--ink); }
+  .z3 { height: 56px; background: var(--cal-container); margin: -24px 14px 0; position: relative; }
+  .z4 { flex: 1; background: var(--cal-low); }
+  .z5 { height: 52px; border-radius: var(--radius-full); background: var(--cobalto); color: var(--on-cobalto); }
+  .z6 { height: 52px; background: var(--cal-low); border: 2px dashed var(--outline); }
+  .notes { display: grid; gap: 10px; }
+  .notes div { background: var(--cal-low); border-radius: var(--radius-lg); padding: 12px 16px; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: .1px; }
+  .notes b { font-size: 16px; line-height: 24px; font-weight: 800; display: block; }
+  .states { display: grid; grid-template-columns: 150px repeat(4, 1fr); gap: 12px 16px; align-items: center; }
+  .states .h { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .states b { font-size: 16px; line-height: 24px; font-weight: 800; }
+  .pressed.pb-tile { transform: scale(1.06) rotate(-2deg); border-radius: var(--radius-lg-inc); }
+  .focus { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .states .pb-btn { min-height: 48px; font-size: 16px; line-height: 24px; }
+  .pressed.pb-btn { border-radius: var(--radius-md); transform: none; }
+  .states .pb-slot { min-width: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div class="pb board">
+  <section>
+    <h2>The phone scaffold</h2>
+    <p class="lede">Phone first, one-handed. The character sits at the top where you look, the action sits at the bottom where your thumb is.</p>
+    <div class="two">
+      <div class="phone">
+        <div class="z z1">Top bar<small>back · place name · coins</small></div>
+        <div class="z z2" style="height:120px">The encounter<small>character on the left · speech on the right</small></div>
+        <div class="z z4">The challenge<small>list, tiles, slider or coins · scrolls if needed</small></div>
+        <div class="z z5">One primary button</div>
+        <div class="z z6">Bottom bar<small>hidden during a challenge</small></div>
+      </div>
+      <div class="notes">
+        <div><b>Size classes</b>Compact under 600 wide: the layout shown. Medium 600 to 839 and expanded 840 and up: the same column centred at 480, with the town map beside it on expanded.</div>
+        <div><b>Gutters and targets</b>16 at the sides. Every touch target is at least 48 high. The primary button is 56, Material's medium size.</div>
+        <div><b>One hero per screen</b>The character and what they say are the hero. Everything else stays flat and quiet.</div>
+        <div><b>Shadow</b>One soft ambient shadow, on cards and the dialogue box only. Separation comes from tone first.</div>
+        <div><b>Sheets and dialogs</b>A bottom sheet for hints and results. A dialog only to confirm something you cannot undo, such as resetting progress.</div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h2>Control states</h2>
+    <p class="lede">Pressing changes shape as well as size. Focus is a solid ink ring. Disabled drops to neutral tone.</p>
+    <div class="panel">
+      <div class="states">
+        <span></span><span class="h">Rest</span><span class="h">Pressed</span><span class="h">Focus</span><span class="h">Disabled</span>
+        <b>Primary button</b>
+        <button class="pb-btn">Check</button><button class="pb-btn pressed">Check</button><button class="pb-btn focus">Check</button><button class="pb-btn" disabled>Check</button>
+        <b>Word tile</b>
+        <span><span class="pb-tile">limones</span></span><span><span class="pb-tile pressed">limones</span></span><span><span class="pb-tile focus">limones</span></span><span><span class="pb-tile" style="background:var(--cal-container);color:var(--ink-muted)">limones</span></span>
+        <span></span><span class="h">Empty</span><span class="h">Filled</span><span class="h">Correct</span><span class="h">Wrong</span>
+        <b>Blank slot</b>
+        <span class="pb-slot"></span><span class="pb-slot pb-slot--filled">limones</span>
+        <span class="pb-slot pb-slot--correct"><span data-ic="check" data-size="18" data-sw="3"></span>limones</span>
+        <span class="pb-slot pb-slot--wrong"><span data-ic="x" data-size="18" data-sw="3"></span>limas</span>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

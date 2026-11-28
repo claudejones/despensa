@@ -1,0 +1,49 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .cover { position: relative; width: 960px; height: 288px; overflow: hidden; background: var(--cal); }
+  svg { position: absolute; inset: 0; }
+  .cob { fill: var(--cobalto); } .ocre { fill: var(--ocre); } .rosa { fill: var(--rosa); } .maya { fill: var(--wall-maya); } .ink { fill: var(--ink); }
+  .cut { fill: var(--card); }
+  .name { position: absolute; left: 32px; bottom: 56px; font-family: var(--font-rotulo); font-size: 112px; line-height: 104px; color: var(--ink); margin: 0; }
+  .tag { position: absolute; left: 36px; bottom: 28px; max-width: 420px; font-family: var(--font-ui); font-size: 14px; line-height: 20px; font-weight: 700; color: var(--ink-muted); margin: 0; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <svg viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
+    <!--
+      Blocks: cobalto 240x288 slab, ocre 192x144, rosa 192x144, wall-maya 48x144 band, ink 48x144 band.
+      Arrangement: one tall slab with satellites, flush like a row of painted house fronts, bleeding off the right edge.
+      Pattern: Talavera tile, the row "tiles cut by the radius tokens", chosen because cobalt on white glaze is this system's action pairing.
+      Steps and radii: 48px pitch (radius-xxl), quarter-circle cuts of radius 48, satellite corners radius-xl 28.
+    -->
+    <rect class="cob" x="480" y="0" width="240" height="288"/>
+    <rect class="ocre" x="720" y="0" width="192" height="144"/>
+    <rect class="rosa" x="720" y="144" width="192" height="144"/>
+    <rect class="maya" x="912" y="0" width="48" height="144"/>
+    <rect class="ink" x="912" y="144" width="48" height="144"/>
+    <g class="cut">
+      <path d="M528 48 a48 48 0 0 1 48 48 h-48z"/>
+      <path d="M624 48 a48 48 0 0 0 -48 48 h48z"/>
+      <path d="M528 144 a48 48 0 0 0 48 -48 h-48z"/>
+      <path d="M624 144 a48 48 0 0 1 -48 -48 h48z"/>
+      <path d="M624 144 a48 48 0 0 1 48 48 h-48z"/>
+      <path d="M720 144 a48 48 0 0 0 -48 48 h48z"/>
+      <path d="M624 240 a48 48 0 0 0 48 -48 h-48z"/>
+      <path d="M720 240 a48 48 0 0 1 -48 -48 h48z"/>
+      <circle cx="576" cy="192" r="12"/>
+      <circle cx="672" cy="96" r="12"/>
+    </g>
+  </svg>
+  <p class="name">Pueblo</p>
+  <p class="tag">A Mexican town where you learn Spanish by living in it.</p>
+</div>
+</body>
+</html>

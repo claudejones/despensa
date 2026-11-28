@@ -1,0 +1,32 @@
+<!-- @dsCard group="Containers" height=464 subtitle="A panel at the edge on wide screens" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 780px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div style="position:relative;height:420px;border-radius:28px;overflow:hidden;background:var(--cal-container)">
+  <div style="padding:24px;max-width:340px"><p class="headline">Town</p><p class="body" style="color:var(--ink-muted)">The town stays visible beside the panel.</p></div>
+  <div class="pb-overlay pb-overlay--end">
+    <aside class="pb-sidesheet" aria-label="Settings">
+      <div class="pb-sidesheet__head"><h2 class="pb-sidesheet__title">Settings</h2><button class="pb-iconbtn" aria-label="Close settings"><span data-ic="x"></span></button></div>
+      <div class="pb-sidesheet__body">
+        <div class="pb-setrow" style="padding-left:0;padding-right:0"><span data-ic="captions"></span><div class="pb-setrow__body"><p class="pb-setrow__title">English subtitles</p><p class="pb-setrow__text">Show the English under what people say.</p></div><label class="pb-switch"><input type="checkbox" checked aria-label="English subtitles"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+        <div class="pb-setrow" style="padding-left:0;padding-right:0"><span data-ic="timer"></span><div class="pb-setrow__body"><p class="pb-setrow__title">Timed replies</p><p class="pb-setrow__text">People lose patience if you take too long.</p></div><label class="pb-switch"><input type="checkbox" aria-label="Timed replies"><span class="pb-switch__track"></span><span class="pb-switch__handle"></span></label></div>
+      </div>
+    </aside>
+  </div>
+</div>
+</div>
+</body>
+</html>

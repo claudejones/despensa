@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Banco: key in the amount</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/pueblo/tokens.css">
+<link rel="stylesheet" href="ds/pueblo/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#1B3FB5}
+</style>
+</helmet>
+<div class="pb" style="width: 390px; height: 844px; box-sizing: border-box; background: var(--cal); display: flex; flex-direction: column; overflow: hidden; position: relative">
+  <header class="pb-topbar">
+    <a class="pb-iconbtn" href="TownMap.dc.html" aria-label="Back to town"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg></a>
+    <h1 class="pb-topbar__title">Banco</h1>
+    <div class="pb-topbar__end"><span class="pb-chip pb-chip--coins"><svg class="pb-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.7.71-2.82 2.82" /></svg>$120</span></div>
+  </header>
+  <div style="padding: 0 16px 10px"><div class="pb-progress pb-progress--steps" style="height: 8px" role="img" aria-label="Step 1 of 4"><i class="on"></i><i></i><i></i><i></i></div></div>
+  <div style="padding: 0 16px 14px">
+    <div class="pb-encounter" data-place="banco">
+      <div class="pb-encounter__who pb-encounter__who--blank" role="img" aria-label="Don Rafael, portrait to come"></div>
+      <div class="pb-dialogue">
+        <p class="pb-dialogue__who">Don Rafael</p>
+        <p class="pb-dialogue__es">Su saldo es de mil doscientos cincuenta pesos.</p>
+        <p class="pb-dialogue__en">Your balance is ··· pesos.</p>
+      </div>
+      <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /><path d="M16 9a5 5 0 0 1 0 6" /><path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></svg></button>
+      <span class="pb-encounter__hud pb-patience" role="img" aria-label="Patience 5 of 5"><svg class="pb-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" x2="14" y1="2" y2="2" /><line x1="12" x2="15" y1="14" y2="11" /><circle cx="12" cy="14" r="8" /></svg>Patience<span class="pb-patience__pips"><i></i><i></i><i></i><i></i><i></i></span></span>
+    </div>
+  </div>
+  <div style="flex: 1; padding: 0 16px 12px; display: flex; flex-direction: column; gap: 12px; min-height: 0">
+    <p class="body">Key in the balance he told you.</p>
+    <div class="pb-amount" aria-live="polite">12</div>
+    <div class="pb-numpad" style="margin: 0 auto">
+      <button class="pb-key">1</button><button class="pb-key">2</button><button class="pb-key">3</button>
+      <button class="pb-key">4</button><button class="pb-key">5</button><button class="pb-key">6</button>
+      <button class="pb-key">7</button><button class="pb-key">8</button><button class="pb-key">9</button>
+      <span></span><button class="pb-key">0</button><button class="pb-key" aria-label="Delete"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z" /><path d="m12 9 6 6" /><path d="m18 9-6 6" /></svg></button>
+    </div>
+  </div>
+  <div style="padding: 0 16px 24px; display: flex; gap: 8px; align-items: center">
+    <button class="pb-iconbtn pb-iconbtn--tonal pb-iconbtn--lg" aria-label="Hint, costs 5 pesos"><svg class="pb-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></button>
+    <button class="pb-iconbtn pb-iconbtn--tonal pb-iconbtn--lg" aria-label="How the words sound"><span class="title" aria-hidden="true">Abc</span></button>
+    <a class="pb-btn" href="Banco.dc.html" style="text-decoration: none; box-sizing: border-box; flex: 1">Check</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

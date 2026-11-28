@@ -1,0 +1,27 @@
+<!-- @dsCard group="Feedback" height=92 subtitle="A short wait" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="line" style="gap:16px"><div class="pb-loading" id="l" data-shape="cookie"></div><p class="cap">Setting up the market…</p></div>
+</div>
+<script>
+(function () {
+var l = document.getElementById('l'), seq = ['cookie', 'clover', 'burst', 'squircle', 'flower', 'sunny'], k = 0;
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(function () { k = (k + 1) % seq.length; l.style.clipPath = Pueblo.shape(seq[k]); }, 700);
+})();
+</script>
+</body>
+</html>

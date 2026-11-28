@@ -1,0 +1,2389 @@
+{
+ "place": "mercado",
+ "version": 1,
+ "builtFrom": "tools/mercado-source.mjs",
+ "groups": {
+  "frutas": {
+   "es": "Frutas",
+   "en": "Fruit"
+  },
+  "verduras": {
+   "es": "Verduras",
+   "en": "Vegetables"
+  },
+  "chiles": {
+   "es": "Chiles y hierbas",
+   "en": "Chillies and herbs"
+  },
+  "palabras": {
+   "es": "Palabras del mercado",
+   "en": "Market words"
+  }
+ },
+ "items": [
+  {
+   "id": "aguacate",
+   "es": "aguacate",
+   "article": "el",
+   "plural": "aguacates",
+   "en": "avocado",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 43.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "aguacate",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "platano",
+   "es": "plátano",
+   "article": "el",
+   "plural": "plátanos",
+   "en": "banana",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "banana",
+   "price": {
+    "pesos": 31.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "plátano",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "manzana",
+   "es": "manzana",
+   "article": "la",
+   "plural": "manzanas",
+   "en": "apple",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "apple",
+   "price": {
+    "pesos": 59.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "manzana",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "pera",
+   "es": "pera",
+   "article": "la",
+   "plural": "peras",
+   "en": "pear",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 80.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "pera",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "durazno",
+   "es": "durazno",
+   "article": "el",
+   "plural": "duraznos",
+   "en": "peach",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 99,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "durazno",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "pina",
+   "es": "piña",
+   "article": "la",
+   "plural": "piñas",
+   "en": "pineapple",
+   "group": "frutas",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "note": "The known price is per kilo.",
+   "price": {
+    "pesos": 24.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "piña",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "limon",
+   "es": "limón",
+   "article": "el",
+   "plural": "limones",
+   "en": "lime",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "citrus",
+   "note": "In Mexico limón is the small green lime, not the yellow lemon.",
+   "price": {
+    "pesos": 30.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "limón",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "limon-amarillo",
+   "es": "limón amarillo",
+   "article": "el",
+   "plural": "limones amarillos",
+   "en": "lemon",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": "citrus",
+   "note": "The yellow lemon. Labels may say limón eureka.",
+   "price": {
+    "pesos": 46.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "limón",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "naranja",
+   "es": "naranja",
+   "article": "la",
+   "plural": "naranjas",
+   "en": "orange",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "citrus",
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "naranja",
+    "found": true,
+    "categories": [
+     "s f",
+     "adj m y f y s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "mandarina",
+   "es": "mandarina",
+   "article": "la",
+   "plural": "mandarinas",
+   "en": "mandarin",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "citrus",
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "mandarina",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "toronja",
+   "es": "toronja",
+   "article": "la",
+   "plural": "toronjas",
+   "en": "grapefruit",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": "citrus",
+   "price": {
+    "pesos": 30,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "toronja",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "lima",
+   "es": "lima",
+   "article": "la",
+   "plural": "limas",
+   "en": "sweet lime",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": "citrus",
+   "note": "A mild, sweet citrus, as in sopa de lima. It is not the English \"lime\".",
+   "price": {
+    "pesos": 30,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "lima",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "sandia",
+   "es": "sandía",
+   "article": "la",
+   "plural": "sandías",
+   "en": "watermelon",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 15,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "sandía",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "melon",
+   "es": "melón",
+   "article": "el",
+   "plural": "melones",
+   "en": "melon",
+   "group": "frutas",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 45,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "melón",
+    "found": true,
+    "categories": [
+     "s m",
+     "adj"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "papaya",
+   "es": "papaya",
+   "article": "la",
+   "plural": "papayas",
+   "en": "papaya",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 30,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "papaya",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "mango",
+   "es": "mango",
+   "article": "el",
+   "plural": "mangos",
+   "en": "mango",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 40,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "mango",
+    "found": true,
+    "categories": [
+     "s m",
+     "s m y f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "fresa",
+   "es": "fresa",
+   "article": "la",
+   "plural": "fresas",
+   "en": "strawberry",
+   "group": "frutas",
+   "level": 1,
+   "sold": "caja",
+   "icon": null,
+   "price": {
+    "pesos": 60,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "fresa",
+    "found": true,
+    "categories": [
+     "s f",
+     "adj m y f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "arandano",
+   "es": "arándano",
+   "article": "el",
+   "plural": "arándanos",
+   "en": "blueberry",
+   "group": "frutas",
+   "level": 1,
+   "sold": "caja",
+   "icon": null,
+   "price": {
+    "pesos": 58.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "arándano",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "frambuesa",
+   "es": "frambuesa",
+   "article": "la",
+   "plural": "frambuesas",
+   "en": "raspberry",
+   "group": "frutas",
+   "level": 2,
+   "sold": "caja",
+   "icon": null,
+   "price": {
+    "pesos": 70,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "frambuesa",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "zarzamora",
+   "es": "zarzamora",
+   "article": "la",
+   "plural": "zarzamoras",
+   "en": "blackberry",
+   "group": "frutas",
+   "level": 2,
+   "sold": "caja",
+   "icon": null,
+   "price": {
+    "pesos": 65,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "zarzamora",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "uva",
+   "es": "uva",
+   "article": "la",
+   "plural": "uvas",
+   "en": "grape",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "grape",
+   "price": {
+    "pesos": 90,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "uva",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "guayaba",
+   "es": "guayaba",
+   "article": "la",
+   "plural": "guayabas",
+   "en": "guava",
+   "group": "frutas",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "guayaba",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "coco",
+   "es": "coco",
+   "article": "el",
+   "plural": "cocos",
+   "en": "coconut",
+   "group": "frutas",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "coco",
+    "found": true,
+    "categories": [
+     "s m",
+     "adj y s"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "ciruela",
+   "es": "ciruela",
+   "article": "la",
+   "plural": "ciruelas",
+   "en": "plum",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 70,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "ciruela",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "ciruela-pasa",
+   "es": "ciruela pasa",
+   "article": "la",
+   "plural": "ciruelas pasas",
+   "en": "prune",
+   "group": "frutas",
+   "level": 2,
+   "sold": "bolsa",
+   "icon": null,
+   "note": "The known price is per kilo.",
+   "price": {
+    "pesos": 298,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "ciruela",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "datil",
+   "es": "dátil",
+   "article": "el",
+   "plural": "dátiles",
+   "en": "date",
+   "group": "frutas",
+   "level": 2,
+   "sold": "caja",
+   "icon": null,
+   "price": {
+    "pesos": 175,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "dátil",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "kiwi",
+   "es": "kiwi",
+   "article": "el",
+   "plural": "kiwis",
+   "en": "kiwi",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 90,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "kiwi",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "cereza",
+   "es": "cereza",
+   "article": "la",
+   "plural": "cerezas",
+   "en": "cherry",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": "cherry",
+   "price": {
+    "pesos": 200,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "cereza",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "higo",
+   "es": "higo",
+   "article": "el",
+   "plural": "higos",
+   "en": "fig",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 120,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "higo",
+    "found": true,
+    "categories": [
+     "s m",
+     "pl"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "granada",
+   "es": "granada",
+   "article": "la",
+   "plural": "granadas",
+   "en": "pomegranate",
+   "group": "frutas",
+   "level": 2,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "granada",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "chabacano",
+   "es": "chabacano",
+   "article": "el",
+   "plural": "chabacanos",
+   "en": "apricot",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "note": "The Mexican word; elsewhere albaricoque.",
+   "price": {
+    "pesos": 90,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "chabacano",
+    "found": true,
+    "categories": [
+     "s m",
+     "adj"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "nectarina",
+   "es": "nectarina",
+   "article": "la",
+   "plural": "nectarinas",
+   "en": "nectarine",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "note": "Not in the Diccionario del español de México; a standard word elsewhere.",
+   "price": {
+    "pesos": 100,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   }
+  },
+  {
+   "id": "tuna",
+   "es": "tuna",
+   "article": "la",
+   "plural": "tunas",
+   "en": "prickly pear",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "note": "The cactus fruit. The fish is atún.",
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "tuna",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "pitahaya",
+   "es": "pitahaya",
+   "article": "la",
+   "plural": "pitahayas",
+   "en": "dragon fruit",
+   "group": "frutas",
+   "level": 2,
+   "sold": "pieza",
+   "icon": null,
+   "note": "Also spelled pitaya.",
+   "price": {
+    "pesos": 40,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "pitahaya",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "mamey",
+   "es": "mamey",
+   "article": "el",
+   "plural": "mameyes",
+   "en": "mamey",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 60,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "mamey",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "guanabana",
+   "es": "guanábana",
+   "article": "la",
+   "plural": "guanábanas",
+   "en": "soursop",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 70,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "guanábana",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "maracuya",
+   "es": "maracuyá",
+   "article": "el",
+   "plural": "maracuyás",
+   "en": "passion fruit",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 80,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "maracuyá",
+    "found": true,
+    "categories": [
+     "s m o f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "tamarindo",
+   "es": "tamarindo",
+   "article": "el",
+   "plural": "tamarindos",
+   "en": "tamarind",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 80,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "tamarindo",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "platano-macho",
+   "es": "plátano macho",
+   "article": "el",
+   "plural": "plátanos machos",
+   "en": "plantain",
+   "group": "frutas",
+   "level": 2,
+   "sold": "kilo",
+   "icon": "banana",
+   "note": "The cooking banana.",
+   "price": {
+    "pesos": 30,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "plátano",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "tomate",
+   "es": "tomate",
+   "article": "el",
+   "plural": "tomates",
+   "en": "tomato",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "note": "In central Mexico the red tomato is usually jitomate, and tomate alone can mean the green tomatillo.",
+   "price": {
+    "pesos": 72.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "tomate",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "tomate-verde",
+   "es": "tomate verde",
+   "article": "el",
+   "plural": "tomates verdes",
+   "en": "tomatillo",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "note": "Also tomatillo. The base of salsa verde.",
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "tomate",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "cebolla",
+   "es": "cebolla",
+   "article": "la",
+   "plural": "cebollas",
+   "en": "onion",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 60.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "cebolla",
+    "found": true,
+    "categories": [
+     "s f",
+     "s f pl"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "cebolla-morada",
+   "es": "cebolla morada",
+   "article": "la",
+   "plural": "cebollas moradas",
+   "en": "red onion",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 40,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "cebolla",
+    "found": true,
+    "categories": [
+     "s f",
+     "s f pl"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "cebolla-cambray",
+   "es": "cebolla cambray",
+   "article": "la",
+   "plural": "cebollas cambray",
+   "en": "spring onion",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 20,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "cambray",
+    "found": true,
+    "categories": [
+     "adj m y f",
+     "s m",
+     "s m o f"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "ajo",
+   "es": "ajo",
+   "article": "el",
+   "plural": "ajos",
+   "en": "garlic",
+   "group": "verduras",
+   "level": 1,
+   "sold": "cabeza",
+   "icon": null,
+   "note": "The known price is per kilo. One bulb is una cabeza de ajo.",
+   "price": {
+    "pesos": 121.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "ajo",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "papa",
+   "es": "papa",
+   "article": "la",
+   "plural": "papas",
+   "en": "potato",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 64.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "papa",
+    "found": true,
+    "categories": [
+     "s f",
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "camote",
+   "es": "camote",
+   "article": "el",
+   "plural": "camotes",
+   "en": "sweet potato",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "camote",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "zanahoria",
+   "es": "zanahoria",
+   "article": "la",
+   "plural": "zanahorias",
+   "en": "carrot",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "carrot",
+   "price": {
+    "pesos": 20,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "zanahoria",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "calabacita",
+   "es": "calabacita",
+   "article": "la",
+   "plural": "calabacitas",
+   "en": "zucchini",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "note": "Labels may say calabaza italiana.",
+   "price": {
+    "pesos": 24.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "calabacita",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "calabaza",
+   "es": "calabaza",
+   "article": "la",
+   "plural": "calabazas",
+   "en": "squash",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "calabaza",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "chayote",
+   "es": "chayote",
+   "article": "el",
+   "plural": "chayotes",
+   "en": "chayote",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "chayote",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "pepino",
+   "es": "pepino",
+   "article": "el",
+   "plural": "pepinos",
+   "en": "cucumber",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "pepino",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "lechuga",
+   "es": "lechuga",
+   "article": "la",
+   "plural": "lechugas",
+   "en": "lettuce",
+   "group": "verduras",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 38.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "lechuga",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "espinaca",
+   "es": "espinaca",
+   "article": "la",
+   "plural": "espinacas",
+   "en": "spinach",
+   "group": "verduras",
+   "level": 1,
+   "sold": "manojo",
+   "icon": null,
+   "note": "Usually said in the plural: espinacas.",
+   "price": {
+    "pesos": 11.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "espinaca",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "acelga",
+   "es": "acelga",
+   "article": "la",
+   "plural": "acelgas",
+   "en": "chard",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "note": "Usually said in the plural: acelgas.",
+   "price": {
+    "pesos": 9.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "acelga",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "col",
+   "es": "col",
+   "article": "la",
+   "plural": "coles",
+   "en": "cabbage",
+   "group": "verduras",
+   "level": 2,
+   "sold": "pieza",
+   "icon": null,
+   "note": "Also repollo.",
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "col",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "kale",
+   "es": "kale",
+   "article": "el",
+   "plural": "kale",
+   "en": "kale",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "note": "A borrowed word; also col rizada.",
+   "price": {
+    "pesos": 40,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   }
+  },
+  {
+   "id": "brocoli",
+   "es": "brócoli",
+   "article": "el",
+   "plural": "brócolis",
+   "en": "broccoli",
+   "group": "verduras",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 35,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "brócoli",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "coliflor",
+   "es": "coliflor",
+   "article": "la",
+   "plural": "coliflores",
+   "en": "cauliflower",
+   "group": "verduras",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 40,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "coliflor",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "apio",
+   "es": "apio",
+   "article": "el",
+   "plural": "apios",
+   "en": "celery",
+   "group": "verduras",
+   "level": 2,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "apio",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "elote",
+   "es": "elote",
+   "article": "el",
+   "plural": "elotes",
+   "en": "corn on the cob",
+   "group": "verduras",
+   "level": 1,
+   "sold": "pieza",
+   "icon": null,
+   "note": "Fresh corn. The dry grain is maíz.",
+   "price": {
+    "pesos": 10,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "elote",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "champinon",
+   "es": "champiñón",
+   "article": "el",
+   "plural": "champiñones",
+   "en": "mushroom",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 114.5,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "champiñón",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "seta",
+   "es": "seta",
+   "article": "la",
+   "plural": "setas",
+   "en": "oyster mushroom",
+   "group": "verduras",
+   "level": 2,
+   "sold": "charola",
+   "icon": null,
+   "price": {
+    "pesos": 34.9,
+    "kind": "known",
+    "source": "Chedraui receipts, Aug-Nov 2026"
+   },
+   "dictionary": {
+    "headword": "seta",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "nopal",
+   "es": "nopal",
+   "article": "el",
+   "plural": "nopales",
+   "en": "cactus paddle",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 30,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "nopal",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "ejote",
+   "es": "ejote",
+   "article": "el",
+   "plural": "ejotes",
+   "en": "green bean",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": "bean",
+   "price": {
+    "pesos": 45,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "ejote",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "chicharo",
+   "es": "chícharo",
+   "article": "el",
+   "plural": "chícharos",
+   "en": "pea",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 60,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "chícharo",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "betabel",
+   "es": "betabel",
+   "article": "el",
+   "plural": "betabeles",
+   "en": "beetroot",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "betabel",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "rabano",
+   "es": "rábano",
+   "article": "el",
+   "plural": "rábanos",
+   "en": "radish",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 15,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "rábano",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "pimiento-morron",
+   "es": "pimiento morrón",
+   "article": "el",
+   "plural": "pimientos morrones",
+   "en": "bell pepper",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 70,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "pimiento",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "berenjena",
+   "es": "berenjena",
+   "article": "la",
+   "plural": "berenjenas",
+   "en": "aubergine",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 45,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "berenjena",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "esparrago",
+   "es": "espárrago",
+   "article": "el",
+   "plural": "espárragos",
+   "en": "asparagus",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 70,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "espárrago",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "poro",
+   "es": "poro",
+   "article": "el",
+   "plural": "poros",
+   "en": "leek",
+   "group": "verduras",
+   "level": 2,
+   "sold": "pieza",
+   "icon": null,
+   "price": {
+    "pesos": 20,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "poro",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "jengibre",
+   "es": "jengibre",
+   "article": "el",
+   "plural": "jengibres",
+   "en": "ginger",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 90,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "jengibre",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "jicama",
+   "es": "jícama",
+   "article": "la",
+   "plural": "jícamas",
+   "en": "jicama",
+   "group": "verduras",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "jícama",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "yuca",
+   "es": "yuca",
+   "article": "la",
+   "plural": "yucas",
+   "en": "cassava",
+   "group": "verduras",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 30,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "yuca",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "flor-de-calabaza",
+   "es": "flor de calabaza",
+   "article": "la",
+   "plural": "flores de calabaza",
+   "en": "squash blossom",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 25,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "flor",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "verdolaga",
+   "es": "verdolaga",
+   "article": "la",
+   "plural": "verdolagas",
+   "en": "purslane",
+   "group": "verduras",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 15,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "verdolaga",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "chile",
+   "es": "chile",
+   "article": "el",
+   "plural": "chiles",
+   "en": "chilli",
+   "group": "chiles",
+   "level": 1,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 50,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "chile",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "chile-jalapeno",
+   "es": "chile jalapeño",
+   "article": "el",
+   "plural": "chiles jalapeños",
+   "en": "jalapeño",
+   "group": "chiles",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 45,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "jalapeño",
+    "found": true,
+    "categories": [
+     "adj y s"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "chile-serrano",
+   "es": "chile serrano",
+   "article": "el",
+   "plural": "chiles serranos",
+   "en": "serrano chilli",
+   "group": "chiles",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 50,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "serrano",
+    "found": true,
+    "categories": [
+     "adj y s",
+     "s y adj m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "chile-habanero",
+   "es": "chile habanero",
+   "article": "el",
+   "plural": "chiles habaneros",
+   "en": "habanero",
+   "group": "chiles",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "note": "The chilli of the Yucatán peninsula, and very hot.",
+   "price": {
+    "pesos": 120,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "habanero",
+    "found": true,
+    "categories": [
+     "adj y s",
+     "s m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "chile-poblano",
+   "es": "chile poblano",
+   "article": "el",
+   "plural": "chiles poblanos",
+   "en": "poblano chilli",
+   "group": "chiles",
+   "level": 2,
+   "sold": "kilo",
+   "icon": null,
+   "price": {
+    "pesos": 60,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "poblano",
+    "found": true,
+    "categories": [
+     "adj y s"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "cilantro",
+   "es": "cilantro",
+   "article": "el",
+   "plural": "cilantros",
+   "en": "coriander",
+   "group": "chiles",
+   "level": 1,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 8,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "cilantro",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "perejil",
+   "es": "perejil",
+   "article": "el",
+   "plural": "perejiles",
+   "en": "parsley",
+   "group": "chiles",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 8,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "perejil",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "epazote",
+   "es": "epazote",
+   "article": "el",
+   "plural": "epazotes",
+   "en": "epazote",
+   "group": "chiles",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 8,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "epazote",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "hierbabuena",
+   "es": "hierbabuena",
+   "article": "la",
+   "plural": "hierbabuenas",
+   "en": "mint",
+   "group": "chiles",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 10,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "hierbabuena",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "albahaca",
+   "es": "albahaca",
+   "article": "la",
+   "plural": "albahacas",
+   "en": "basil",
+   "group": "chiles",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 15,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "albahaca",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "romero",
+   "es": "romero",
+   "article": "el",
+   "plural": "romeros",
+   "en": "rosemary",
+   "group": "chiles",
+   "level": 2,
+   "sold": "manojo",
+   "icon": null,
+   "price": {
+    "pesos": 15,
+    "kind": "preset",
+    "source": "Chosen for the game"
+   },
+   "dictionary": {
+    "headword": "romero",
+    "found": true,
+    "categories": [
+     "s m",
+     "s"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "fruta",
+   "es": "fruta",
+   "article": "la",
+   "plural": "frutas",
+   "en": "fruit",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": "apple",
+   "dictionary": {
+    "headword": "fruta",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "verdura",
+   "es": "verdura",
+   "article": "la",
+   "plural": "verduras",
+   "en": "vegetable",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": "carrot",
+   "dictionary": {
+    "headword": "verdura",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "kilo",
+   "es": "kilo",
+   "article": "el",
+   "plural": "kilos",
+   "en": "kilo",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": "scale",
+   "dictionary": {
+    "headword": "kilo",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "medio-kilo",
+   "es": "medio kilo",
+   "article": "el",
+   "plural": "medios kilos",
+   "en": "half a kilo",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": "scale",
+   "dictionary": {
+    "headword": "medio",
+    "found": true,
+    "categories": [
+     "adj",
+     "adv",
+     "s m"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "cuarto-de-kilo",
+   "es": "cuarto de kilo",
+   "article": "el",
+   "plural": "cuartos de kilo",
+   "en": "quarter of a kilo",
+   "group": "palabras",
+   "level": 2,
+   "sold": null,
+   "icon": "scale",
+   "dictionary": {
+    "headword": "cuarto",
+    "found": true,
+    "categories": [
+     "s m",
+     "adj"
+    ],
+    "checked": false
+   }
+  },
+  {
+   "id": "pieza",
+   "es": "pieza",
+   "article": "la",
+   "plural": "piezas",
+   "en": "one (a single item)",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": null,
+   "note": "Sold by the piece: una pieza.",
+   "dictionary": {
+    "headword": "pieza",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "manojo",
+   "es": "manojo",
+   "article": "el",
+   "plural": "manojos",
+   "en": "bunch",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": null,
+   "dictionary": {
+    "headword": "manojo",
+    "found": true,
+    "categories": [
+     "s m"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "docena",
+   "es": "docena",
+   "article": "la",
+   "plural": "docenas",
+   "en": "dozen",
+   "group": "palabras",
+   "level": 2,
+   "sold": null,
+   "icon": null,
+   "dictionary": {
+    "headword": "docena",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "bolsa",
+   "es": "bolsa",
+   "article": "la",
+   "plural": "bolsas",
+   "en": "bag",
+   "group": "palabras",
+   "level": 1,
+   "sold": null,
+   "icon": null,
+   "dictionary": {
+    "headword": "bolsa",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "caja",
+   "es": "caja",
+   "article": "la",
+   "plural": "cajas",
+   "en": "box, punnet",
+   "group": "palabras",
+   "level": 2,
+   "sold": null,
+   "icon": null,
+   "dictionary": {
+    "headword": "caja",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "cabeza",
+   "es": "cabeza",
+   "article": "la",
+   "plural": "cabezas",
+   "en": "head, bulb",
+   "group": "palabras",
+   "level": 2,
+   "sold": null,
+   "icon": null,
+   "note": "Una cabeza de ajo is a bulb of garlic.",
+   "dictionary": {
+    "headword": "cabeza",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  },
+  {
+   "id": "charola",
+   "es": "charola",
+   "article": "la",
+   "plural": "charolas",
+   "en": "tray",
+   "group": "palabras",
+   "level": 2,
+   "sold": null,
+   "icon": null,
+   "dictionary": {
+    "headword": "charola",
+    "found": true,
+    "categories": [
+     "s f"
+    ],
+    "checked": true
+   }
+  }
+ ]
+}

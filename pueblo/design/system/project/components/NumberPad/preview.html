@@ -1,0 +1,28 @@
+<!-- @dsCard group="Controls" height=454 subtitle="Try it: key in the amount you hear" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-talk"><div class="pb-dialogue"><p class="pb-dialogue__es">Mil doscientos cincuenta pesos.</p><p class="pb-dialogue__en">1,250 pesos.</p></div><button class="pb-iconbtn pb-iconbtn--tonal" aria-label="Hear it again" data-say="Mil doscientos cincuenta pesos"><span data-ic="volume-2"></span></button></div>
+<div class="pb-amount" id="a" aria-live="polite"></div>
+<div class="pb-numpad" data-keys data-for="a" data-max="6" style="margin:0 auto">
+  <button class="pb-key" data-key="1">1</button><button class="pb-key" data-key="2">2</button><button class="pb-key" data-key="3">3</button>
+  <button class="pb-key" data-key="4">4</button><button class="pb-key" data-key="5">5</button><button class="pb-key" data-key="6">6</button>
+  <button class="pb-key" data-key="7">7</button><button class="pb-key" data-key="8">8</button><button class="pb-key" data-key="9">9</button>
+  <span></span><button class="pb-key" data-key="0">0</button><button class="pb-key" data-key="back" aria-label="Delete"><span data-ic="delete"></span></button>
+</div>
+</div>
+</body>
+</html>

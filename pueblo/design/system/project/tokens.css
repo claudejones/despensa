@@ -1,0 +1,67 @@
+/* Pueblo Design System — generated from tokens.json */
+:root, [data-theme="light"] {
+  --cal: #FBF7EF;
+  --cal-low: #F3ECDD;
+  --cal-container: #E9E0CC;
+  --card: #FFFFFF;
+  --ink: #1F1B16;
+  --ink-muted: #5E564B;
+  --outline: #857B6C;
+  --outline-soft: #D9CFBA;
+  --cobalto: #1B3FB5;
+  --on-cobalto: #FFFFFF;
+  --cobalto-container: #DDE5FF;
+  --on-cobalto-container: #0C2470;
+  --nopal: #5CCB87;
+  --on-nopal: var(--ink);
+  --nopal-ink: #17683A;
+  --nopal-container: #D6F1DE;
+  --cochinilla: #B3202F;
+  --on-cochinilla: #FFFFFF;
+  --cochinilla-container: #FBDCDA;
+  --on-cochinilla-container: #7A0F1B;
+  --ocre: #E8AE2C;
+  --on-ocre: var(--ink);
+  --ocre-ink: #7A5200;
+  --rosa: #D6006F;
+  --on-rosa: #FFFFFF;
+  --rosa-container: #FFD9EA;
+  --on-rosa-container: #8A0047;
+  --wall-ocre: #E8AE2C;
+  --wall-rosa: #E4007C;
+  --wall-caribe: #18A7A0;
+  --wall-jade: #2E9D7A;
+  --wall-terracota: #C2613A;
+  --wall-maya: #5BB5D6;
+  --wall-purpura: #7A3E9D;
+  --wall-anil: #2B3A8C;
+  --wall-cal: #FFFDF8;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-lg-inc: 20px;
+  --radius-xl: 28px;
+  --radius-xl-inc: 32px;
+  --radius-xxl: 48px;
+  --radius-full: 999px;
+  --font-ui: "Nunito", system-ui, sans-serif;
+  --font-rotulo: "Lilita One", "Nunito", system-ui, sans-serif;
+}
+.rotulo-large { font-family: var(--font-rotulo); font-size: 36px; line-height: 44px; font-weight: 400; }
+.rotulo-small { font-family: var(--font-rotulo); font-size: 24px; line-height: 32px; font-weight: 400; }
+.headline { font-family: var(--font-ui); font-size: 24px; line-height: 32px; font-weight: 900; }
+.word { font-family: var(--font-ui); font-size: 22px; line-height: 28px; font-weight: 800; }
+.dialogue { font-family: var(--font-ui); font-size: 22px; line-height: 28px; font-weight: 800; }
+.title { font-family: var(--font-ui); font-size: 16px; line-height: 24px; font-weight: 800; letter-spacing: 0.15px; }
+.body { font-family: var(--font-ui); font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: 0.5px; }
+.label { font-family: var(--font-ui); font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: 0.1px; }
+.label-small { font-family: var(--font-ui); font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.5px; }

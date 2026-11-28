@@ -1,0 +1,33 @@
+<!-- @dsCard group="Dialogue" height=472 subtitle="Character left, speech right" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--cal); }
+  .stage { padding: 16px; max-width: 412px; display: grid; gap: 12px; }
+  .cap { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .5px; color: var(--ink-muted); }
+  .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+</style>
+</head>
+<body>
+<div class="pb stage">
+<div class="pb-encounter" data-place="mercado">
+  <div class="pb-encounter__who pb-encounter__who--blank" role="img" aria-label="Doña Carmen"></div>
+  <div class="pb-dialogue"><p class="pb-dialogue__who">Doña Carmen</p><p class="pb-dialogue__es">¿Qué va a llevar?</p><p class="pb-dialogue__en">What would you like?</p></div>
+  <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again" data-say="¿Qué va a llevar?"><span data-ic="volume-2"></span></button>
+</div>
+<p class="cap">Compact, for a challenge. The dark block stands in for the character's sprite.</p>
+<div class="pb-encounter pb-encounter--tall" data-place="banco">
+  <div class="pb-encounter__who pb-encounter__who--blank" role="img" aria-label="The bank teller"></div>
+  <div class="pb-dialogue"><p class="pb-dialogue__who">Don Rafael</p><p class="pb-dialogue__es">Buenas tardes. ¿En qué le puedo servir?</p><p class="pb-dialogue__en">Good afternoon. How can I help you?</p></div>
+  <button class="pb-iconbtn pb-iconbtn--tonal pb-encounter__say" aria-label="Hear it again" data-say="Buenas tardes. ¿En qué le puedo servir?"><span data-ic="volume-2"></span></button>
+  <span class="pb-encounter__hud pb-patience"><span data-ic="timer" data-size="18"></span>Patience<span class="pb-patience__pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></span>
+</div>
+<p class="cap">Tall, for a place's home screen, with the patience meter.</p>
+</div>
+</body>
+</html>
