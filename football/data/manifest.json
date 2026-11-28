@@ -59,14 +59,15 @@
     },
     "12": {
       "path": "2026/week-12.json",
-      "status": "preliminary",
-      "researchVersion": "2026-11-26-week12-thursday-1",
-      "dataVersion": "2026-11-26-week12-thursday-1"
+      "status": "refreshed-open",
+      "researchVersion": "2026-11-28-week12-weekend-1",
+      "dataVersion": "2026-11-28-week12-weekend-1",
+      "resultsVersion": "2026-11-28-week12-early-finals"
     }
   },
-  "lastSuccessfulPublication": "2026-11-26T07:59:08-05:00",
-  "notice": "Week 12: three Thanksgiving picks; full 16-game schedule. Friday/weekend research preliminary; Wednesday final recorded without retrospective pick.",
-  "scoresCheckedAt": "2026-11-26T07:57:04-05:00",
-  "marketsCheckedAt": "2026-11-26T07:57:45-05:00",
-  "recordsCheckedAt": "2026-11-26T07:57:04-05:00"
+  "lastSuccessfulPublication": "2026-11-28T07:58:52-05:00",
+  "notice": "Week 12: all 11 Sunday/Monday games researched; five early finals verified. Week remains open.",
+  "scoresCheckedAt": "2026-11-28T07:57:19-05:00",
+  "marketsCheckedAt": "2026-11-28T07:58:29-05:00",
+  "recordsCheckedAt": "2026-11-28T07:57:19-05:00"
 }
